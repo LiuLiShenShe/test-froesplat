@@ -1,0 +1,21 @@
+{
+  "sample": "KongQueZhuYu",
+  "source_method": "E7_mask_pruning",
+  "input_ply": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/point_cloud/iteration_30000/point_cloud.ply",
+  "cameras_json": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/cameras.json",
+  "mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/02-sam_masks/KongQueZhuYu",
+  "output_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/plant_only",
+  "mask_pattern": "mask_{stem}.png",
+  "mask_threshold": 127,
+  "dilate_mask_px": 5,
+  "erode_mask_px": 0,
+  "camera_stride": 1,
+  "max_cameras": 0,
+  "chunk_size": 200000,
+  "min_observations": 3,
+  "foreground_ratio_threshold": 0.35,
+  "projection_mode": "auto",
+  "near": 1e-06,
+  "export_background": false,
+  "dry_run": false
+}

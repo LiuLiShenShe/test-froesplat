@@ -1,0 +1,163 @@
+[
+  {
+    "scene_id": "KongQueZhuYu",
+    "zh_name": "孔雀竹芋",
+    "source_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu",
+    "raw_mask_dir": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+    "prepared_mask_dir": "00-论文优化重构/m2m3实验/实验输出/prepared_masks/KongQueZhuYu",
+    "prepared_gate_list": "00-论文优化重构/m2m3实验/实验输出/prepared_gate_lists/KongQueZhuYu_mask_matched.txt",
+    "image_count": 210,
+    "invalid_image_count": 0,
+    "invalid_image_examples": [],
+    "mask_count": 210,
+    "missing_mask_count": 0,
+    "missing_mask_examples": [],
+    "invalid_mask_count": 0,
+    "invalid_mask_examples": [],
+    "mask_foreground_ratio_summary": {
+      "min": 0.13697567033179012,
+      "median": 0.3028782069830247,
+      "max": 0.5451719232253086
+    },
+    "view_weight": {
+      "enabled": true,
+      "raw_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/S16_M1_soft_weighting_on_A6/kongquezhu_hvqg_soft_view_weights.csv",
+      "prepared_path": "00-论文优化重构/m2m3实验/实验输出/prepared_view_weights/KongQueZhuYu_view_weights.csv",
+      "matched": 210,
+      "missing": 0,
+      "missing_examples": []
+    },
+    "mask_source_note": "03-SAM masks; invalid or missing masks are skipped by matched-view gate",
+    "status": "ok"
+  },
+  {
+    "scene_id": "ChangShouHua2",
+    "zh_name": "长寿花",
+    "source_dir": "/data/fj/F2DMAS/00-论文优化重构/m2m3实验/实验输出/prepared_sources/ChangShouHua2_repaired_colmap",
+    "raw_mask_dir": "/data/fj/F2DMAS/03-SAM/ChangShouHua2",
+    "prepared_mask_dir": "00-论文优化重构/m2m3实验/实验输出/prepared_masks/ChangShouHua2",
+    "prepared_gate_list": "00-论文优化重构/m2m3实验/实验输出/prepared_gate_lists/ChangShouHua2_mask_matched.txt",
+    "image_count": 212,
+    "invalid_image_count": 0,
+    "invalid_image_examples": [],
+    "mask_count": 190,
+    "missing_mask_count": 22,
+    "missing_mask_examples": [
+      "0106",
+      "0214",
+      "0215",
+      "0218",
+      "0219",
+      "0220",
+      "0221",
+      "0222",
+      "0224",
+      "0226"
+    ],
+    "invalid_mask_count": 1,
+    "invalid_mask_examples": [
+      {
+        "stem": "0106",
+        "path": "/data/fj/F2DMAS/03-SAM/ChangShouHua2/mask_0106.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/ChangShouHua2/mask_0106.png'"
+      }
+    ],
+    "mask_foreground_ratio_summary": {
+      "min": 0.17636537905092592,
+      "median": 0.26303264853395064,
+      "max": 0.6038261959876543
+    },
+    "view_weight": {
+      "enabled": false,
+      "raw_path": "",
+      "prepared_path": "",
+      "matched": 0,
+      "missing": 0
+    },
+    "mask_source_note": "03-SAM masks; repaired COLMAP source because original final-locked 0084 and 0085 images are unreadable",
+    "status": "ok_with_gate"
+  },
+  {
+    "scene_id": "CaoMei2",
+    "zh_name": "草莓",
+    "source_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/CaoMei2",
+    "raw_mask_dir": "/data/fj/F2DMAS/03-SAM/CaoMei2",
+    "prepared_mask_dir": "00-论文优化重构/m2m3实验/实验输出/prepared_masks/CaoMei2",
+    "prepared_gate_list": "00-论文优化重构/m2m3实验/实验输出/prepared_gate_lists/CaoMei2_mask_matched.txt",
+    "image_count": 210,
+    "invalid_image_count": 0,
+    "invalid_image_examples": [],
+    "mask_count": 203,
+    "missing_mask_count": 7,
+    "missing_mask_examples": [
+      "0070",
+      "0072",
+      "0087",
+      "0090",
+      "0132",
+      "0134",
+      "0138"
+    ],
+    "invalid_mask_count": 7,
+    "invalid_mask_examples": [
+      {
+        "stem": "0070",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0070.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0070.png'"
+      },
+      {
+        "stem": "0072",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0072.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0072.png'"
+      },
+      {
+        "stem": "0087",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0087.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0087.png'"
+      },
+      {
+        "stem": "0090",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0090.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0090.png'"
+      },
+      {
+        "stem": "0132",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0132.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0132.png'"
+      },
+      {
+        "stem": "0134",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0134.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0134.png'"
+      },
+      {
+        "stem": "0138",
+        "path": "/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0138.png",
+        "error": "UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/03-SAM/CaoMei2/mask_0138.png'"
+      }
+    ],
+    "mask_foreground_ratio_summary": {
+      "min": 0.04609206211419753,
+      "median": 0.11639274691358024,
+      "max": 0.27800624517746914
+    },
+    "view_weight": {
+      "enabled": true,
+      "raw_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/S17_M1_soft_cross_sample/caomei2_hvqg_soft_view_weights.csv",
+      "prepared_path": "00-论文优化重构/m2m3实验/实验输出/prepared_view_weights/CaoMei2_view_weights.csv",
+      "matched": 203,
+      "missing": 7,
+      "missing_examples": [
+        "0070",
+        "0072",
+        "0087",
+        "0090",
+        "0132",
+        "0134",
+        "0138"
+      ]
+    },
+    "mask_source_note": "03-SAM masks; invalid or missing masks are skipped by matched-view gate",
+    "status": "ok_with_gate"
+  }
+]

@@ -1,0 +1,66 @@
+vfm_backend:
+  name: sam3
+  checkpoint: external
+  redistribute_weights: false
+  note: Install SAM-series models according to their official licenses.
+
+quality_filter:
+  method: fft_high_frequency_saliency
+  adaptive_threshold: first_quartile
+  retain_all_in_demo: true
+
+prompts:
+  - id: P1
+    name: green_region
+    text: green plant
+    expected_bias: may include green background
+  - id: P2
+    name: plant_instance
+    text: entire potted plant
+    expected_bias: may retain visible support container
+  - id: P3
+    name: organs
+    text: leaves and stems
+    expected_bias: may miss complete plant instance
+  - id: P4
+    name: seedling
+    text: crop seedling
+    expected_bias: may fail on mature plants
+  - id: P5
+    name: background_excluding_plant
+    text: plant body without background
+    expected_bias: may be overly conservative
+
+semantic_gate:
+  enabled: true
+  preferred_prompt: P2
+  reject_if:
+    min_area_ratio: 0.02
+    max_area_ratio: 0.90
+    max_bottom_leakage_ratio: 0.18
+  softmax_temperature: 0.25
+
+structure_balanced_refinement:
+  enabled: true
+  positive_prompt_sources:
+    - selected_prompt
+    - high_confidence_foreground_core
+  negative_prompt_sources:
+    - lower_table_region
+    - neighbouring_objects
+    - high_confidence_background
+  retain_visible_support_base: true
+
+geometry_consistency_correction:
+  enabled: true
+  source: colmap_sparse_tracks
+  support_threshold: 0.55
+  boundary_band_pixels: 24
+  negative_deletion: false
+
+outputs:
+  binary_masks: true
+  alpha_images: true
+  foreground_rgb: true
+  prompt_selection_log: true
+  semantic_gate_scores: true

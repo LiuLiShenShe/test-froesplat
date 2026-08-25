@@ -1,0 +1,108 @@
+﻿Looking in indexes: https://download.pytorch.org/whl/cu124
+.venv\Scripts\python.exe : ERROR: Exception:
+所在位置 行:1 字符: 36
++ ... 3+  U-Net"; .venv\Scripts\python.exe -m pip install torch torchvision ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: Exception::String) [], Rem 
+   oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Traceback (most recent call last):
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\cli\
+base_command.py", line 173, in _main
+    status = self.run(options, args)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\cli\
+req_command.py", line 203, in wrapper
+    return func(self, options, args)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\comm
+ands\install.py", line 315, in run
+    requirement_set = resolver.resolve(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\reso
+lution\resolvelib\resolver.py", line 94, in resolve
+    result = self._result = resolver.resolve(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\resolv
+elib\resolvers.py", line 472, in resolve
+    state = resolution.resolve(requirements, max_rounds=max_rounds)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\resolv
+elib\resolvers.py", line 341, in resolve
+    self._add_to_criteria(self.state.criteria, r, parent=None)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\resolv
+elib\resolvers.py", line 172, in _add_to_criteria
+    if not criterion.candidates:
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\resolv
+elib\structs.py", line 151, in __bool__
+    return bool(self._sequence)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\reso
+lution\resolvelib\found_candidates.py", line 140, in __bool__
+    return any(self)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\reso
+lution\resolvelib\found_candidates.py", line 128, in <genexpr>
+    return (c for c in iterator if id(c) not in self._incompatible_ids)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\reso
+lution\resolvelib\found_candidates.py", line 29, in _iter_built
+    for version, func in infos:
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\reso
+lution\resolvelib\factory.py", line 272, in iter_index_candidate_infos
+    result = self._finder.find_best_candidate(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\package_finder.py", line 851, in find_best_candidate
+    candidates = self.find_all_candidates(project_name)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\package_finder.py", line 798, in find_all_candidates
+    page_candidates = list(page_candidates_it)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\sources.py", line 134, in page_candidates
+    yield from self._candidates_from_page(self._link)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\package_finder.py", line 758, in process_project_url
+    html_page = self._link_collector.fetch_page(project_url)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\collector.py", line 490, in fetch_page
+    return _get_html_page(location, session=self.session)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\collector.py", line 400, in _get_html_page
+    resp = _get_html_response(url, session=session)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\inde
+x\collector.py", line 115, in _get_html_response
+    resp = session.get(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\reques
+ts\sessions.py", line 555, in get
+    return self.request('GET', url, **kwargs)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_internal\netw
+ork\session.py", line 454, in request
+    return super().request(method, url, *args, **kwargs)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\reques
+ts\sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\reques
+ts\sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\cachec
+ontrol\adapter.py", line 53, in send
+    resp = super(CacheControlAdapter, self).send(request, **kw)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\reques
+ts\adapters.py", line 439, in send
+    resp = conn.urlopen(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\connectionpool.py", line 696, in urlopen
+    self._prepare_proxy(conn)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\connectionpool.py", line 964, in _prepare_proxy
+    conn.connect()
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\connection.py", line 359, in connect
+    conn = self._connect_tls_proxy(hostname, conn)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\connection.py", line 500, in _connect_tls_proxy
+    return ssl_wrap_socket(
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\util\ssl_.py", line 453, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls)
+  File "D:\CAAS\03-DeepLabv3+  U-Net\.venv\lib\site-packages\pip\_vendor\urllib
+3\util\ssl_.py", line 495, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock)
+  File "D:\AppData\Python\lib\ssl.py", line 500, in wrap_socket
+    return self.sslsocket_class._create(
+  File "D:\AppData\Python\lib\ssl.py", line 997, in _create
+    raise ValueError("check_hostname requires server_hostname")
+ValueError: check_hostname requires server_hostname

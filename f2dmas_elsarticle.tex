@@ -1,0 +1,601 @@
+% !TeX program = xelatex
+%% Prefer XeLaTeX. A pdfLaTeX fallback is kept for editors that ignore the magic comment.
+\documentclass[preprint,12pt]{elsarticle}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage{CJKutf8}
+  \newcommand{\zhtextbegin}{\begin{CJK*}{UTF8}{gbsn}}
+  \newcommand{\zhtextend}{\end{CJK*}}
+\else
+  \usepackage[UTF8]{ctex}
+  \newcommand{\zhtextbegin}{}
+  \newcommand{\zhtextend}{}
+\fi
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{elsarticle_assets/}}
+\journal{TODO: Target journal name}
+
+\begin{document}
+\zhtextbegin
+
+\begin{frontmatter}
+
+\title{F2DMAS：基于频空特征解耦与显式几何高斯的跨场景植物数字孪生框架}
+
+\author{TODO: Author name(s)}
+\ead{TODO: corresponding.author@example.com}
+\affiliation{organization={TODO: Affiliation},
+            addressline={TODO: Address},
+            city={TODO: City},
+            postcode={TODO: Postcode},
+            state={TODO: State/Province},
+            country={TODO: Country}}
+
+\begin{abstract}
+植物表型组学是现代智慧农业与作物遗传改良的核心数据基石，而复杂非结构化环境下的高保真三维重建是表型解析的重大技术瓶颈。针对植物叶片等非刚性、零厚度器官在传统三维重建中易发生的几何畸变、拓扑膨胀，以及跨场景背景噪声导致的模型泛化能力衰减问题，本研究提出了一种基于频空特征解耦与显式几何高斯的跨场景植物数字孪生框架（F2DMAS）。首先，该框架构建了频空双域预处理管线，在频域利用快速傅里叶变换（FFT）剔除运动模糊帧，在空域引入视觉基础模型（如SAM3）执行零样本语义解耦，强制剥离复杂环境背景，大幅提升重建数据源的信噪比。其次，为突破传统三维高斯溅射（3DGS）体积化表征造成的薄壁器官过度平滑与几何增厚缺陷，核心重建引擎采用二维高斯溅射（2DGS）架构。通过引入带有显式法线约束的二维定向面片（Surfels），精确同构植物叶片的二维流形拓扑，并结合深度与法线一致性正则化，实现了对非刚性器官高频微观结构（如叶缘锯齿、细长茎秆）的绝对物理对齐。F2DMAS框架有效切断了光照波动与背景杂讯对底层几何的干扰，确立了跨场景条件下植物三维形态高精度提取的流形物理基准，为高通量无损表型监测与智慧育种决策提供了高度鲁棒的数字孪生解决方案。
+\end{abstract}
+
+% Optional journal-specific sections such as graphical abstract and highlights
+% can be restored here if your target journal requires them.
+
+\begin{keyword}
+植物表型组学 \sep 三维重建 \sep 2D高斯溅射 (2DGS) \sep 频空特征解耦 \sep 视觉基础模型 (VFMs) \sep 数字孪生 \sep 跨场景泛化
+\end{keyword}
+
+\end{frontmatter}
+
+\section{引言}
+
+植物表型组学（Plant Phenomics）已确立为现代农业科学与作物生产系统的核心驱动力，是精准解析基因型与环境互作机制的关键桥梁 (Nguyen et al., 2025[1] )。高通量、高精度的表型数据采集不仅能全维度量化植物生长动态、抗逆机制及种质特性，更为作物遗传改良、智慧农业决策及生态系统监测提供了不可或缺的数据基石(Walsh et al., 2024[2] )。
+
+然而，当前植物表型组学仍受制于生物物理特性与数据维度的双重限制。植物非刚性器官尤其是叶片与茎秆的形态可塑性及自遮挡效应，严重阻碍了完整点云数据的获取，导致三维重构过程极易产生几何畸变与特征丢失(Chen et al., 2023[3] )。此外，作物表型解析具有高度的多维复杂性。以小麦为例，其精准育种不仅依赖单一性状，更需对产量构成要素（如有效穗数）、环境响应及跨区域生长异质性进行多源数据融合与协同预测，数据维度与耦合难度的增加对算法模型的泛化能力提出了严苛要求(Qin et al., 2026[4] )。
+
+植物生长环境的空间异质性构成了表型分析的核心壁垒。露天大田与温室在光照波动、背景噪声及气象干扰等方面存在显著差异，导致不同场景下采集的表型数据产生剧烈的分布偏移，严重削弱了现有算法模型的跨场景泛化能力 (Li et al., 2024[5] )。为突破这一实验室至大田的应用瓶颈，当前研究亟需构建一种全域统一的表型解析框架。该框架必须具备极强的环境鲁棒性，能够在非结构化环境下实现对多物种、多性状的高通量无损监测与跨域特征对齐，从而支撑全天候的智慧育种决策 (Wang et al., 2025[6] )。
+
+早期的植物表型分析严重依赖人工手动测量（如卷尺、卡尺），这种接触式方法存在效率低下、主观误差极高且具有破坏性的本质缺陷，物理接触往往诱发植物的触碰形态发生，从而干扰其自然生长轨迹 (Zhu et al., 2024[7] )。随着计算机视觉技术的突破，基于二维数字成像的自动化分析已逐步取代人工测量，成为实现无损、高通量表型解析的主流范式，显著提升了性状提取的精度与可重复性，从而解决了传统方法在大规模育种筛选中的瓶颈问题 (Andeer et al., 2025[8] )。
+
+尽管高分辨率光学成像结合计算机视觉算法已实现了对二维平面特征（如投影面积、颜色指数）的自动化提取，但该技术路径存在本质的降维局限性。二维图像无法重构植物的体积拓扑结构，导致茎秆粗度、叶片空间曲率及节间距等关键三维形态参数缺失 (Chen et al., 2025[9] )。更为严峻的挑战在于植物冠层复杂的空间结构引发的遮挡效应。在二维视角下，相互遮挡与自遮挡现象会导致大量非可视区域，使得被遮挡器官的性状无法被精准量化。这一技术瓶颈严重制约了表型分析的完整性，阻碍了全维度植物形态参数的高通量获取 (Luo et al., 2025[10] )。
+
+随着计算机视觉技术的迭代，植物表型分析正从二维平面加速向三维立体维度演进，三维点云已成为解析植物复杂几何结构的核心载体(Harandi et al., 2023[11] )。目前，数据获取技术主要分为“主动式”与“被动式”两大阵营。激光雷达（LiDAR）作为主动式遥感的代表，凭借其高精度的测距能力，能够精准捕捉冠层结构并穿透部分遮挡。然而，高昂的硬件成本（尤其是高线束LiDAR）以及庞大的数据处理需求，构建了难以跨越的大规模田间应用壁垒 (Luo et al., 2025[12] )。尽管RGB-D深度相机降低了门槛，但其成像原理（结构光或ToF）在野外强光环境下极易受红外光谱干扰，导致深度数据缺失与严重的信噪比下降，难以满足全天候监测需求(Chen et al., 2025[13] )。鉴于上述局限，基于多视角立体视觉（MVS）与运动恢复结构（SfM）的被动式三维重建技术成为当前的主流替代方案。该技术仅需标准RGB图像即可解算高密度点云，兼具硬件低成本、采集灵活性与跨尺度适应性，为高通量田间表型分析提供了可扩展的通用路径。
+
+运动恢复结构-多视图立体（SfM-MVS）技术通过解析多视角图像间的特征匹配关系（Feature Matching），以稀疏点云-稠密重建的流水线生成高精度三维模型。该技术凭借低硬件门槛与高通量优势，已广泛应用于玉米与小麦等大田作物的全生育期表型解析(Wen et al., 2024a[14] ; Wen et al., 2024b)。
+
+然而，该技术对物体表面纹理具有极高的依赖性，存在显著的纹理盲区。在植物叶片等弱纹理区域，特征点提取算法（如SIFT/ORB）难以捕获有效描述子，导致匹配失效与点云空洞。此外，大规模场景下的光束法平差涉及巨量的非线性优化计算，其高昂的时间成本与算力需求，严重制约了实时表型分析的效率(Chen et al., 2025[15] )。
+
+作为计算机视觉领域的范式转移技术，神经辐射场（NeRF）通过体积渲染+隐式神经网络的机制，实现了在复杂光照条件下对植物细节的高保真新视角合成。相较于传统显式建模，结合哈希编码等加速算子的改进型NeRF架构（如Instant-NGP），已显著突破了早期模型的训练效率瓶颈，能够快速生成照片级逼真的植物数字孪生 (Zhang et al., 2024[16] )。然而，NeRF的隐式连续场景表征导致了其在“所见即所得”与“几何精准度”之间的内生矛盾。将隐式密度场转化为显式几何网格时，常因密度阈值敏感而产生拓扑结构不连续与表面伪影。这种几何保真度的缺失，直接制约了其在叶面积、茎粗等需毫米级精度表型参数提取中的应用 (Luo et al., 2025[17] )。
+
+尽管三维高斯溅射（3DGS）通过显式椭球体实现了渲染速度的革命，但其体积化的几何表征在处理植物叶片等薄壁结构时存在内生缺陷：椭球体的空间重叠往往导致重建表面增厚与法向量噪声，难以满足高精度表型测量的需求。为此，2D高斯溅射作为最新的范式演进，通过将图元从三维椭球体压扁为二维定向圆盘，在数学层面强制实现了图元与物体表面的物理对齐 (Huang et al., 2024[18] )。2DGS不仅继承了显式表示的实时渲染与拓扑编辑优势，更通过引入深度失真与法向一致性正则化项，极大地提升了显式网格提取的几何保真度。这一特性使其在植物表型分析中具有决定性优势：能够精准还原叶片边缘与纹理细节，克服了传统3DGS在复杂冠层重建中常见的“模糊伪影”问题 (Yu et al., 2024[19] )。然而，现有的高斯溅射技术在农业非结构化场景中仍面临背景分割的挑战。模型中不可避免地耦合了土壤、盆栽支撑架等背景噪声，导致后续的点云清洗与性状提取过程依然呈现出高度的劳动密集型特征，亟需开发端到端的语义剔除算法。
+
+为消除非结构化环境（土壤、支架、光照伪影）对三维重建的几何干扰，从多视图序列中精准提取感兴趣区域掩膜是决定重建信噪比的关键前处理步骤。传统的摄影测量软件（如3DF Zephyr, Agisoft Metashape）主要依赖色彩空间转换（HSV/Lab）与手动阈值分割。这类硬编码算法在受控实验室内尚可运行，但在光照剧烈波动（阴影、高光）及色彩重叠（绿色背景）的野外复杂场景下，其特征识别能力会发生灾难性衰减，导致掩膜边缘破碎或主体误剔除 (Xie et al., 2024[20] )。基于全监督深度学习（如Mask R-CNN, U-Net）的分割方案虽然显著提升了自动化水平，但其性能高度依赖于大规模、像素级精度的标注数据集。这一数据饥渴特性构成了高昂的成本壁垒。更为致命的是，监督模型存在严重的域偏移问题：针对特定物种或生长环境训练的模型，在迁移至新场景时泛化能力急剧下降，无法满足多品种、跨周期的通用表型分析需求 (Ji et al., 2024[21] )。
+
+以Grounding DINO、SAM及Depth Anything为代表的视觉基础模型，确立了计算机视觉的全新范式。这些模型基于海量多模态数据进行预训练，展现出了前所未有的零样本推理与场景泛化能力，为解决传统模型对标注数据的高度依赖提供了理论上的最优解 (Du et al., 2024[22] )。然而，通用域的卓越表现并不能直接等同于农业垂直域的即插即用。农业场景具有极端的复杂性——植物叶片的高频遮挡、细微的纹理相似性以及非结构化环境的动态变化，均对VFMs的边界分割精度与小目标识别能力构成了严峻挑战。当前，VFMs在跨场景植物表型分析中的实际效能仍缺乏系统性的量化评估与验证，这是将其转化为生产力的关键缺失环节 (Shorten et al., 2025[23] )。
+
+为解决上述挑战，本研究提出了一种跨场景多植物的三维重建框架，集成了视觉基础模型和2DGS技术。 该框架的主要目标是：（1）基于视觉基础模型开发图像处理流水线FSAM3，通过文本提示实现多视图图像序列的自动化处理，从而克服传统方法对标注数据的依赖与场景可迁移性限制；（2）利用2DGS技术进行高保真三维植物建模，评估其在重建效率和精度方面对植物三维结构采集的适用性，从而支持植物表型分析。
+
+\section{方法论}
+
+\subsection{系统框架总体设计}
+
+本研究包含四个部分：（1）多视图不同品种植物图像数据集的构建；（2）基于视觉基础模型的FSAM3数据预处理框架；（3）使用2DGS进行高保真植物三维重建；（4）表型性状计算。
+
+首先，收集了来自两个不同的场景下的，不同品种的盆栽植物的多视图图像序列。
+
+然后，通过集成视觉基础模型SAM3进行零样本语义分割与跟踪，开发了自动化预处理框架FSAM3，通过提示词引导实现高精度掩膜提取。
+
+使用2DGS实现高保真三维植物建模，随后使用TSDF表面优化算法进行几何精炼，生成高质量的三维植物网格。
+
+最后，从重建的模型中提取关键表型性状（例如，株高和冠幅、叶长、叶宽），并与地面真实测量值进行比较，以评估重建精度。
+
+图1展示了整体技术框架。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image1.png}
+\caption{Overall Architecture: (a) Two Data Collection Methods, (b) FSAM3 Framework Workflow, (c) 3DGS Reconstruction Process, (d) Scale Recovery, Feature Extraction, and Evaluation.}
+\label{fig:image1}
+\end{figure}
+
+\subsection{实验材料与数据采集}
+
+植物数据集的采集源于两种不同的采集方式：固定器械数据采集、复杂环境采集。该数据集包含了15种
+
+基于固定器械数据采集方法，本研究构建了一套低成本、便携式的植物表型数据采集系统，如图 2(a)所示,由电动转盘、黑色背景布、移动设备组成。我们没有采用三脚架的进行对于设备的固定，直接通过电动转盘设备的转动带动草莓植株幼苗旋转的方式对于目标草莓植株幼苗进行拍摄。虽然使用了黑色幕布，但我们特意保留了布面的自然褶皱。这些不规则的褶皱在动态拍摄过程中会产生随机的镜面反射与阴影变化，形成了类似于田间复杂光照环境下的光学噪声。这种设计旨在测试算法在非受控光照与背景干扰下的分割鲁棒性。
+
+基于复杂环境采集的方法，植株放置于复杂室内环境中，包含多类无关背景以及颜色相似的杂物。在数据收集的过程中，相机围绕植株两圈，以保证完整的拍摄。（如图2(b)所示）
+
+图 2中的移动设备采用普通入门级智能手机（iphone 14 ProMax），拍摄的帧率为60FPS，采集的分辨率为1080 X 1920像素，超广角13mm f2.2的相机参数。因未使用三脚架进行固定拍摄角度以及高度所以无固定数据，对于拍摄距离需确保目标草莓植株幼苗70\%以上的时间存于拍摄的视角中。电动转盘的直径为15cm，最大旋转角度为360$^\circ$，定位精度为0.01$^\circ$。为了模拟田间实际作业中不可避免的环境干扰，本实验构建了非理想化的背景环境。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image3.png}
+\caption{(a) Schematic of the data acquisition setup. 1. Target strawberry seedling; 2. Electric turntable; 3. Smartphone; 4. Wrinkled black background. (b) Schematic diagram of data collection in a complex environment.}
+\label{fig:image3}
+\end{figure}
+
+基于固定器械数据采集方法的草莓植株幼苗及基于复杂环境采集的仙客来植株如图 3 所示。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image5.png}
+\caption{Multi-view representation of the target strawberry seedling.}
+\label{fig:image5}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image7.png}
+\caption{Schematic of the multi-view image acquisition strategy. Path (1) denotes the high-angle orbit and Path (2) denotes the horizontal orbit.}
+\label{fig:image7}
+\end{figure}
+
+两种数据采集的方法具体如下。因想要简便快捷切获取大量静态清晰的图像，实验未采用三脚架，通过手持移动设备进行视频的拍摄，通过此方式采集视频获取多视角图像，采集方案如图 4 所示。在拍摄视频之前，将目标植株置于电动转盘之上或放置于固定物体上，为了便于处理图像，我们基于固定器械数据采集时，在白色电动转盘的上方放置了一张黑色卡片以及红色标定物。启动转盘后，移动设备进行录制。基于复杂环境数据采集时，由于目标幼苗放置于固定物体上时实验者能够较为方便的进行拍摄。这两种数据采集方法我们均采用两个视角进行对应的连续拍摄，第一个视角需能够在移动设备中完全展示出目标植株，如路径 (2) 所示，第二个视角需要拍摄位置高于目标植株，其距离高度、与目标植株间的水平间距以及相机的倾角大小设置均以能拍摄到目标植株的俯视图为依据，如路径 (1) 所示。拍摄视频时, 目标植株始终位于相机视野中心,  以确保获取的图像完整。从路径 (2) 到路径 (1) 开始进行连续视频图像的采集，目标植株在电动转盘的转动下按照既定的拍摄路线进行转动，此方法能够确保获取到360$^\circ$的全部视角图像。每一个位置录制目标植株转动360$^\circ$即可。
+
+\subsection{FSAM3：频空双域协同处理框架}
+
+神经辐射场与三维高斯溅射对多视图序列的光度一致性与空间纯净度具有极高要求。为突破非受控农业环境中运动模糊与复杂农艺背景对底层三维重建造成的拓扑干扰，本研究提出 FSAM3 频空双域协同处理框架。该框架将快速傅里叶变换（FFT）作为频域质量网关，联合 SAM3 (Segment Anything Model 3) 的空域语义解耦能力，辅以目标筛选机制，构建了一条从无监督模糊剔除到高频特征保留的自动化预处理管线。
+
+\subsubsection{频域质量过滤机制}
+
+三维重建管线中的运动恢复结构（SfM）依赖精确的像素级特征点。植物冠层在风力或相机移动下产生的运动模糊，会直接导致对应帧的相机位姿解算漂移或特征点云发散。本模块利用 OpenCV 部署基于二维离散傅里叶变换（2D DFT）的高频能量检测算法，实施硬性图像质量拦截。
+
+给定尺寸为$M \timesN$的灰度图像$f\left(x,y\right)$，其二维离散傅里叶变换频谱 $F\left(u,v\right)$ 定义为：
+
+\begin{equation}
+F\left(u,v\right)=\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f\left(x,y\right){e}^{-j2\pi\left(\frac{\mathrm{ux}}{M}+\frac{\mathrm{vy}}{N}\right)}
+\end{equation}
+
+为量化图像清晰度，执行低频中心化操作操作将零频率分量移至频谱中心，提取幅度谱，并进行对数变换以压缩动态范围：
+
+\begin{equation}
+S\left(u,v\right)=\mathrm{log}\left(1+\left|{F}_{\mathrm{centered}}\left(u,v\right)\right|\right)
+\end{equation}
+
+清晰图像的边缘和纹理在频域中表现为高频分量（远离中心的区域）。定义中心低频掩码半径$R$，屏蔽低频核心能量，计算剩余高频区域 $\mathrm{HF}$ 的幅度均值 ${\mu}_{\mathrm{HF}}$ 作为清晰度评估指标：
+
+\begin{equation}
+{\mu}_{\mathrm{HF}}=\frac{1}{{N}_{\mathrm{HF}}}\sum_{\left(u,v\right)\in\mathrm{HF}} S\left(u,v\right)
+\end{equation}
+
+式中，${N}_{\mathrm{HF}}$ 为高频区域的像素总数。设定硬性清晰度阈值${\tau}_{\mathrm{blur}}$。当${\mu}_{\mathrm{HF}}<{\tau}_{\mathrm{blur}}$时，系统判定该帧存在严重运动模糊并自动将其从序列中剔除，确保进入下一阶段的视频帧集保持绝对的光学锐度。
+
+\subsubsection{空域语义解耦机制}
+
+剔除模糊帧后，剩余高保真图像${I}_{\mathrm{clean}}$仍包含温室支架、反光地表等复杂背景。若直接进行重建，这些背景将抢占大量高斯基元，引发资源耗散，并导致提取几何网格时植物底座与环境发生不可逆的物理粘连。本阶段引入 FSAM3 架构执行全自动无监督语义分割（Automatic Mask Generation, AMG）。与依赖人工边界框提示的前代模型不同，FSAM3 利用空间网格化自动提示机制，直接对全图执行零样本实例提取。
+
+数据流经 FSAM3 的视觉 Transformer（ViT）编码器提取高维空间特征${F}_{\mathrm{spatial}}$，结合网格提示编码${P}_{\mathrm{grid}}$，输入掩码解码器输出二进制掩码${M}_{\mathrm{out}}$：
+
+\begin{equation}
+{M}_{\mathrm{out}}=\mathrm{Decoder}\left(\mathrm{ViT}\left({I}_{\mathrm{clean}}\right),{P}_{\mathrm{grid}}\right)
+\end{equation}
+
+针对输出掩码执行形态学闭操作（Morphological Closing）填补内部微小孔洞，并与原始图像进行按位与运算（Bitwise AND），生成附带 Alpha 透明通道的高保真纯净植物图像${I}_{\mathrm{ARGB}}$。
+
+该机制彻底切断了环境纹理对TSDF 正则化优化的光度干扰，为后续 2DGS 管线提供仅包含植物拓扑特征的高纯度输入流，是保证薄壁器官水密网格成功提取的刚性前置条件。
+
+与具有高度依赖大量特定领域的标注数据、在新场景下的泛化能力有限以及分割结果的稳定性不高、分割无时序等问题的传统图像分割模型(如 UNet、YOLOv8 和 Mask R-CNN 和SAM等)相比,FSAM3集成了轻量级的文本编码器，能够将自然语言提示映射为高维语义嵌入。与传统的稀疏点提示不同，文本提示能够为模型提供全局的语义上下文，从而在无需人工交互的情况下实现特定生物部件的自动识别。
+
+FSAM 3 采用统一的 Transformer 架构处理图像与视频流，其核心由图像编码器、记忆关注模块、提示编码器和掩码解码器组成（如图 5 所示）。与早期版本不同，FSAM 3 引入了流式记忆机制以处理时序与多视图数据。图像编码器：采用层级视觉 Transformer架构，高效提取输入帧的高维时空特征；记忆关注模块：是实现多视图一致性的关键，它包含记忆编码器与记忆库，用于存储和检索先前帧的目标交互信息与掩码特征，确保分割目标在不同视角下的连续性；提示编码器：在支持稀疏提示（点、框）的基础上，增强了对自然语言文本提示的编码能力，生成多模态提示嵌入；掩码解码器：通过双向注意力机制聚合图像特征、提示嵌入以及从记忆库中检索的时空上下文，生成最终的高精度分割掩码。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image9.png}
+\caption{Strawberry seedling image segmentation results based on SAM3.}
+\label{fig:image9}
+\end{figure}
+
+基于 FSAM 3 的文本驱动分割流程如所示，该过程实现了从交互式到自动化的跨越。在首帧中，我们不再依赖人工标注的点或框，而是输入描述性的文本提示，例如 "The entire green plant excluding the pot"。FSAM 3 的文本编码器解析该指令，结合图像特征，自动生成覆盖植物全貌的初始掩码。这种方法避免了人工打点的主观误差，保证了特征提取的客观性。一旦首帧的语义掩码生成，FSAM 3 的记忆引擎即被激活。模型将植物的语义特征与几何特征存入记忆库。在随后的旋转视图中，即使植物发生了自遮挡或光照变化，模型依然能依据记忆库中的语义一致性，持续追踪并分割该目标，而无需每帧重复输入文本。这种语义驱动的掩码序列具有极高的语义连续性，有效防止了传统方法中非目标物体的误识别，为后续 2DGS 提供了极其纯净的几何约束。
+
+\subsection{基于 2DGS 的流形同构三维重建与表型管线}
+
+植物高保真三维结构获取的管线包含四个核心执行节点：FSAM3 语义前置解耦、SfM 稀疏重建、2DGS 二维流形优化、以及空间伪影滤除与显式网格化。
+
+重建管线流转如图 6 所示。系统首先通过帧间隔抽取从采集视频中获取完整的多视角图像集。针对非受控农艺环境中手持拍摄带来的运动模糊，管线部署基于快速傅里叶变换（FFT）的高频能量检测算法，中心化掩蔽低频分量，通过均值化高频振幅执行模糊帧的硬性剔除。随后，利用 FSAM3 语义解耦模型强制剥离温室背景。此步骤至关重要，绝对纯净的 Alpha 掩码切断了底层 2DGS 面片向复杂背景发生错误深度对齐的路径，迫使算力 100\% 收敛于植物本体。
+
+处理后的高保真图像阵列输入 SfM 算法提取相机内外参及稀疏点云。以此稀疏拓扑为先验，系统初始化 2D 高斯溅射（2DGS）场景表征，利用带有显式法线约束的二维椭圆面片极度逼近植物叶片的零厚度物理属性 。最终，在剔除光度学冗余伪影后，通过深度与法线的联合提取，输出完全贴合植物高频物理边界的显式流形网格，为下游表型参数的绝对量化提供基座。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image11.png}
+\caption{3D reconstruction pipeline for strawberry seedlings.}
+\label{fig:image11}
+\end{figure}
+
+\subsubsection{稀疏拓扑重建与相机位姿解算}
+
+采用运动恢复结构（Structure from Motion, SfM）算法对植株进行稀疏重建。SfM 是一种突破视点限制的离线三维重建技术，通过解析无序图像序列中的多视图几何关系，联合求解场景的三维拓扑结构与相机运动轨迹。针对草莓幼苗复杂的冠层遮挡与叶片重复纹理，该管线涵盖特征关联、极线约束、位姿解算及非线性优化四个核心阶段。
+
+利用特征检测算法从不同视角的图像序列中提取关键点与高维描述子。为剔除无序匹配中的离群值（Outliers），引入对极几何（Epipolar Geometry）进行空间约束。设 ${x}_{1}$ 与 ${x}_{2}$ 为相邻视图中的一对齐次像素坐标，其严格满足：
+
+\begin{equation}
+{x}_{2}^{T}F{x}_{1}=0
+\end{equation}
+
+式中，$F$ 为基础矩阵（Fundamental Matrix），用于限定候选匹配点必须收敛于对应的极线之上。
+
+基于预标定获取的相机内参矩阵$K$，将基础矩阵 $F$ 升维转化为本质矩阵（Essential Matrix）$E$：
+
+\begin{equation}
+E={K}^{T} F K
+\end{equation}
+
+通过对本质矩阵 $E$ 进行奇异值分解（SVD），解耦并提取当前视图相机的旋转矩阵 $R$ 与平移向量$t$。由此构建第 $i$ 个视角的相机投影矩阵${P}_{i}$：
+
+\begin{equation}
+{P}_{i}={K}_{i}\left[{R}_{i}\mid {t}_{i}\right]
+\end{equation}
+
+在获取多视角精确相机位姿与像素特征关联后，利用三角测量（Triangulation）机制将二维图像平面坐标反投影至三维物理空间。设场景中未知三维物理点为$X$（齐次坐标），其与图像观测点 ${x}_{i}$ 的映射关系定义为：
+
+\begin{equation}
+{s}_{i}{x}_{i}={P}_{i}X
+\end{equation}
+
+式中，${s}_{i}$ 为射影深度尺度因子。基于奇异值分解求解该线性方程组，交会并恢复出草莓幼苗表面的三维离散坐标，实例化生成初始稀疏 3D 点云。
+
+SfM 管线在连续位姿递推中极易产生误差累积。引入光束法平差对相机外参及三维点坐标执行全局非线性约束。定义系统级重投影误差（Reprojection Error）代价函数：
+
+\begin{equation}
+E\left(R,t,X\right)=\sum_{i=1}^{N} \sum_{j=1}^{M} {v}_{\mathrm{ij}}{\left|\left|{x}_{\mathrm{ij}}-\pi\left({R}_{i},{t}_{i},{X}_{j}\right)\right|\right|}^{2}
+\end{equation}
+
+式中，$N$ 为相机视图总集，$M$ 为三维点总集；${v}_{\mathrm{ij}}\in \{0,1\}$ 为观测可见性指示变量；$\pi\left(\cdot\right)$ 为依据 ${R}_{i}$ 和 ${t}_{i}$ 将三维点 ${X}_{j}$ 投影至第 $i$ 个像面的非线性映射函数。系统利用 Levenberg-Marquardt (LM) 算法最小化此代价函数，最终输出高保真的植株稀疏几何拓扑及全局对齐的相机位姿序列。
+
+\subsubsection{2DGS 二维流形同构重建算法}
+
+本研究摒弃了传统 3DGS 的体积球体假设，采用 2D Gaussian Splatting (2DGS) 作为核心场景表征。植物叶片在物理空间中属于典型的零厚度二维流形（2D Manifold）。3DGS 的体积分布会引发透视交叉处的拓扑膨胀，而 2DGS 利用显式的二维面片（Surfels），通过法线一致性约束完美同构了植物叶片的薄壁形态。
+
+2DGS 场景被离散化为数百万个带有显式几何边界的二维高斯面片。每个面片由三维中心坐标$p\in{R}^{3}$、二维缩放矩阵$S\in{R}^{2\times2}$、以及定义局部切平面朝向的旋转矩阵 $R\in{R}^{3\times3}$ 参数化定义。矩阵 $R$ 的前两个列向量 ${t}_{u},{t}_{v}$ 构成了切平面的正交基，第三个列向量 $n$ 即为该面片的显式法线。其在局部二维切平面上的概率密度分布函数定义为：
+
+\begin{equation}
+G\left(u\right)=\exp\left(-\frac{1}{2}{u}^{T}{S}^{-2}u\right)
+\end{equation}
+
+式中，$u\in{R}^{2}$ 为切平面上的局部坐标。在光栅化渲染阶段，2DGS 摒弃了 3DGS 沿相机射线积分的体积近似，转而执行严格的射线-面片相交测试。给定从相机发出的射线方程$r\left(t\right)=o+td$，其与 2D 高斯面片所在平面的精确交点深度 $t$ 计算为：
+
+\begin{equation}
+t=\frac{\left(p-o\right)\cdotn}{d\cdotn}
+\end{equation}
+
+确定交点后，系统将其投影至面片的局部切平面获取二维坐标$u$，并结合基础不透明度 $\alpha$ 与高斯衰减因子评估最终的空间不透明度。这种基于射线相交的降维表征，从根本上消除了视角偏移引起的渲染模糊与深度发散，保证了植物边缘（如叶缘锯齿）的高频锐度。
+
+渲染颜色 $C$ 与深度 $D$ 通过沿射线的深度排序进行 $\alpha$ 混合累加求解：
+
+\begin{equation}
+C=\sum_{i=1}^{N} {c}_{i}{\alpha}_{i}\prod_{j=1}^{i-1} \left(1-{\alpha}_{j}\right)
+\end{equation}
+
+训练过程中，除了标准的光度学误差 ${L}_{1}$ 与 D-SSIM 损失外，2DGS 引入了基于深度的法线一致性正则化。系统强制利用渲染深度图计算出的几何法线与 2D 面片的显式法线 $n$ 保持对齐，确保高斯面片在空间中平滑延展且不发生物理自相交。
+
+\subsubsection{基于光度学的空间伪影滤除}
+
+2DGS 在场景优化过程中，由于视角盲区、冠层遮挡边界以及训练集光照条件的非理想性，常会在隐蔽区域生成大量异常暗色的三维高斯基元。此类空间伪影在渲染结果中表现为高频的黑色斑块，其本质是梯度下降优化过程中缺乏充分多视图几何约束而导致的局部过拟合。分析表明，此类冗余基元在光度属性上具有显著共性：其各向同性的基础颜色辐射值趋近于纯黑。基于上述光度学特征，本研究提出一种基于人类视觉感知模型（Human Visual System, HVS）的自动化后处理滤除算法，以剔除底层拓扑中的无效冗余数据。
+
+该滤除机制的核心实施链路分为特征提取、亮度感知与硬性阈值裁剪三个阶段。2DGS 依赖球谐函数（Spherical Harmonics, SH）对每个三维高斯基元的视角相关颜色辐射进行高维编码。该模块首先从场景模型中提取所有高斯基元球谐系数的零阶分量（0-order SH coefficients）。作为球谐基底的基础常量，零阶分量独立于观测视角，直接表征了高斯基元在各向同性条件下的基础 RGB 颜色值。设提取的零阶分量系数为${C}_{0}^{\mathrm{SH}}$，其向基础颜色向量 ${C}_{\mathrm{RGB}}={\left(R,G,B\right)}^{T}$ 的映射关系定义为：
+
+\begin{equation}
+{C}_{\mathrm{RGB}}=\sigma\left({c}_{0}\cdot{C}_{0}^{\mathrm{SH}}+0.5\right)
+\end{equation}
+
+式中，${c}_{0}$ 为球谐零阶基底常数（约为 0.28209），$\sigma\left(\cdot\right)$为确保颜色值收敛于 $\left[0,1\right]$ 区间的截断激活函数。
+
+在获取标准化的 RGB 颜色分量后，系统依据国际电信联盟（ITU）颁布的 BT.601 颜色空间转换标准计算每个高斯基元的感知亮度。该标准引入了人眼视觉系统对不同波长光谱的不等价敏感度特性，为红、绿、蓝三个颜色通道分配了特定的心理物理学权重。高斯基元的感知亮度 $Y$ 的计算公式如下：
+
+\begin{equation}
+Y=0.299 R + 0.587 G + 0.114 B
+\end{equation}
+
+获取全局基元的感知亮度分布后，系统引入硬性亮度裁剪机制。设定全局亮度感知阈值${\tau}_{\mathrm{Luma}}$，将满足条件 $Y<{\tau}_{\mathrm{Luma}}$ 的三维高斯基元判定为光度学伪影，并将其从场景点云拓扑中永久剥离。此类暗色基元对场景有效结构的视觉贡献极低，且占据额外的显存开销。基于在数据集上的多轮消融实验调优，当截断阈值 ${\tau}_{\mathrm{Luma}}$ 设定为 0.15 时，该算法能够在彻底清除暗部伪影噪声与保留有效植物冠层阴影细节之间达到最优的光度学平衡，显著提升了 2DGS 重建模型的空间纯净度与渲染信噪比。
+
+\subsubsection{深度-法线联合显式网格化}
+
+获取纯净的 2DGS 模型后，必须将其转化为连续的显式多边形网格（Mesh）以执行表型量化。由于 2DGS 采用平面基元而非体积分布，隐式场常用的 SDF 正则化会破坏其流形特性。因此，本研究采用深度与法线联合截断符号距离场（TSDF Fusion）的网格化策略。
+
+2DGS 的底层数学架构允许在任意视点无损渲染出极高精度的深度图 ${D}_{\mathrm{render}}$ 与法线图${N}_{\mathrm{render}}$。系统在目标物体的包围盒内划定均匀的体素网格，遍历所有训练集相机位姿，将每个视点渲染的深度与法线反投影至全局空间。对于三维空间中的任意体素点$v$，其相对相机 $c$ 的截断符号距离值 $\mathrm{tsdf}_{v,c}$ 根据渲染深度与法线的一致性进行加权融合：
+
+\begin{equation}
+\mathrm{TSDF}\left(v\right)=\frac{\sum_{c} {w}_{v,c}\,\mathrm{tsdf}_{v,c}}{\sum_{c} {w}_{v,c}}
+\end{equation}
+
+权重 ${w}_{v,c}$ 由射线入射角与法线 ${N}_{\mathrm{render}}$ 的夹角动态决定，剔除处于大倾角边缘的不可靠深度观测。在全局 TSDF 场收敛后，应用移动立方体算法提取等值面。
+
+由于底层数据源自零厚度的 2DGS 面片而非膨胀的体积高斯，提取出的三角网格完美保留了植物叶片的薄壁形态。最终执行连通域过滤，剥离离散碎片，输出高度平滑且保真的多边形表型孪生体，为表面积积分、极值距离计算等下游任务确立了绝对的几何物理基准。
+
+\subsection{基于数字孪生的尺度恢复与表型测量验证}
+
+尽管 2DGS 重建了高保真的植物几何形态，但 SfM 和高斯溅射生成的模型天然缺失绝对尺度信息。为了赋予模型真实的物理属性并验证其测量精度，本研究采用物理-数字双重验证策略，利用开源点云处理软件 CloudCompare进行虚拟测量。
+
+重建生成的 Mesh 模型处于相对坐标系中。为了将其映射到真实世界坐标系，本实验利用场景中预置的标定物（已知物理尺寸为 ${L}_{\mathrm{ref}}$）作为基准。在 CloudCompare 中，提取标定物对应的 Mesh 顶点，计算其在虚拟空间中的欧氏距离 ${L}_{\mathrm{virtual}}$。计算全局缩放因子 $\eta$：
+
+\begin{equation}
+\eta=\frac{{L}_{\mathrm{ref}}}{{L}_{\mathrm{virtual}}}
+\end{equation}
+
+随后，对整个植株 Mesh 模型应用缩放变换矩阵 ${T}_{\mathrm{scale}}$，将模型单位统一为厘米（cm）：
+
+\begin{equation}
+{M}_{\mathrm{real}}=\eta\cdot{M}_{\mathrm{virtual}}
+\end{equation}
+
+在完成尺度校正的数字孪生模型 ${M}_{\mathrm{real}}$ 上，我们模拟真实的农学测量过程提取表型参数。如图7所示。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image13.png}
+\caption{Scale recovery, phenotype extraction, and measurement workflow on the reconstructed digital twin.}
+\label{fig:image13}
+\end{figure}
+
+\subsection{评估指标}
+
+为全面量化算法在目标检测、图像分割及三维重建任务中的性能表现，本研究选取F1 分数（F1-Score）、平均交并比（mIoU）、峰值信噪比（PSNR）、结构相似性（SSIM）、学习感知图像块相似度（LPIPS）以及决定系数（${R}^{2}$）作为核心评估指标。
+
+F1 分数（F1-Score）：用于综合评估模型的精确率（Precision,$P$）与召回率（Recall,$R$）。精确率表示预测为正类的样本中实际为正类的比例，召回率表示实际为正类的样本中被正确预测的比例。公式为：
+
+\begin{equation}
+P=\frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FP}}
+\end{equation}
+
+\begin{equation}
+R=\frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}
+\end{equation}
+
+\begin{equation}
+F1=2\times\frac{P\timesR}{P+R}
+\end{equation}
+
+式中，$\mathrm{TP}$ 为真阳性，$\mathrm{FP}$ 为假阳性，$\mathrm{FN}$ 为假阴性。F1 分数越高，表明模型的整体分类性能越均衡。
+
+平均交并比（mIoU, Mean Intersection over Union）：图像语义分割的核心指标，计算所有类别交并比的平均值。衡量预测区域与真实标签区域的空间重合度：
+
+\begin{equation}
+mIoU=\frac{1}{k+1}\sum_{i=0}^{k} \frac{\mathrm{TP}_{i}}{\mathrm{TP}_{i}+\mathrm{FP}_{i}+\mathrm{FN}_{i}}
+\end{equation}
+
+式中，$k$ 为目标类别数（不含背景）。mIoU 值越接近 1，分割的空间精度越高。
+
+峰值信噪比（PSNR, Peak Signal-to-Noise Ratio）：基于像素级误差评估重建图像的物理失真程度。首先计算均方误差（MSE）：
+
+\begin{equation}
+MSE=\frac{1}{\mathrm{HWC}}\sum_{i=1}^{H} \sum_{j=1}^{W} \sum_{k=1}^{C} {\left(I\left(i,j,k\right)-\hat{I}\left(i,j,k\right)\right)}^{2}
+\end{equation}
+
+\begin{equation}
+PSNR=10\cdot\log_{10}\left(\frac{\mathrm{MAX}_{I}^{2}}{\mathrm{MSE}}\right)
+\end{equation}
+
+式中，$I$ 与 $\hat{I}$ 分别为真实图像与重建图像，$\mathrm{MAX}_{I}$ 为图像像素的最大可能值（如 8 位图像为 255）。PSNR 值越高，表明像素级误差越小。
+
+结构相似性（SSIM, Structural Similarity）：从亮度、对比度与结构三个维度衡量图像间的感知相似度：
+
+\begin{equation}
+\mathrm{SSIM}\left(x,y\right)=\frac{\left(2{\mu}_{x}{\mu}_{y}+{c}_{1}\right)\left(2{\sigma}_{\mathrm{xy}}+{c}_{2}\right)}{\left({\mu}_{x}^{2}+{\mu}_{y}^{2}+{c}_{1}\right)\left({\sigma}_{x}^{2}+{\sigma}_{y}^{2}+{c}_{2}\right)}
+\end{equation}
+
+式中，$\mu$ 与 ${\sigma}^{2}$ 分别为图像块的均值与方差，${\sigma}_{\mathrm{xy}}$ 为协方差，${c}_{1}$ 与 ${c}_{2}$ 为维持分母稳定的极小常数。SSIM 值越接近 1，表明图像结构保真度越高。
+
+学习感知图像块相似度（LPIPS）：利用预训练深度神经网络提取深层特征，计算特征空间中的感知距离：
+
+\begin{equation}
+LPIPS=\sum_{l}\frac{1}{H_{l}W_{l}}\sum_{h,w}\left\|w_{l}\odot\left(\hat{y}_{hw}^{l}-y_{hw}^{l}\right)\right\|_{2}^{2}
+\end{equation}
+
+式中，$\hat{y}^{l}$ 与 $y^{l}$ 为网络第 $l$ 层的特征激活值，${w}_{l}$ 为通道权重。LPIPS 值越低，表明图像在人类视觉系统中的感知相似度越高。
+
+决定系数（${R}^{2}$, Coefficient of Determination）：用于回归任务（如植物表型参数的拟合），评估模型预测值对真实值变异的解释程度：
+
+\begin{equation}
+{R}^{2}=1-\frac{\sum_{i=1}^{n} {\left({y}_{i}-\hat{{y}_{i}}\right)}^{2}}{\sum_{i=1}^{n} {\left({y}_{i}-\bar{y}\right)}^{2}}
+\end{equation}
+
+式中，${y}_{i}$ 为真实观测值，$\hat{{y}_{i}}$ 为模型预测值，$\bar{y}$ 为真实值的样本均值。${R}^{2}$越接近 1，回归模型的拟合优度越高。
+
+\section{实验结果与分析}
+
+\subsection{实验设置}
+
+本实验的所有计算任务均在单一工作站上完成。硬件搭载 Intel Core i9-13900K 处理器，配备 64GB DDR5 内存，以及一张 NVIDIA GeForce A6000 GPU（48GB GDDR6X 显存）。软件环境基于 Ubuntu 22.04 LTS 操作系统，核心算法基于 PyTorch 2.1 框架与 CUDA 11.8 工具包实现。所有对比基准算法均使用其官方开源代码，并在相同硬件环境下重新编译运行，以确保公平性。
+
+为了全方位评估本研究在渲染质量、几何还原度及计算效率上的性能，选取了以下代表性方法进行对比：
+
+3DGS: 原始的 3D Gaussian Splatting 方法。
+
+2DGS: 原始的 2D Gaussian Splatting 方法。
+
+COLMAP: 传统的基于多视图立体几何的稠密重建方法。作为工业界的物理几何真值，它通过 patch-match 算法生成稠密点云并执行泊松重建。虽然耗时较长，但其几何精度极高，用于验证本文 Mesh 的物理准确性。
+
+\subsection{SAM3分割对比}
+
+定性分析表明，FSAM3 完整地包含了目标植株所需的全部内容。它成功识别并保留了复杂的组成部分，包括泥土和极其细微的植株结构。相反，SEEM 基线表现出结构性缺陷，其特征是泥土区域和细粒度植株部分的明显缺失。这种形态上的完整性表明 FSAM3 对复杂的语义边界具有更强的敏感性。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image15.png}
+\caption{Qualitative comparison between FSAM3 and SEEM for plant segmentation.}
+\label{fig:image15}
+\end{figure}
+
+定量评估与定性的结构保留情况严格吻合。FSAM3 的 F1 得分为 98.3，mIoU 为 97.9\%，分别以 3.2 和 3.8\% 的绝对优势领先于 SEEM。HD95 指标从 281.9 像素大幅下降至 41.4 像素。HD95 中高达 240.5 像素的大幅缩减直接量化了严重边界偏差的消除，在数学上证实了 FSAM3 解决了 SEEM 方法中存在的部件缺失问题的观察结果。
+
+\begin{table}[t]
+\centering
+\caption{Quantitative comparison of FSAM3 and SEEM on segmentation performance.}
+\label{tab:1}
+\begin{tabular}{lccc}
+\toprule
+Metric & FSAM3 & SEEM & Difference \\
+\midrule
+F1 & 98.3 & 95.1 & 3.2 \\
+mIoU/\% & 97.9 & 94.1 & 3.8 \\
+HD95 (px) & 41.4 & 281.9 & -240.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{基于 3DGS 的植物三维建模}
+
+\subsubsection{相机位姿估计}
+
+相机位姿估计 图 9 展示了使用 SfM 算法在 FSAM3 处理的图像序列上获得的位姿估计结果。估计的相机位姿与实际拍摄轨迹高度对齐，而生成的稀疏点云有效地捕捉了目标植物的三维轮廓。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image17.png}
+\caption{Camera pose estimation and sparse point cloud reconstruction produced by SfM.}
+\label{fig:image17}
+\end{figure}
+
+表2展示了使用F2DMS方法和标准2DGS方法在数据集上获得的3D重建结果的比较。
+
+实验结果表明，这两种方法都能够生成照片级逼真的三维场景模型
+
+语义分割结果作为先验信息，从而能够精确地排除非目标区域，仅保留植物区域。
+
+这种方法使得重建结果更加直观且易于分析管理。
+
+在细节处理方面，F2DMAS有效减轻了2DGS在场景边缘常产生的白高斯噪声伪影，提供了更平滑、更精细的三维场景表示。
+
+\begin{table}[t]
+\centering
+\caption{Comparison of F2DMAS and vanilla 2DGS on reconstruction quality and efficiency.}
+\label{tab:2}
+\begin{tabular}{lccccc}
+\toprule
+Metric & PSNR & SSIM & LPIPS & Training time(s) & Mesh time(s) \\
+\midrule
+F2DMAS & 31.09 & 0.9711 & 0.0365 & 5044.5 & 55 \\
+2DGS & 29.58 & 0.9574 & 0.0487 & 12913.7 & 157.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{几何精度分析}
+
+本节重点评估 3DGS 重建模型在实际农学表型参数提取中的可靠性。我们将从网格拓扑质量与表型参数测量误差两个维度展开分析。
+
+\subsubsection{2dgs对比}
+
+1. 定量评估表 1 展示了不同方法在测试集上的定量评估结果。如表所示，F2DMAS 在所有视觉质量指标上均确立了最高性能。其 PSNR 达到 31.09，SSIM 达到 0.9711，LPIPS 降至最低的 0.0365。与 3DGS 基线相比，F2DMAS 在渲染质量上取得了严格的数值优势。与传统 COLMAP 方法相比，性能差距尤为显著，体现为 PSNR 实现了 17.46 的绝对提升，LPIPS 降低了 0.0707。F2DMAS 彻底打破了渲染保真度与处理速度之间的传统权衡。最关键的优势体现在网格生成阶段，F2DMAS 仅需 55 秒。与 3DGS 的 642 秒相比，网格化时间缩减了 91.4\%，甚至超越了传统上更快的 COLMAP 基线（78 秒）。同时，相较于 3DGS，F2DMAS 将总体训练时间从 5413.5 秒减少至 5044.5 秒。视觉指标与提取速度的双重优化验证了该方法的架构效率。
+
+\begin{table}[t]
+\centering
+\caption{Quantitative comparison among COLMAP, 3DGS, and F2DMAS.}
+\label{tab:3}
+\begin{tabular}{lccccc}
+\toprule
+Method & PSNR (↑) & SSIM (↑) & LPIPS(↓) & Training time(s) & Mesh time(s) \\
+\midrule
+COLMAP & 13.63 & 0.8745 & 0.1072 & 599.5 & 78 \\
+3DGS & 30.17 & 0.9587 & 0.0386 & 5413.5 & 642 \\
+F2DMAS & 31.09 & 0.9711 & 0.0365 & 5044.5 & 55 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+2. 定性评估为了直观展示重建质量，图 10 展示了各方法在测试视角下的可视化对比结果。这两种方式都通过FSAM3预处理步骤有效的消除了背景的噪声，验证了FSAM3框架在不同的三维重建中的实用性。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image19.png}
+\caption{Qualitative comparison of reconstruction results under the test views.}
+\label{fig:image19}
+\end{figure}
+
+\subsubsection{网格拓扑与截面质量分析}
+
+植物表型的自动化测量高度依赖于 Mesh 的表面平整度。为了验证 2DGS 在几何恢复上的优势， 我们进行了对于标准图像 、SuGaR方法生成的Mesh和F2DMAS方法生成的Mesh进行了对比。通过图11可以发现，原图像中的叶片出现叠加的状态，在SuGaR的Mesh中，对于这种状态出现了边界模糊不清且粘连的效果，而我们的F2DMAS方法并没有出现这个问题，能够清晰的分离叠加叶片的边界。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image21.png}
+\caption{Comparison of mesh topology quality among the original image, SuGaR, and F2DMAS.}
+\label{fig:image21}
+\end{figure}
+
+\subsubsection{表型参数测量精度}
+
+为了定量评估测量精度，我们在尺度恢复后的数字孪生模型上提取了四个关键农学指标：叶长、叶宽、株高和冠幅，并与人工测量的物理真值进行回归分析。
+
+如图12所示。图（a）为植株高度，图（b）为植株冠幅，图（c）为叶片长度，图（d）为叶片宽度。
+
+虚拟提取方法展现出强大的准确性，可作为测量多种植物表型特征的人工测量的极佳替代方案。线性回归分析显示，所有四个评估维度的决定系数（${R}^{2}$）均超过 0.95，表明数字化数据成功捕捉并解释了人工基准测量中 95\% 以上的变异。这种高度的一致性证实了虚拟提取流程用于表型分析的基础可靠性。
+
+不同表型维度之间的比较评估表明，宏观形态特征的提取精度显著优于微观叶片特征。冠层宽度的线性拟合取得了最高性能，其 ${R}^{2}$ 为 0.993，均方根误差（RMSE）为 0.99 cm，回归斜率达到最优的 1.01，植株高度紧随其后（${R}^{2}$为 0.991）。相反，叶片宽度测量在所有测试指标中一致性最低，其 ${R}^{2}$ 为 0.956，这表明当前算法在捕捉整体冠层和植株结构方面比捕捉局部细粒度的叶片几何形状更有效。
+
+尽管整体线性相关性很强，但对回归方程的分析揭示了提取算法内部存在特定的系统性偏差。对于植株高度，回归方程（$y = 0.98x + 0.92$）显示存在接近 1 cm 的系统性正向基础偏移，该偏移相对独立于植株的绝对大小。更关键的是，叶片宽度的测量表现出明显的放大偏差。由于具有最陡的斜率（$y = 1.09x - 0.05$），随着物理尺寸的增加，虚拟提取方法会成比例地将实际叶片宽度高估约 9\%，这是所有评估指标中偏离理想零误差拟合（$y = x$）最显著的比例偏差。
+
+\begin{figure}[t]
+\centering
+% \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{image23.png}
+\caption{Regression analysis of phenotype measurements: (a) plant height, (b) canopy width, (c) leaf length, and (d) leaf width.}
+\label{fig:image23}
+\end{figure}
+
+\section{结论}
+
+本研究针对低成本、便携式植物表型分析的需求，提出了一种结合语义分割与高保真几何重建的自动化三维表型测量框架。通过手持设备采集视频，利用 FFT 算法筛选高质量帧，结合 SAM 3 的文本驱动分割与时序记忆能力剔除背景干扰，最终采用引入几何正则化的 2D Gaussian Splatting 技术实现了植物的高精度数字孪生。
+
+本研究的主要结论如下：
+
+\begin{itemize}
+\item 几何重建突破： 2DGS 有效解决了传统 3DGS 在表征植物薄壁结构时的雾状伪影问题。实验表明，该方法在保持极高结构相似性的同时，生成的 Mesh 模型具有拓扑闭合、表面平滑的特性。
+\item 高精度表型测量： 基于重建 Mesh 的虚拟测量结果与人工真值高度一致。株高、茎粗及叶长的平均相对误差均控制在 5\% 以内，证明了该非接触式测量方法在替代传统破坏性或接触式测量方面的可靠性。
+\item 效率与可用性： 相比于目前 SOTA 的 SuGaR 方法，本文提出的 Mesh 提取方案在保证质量的前提下，显著缩短了处理时间，配合消费级采集设备，为田间及实验室环境下的高通量作物监测提供了一种经济、高效的新范式。
+\end{itemize}
+
+未来工作将集中在两方面：一是引入4D 时空高斯以解决植物生长过程中的非刚性形变问题；二是探索将该管线移植至移动端设备，实现拍摄即测量的实时表型反馈。
+
+\begin{thebibliography}{00}
+
+\bibitem{ref1} Advancing Crop Resilience Through High-Throughput Phenotyping for Crop Improvement in the Face of Climate Change. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref2} Advancements in Imaging Sensors and AI for Plant Stress Detection: A Systematic Literature Review. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref3} Point Cloud Completion of Plant Leaves under Occlusion Conditions Based on Deep Learning. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref4} Predicting Multiple Traits of Rice and Cotton Across Varieties and Regions Using Multi-Source Data and a Meta-Hybrid Regression Ensemble. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref5} From laboratory to field: cross-domain few-shot learning for crop disease identification in the field. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref6} Artificial intelligence in plant science: from image-based phenotyping to yield and trait prediction. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref7} Three-Dimensional Phenotyping Pipeline of Potted Plants Based on Neural Radiation Fields and Path Segmentation. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref8} EcoBOT: an AI/ML enabled automated phenotyping capability for model plants. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref9} A Review of Optical-Based Three-Dimensional Reconstruction and Multi-Source Fusion for Plant Phenotyping. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref10} Applications of 3D Reconstruction Techniques in Crop Canopy Phenotyping: A Review. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref11} How to make sense of 3D representations for plant phenotyping: a compendium of processing and analysis techniques. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref12} Applications of 3D Reconstruction Techniques in Crop Canopy Phenotyping: A Review. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref13} A Review of Optical-Based Three-Dimensional Reconstruction and Multi-Source Fusion for Plant Phenotyping. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref14} 3D Morphological Feature Quantification and Analysis of Corn Leaves. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref15} A Review of Optical-Based Three-Dimensional Reconstruction and Multi-Source Fusion for Plant Phenotyping. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref16} Tomato-Nerf: Advancing Tomato Model Reconstruction With Improved Neural Radiance Fields. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref17} Applications of 3D Reconstruction Techniques in Crop Canopy Phenotyping: A Review. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref18} 2D Gaussian Splatting for Geometrically Accurate Radiance Fields. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref19} Mip-Splatting: Alias-free 3D Gaussian Splatting. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref20} Multi-source data fusion improved the potential of proximal fluorescence sensors in predicting nitrogen nutrition status across winter wheat growth stages. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref21} Comparative Performance of Aerial RGB vs. Ground Hyperspectral Indices for Evaluating Water and Nitrogen Status in Sweet Maize. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref22} Few-Shot Adaptation of Grounding DINO for Agricultural Domain. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\bibitem{ref23} Harnessing large vision and language models in agriculture: a review. [TODO: complete authors, venue, volume, pages, and year from the source reference.]
+
+\end{thebibliography}
+\zhtextend
+\end{document}

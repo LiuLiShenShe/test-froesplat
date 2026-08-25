@@ -1,0 +1,45 @@
+{
+  "stage": "S5-M1-M5单场景开关验证",
+  "run_type": "baseline_guard_smoke_after_m1_m4_m5_fix",
+  "sample": "KongQueZhuYu",
+  "method_tag": "E2_2dgs_baseline_guard_smoke_v2",
+  "repo_path": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "source_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu",
+  "output_root": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出",
+  "allow_existing_output": false,
+  "append_timestamp_if_exists": true,
+  "cuda_visible_devices": "1",
+  "ip": "127.0.0.1",
+  "port": 16101,
+  "eval": true,
+  "resolution": 8,
+  "quiet": false,
+  "module_switches": {
+    "view_quality_mode": "none",
+    "raw_gate_mode": "none",
+    "mask_gate_mode": "none",
+    "geo_gate_mode": "none",
+    "mask_mode": "none",
+    "lambda_mask": 0.0,
+    "lambda_bg": 0.0,
+    "pruning_mode": "none",
+    "meshing_mode": "standard"
+  },
+  "train": {
+    "iterations": 30,
+    "test_iterations": [
+      -1
+    ],
+    "save_iterations": [
+      30
+    ],
+    "checkpoint_iterations": []
+  },
+  "render": {
+    "enabled": false
+  },
+  "metrics": {
+    "enabled": false
+  }
+}

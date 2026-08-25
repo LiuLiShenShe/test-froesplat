@@ -1,0 +1,103 @@
+{
+  "stage": "S18_M1_soft_M4_on_A6",
+  "completed_at": "2026-05-21",
+  "sample": "KongQueZhuYu",
+  "purpose": "Complete the main-sample closure for A6+M1-soft+M4 as an Ours-full practical compact variant.",
+  "rows": [
+    {
+      "variant": "A6",
+      "eval_images": 27,
+      "PSNR_fg": 25.0072,
+      "SSIM_fg": 0.8548,
+      "LPIPS_fg_black_bg": 0.0438,
+      "outside_nonblack_ratio_mean": 0.0294,
+      "leakage_energy_ratio_mean": 0.0189,
+      "gaussians_30000": 591623,
+      "full_PSNR": 6.2555,
+      "full_SSIM": 0.2684,
+      "full_LPIPS": 0.5567
+    },
+    {
+      "variant": "A6+M1-soft",
+      "eval_images": 27,
+      "PSNR_fg": 24.9566,
+      "SSIM_fg": 0.8543,
+      "LPIPS_fg_black_bg": 0.0440,
+      "outside_nonblack_ratio_mean": 0.0284,
+      "leakage_energy_ratio_mean": 0.0184,
+      "gaussians_30000": 532264,
+      "full_PSNR": 6.2539,
+      "full_SSIM": 0.2681,
+      "full_LPIPS": 0.5567
+    },
+    {
+      "variant": "A6+M1-soft+M4",
+      "eval_images": 27,
+      "PSNR_fg": 24.9423,
+      "SSIM_fg": 0.8540,
+      "LPIPS_fg_black_bg": 0.0441,
+      "outside_nonblack_ratio_mean": 0.0284,
+      "leakage_energy_ratio_mean": 0.0182,
+      "gaussians_30000": 530936,
+      "full_PSNR": 6.2533,
+      "full_SSIM": 0.2679,
+      "full_LPIPS": 0.5564
+    }
+  ],
+  "combo_delta_vs_A6": {
+    "PSNR_fg": -0.0649,
+    "SSIM_fg": -0.0008,
+    "LPIPS_fg_black_bg": 0.0003,
+    "outside_nonblack_ratio_mean": -0.0010,
+    "leakage_energy_ratio_mean": -0.0007,
+    "gaussians_30000": -60687,
+    "gaussian_reduction_percent": 10.26
+  },
+  "combo_delta_vs_A6_M1_soft": {
+    "PSNR_fg": -0.0143,
+    "SSIM_fg": -0.0003,
+    "LPIPS_fg_black_bg": 0.0001,
+    "outside_nonblack_ratio_mean": -0.0000,
+    "leakage_energy_ratio_mean": -0.0002,
+    "gaussians_30000": -1328,
+    "gaussian_reduction_percent": 0.25
+  },
+  "pruning_reports": [
+    {
+      "iteration": 18000,
+      "gaussians_before": 533247,
+      "gaussians_after": 531691,
+      "removed": 1556,
+      "pruning_ratio": 0.002917972346773634
+    },
+    {
+      "iteration": 21000,
+      "gaussians_before": 531691,
+      "gaussians_after": 531311,
+      "removed": 380,
+      "pruning_ratio": 0.0007147008318741524
+    },
+    {
+      "iteration": 24000,
+      "gaussians_before": 531311,
+      "gaussians_after": 531120,
+      "removed": 191,
+      "pruning_ratio": 0.0003594881340683705
+    },
+    {
+      "iteration": 27000,
+      "gaussians_before": 531120,
+      "gaussians_after": 531010,
+      "removed": 110,
+      "pruning_ratio": 0.00020710950444344028
+    },
+    {
+      "iteration": 30000,
+      "gaussians_before": 531010,
+      "gaussians_after": 530936,
+      "removed": 74,
+      "pruning_ratio": 0.00013935707425472214
+    }
+  ],
+  "conclusion": "On KongQueZhuYu, A6+M1-soft+M4 completes the main-sample closure. It stays close to A6 in foreground-object quality, reduces outside/leakage, and reduces Gaussian count by 60687 (10.26%). Compared with A6+M1-soft, M4 adds only a small cleanup, confirming that M1-soft provides most of the compactness gain for this sample."
+}

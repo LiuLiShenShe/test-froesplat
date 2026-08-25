@@ -1,0 +1,55 @@
+stage: "S10-KongQueZhuYu_A0-A6消融"
+run_type: "foreground_objective_ablation_full"
+sample: "KongQueZhuYu"
+method_tag: "A4_alpha_mask_bg_opacity"
+repo_path: "/data/fj/F2DMAS/2d-gaussian-splatting-main"
+python: "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python"
+source_path: "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu"
+output_root: "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出"
+allow_existing_output: false
+append_timestamp_if_exists: true
+cuda_visible_devices: "1"
+ip: "127.0.0.1"
+port: 16404
+eval: true
+resolution: 4
+quiet: false
+module_switches:
+  view_quality_mode: "none"
+  raw_gate_mode: "none"
+  mask_gate_mode: "none"
+  geo_gate_mode: "none"
+  mask_mode: "alpha"
+  mask_dir: "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/02-sam_masks/KongQueZhuYu"
+  mask_pattern: "mask_{stem}.png"
+  mask_threshold: 0.5
+  use_mask_loss: true
+  use_bg_opacity_loss: true
+  use_foreground_rgb_loss: false
+  lambda_mask: 0.08
+  lambda_bg: 0.02
+  mask_loss_type: "l1_dice"
+  mask_ignore_boundary_px: 2
+  mask_loss_start_iter: 500
+  mask_loss_warmup_iters: 1500
+  pruning_mode: "none"
+  meshing_mode: "standard"
+train:
+  iterations: 30000
+  test_iterations:
+    - -1
+  save_iterations:
+    - 7000
+    - 30000
+  checkpoint_iterations:
+render:
+  enabled: true
+  iteration: 30000
+  skip_train: true
+  skip_test: false
+  skip_mesh: true
+metrics:
+  enabled: true
+  script: "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S4-2DGS-baseline回归/scripts/evaluate_rendered_metrics.py"
+  device: "cuda:0"
+  no_lpips: false

@@ -1,0 +1,125 @@
+{
+  "stage": "S18_M1_soft_M4_on_A6",
+  "completed_at": "2026-05-21",
+  "sample": "XianKeLai1",
+  "purpose": "Cross-sample validation of A6+M1-soft+M4 on a thin-leaf / fine-structure sample.",
+  "rows": [
+    {
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 23.7276,
+      "SSIM_fg": 0.8278,
+      "LPIPS_fg_black_bg": 0.0309,
+      "outside_nonblack_ratio_mean": 0.0484,
+      "leakage_energy_ratio_mean": 0.0379,
+      "gaussians_30000": 253827,
+      "full_PSNR": 22.6258,
+      "full_SSIM": 0.9287,
+      "full_LPIPS": 0.0756
+    },
+    {
+      "variant": "A6+M1-soft",
+      "eval_images": 26,
+      "PSNR_fg": 23.6632,
+      "SSIM_fg": 0.8274,
+      "LPIPS_fg_black_bg": 0.0312,
+      "outside_nonblack_ratio_mean": 0.0478,
+      "leakage_energy_ratio_mean": 0.0374,
+      "gaussians_30000": 220947,
+      "full_PSNR": 22.7146,
+      "full_SSIM": 0.9290,
+      "full_LPIPS": 0.0755
+    },
+    {
+      "variant": "A6+M4",
+      "eval_images": 26,
+      "PSNR_fg": 23.7256,
+      "SSIM_fg": 0.8279,
+      "LPIPS_fg_black_bg": 0.0310,
+      "outside_nonblack_ratio_mean": 0.0486,
+      "leakage_energy_ratio_mean": 0.0376,
+      "gaussians_30000": 251047,
+      "full_PSNR": 22.6946,
+      "full_SSIM": 0.9288,
+      "full_LPIPS": 0.0761
+    },
+    {
+      "variant": "A6+M1-soft+M4",
+      "eval_images": 26,
+      "PSNR_fg": 23.7070,
+      "SSIM_fg": 0.8273,
+      "LPIPS_fg_black_bg": 0.0312,
+      "outside_nonblack_ratio_mean": 0.0479,
+      "leakage_energy_ratio_mean": 0.0373,
+      "gaussians_30000": 219661,
+      "full_PSNR": 22.7524,
+      "full_SSIM": 0.9291,
+      "full_LPIPS": 0.0757
+    }
+  ],
+  "combo_delta_vs_A6": {
+    "PSNR_fg": -0.0206,
+    "SSIM_fg": -0.0005,
+    "LPIPS_fg_black_bg": 0.0003,
+    "outside_nonblack_ratio_mean": -0.0004,
+    "leakage_energy_ratio_mean": -0.0006,
+    "gaussians_30000": -34166,
+    "gaussian_reduction_percent": 13.46
+  },
+  "combo_delta_vs_A6_M1_soft": {
+    "PSNR_fg": 0.0438,
+    "SSIM_fg": -0.0001,
+    "LPIPS_fg_black_bg": 0.0001,
+    "outside_nonblack_ratio_mean": 0.0001,
+    "leakage_energy_ratio_mean": -0.0001,
+    "gaussians_30000": -1286,
+    "gaussian_reduction_percent": 0.58
+  },
+  "combo_delta_vs_A6_M4": {
+    "PSNR_fg": -0.0186,
+    "SSIM_fg": -0.0006,
+    "LPIPS_fg_black_bg": 0.0002,
+    "outside_nonblack_ratio_mean": -0.0007,
+    "leakage_energy_ratio_mean": -0.0003,
+    "gaussians_30000": -31386,
+    "gaussian_reduction_percent": 12.50
+  },
+  "pruning_reports": [
+    {
+      "iteration": 18000,
+      "gaussians_before": 221842,
+      "gaussians_after": 220657,
+      "removed": 1185,
+      "pruning_ratio": 0.005341639545261943
+    },
+    {
+      "iteration": 21000,
+      "gaussians_before": 220657,
+      "gaussians_after": 220198,
+      "removed": 459,
+      "pruning_ratio": 0.002080151547424283
+    },
+    {
+      "iteration": 24000,
+      "gaussians_before": 220198,
+      "gaussians_after": 219953,
+      "removed": 245,
+      "pruning_ratio": 0.0011126349921434346
+    },
+    {
+      "iteration": 27000,
+      "gaussians_before": 219953,
+      "gaussians_after": 219774,
+      "removed": 179,
+      "pruning_ratio": 0.0008138102230931154
+    },
+    {
+      "iteration": 30000,
+      "gaussians_before": 219774,
+      "gaussians_after": 219661,
+      "removed": 113,
+      "pruning_ratio": 0.0005141645508567892
+    }
+  ],
+  "conclusion": "On XianKeLai1, A6+M1-soft+M4 stays within the foreground-only thresholds and remains very close to A6. Compared with A6, PSNR_fg decreases by only 0.0206 dB, outside/leakage slightly decrease, and Gaussian count drops by 34166 (13.46%)."
+}

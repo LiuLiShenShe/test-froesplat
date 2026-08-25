@@ -1,0 +1,79 @@
+{
+  "stage": "S13_M4_on_A6",
+  "completed_at": "2026-05-21",
+  "purpose": "Validate whether M4 mask pruning can reduce model size while preserving A6 foreground-object reconstruction quality.",
+  "foreground_only_thresholds": {
+    "outside_nonblack_ratio_mean": 0.05,
+    "leakage_energy_ratio_mean": 0.10
+  },
+  "rows": [
+    {
+      "sample": "XianKeLai1",
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 23.7276,
+      "SSIM_fg": 0.8278,
+      "LPIPS_fg_black_bg": 0.0309,
+      "outside_nonblack_ratio_mean": 0.0484,
+      "leakage_energy_ratio_mean": 0.0379,
+      "gaussians_30000": 253827,
+      "full_PSNR": 22.6258,
+      "full_SSIM": 0.9287,
+      "full_LPIPS": 0.0756
+    },
+    {
+      "sample": "XianKeLai1",
+      "variant": "A6+M4",
+      "eval_images": 26,
+      "PSNR_fg": 23.7256,
+      "SSIM_fg": 0.8279,
+      "LPIPS_fg_black_bg": 0.0310,
+      "outside_nonblack_ratio_mean": 0.0486,
+      "leakage_energy_ratio_mean": 0.0376,
+      "gaussians_30000": 251047,
+      "full_PSNR": 22.6946,
+      "full_SSIM": 0.9288,
+      "full_LPIPS": 0.0761
+    },
+    {
+      "sample": "CaoMei2",
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 25.0833,
+      "SSIM_fg": 0.8121,
+      "LPIPS_fg_black_bg": 0.0250,
+      "outside_nonblack_ratio_mean": 0.0147,
+      "leakage_energy_ratio_mean": 0.0081,
+      "gaussians_30000": 370844,
+      "full_PSNR": 5.1344,
+      "full_SSIM": 0.1076,
+      "full_LPIPS": 0.7066
+    },
+    {
+      "sample": "CaoMei2",
+      "variant": "A6+M4",
+      "eval_images": 26,
+      "PSNR_fg": 25.0303,
+      "SSIM_fg": 0.8108,
+      "LPIPS_fg_black_bg": 0.0251,
+      "outside_nonblack_ratio_mean": 0.0144,
+      "leakage_energy_ratio_mean": 0.0080,
+      "gaussians_30000": 284757,
+      "full_PSNR": 5.1341,
+      "full_SSIM": 0.1074,
+      "full_LPIPS": 0.7070
+    }
+  ],
+  "delta_summary": {
+    "mean_delta_PSNR_fg": -0.0275,
+    "mean_delta_SSIM_fg": -0.0006,
+    "mean_delta_LPIPS_fg_black_bg": 0.0001,
+    "mean_delta_outside_nonblack_ratio_mean": -0.0000,
+    "mean_delta_leakage_energy_ratio_mean": -0.0002,
+    "total_A6_gaussians": 624671,
+    "total_A6_M4_gaussians": 535804,
+    "total_gaussian_reduction": 88867,
+    "total_gaussian_reduction_percent": 14.23
+  },
+  "conclusion": "Across XianKeLai1 and CaoMei2, M4 mask pruning preserves foreground-object quality within noise-level differences and reduces total Gaussian count by 88867 (14.23%)."
+}

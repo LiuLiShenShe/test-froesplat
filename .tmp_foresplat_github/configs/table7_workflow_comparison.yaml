@@ -1,0 +1,32 @@
+table: table7_workflow_reconstruction_comparison
+description: Template for workflow-level reconstruction comparison.
+dataset: all_20_multiview_rgb_sequences
+shared_settings:
+  train_iterations: 30000
+  train_test_split: matched
+  image_resolution: matched
+  hardware: two_nvidia_rtx_a6000_48gb
+metrics:
+  - psnr
+  - ssim
+  - lpips
+  - train_or_reconstruction_time_seconds
+  - mesh_extraction_time_seconds
+methods:
+  - name: colmap
+    type: sparse_reconstruction_baseline
+    foreground_masks: false
+  - name: 3dgs_with_vfm_foreground_preprocessing
+    type: gaussian_baseline
+    foreground_masks: true
+  - name: standard_2dgs
+    type: full_scene_2dgs
+    foreground_masks: false
+  - name: foresplat
+    type: foreground_object_2dgs
+    foreground_masks: true
+    foreground_object_loss: true
+    m2m3_go: true
+notes:
+  - Runtime columns report stage-level wall-clock time.
+  - VFM foreground-prior generation, frame extraction, manual measurement and IO are not included in train/mesh time.

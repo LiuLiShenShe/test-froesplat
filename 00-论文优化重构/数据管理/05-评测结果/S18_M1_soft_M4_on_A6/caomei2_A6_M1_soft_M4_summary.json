@@ -1,0 +1,125 @@
+{
+  "stage": "S18_M1_soft_M4_on_A6",
+  "completed_at": "2026-05-21",
+  "sample": "CaoMei2",
+  "purpose": "Test whether M1-soft view weighting and M4 mask pruning can be combined on top of A6 foreground-object reconstruction.",
+  "rows": [
+    {
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 25.0833,
+      "SSIM_fg": 0.8121,
+      "LPIPS_fg_black_bg": 0.0250,
+      "outside_nonblack_ratio_mean": 0.0147,
+      "leakage_energy_ratio_mean": 0.0081,
+      "gaussians_30000": 370844,
+      "full_PSNR": 5.1344,
+      "full_SSIM": 0.1076,
+      "full_LPIPS": 0.7066
+    },
+    {
+      "variant": "A6+M1-soft",
+      "eval_images": 26,
+      "PSNR_fg": 25.0046,
+      "SSIM_fg": 0.8107,
+      "LPIPS_fg_black_bg": 0.0253,
+      "outside_nonblack_ratio_mean": 0.0140,
+      "leakage_energy_ratio_mean": 0.0077,
+      "gaussians_30000": 249944,
+      "full_PSNR": 5.1332,
+      "full_SSIM": 0.1074,
+      "full_LPIPS": 0.7067
+    },
+    {
+      "variant": "A6+M4",
+      "eval_images": 26,
+      "PSNR_fg": 25.0303,
+      "SSIM_fg": 0.8108,
+      "LPIPS_fg_black_bg": 0.0251,
+      "outside_nonblack_ratio_mean": 0.0144,
+      "leakage_energy_ratio_mean": 0.0080,
+      "gaussians_30000": 284757,
+      "full_PSNR": 5.1341,
+      "full_SSIM": 0.1074,
+      "full_LPIPS": 0.7070
+    },
+    {
+      "variant": "A6+M1-soft+M4",
+      "eval_images": 26,
+      "PSNR_fg": 24.9718,
+      "SSIM_fg": 0.8101,
+      "LPIPS_fg_black_bg": 0.0252,
+      "outside_nonblack_ratio_mean": 0.0136,
+      "leakage_energy_ratio_mean": 0.0076,
+      "gaussians_30000": 246452,
+      "full_PSNR": 5.1327,
+      "full_SSIM": 0.1073,
+      "full_LPIPS": 0.7070
+    }
+  ],
+  "combo_delta_vs_A6": {
+    "PSNR_fg": -0.1115,
+    "SSIM_fg": -0.0020,
+    "LPIPS_fg_black_bg": 0.0002,
+    "outside_nonblack_ratio_mean": -0.0010,
+    "leakage_energy_ratio_mean": -0.0005,
+    "gaussians_30000": -124392,
+    "gaussian_reduction_percent": 33.54
+  },
+  "combo_delta_vs_A6_M1_soft": {
+    "PSNR_fg": -0.0328,
+    "SSIM_fg": -0.0006,
+    "LPIPS_fg_black_bg": -0.0001,
+    "outside_nonblack_ratio_mean": -0.0004,
+    "leakage_energy_ratio_mean": -0.0001,
+    "gaussians_30000": -3492,
+    "gaussian_reduction_percent": 1.40
+  },
+  "combo_delta_vs_A6_M4": {
+    "PSNR_fg": -0.0585,
+    "SSIM_fg": -0.0007,
+    "LPIPS_fg_black_bg": 0.0001,
+    "outside_nonblack_ratio_mean": -0.0007,
+    "leakage_energy_ratio_mean": -0.0004,
+    "gaussians_30000": -38305,
+    "gaussian_reduction_percent": 13.45
+  },
+  "pruning_reports": [
+    {
+      "iteration": 18000,
+      "gaussians_before": 248026,
+      "gaussians_after": 247043,
+      "removed": 983,
+      "pruning_ratio": 0.003963294170772419
+    },
+    {
+      "iteration": 21000,
+      "gaussians_before": 247043,
+      "gaussians_after": 246757,
+      "removed": 286,
+      "pruning_ratio": 0.0011576931951117822
+    },
+    {
+      "iteration": 24000,
+      "gaussians_before": 246757,
+      "gaussians_after": 246614,
+      "removed": 143,
+      "pruning_ratio": 0.0005795175010232739
+    },
+    {
+      "iteration": 27000,
+      "gaussians_before": 246614,
+      "gaussians_after": 246517,
+      "removed": 97,
+      "pruning_ratio": 0.0003933272239207831
+    },
+    {
+      "iteration": 30000,
+      "gaussians_before": 246517,
+      "gaussians_after": 246452,
+      "removed": 65,
+      "pruning_ratio": 0.0002636734991907252
+    }
+  ],
+  "conclusion": "On CaoMei2, A6+M1-soft+M4 gives the smallest model and the lowest outside/leakage among the tested A6 variants. Foreground quality remains close to A6, with a small PSNR_fg decrease of 0.1115 dB and SSIM_fg decrease of 0.0020."
+}

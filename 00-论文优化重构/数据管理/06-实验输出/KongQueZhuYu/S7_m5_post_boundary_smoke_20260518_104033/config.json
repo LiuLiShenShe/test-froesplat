@@ -1,0 +1,51 @@
+{
+  "stage": "S7-M5-边界网格化验证",
+  "run_type": "m5_post_boundary_render_smoke",
+  "sample": "KongQueZhuYu",
+  "method_tag": "S7_m5_post_boundary_smoke",
+  "repo_path": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "source_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu",
+  "output_root": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出",
+  "allow_existing_output": false,
+  "append_timestamp_if_exists": true,
+  "cuda_visible_devices": "1",
+  "ip": "127.0.0.1",
+  "port": 16039,
+  "eval": true,
+  "resolution": 8,
+  "quiet": false,
+  "module_switches": {
+    "mask_mode": "alpha",
+    "mask_dir": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+    "mask_pattern": "mask_{stem}.png",
+    "mask_threshold": 0.5,
+    "meshing_mode": "post_boundary",
+    "boundary_shrink_ratio": 0.08
+  },
+  "train": {
+    "iterations": 20,
+    "test_iterations": [
+      -1
+    ],
+    "save_iterations": [
+      20
+    ],
+    "checkpoint_iterations": []
+  },
+  "render": {
+    "enabled": true,
+    "iteration": 20,
+    "skip_train": false,
+    "skip_test": true,
+    "skip_mesh": false,
+    "voxel_size": 0.02,
+    "depth_trunc": 6.0,
+    "sdf_trunc": 0.08,
+    "num_cluster": 20,
+    "mesh_res": 256
+  },
+  "metrics": {
+    "enabled": false
+  }
+}

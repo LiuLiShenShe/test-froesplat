@@ -1,0 +1,30 @@
+table: table8_manual_virtual_phenotype_agreement
+description: Template for plant-trait measurement agreement analysis.
+dataset:
+  sequences: 20
+  plants: 21
+  leaf_traits_per_plant: 3
+traits:
+  - name: plant_height
+    unit: cm
+    virtual_definition: vertical bounding range after scale recovery
+  - name: canopy_width
+    unit: cm
+    virtual_definition: horizontal canopy bounding range
+  - name: leaf_length
+    unit: cm
+    virtual_definition: selected leaf main-axis length
+  - name: leaf_width
+    unit: cm
+    virtual_definition: selected leaf cross-sectional width
+agreement_metrics:
+  - r2
+  - mae
+  - rmse
+  - bias
+  - n
+scale_recovery:
+  source: scale_marker_json
+  manual_reference: standard manual measurement
+notes:
+  - Repeated manual measurements are recommended for future uncertainty decomposition.

@@ -1,0 +1,59 @@
+{
+  "sample": "KongQueZhuYu",
+  "runs": {
+    "A6": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_foreground_track_init_fg_rgb_alpha_bg",
+      "num_eval_images": 27,
+      "gaussians_30000": 591623,
+      "PSNR": 6.2554980560585305,
+      "SSIM": 0.2683636134973279,
+      "LPIPS": 0.556709905465444,
+      "PSNR_fg": 25.007228992603444,
+      "SSIM_fg": 0.8547798549687421,
+      "LPIPS_fg_black_bg": 0.04384410257140795,
+      "leakage_energy_ratio_mean": 0.018883968703448772,
+      "outside_nonblack_ratio_mean": 0.029438171466743504
+    },
+    "A6+M1/H-VQG": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_hvqg_smoke_v2",
+      "retained_list_dir": "00-论文优化重构/数据管理/05-评测结果/KongQueZhuYu/M1_hvqg_smoke_v2",
+      "num_eval_images": 17,
+      "gaussians_30000": 597116,
+      "PSNR": 6.317433020647834,
+      "SSIM": 0.2757231807884048,
+      "LPIPS": 0.5577906913617078,
+      "PSNR_fg": 12.547784580903894,
+      "SSIM_fg": 0.6017746899057838,
+      "LPIPS_fg_black_bg": 0.1178701618576751,
+      "leakage_energy_ratio_mean": 0.30202971913797017,
+      "outside_nonblack_ratio_mean": 0.1742568127810955
+    }
+  },
+  "retained_views_observed": {
+    "raw_gate": {
+      "train": "163/183",
+      "test": "24/27"
+    },
+    "mask_gate": {
+      "train": "163/163",
+      "test": "24/24"
+    },
+    "geometry_gate": {
+      "train": "123/163",
+      "test": "17/24"
+    }
+  },
+  "delta_A6_M1_minus_A6": {
+    "num_eval_images": -10,
+    "gaussians_30000": 5493,
+    "PSNR": 0.06193496458930326,
+    "SSIM": 0.007359567291076919,
+    "LPIPS": 0.0010807858962638208,
+    "PSNR_fg": -12.45944441169955,
+    "SSIM_fg": -0.2530051650629583,
+    "LPIPS_fg_black_bg": 0.07402605928626715,
+    "leakage_energy_ratio_mean": 0.2831457504345214,
+    "outside_nonblack_ratio_mean": 0.14481864131435198
+  },
+  "interpretation": "Existing H-VQG retained list is negative evidence: hard filtering reduces coverage too much and damages foreground-object reconstruction. Next M1 should use coverage-balanced selection or view weighting."
+}

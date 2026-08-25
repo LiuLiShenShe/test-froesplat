@@ -1,0 +1,11 @@
+﻿method,method_dir,protocol,main_table_candidate,target,sample_count,gt_frames,eval_frames,F1,mIoU,HD95_px,boundary_F1,leakage_energy,precision,recall
+SEEM,SEEM_existing,existing project output,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.5439,0.6147,306.55,0.1584,0.005293,0.9373,0.3831
+CLIPSeg,CLIPSeg_potted,zero-shot text prompt,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.9221,0.9076,310.37,0.0874,0.018218,0.9135,0.9309
+Grounded-SAM,GroundedSAM1_potted,GroundingDINO text box + SAM1,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.9443,0.9335,246.36,0.4034,0.004374,0.9774,0.9134
+Grounded-SAM2,GroundedSAM2_potted,GroundingDINO text box + SAM2,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.9238,0.9109,359.38,0.3018,0.004718,0.9747,0.8780
+SAM2 oracle,SAM2_oracle_box,oracle GT bounding-box prompt,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.8810,0.8656,250.19,0.2977,0.012240,0.9337,0.8340
+SAM3 single prompt,SAM3_P2,SAM3 P2 single prompt,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.9692,0.9624,193.71,0.4051,0.002272,0.9886,0.9506
+RAP-FSAM3-v2,RAP-FSAM3-v2,ours: multi-prompt selection + refinement + geometry correction,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.9706,0.9641,183.42,0.4643,0.001739,0.9912,0.9508
+U-Net,UNet_fewshot_seqcv,leave-one-sequence-out few-shot training,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.8622,0.8443,402.54,0.1501,0.028350,0.8627,0.8618
+DeepLabv3+ lite,DeepLabV3PlusLite_fewshot_seqcv,leave-one-sequence-out few-shot training,yes,project LabelMe GT foreground: union of closed target-object linestrips,4,20,20,0.8758,0.8596,265.25,0.1532,0.017171,0.9104,0.8438
+SAM existing,SAM_existing,existing project output; historical reference only,no,project LabelMe GT foreground: union of closed target-object linestrips,4,20,19,0.9837,0.9797,19.49,0.4283,0.001338,0.9936,0.9741

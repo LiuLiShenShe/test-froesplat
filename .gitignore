@@ -1,0 +1,71 @@
+# ===== 大文件 / 数据产物（全部排除）=====
+# 图像与视频数据
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.gif
+*.rgba
+*.rgba_backup
+*.exr
+*.hdr
+
+# 3D / COLMAP / 点云产物
+*.ply
+*.bin
+*.obj
+*.glb
+*.gltf
+*.npy
+*.npz
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.safetensors
+
+# 压缩包与大文档
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# ===== Python 运行产物 =====
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+build/
+dist/
+
+# ===== 编译产物 =====
+*.so
+*.o
+*.a
+*.lib
+*.dll
+*.exe
+
+# ===== 日志与临时文件 =====
+*.log
+nohup.out
+.lock/
+.tmp/
+
+# ===== 系统文件 =====
+.DS_Store
+*.db
+*.db.bak
+
+# ===== 超大文本产物（>50MB，超 GitHub 100MB 限制风险）=====
+fuse.ply.vis
+10-Instant-NGP/*/colmap_text/images.txt

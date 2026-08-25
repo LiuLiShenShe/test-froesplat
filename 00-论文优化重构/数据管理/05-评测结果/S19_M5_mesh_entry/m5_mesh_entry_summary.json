@@ -1,0 +1,182 @@
+{
+  "stage": "S19_M5_mesh_entry",
+  "purpose": "Mesh-only M5 entry comparison on existing Ours-full 30k models.",
+  "model_variant": "A6+M1-soft+M4",
+  "iteration": 30000,
+  "samples": [
+    {
+      "sample": "KongQueZhuYu",
+      "role": "main sample / complex background",
+      "model_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_M1_soft_M4",
+      "variants": [
+        {
+          "mesh_variant": "standard_tsdf",
+          "metrics_path": "KongQueZhuYu_A6_M1_soft_M4_standard/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.08,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.0,
+          "raw_vertices": 174319,
+          "raw_triangles": 331109,
+          "post_vertices": 167789,
+          "post_triangles": 325846,
+          "structure_metrics": {
+            "connected_components": 8,
+            "largest_component_ratio": 0.9919601404144491,
+            "small_component_count": 5,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 12088,
+            "non_manifold_edge_count": 0
+          },
+          "mesh_time_s": 53.33,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        },
+        {
+          "mesh_variant": "small_trunc_tsdf",
+          "metrics_path": "KongQueZhuYu_A6_M1_soft_M4_small_trunc/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.04,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.0,
+          "raw_vertices": 160103,
+          "raw_triangles": 283821,
+          "post_vertices": 147665,
+          "post_triangles": 274646,
+          "post_vertex_reduction_vs_standard": 20124,
+          "post_vertex_reduction_ratio_vs_standard": 0.1199363486,
+          "structure_metrics": {
+            "connected_components": 20,
+            "largest_component_ratio": 0.9350421562320117,
+            "small_component_count": 12,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 25086,
+            "non_manifold_edge_count": 0
+          },
+          "mesh_time_s": 56.52,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        },
+        {
+          "mesh_variant": "post_boundary",
+          "metrics_path": "KongQueZhuYu_A6_M1_soft_M4_post_boundary/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.08,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.08,
+          "raw_vertices": 174319,
+          "raw_triangles": 331109,
+          "post_vertices": 167789,
+          "post_triangles": 325846,
+          "edge_metrics": {
+            "used_masks": 183,
+            "projected_vertices": 167789,
+            "outside_ratio_before": 0.036892835050821304,
+            "mean_consistency": 0.9631072282791138,
+            "mean_shrink_scale": 0.997048556804657,
+            "mean_displacement": 0.00414089443600719,
+            "max_displacement": 0.13137828476405802
+          },
+          "structure_metrics": {
+            "connected_components": 8,
+            "largest_component_ratio": 0.9919601404144491,
+            "small_component_count": 5,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 12088,
+            "non_manifold_edge_count": 0,
+            "p95_standard_to_post_boundary_displacement": 0.022208710155893985,
+            "max_standard_to_post_boundary_displacement": 0.13369503080978362
+          },
+          "mesh_time_s": 58.26,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        }
+      ]
+    },
+    {
+      "sample": "XianKeLai1",
+      "role": "thin-leaf / fine-structure stress test",
+      "model_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/XianKeLai1/A6_M1_soft_M4",
+      "variants": [
+        {
+          "mesh_variant": "standard_tsdf",
+          "metrics_path": "XianKeLai1_A6_M1_soft_M4_standard/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.08,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.0,
+          "raw_vertices": 77752,
+          "raw_triangles": 145701,
+          "post_vertices": 74753,
+          "post_triangles": 143334,
+          "structure_metrics": {
+            "connected_components": 6,
+            "largest_component_ratio": 0.9488181076344762,
+            "small_component_count": 0,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 6956,
+            "non_manifold_edge_count": 0
+          },
+          "mesh_time_s": 78.15,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        },
+        {
+          "mesh_variant": "small_trunc_tsdf",
+          "metrics_path": "XianKeLai1_A6_M1_soft_M4_small_trunc/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.04,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.0,
+          "raw_vertices": 69856,
+          "raw_triangles": 126367,
+          "post_vertices": 66138,
+          "post_triangles": 123863,
+          "post_vertex_reduction_vs_standard": 8615,
+          "post_vertex_reduction_ratio_vs_standard": 0.1152462109,
+          "structure_metrics": {
+            "connected_components": 12,
+            "largest_component_ratio": 0.9486830566391484,
+            "small_component_count": 5,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 9763,
+            "non_manifold_edge_count": 0
+          },
+          "mesh_time_s": 78.57,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        },
+        {
+          "mesh_variant": "post_boundary",
+          "metrics_path": "XianKeLai1_A6_M1_soft_M4_post_boundary/mesh_metrics.json",
+          "voxel_size": 0.02,
+          "sdf_trunc": 0.08,
+          "depth_trunc": 6.0,
+          "boundary_shrink_ratio": 0.08,
+          "raw_vertices": 77752,
+          "raw_triangles": 145701,
+          "post_vertices": 74753,
+          "post_triangles": 143334,
+          "edge_metrics": {
+            "used_masks": 177,
+            "projected_vertices": 74753,
+            "outside_ratio_before": 0.17221586406230927,
+            "mean_consistency": 0.8277841210365295,
+            "mean_shrink_scale": 0.9862227439880371,
+            "mean_displacement": 0.012103938642414104,
+            "max_displacement": 0.11902467399782508
+          },
+          "structure_metrics": {
+            "connected_components": 6,
+            "largest_component_ratio": 0.9488181076344762,
+            "small_component_count": 0,
+            "isolated_vertices": 0,
+            "boundary_edge_count": 6956,
+            "non_manifold_edge_count": 0,
+            "p95_standard_to_post_boundary_displacement": 0.03757244965958502,
+            "max_standard_to_post_boundary_displacement": 0.12553553142932097
+          },
+          "mesh_time_s": 97.1,
+          "timing_scope": "render.py mesh-only wall time (--skip_train --skip_test)"
+        }
+      ]
+    }
+  ],
+  "takeaway": "Mesh-only extraction on Ours-full is operational on the main and thin-leaf samples. Smaller truncation reduces post-processed mesh vertices by about 12% on KongQueZhuYu and 11.5% on XianKeLai1, but it also increases connected components and boundary edges, so compactness may come with fragmentation risk. Post-boundary cleanup preserves component counts and remains conservative, with larger displacement on the thin-leaf sample. These are mesh-structure results only, not evidence of leaf-width or phenotype accuracy improvement.",
+  "timing_note": "mesh_time_s is measured as render.py mesh-only wall time with --skip_train --skip_test. It includes model/camera loading, radiance reconstruction, TSDF fusion, mesh extraction, cleanup, and optional post-boundary processing; it is not a decomposition into TSDF/cleanup substages."
+}

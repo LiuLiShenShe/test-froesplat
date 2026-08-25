@@ -1,0 +1,13 @@
+table: table8_phenotype_measurement
+summary_source_data: examples/paper_tables/table8_phenotype_summary.csv
+pair_source_data: examples/paper_tables/phenotype_error_by_mask_quality.csv
+traits:
+  - plant_height
+  - canopy_width
+  - leaf_length
+  - leaf_width
+agreement_metrics:
+  - R2
+  - MAE
+  - RMSE
+  - MAPE_percent

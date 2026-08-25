@@ -1,0 +1,17 @@
+table: table6_prior_injection_ablation
+source_data: examples/paper_tables/table6_prior_injection_ablation.csv
+sample: KongQueZhuYu
+metrics:
+  - PSNR_fg
+  - SSIM_fg
+  - LPIPS_fg
+  - outside_non_black_ratio
+  - leakage_energy
+  - gaussian_count
+variants:
+  - B0_standard_2dgs
+  - B1_input_mask_only
+  - B2_sparse_point_initialisation_only
+  - B3_loss_constraints_only
+  - B4_posthoc_pruning_only
+  - B5_complete_foresplat

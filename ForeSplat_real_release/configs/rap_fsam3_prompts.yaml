@@ -1,0 +1,38 @@
+vfm_backend:
+  name: sam3
+  checkpoint: external
+  redistribute_weights: false
+  note: This repository does not include SAM-series weights.
+
+quality_filter:
+  method: fft_high_frequency_saliency
+  adaptive_threshold: first_quartile
+
+prompts:
+  - id: P1
+    text: green plant
+  - id: P2
+    text: entire plant excluding pot
+  - id: P3
+    text: leaves and stems
+  - id: P4
+    text: crop seedling
+  - id: P5
+    text: plant body without background
+
+semantic_gate:
+  enabled: true
+  preferred_prompt_observed_in_subset: P2
+  softmax_temperature: 0.25
+  scoring_logs: examples/real_subset_doubanlv1/metadata/semantic_gate_scores.csv
+
+structure_balanced_refinement:
+  enabled: true
+  positive_negative_prompt_log: examples/real_subset_doubanlv1/metadata/posneg_prompt_points.csv
+  retain_visible_support_base_when_consistent: true
+
+geometry_consistency_correction:
+  enabled: true
+  support_log: examples/real_subset_doubanlv1/metadata/geometry_support_prompt.csv
+  correction_log: examples/real_subset_doubanlv1/metadata/corrective_geometry_delta.csv
+  negative_deletion: false

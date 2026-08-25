@@ -1,0 +1,17 @@
+name: view_quality_soft_weighting
+signals:
+  fft_saliency:
+    enabled: true
+    weight: 0.35
+  mask_reliability:
+    enabled: true
+    weight: 0.35
+  geometry_reliability:
+    enabled: true
+    weight: 0.30
+normalisation:
+  method: min_max_clamped
+  min_weight: 0.25
+  max_weight: 1.00
+fallback:
+  retain_all_views: true

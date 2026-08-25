@@ -1,0 +1,28 @@
+{
+  "stage": "S24-E4b-mask-source-2DGS-closed-loop",
+  "sample": "KongQueZhuYu",
+  "mask_source_id": "RAP_FSAM3_v2",
+  "mask_source_label": "RAP-FSAM3-v2",
+  "source_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu",
+  "raw_mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E4b_downstream/KongQueZhuYu/最终掩膜",
+  "prepared_mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E4b_RAP_FSAM3_v2/prepared_masks",
+  "repo_path": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "iterations": 30000,
+  "resolution": 4,
+  "eval": true,
+  "image_count": 210,
+  "missing_mask_count": 0,
+  "missing_masks": [],
+  "fixed_2dgs_setting": {
+    "mask_mode": "alpha",
+    "init_pcd_mode": "foreground_track",
+    "use_foreground_rgb_loss": true,
+    "use_mask_loss": true,
+    "use_bg_opacity_loss": true,
+    "pruning_mode": "mask",
+    "lambda_mask": 0.08,
+    "lambda_bg": 0.02,
+    "mask_loss_type": "l1_dice"
+  }
+}

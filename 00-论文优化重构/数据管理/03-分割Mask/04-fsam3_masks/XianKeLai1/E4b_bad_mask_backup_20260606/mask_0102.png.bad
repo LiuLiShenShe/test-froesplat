@@ -1,0 +1,179 @@
+tc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:54:49.620][I  7412][controlled] [rtc](probe_controller.cc:468): kWaitingForProbingResult: timeout
+
+[2026-02-25 15:54:49.695][I  7412][controlled] [rtc](aimd_rate_control.cc:276): bandwidth debug aimd new_bitrate 0 bps current rate 9585142 bps ack rate 143771 bps additive increase 0 bps multi increase -inf bps link capacity 129711 bps current level 50000 kbps add bits persecond 0 in alr 1
+
+[2026-02-25 15:54:50.766][I  7412][controlled] [rtc](bitrate_allocator.cc:393): Current BWE 3000000
+
+[2026-02-25 15:54:51.877][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:54:51.878][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|65] set switch reason: 7 type:prflx
+
+[2026-02-25 15:54:51.890][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:54:51.890][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|65] set switch reason: 7 type:prflx
+
+[2026-02-25 15:54:51.923][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:54:51.923][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|65] set switch reason: 7 type:prflx
+
+[2026-02-25 15:54:53.595][I  7412][controlled] [rtc](probe_controller.cc:478): alr_probe:1 state_probe:0 InitiateProbing
+
+[2026-02-25 15:54:53.595][I  7412][controlled] [rtc](probe_controller.cc:567): bandwidth debug probe InitiateProbing max_probe_bitrate_kbps: 50000 max_bitrate_kbps: 50000 probe further:4200 kbps end bitrate_probe: 6000 kbps end probe_id_end:1
+
+[2026-02-25 15:54:53.595][I  7408][controlled] [rtc](bitrate_prober.cc:105): Probe cluster (id:bitrate:min bytes:min packets): (1273:6000000:11250:5)
+
+[2026-02-25 15:54:53.637][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:54:53.701][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5802303, {input_fps: 61.0, encode_fps: 60, encode_ms: 155, encode_usage_perc: 585, target_bps: 1641620, media_bps: 65928, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 1,bit_depth: 7} {ssrc: 2621540494, type: media, width: 1659, height: 850, key: 68, delta: 145442, total_bps: 951545, retransmit_bps: 15712, avg_delay_ms: 0, max_delay_ms: 0, cum_loss: 36694, max_ext_seq: 203747, nack: 30660, fir: 0, pli: 2}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5802303, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 74}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5802303, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 430200590, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5802303, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 74}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5802303, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 1759845521, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5802303, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 74}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5802303, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 3178171436, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5802303, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 74}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5802303, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 733671316, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:54:53.702][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5802303, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 74}
+
+[2026-02-25 15:54:53.994][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:54:54.620][I  7412][controlled] [rtc](probe_controller.cc:468): kWaitingForProbingResult: timeout
+
+[2026-02-25 15:54:54.635][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:54:54.635][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|66] set switch reason: 7 type:prflx
+
+[2026-02-25 15:54:54.735][I  7412][controlled] [rtc](aimd_rate_control.cc:276): bandwidth debug aimd new_bitrate 0 bps current rate 9585142 bps ack rate 140348 bps additive increase 0 bps multi increase -inf bps link capacity 133070 bps current level 50000 kbps add bits persecond 0 in alr 1
+
+[2026-02-25 15:54:55.070][W  7412][controlled] [rtc]:(send_side_bandwidth_estimation.cc:637): Estimated available bandwidth 2677734 bps is below configured min bitrate 3000 kbps.
+
+[2026-02-25 15:54:55.785][I  7412][controlled] [rtc](bitrate_allocator.cc:393): Current BWE 3000000
+
+[2026-02-25 15:54:58.595][I  7412][controlled] [rtc](probe_controller.cc:478): alr_probe:1 state_probe:0 InitiateProbing
+
+[2026-02-25 15:54:58.595][I  7412][controlled] [rtc](probe_controller.cc:567): bandwidth debug probe InitiateProbing max_probe_bitrate_kbps: 50000 max_bitrate_kbps: 50000 probe further:4200 kbps end bitrate_probe: 6000 kbps end probe_id_end:1
+
+[2026-02-25 15:54:58.595][I  7408][controlled] [rtc](bitrate_prober.cc:105): Probe cluster (id:bitrate:min bytes:min packets): (1274:6000000:11250:5)
+
+[2026-02-25 15:54:58.758][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1274] [send: 8875 bytes / 13 ms = 5461538 bps] [receive: 8802 bytes / 19 ms = 3706105 bps ] [ratio: 3706105 bps / 5461538 bps = 0.678583 > kMaxValidRatio (2)]
+
+[2026-02-25 15:54:59.044][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:54:59.400][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:54:59.619][I  7412][controlled] [rtc](probe_controller.cc:468): kWaitingForProbingResult: timeout
+
+[2026-02-25 15:54:59.771][I  7412][controlled] [rtc](aimd_rate_control.cc:276): bandwidth debug aimd new_bitrate 0 bps current rate 9585142 bps ack rate 119929 bps additive increase 0 bps multi increase -inf bps link capacity 122114 bps current level 50000 kbps add bits persecond 0 in alr 1
+
+[2026-02-25 15:55:01.057][I  7412][controlled] [rtc](bitrate_allocator.cc:393): Current BWE 3000000
+
+[2026-02-25 15:55:03.017][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:03.017][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|77] set switch reason: 7 type:prflx
+
+[2026-02-25 15:55:03.621][I  7412][controlled] [rtc](probe_controller.cc:478): alr_probe:1 state_probe:0 InitiateProbing
+
+[2026-02-25 15:55:03.621][I  7412][controlled] [rtc](probe_controller.cc:567): bandwidth debug probe InitiateProbing max_probe_bitrate_kbps: 50000 max_bitrate_kbps: 50000 probe further:4200 kbps end bitrate_probe: 6000 kbps end probe_id_end:1
+
+[2026-02-25 15:55:03.621][I  7408][controlled] [rtc](bitrate_prober.cc:105): Probe cluster (id:bitrate:min bytes:min packets): (1275:6000000:11250:5)
+
+[2026-02-25 15:55:03.697][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5812321, {input_fps: 45.0, encode_fps: 45, encode_ms: 155, encode_usage_perc: 585, target_bps: 1487523, media_bps: 41688, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 1,bit_depth: 7} {ssrc: 2621540494, type: media, width: 1659, height: 850, key: 68, delta: 145974, total_bps: 101904, retransmit_bps: 21024, avg_delay_ms: 0, max_delay_ms: 0, cum_loss: 36813, max_ext_seq: 204299, nack: 30789, fir: 0, pli: 2}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5812321, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 73}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5812321, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 430200590, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5812321, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 73}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5812321, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 1759845521, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5812321, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 73}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5812321, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 3178171436, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5812321, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 73}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:2688): VideoSendStream stats: 5812321, {input_fps: 0.0, encode_fps: 0, encode_ms: 0, encode_usage_perc: 0, target_bps: 0, media_bps: 0, suspended: false, bw_adapted_res: false, cpu_adapted_res: false, bw_adapted_fps: false, cpu_adapted_fps: false, #cpu_adaptations: 0, #quality_adaptations: 0,chroma_sampling: 0,bit_depth: 8} {ssrc: 733671316, type: media, width: 0, height: 0, key: 0, delta: 0, total_bps: 0, retransmit_bps: 0, avg_delay_ms: 0, max_delay_ms: 0, nack: 0, fir: 0, pli: 0}
+
+[2026-02-25 15:55:03.719][I  6448][controlled] [rtc](webrtc_video_engine.cc:1689): Call stats: 5812321, {send_bw_bps: 3000000, recv_bw_bps: 0, max_pad_bps: 100000, pacer_delay_ms: 0, rtt_ms: 73}
+
+[2026-02-25 15:55:04.020][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:55:04.645][I  7412][controlled] [rtc](probe_controller.cc:468): kWaitingForProbingResult: timeout
+
+[2026-02-25 15:55:04.794][I  7412][controlled] [rtc](aimd_rate_control.cc:276): bandwidth debug aimd new_bitrate 0 bps current rate 9585142 bps ack rate 134074 bps additive increase 0 bps multi increase -inf bps link capacity 132081 bps current level 50000 kbps add bits persecond 0 in alr 1
+
+[2026-02-25 15:55:05.420][W  7412][controlled] [rtc]:(send_side_bandwidth_estimation.cc:637): Estimated available bandwidth 2642578 bps is below configured min bitrate 3000 kbps.
+
+[2026-02-25 15:55:05.670][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:05.670][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|83] set switch reason: 7 type:prflx
+
+[2026-02-25 15:55:06.606][I  7412][controlled] [rtc](bitrate_allocator.cc:393): Current BWE 3000000
+
+[2026-02-25 15:55:08.620][I  7412][controlled] [rtc](probe_controller.cc:478): alr_probe:1 state_probe:0 InitiateProbing
+
+[2026-02-25 15:55:08.620][I  7412][controlled] [rtc](probe_controller.cc:567): bandwidth debug probe InitiateProbing max_probe_bitrate_kbps: 50000 max_bitrate_kbps: 50000 probe further:4200 kbps end bitrate_probe: 6000 kbps end probe_id_end:1
+
+[2026-02-25 15:55:08.620][I  7408][controlled] [rtc](bitrate_prober.cc:105): Probe cluster (id:bitrate:min bytes:min packets): (1276:6000000:11250:5)
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 8864 bytes / 11 ms = 6446545 bps] [receive: 8758 bytes / 15 ms = 4670933 bps ] [ratio: 4670933 bps / 6446545 bps = 0.724564 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 9044 bytes / 13 ms = 5565538 bps] [receive: 8972 bytes / 15 ms = 4785066 bps ] [ratio: 4785066 bps / 5565538 bps = 0.859767 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 9223 bytes / 13 ms = 5675692 bps] [receive: 9151 bytes / 15 ms = 4880533 bps ] [ratio: 4880533 bps / 5675692 bps = 0.859901 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 9509 bytes / 13 ms = 5851692 bps] [receive: 9437 bytes / 15 ms = 5033066 bps ] [ratio: 5033066 bps / 5851692 bps = 0.860104 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 9694 bytes / 13 ms = 5965538 bps] [receive: 9622 bytes / 15 ms = 5131733 bps ] [ratio: 5131733 bps / 5965538 bps = 0.86023 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 9906 bytes / 13 ms = 6096 kbps] [receive: 9834 bytes / 15 ms = 5244800 bps ] [ratio: 5244800 bps / 6096 kbps = 0.860367 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 10120 bytes / 13 ms = 6227692 bps] [receive: 10048 bytes / 16 ms = 5024 kbps ] [ratio: 5024 kbps / 6227692 bps = 0.806719 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:08.780][I  7412][controlled] [rtc](probe_bitrate_estimator.cc:140): Probing unsuccessful, receive/send ratio too high [cluster id: 1276] [send: 10299 bytes / 13 ms = 6337846 bps] [receive: 10227 bytes / 16 ms = 5113500 bps ] [ratio: 5113500 bps / 6337846 bps = 0.80682 > kMaxValidRatio (2)]
+
+[2026-02-25 15:55:09.003][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:09.003][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|83] set switch reason: 7 type:prflx
+
+[2026-02-25 15:55:09.021][I  7412][controlled] [rtc](probe_controller.cc:319): Measured bitrate: 3000 kbps Minimum to probe further: 4200 kbps
+
+[2026-02-25 15:55:09.645][I  7412][controlled] [rtc](probe_controller.cc:468): kWaitingForProbingResult: timeout
+
+[2026-02-25 15:55:09.830][I  7412][controlled] [rtc](aimd_rate_control.cc:276): bandwidth debug aimd new_bitrate 0 bps current rate 9585142 bps ack rate 133272 bps additive increase 0 bps multi increase -inf bps link capacity 127759 bps current level 50000 kbps add bits persecond 0 in alr 1
+
+[2026-02-25 15:55:10.004][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:10.004][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWI|S|1|0|7240977860154768894|83] set switch reason: 7 type:prflx
+
+[2026-02-25 15:55:10.741][I  7412][controlled] [rtc](goog_cc_network_control.cc:723):  Detected recovered from overuse start request probe now...
+
+[2026-02-25 15:55:11.683][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:11.683][I  6460][controlled] [rtc](basic_ice_controller.cc:544): peer conn network top connection: Conn[a98d45a0:0:Net[vmxnet3:192.168.1.x/32:Ethernet:id=1]:PAbE8q3j:1:0:prflx:udp:36.135.125.x:6716->WFnU4wJ7:1:1685921535:stun:udp:117.83.2.x:5626|CRWS|S|1|0|7240977860154768894|78] set switch reason: 7 type:prflx
+
+[2026-02-25 15:55:11.835][I  7412][controlled] [rtc](bitrate_allocator.cc:393): Current BWE 3000000
+
+[2026-02-25 15:55:12.679][I  6460][controlled] [rtc](turn_port.cc:1612): Port[a0ebae60:0:1:0:relay:Net[any:0.0.0.x/0:Wildcard:id=0]]: TURN create permission request sent, id=586c6c75707a4c6d64426975
+
+[2026-02-25 15:55:12.679][I  6460][controlled] [rtc](turn_port.cc:1612): Port[a0ebae60:0:1:0:relay:Net[any:0.0.0.x/0:Wildcard:id=0]]: TURN create permission request sent, id=4a5356582b6877486f363149
+
+[2026-02-25 15:55:12.681][I  6460][controlled] [rtc](turn_port.cc:1612): Port[a0ebae60:0:1:0:relay:Net[any:0.0.0.x/0:Wildcard:id=0]]: TURN create permission request sent, id=6e3774725a4846586e554963
+
+[2026-02-25 15:55:12.685][I  6460][controlled] [rtc](basic_ice_controller.cc:538): peer conn network sorting 55 available connections
+
+[2026-02-25 15:55:12.685][

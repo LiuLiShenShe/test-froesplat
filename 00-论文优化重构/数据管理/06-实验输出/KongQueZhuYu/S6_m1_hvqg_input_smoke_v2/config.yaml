@@ -1,0 +1,40 @@
+stage: "S6-M1-H-VQG视图质量门控"
+run_type: "m1_hvqg_retained_list_training_smoke"
+sample: "KongQueZhuYu"
+method_tag: "S6_m1_hvqg_input_smoke_v2"
+repo_path: "/data/fj/F2DMAS/2d-gaussian-splatting-main"
+python: "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python"
+source_path: "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu"
+output_root: "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出"
+allow_existing_output: false
+append_timestamp_if_exists: true
+cuda_visible_devices: "1"
+ip: "127.0.0.1"
+port: 16102
+eval: true
+resolution: 8
+quiet: false
+module_switches:
+  view_quality_mode: "hvqg"
+  raw_gate_mode: "full"
+  mask_gate_mode: "basic"
+  geo_gate_mode: "registered"
+  raw_gate_list: "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/KongQueZhuYu/M1_hvqg_smoke_v2/raw_gate_retained.txt"
+  mask_gate_list: "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/KongQueZhuYu/M1_hvqg_smoke_v2/mask_gate_retained.txt"
+  geo_gate_list: "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/KongQueZhuYu/M1_hvqg_smoke_v2/geometry_gate_retained.txt"
+  mask_mode: "none"
+  lambda_mask: 0.0
+  lambda_bg: 0.0
+  pruning_mode: "none"
+  meshing_mode: "standard"
+train:
+  iterations: 30
+  test_iterations:
+    - -1
+  save_iterations:
+    - 30
+  checkpoint_iterations:
+render:
+  enabled: false
+metrics:
+  enabled: false

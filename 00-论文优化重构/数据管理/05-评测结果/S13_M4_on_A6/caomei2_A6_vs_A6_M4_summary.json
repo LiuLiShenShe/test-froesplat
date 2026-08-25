@@ -1,0 +1,79 @@
+{
+  "sample": "CaoMei2",
+  "runs": {
+    "A6": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/CaoMei2/A6_foreground_track_init_fg_rgb_alpha_bg",
+      "gaussians_30000": 370844,
+      "PSNR": 5.134393838735727,
+      "SSIM": 0.10760365383556256,
+      "LPIPS": 0.7065905928611755,
+      "PSNR_fg": 25.08328753251296,
+      "SSIM_fg": 0.8121169255330012,
+      "LPIPS_fg_black_bg": 0.024955404850725945,
+      "leakage_energy_ratio_mean": 0.008134688805932036,
+      "outside_nonblack_ratio_mean": 0.01465627749880346
+    },
+    "A6+M4": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/CaoMei2/A6_M4_mask_pruning",
+      "gaussians_30000": 284757,
+      "PSNR": 5.134081308658306,
+      "SSIM": 0.10739824204490735,
+      "LPIPS": 0.707016619352194,
+      "PSNR_fg": 25.030347457298866,
+      "SSIM_fg": 0.8107896034534161,
+      "LPIPS_fg_black_bg": 0.02511114666524988,
+      "leakage_energy_ratio_mean": 0.008034593658521771,
+      "outside_nonblack_ratio_mean": 0.0143635743118536
+    }
+  },
+  "delta_A6_M4_minus_A6": {
+    "gaussians_30000": -86087,
+    "PSNR": -0.0003125300774211581,
+    "SSIM": -0.00020541179065521054,
+    "LPIPS": 0.0004260264910184164,
+    "PSNR_fg": -0.052940075214092275,
+    "SSIM_fg": -0.0013273220795850804,
+    "LPIPS_fg_black_bg": 0.00015574181452393532,
+    "leakage_energy_ratio_mean": -0.00010009514741026425,
+    "outside_nonblack_ratio_mean": -0.00029270318694985843,
+    "gaussian_reduction_percent": 23.213804187205405
+  },
+  "pruning_reports": [
+    {
+      "iteration": 18000,
+      "gaussians_before": 286806,
+      "gaussians_after": 285504,
+      "removed": 1302,
+      "pruning_ratio": 0.004539653982134265
+    },
+    {
+      "iteration": 21000,
+      "gaussians_before": 285504,
+      "gaussians_after": 285165,
+      "removed": 339,
+      "pruning_ratio": 0.001187373907195696
+    },
+    {
+      "iteration": 24000,
+      "gaussians_before": 285165,
+      "gaussians_after": 284963,
+      "removed": 202,
+      "pruning_ratio": 0.0007083618256097347
+    },
+    {
+      "iteration": 27000,
+      "gaussians_before": 284963,
+      "gaussians_after": 284834,
+      "removed": 129,
+      "pruning_ratio": 0.00045269034927341445
+    },
+    {
+      "iteration": 30000,
+      "gaussians_before": 284834,
+      "gaussians_after": 284757,
+      "removed": 77,
+      "pruning_ratio": 0.00027033289565150226
+    }
+  ],
+  "conclusion": "On CaoMei2, adding M4 mask pruning to A6 reduces Gaussian count by 86087 (23.21%) while keeping foreground-object reconstruction close to A6. Leakage and outside nonblack metrics are slightly lower."
+}

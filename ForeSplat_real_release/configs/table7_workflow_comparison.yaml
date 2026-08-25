@@ -1,0 +1,15 @@
+table: table7_workflow_comparison
+dataset_scope: all_20_multiview_rgb_sequences_in_full_study
+included_in_repository: non_full_visual_subset_only
+methods:
+  - colmap
+  - 3dgs_with_vfm_foreground_preprocessing
+  - standard_2dgs
+  - foresplat
+metrics:
+  - psnr
+  - ssim
+  - lpips
+  - train_or_reconstruction_time_seconds
+  - mesh_extraction_time_seconds
+note: Full table-level reconstruction comparison requires the curated full dataset.

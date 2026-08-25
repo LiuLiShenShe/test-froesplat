@@ -1,0 +1,76 @@
+{
+  "sample": "KongQueZhuYu",
+  "runs": {
+    "A6": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_foreground_track_init_fg_rgb_alpha_bg",
+      "num_eval_images": 27,
+      "gaussians_30000": 591623,
+      "PSNR": 6.2554980560585305,
+      "SSIM": 0.2683636134973279,
+      "LPIPS": 0.556709905465444,
+      "PSNR_fg": 25.007228992603444,
+      "SSIM_fg": 0.8547798549687421,
+      "LPIPS_fg_black_bg": 0.04384410257140795,
+      "outside_nonblack_ratio_mean": 0.029438171466743504,
+      "leakage_energy_ratio_mean": 0.018883968703448772
+    },
+    "A6+M1-hard": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_hvqg_smoke_v2",
+      "num_eval_images": 17,
+      "gaussians_30000": 597116,
+      "PSNR": 6.317433020647834,
+      "SSIM": 0.2757231807884048,
+      "LPIPS": 0.5577906913617078,
+      "PSNR_fg": 12.547784580903894,
+      "SSIM_fg": 0.6017746899057838,
+      "LPIPS_fg_black_bg": 0.1178701618576751,
+      "outside_nonblack_ratio_mean": 0.1742568127810955,
+      "leakage_energy_ratio_mean": 0.30202971913797017,
+      "retained_views": {
+        "raw_gate": "163/183 train, 24/27 test",
+        "mask_gate": "163/163 train, 24/24 test",
+        "geometry_gate": "123/163 train, 17/24 test"
+      }
+    },
+    "A6+M1-reject-only/raw-mask": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/A6_M1_reject_only_raw_mask",
+      "num_eval_images": 24,
+      "gaussians_30000": 579612,
+      "PSNR": 6.2292466560999555,
+      "SSIM": 0.2668453613296151,
+      "LPIPS": 0.5594477541744709,
+      "PSNR_fg": 13.455656468868256,
+      "SSIM_fg": 0.6243755634253224,
+      "LPIPS_fg_black_bg": 0.11153456436780591,
+      "outside_nonblack_ratio_mean": 0.1450046217845132,
+      "leakage_energy_ratio_mean": 0.28482319763861597,
+      "retained_views": {
+        "raw_gate": "163/183 train, 24/27 test",
+        "mask_gate": "163/163 train, 24/24 test",
+        "geometry_gate": "none"
+      },
+      "train_elapsed_seconds": 1066.407,
+      "render_elapsed_seconds": 50.178,
+      "metrics_elapsed_seconds": 6.751
+    }
+  },
+  "delta_vs_A6": {
+    "A6+M1-hard": {
+      "gaussians_30000": 5493,
+      "PSNR_fg": -12.45944441169955,
+      "SSIM_fg": -0.2530051650629583,
+      "LPIPS_fg_black_bg": 0.07402605928626715,
+      "outside_nonblack_ratio_mean": 0.14481864131435198,
+      "leakage_energy_ratio_mean": 0.2831457504345214
+    },
+    "A6+M1-reject-only/raw-mask": {
+      "gaussians_30000": -12011,
+      "PSNR_fg": -11.551572523735188,
+      "SSIM_fg": -0.23040429154341972,
+      "LPIPS_fg_black_bg": 0.06769046179639796,
+      "outside_nonblack_ratio_mean": 0.1155664503177697,
+      "leakage_energy_ratio_mean": 0.2659392289351672
+    }
+  },
+  "interpretation": "Reject-only/raw-mask is slightly better than M1-hard but still fails relative to A6. Existing retained-list hard filtering should not be pursued as effective M1; next M1 should use soft view weighting or true coverage-balanced anchor-view selection."
+}

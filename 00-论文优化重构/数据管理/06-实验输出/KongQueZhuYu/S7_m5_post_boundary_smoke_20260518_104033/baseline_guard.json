@@ -1,0 +1,17 @@
+{
+  "baseline_type": "plant_aware_2dgs_variant",
+  "uses_mask": true,
+  "uses_fsam3": true,
+  "uses_h_vqg": false,
+  "uses_m3_mask_loss": false,
+  "uses_m4_pruning": false,
+  "uses_m5_edge_meshing": true,
+  "module_switches": {
+    "mask_mode": "alpha",
+    "mask_dir": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+    "mask_pattern": "mask_{stem}.png",
+    "mask_threshold": 0.5,
+    "meshing_mode": "post_boundary",
+    "boundary_shrink_ratio": 0.08
+  }
+}

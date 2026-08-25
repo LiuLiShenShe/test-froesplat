@@ -1,0 +1,10 @@
+# run_tag: 20260610_1240_smoke_caomei2_resume
+# scene: CaoMei2
+# method: fg2dgs_m2m3
+# mode: smoke
+# image_count: 210
+# mask_matched_gate_count: 210
+# init_pcd_mode: foreground_track
+# started_at: 2026-06-10T14:31:05+08:00
+# command:
+/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python train.py --source_path /data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/CaoMei2 --model_path /data/fj/F2DMAS/00-论文优化重构/m2m3实验/实验输出/runs/20260610_1240_smoke_caomei2_resume/CaoMei2/fg2dgs_m2m3 --eval --resolution 4 --mask_mode alpha --mask_dir /data/fj/F2DMAS/00-论文优化重构/m2m3实验/实验输出/prepared_masks/CaoMei2 --mask_pattern mask_\{stem\}.png --mask_threshold 0.5 --mask_gate_list /data/fj/F2DMAS/00-论文优化重构/m2m3实验/实验输出/prepared_gate_lists/CaoMei2_mask_matched.txt --init_pcd_mode foreground_track --init_pcd_min_observations 3 --init_pcd_foreground_threshold 0.9 --init_pcd_dilate_mask_px 0 --use_foreground_rgb_loss --use_mask_loss --use_bg_opacity_loss --lambda_mask 0.08 --lambda_bg 0.02 --mask_loss_type l1_dice --mask_ignore_boundary_px 2 --mask_loss_start_iter 500 --mask_loss_warmup_iters 1500 --pruning_mode mask --pruning_start_iter 18000 --pruning_interval 3000 --pruning_opacity_threshold 0.005 --pruning_brightness_threshold 0.01 --pruning_mask_threshold 0.45 --pruning_mask_max_views 12 --pruning_max_remove_ratio 0.03 --pruning_mask_score_weight 3.0 --save_pruning_report --ip 127.0.0.1 --port 17112 --iterations 19000 --test_iterations 19000 --save_iterations 19000 --view_weight_mode rgb_only --view_weight_list /data/fj/F2DMAS/00-论文优化重构/m2m3实验/实验输出/prepared_view_weights/CaoMei2_view_weights.csv --view_weight_min 0.6 --view_weight_max 1.0 --view_weight_default 1.0 --capacity_control_mode m2m3 --m2m3_score_mode topology --m2m3_region_mode foreground --m2m3_max_remove_ratio 0.03 --save_capacity_report --capacity_report_interval 1000 

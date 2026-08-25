@@ -1,0 +1,50 @@
+{
+  "stage": "S7-M3-Mask-constrained-2DGS",
+  "run_type": "m2_m3_mask_loss_smoke_after_fix",
+  "sample": "KongQueZhuYu",
+  "method_tag": "S7_m2_m3_mask_loss_smoke_v2",
+  "repo_path": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "source_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu",
+  "output_root": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出",
+  "allow_existing_output": false,
+  "append_timestamp_if_exists": true,
+  "cuda_visible_devices": "1",
+  "ip": "127.0.0.1",
+  "port": 16103,
+  "eval": true,
+  "resolution": 8,
+  "quiet": false,
+  "module_switches": {
+    "view_quality_mode": "none",
+    "raw_gate_mode": "none",
+    "mask_gate_mode": "none",
+    "geo_gate_mode": "none",
+    "mask_mode": "alpha",
+    "mask_dir": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+    "mask_pattern": "mask_{stem}.png",
+    "mask_threshold": 0.5,
+    "use_mask_loss": true,
+    "use_bg_opacity_loss": true,
+    "lambda_mask": 0.02,
+    "lambda_bg": 0.002,
+    "mask_loss_type": "l1_dice",
+    "mask_ignore_boundary_px": 2,
+    "mask_loss_start_iter": 5,
+    "mask_loss_warmup_iters": 10,
+    "pruning_mode": "none",
+    "meshing_mode": "standard"
+  },
+  "train": {
+    "iterations": 30,
+    "test_iterations": [-1],
+    "save_iterations": [30],
+    "checkpoint_iterations": []
+  },
+  "render": {
+    "enabled": false
+  },
+  "metrics": {
+    "enabled": false
+  }
+}

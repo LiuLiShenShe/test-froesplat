@@ -1,0 +1,77 @@
+{
+  "input_ply": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/point_cloud/iteration_30000/point_cloud.ply",
+  "cameras_json": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/cameras.json",
+  "mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/02-sam_masks/KongQueZhuYu",
+  "output_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/plant_only",
+  "plant_only_ply": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/plant_only/plant_only_gaussians.ply",
+  "score_npz": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/plant_only/plant_only_scores.npz",
+  "projection_mode": "positive_z",
+  "projection_auto_scores": {
+    "positive_z": {
+      "inside_total": 435255.0,
+      "foreground_total": 360578.0,
+      "foreground_ratio": 0.8284293115529977
+    },
+    "negative_z": {
+      "inside_total": 7946.0,
+      "foreground_total": 2969.0,
+      "foreground_ratio": 0.373647118046816
+    }
+  },
+  "config": {
+    "sample": "KongQueZhuYu",
+    "source_method": "E7_mask_pruning",
+    "input_ply": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/point_cloud/iteration_30000/point_cloud.ply",
+    "cameras_json": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/cameras.json",
+    "mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/02-sam_masks/KongQueZhuYu",
+    "output_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/KongQueZhuYu/E7_mask_pruning/plant_only",
+    "mask_pattern": "mask_{stem}.png",
+    "mask_threshold": 127,
+    "dilate_mask_px": 5,
+    "erode_mask_px": 0,
+    "camera_stride": 1,
+    "max_cameras": 0,
+    "chunk_size": 200000,
+    "min_observations": 3,
+    "foreground_ratio_threshold": 0.35,
+    "projection_mode": "auto",
+    "near": 1e-06,
+    "export_background": false,
+    "dry_run": false
+  },
+  "num_input_gaussians": 694992,
+  "num_kept_gaussians": 340413,
+  "num_removed_gaussians": 354579,
+  "kept_ratio": 0.4898085157814766,
+  "num_visible_min_obs": 680593,
+  "num_cameras_used": 210,
+  "num_missing_masks": 0,
+  "missing_masks_preview": [],
+  "obs_count_quantiles": {
+    "min": 0.0,
+    "p25": 9.0,
+    "p50": 17.0,
+    "p75": 180.0,
+    "p90": 199.0,
+    "p99": 210.0,
+    "max": 210.0
+  },
+  "fg_ratio_quantiles_all": {
+    "min": 0.0,
+    "p25": 0.0,
+    "p50": 0.3333333432674408,
+    "p75": 0.9728260636329651,
+    "p90": 1.0,
+    "p99": 1.0,
+    "max": 1.0
+  },
+  "fg_ratio_quantiles_visible": {
+    "min": 0.0,
+    "p25": 0.0,
+    "p50": 0.3499999940395355,
+    "p75": 0.976190447807312,
+    "p90": 1.0,
+    "p99": 1.0,
+    "max": 1.0
+  }
+}

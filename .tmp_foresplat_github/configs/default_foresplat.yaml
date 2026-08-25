@@ -1,0 +1,61 @@
+experiment:
+  name: foresplat_default
+  description: Foreground-object 2DGS configuration used as the default workflow template.
+  train_iterations: 30000
+  image_resolution: original
+  random_seed: 2026
+
+data:
+  image_dir: examples/demo_sequence/images
+  mask_dir: examples/demo_sequence/masks
+  camera_manifest: examples/demo_sequence/cameras/transforms_demo.json
+  scale_marker: examples/demo_sequence/scale_marker.json
+
+foreground_initialisation:
+  use_colmap_tracks: true
+  require_mask_consistency: true
+  min_visible_views: 2
+  foreground_confidence_threshold: 0.55
+
+losses:
+  foreground_rgb:
+    enabled: true
+    weight: 1.0
+  alpha_mask:
+    enabled: true
+    l1_weight: 0.2
+    dice_weight: 0.1
+  background_opacity:
+    enabled: true
+    weight: 0.05
+  ssim:
+    enabled: true
+    weight: 0.2
+
+view_quality_weighting:
+  enabled: true
+  config: configs/view_quality_weights.yaml
+
+m2m3_go:
+  enabled: true
+  config: configs/m2m3_go.yaml
+
+mask_guided_pruning:
+  enabled: true
+  config: configs/pruning.yaml
+
+rendering:
+  eval_split: heldout
+  metrics:
+    - psnr_fg
+    - ssim_fg
+    - lpips_fg
+    - outside_mask_non_black_ratio
+    - leakage_energy_ratio
+
+mesh_extraction:
+  method: tsdf_style_fusion
+  voxel_size: 0.002
+  truncation_distance: 0.008
+  mask_aware_weighting: true
+  normal_aware_weighting: true

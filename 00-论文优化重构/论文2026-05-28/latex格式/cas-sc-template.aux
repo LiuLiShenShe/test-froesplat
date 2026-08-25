@@ -1,0 +1,142 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\csgdef{mark@corau2}{1}
+\csgdef{mark@corau3}{1}
+\citation{ref6,ref56,ref61}
+\citation{ref62,ref63}
+\citation{ref8,ref10}
+\citation{ref9,ref11,ref12}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{1}{Introduction}{section.1}{}}
+\citation{ref14}
+\citation{ref18,ref19}
+\citation{ref20,ref21,ref22}
+\citation{ref25,ref26}
+\citation{ref59}
+\citation{ref27,ref28}
+\citation{ref51,ref52,ref53}
+\citation{ref54}
+\citation{ref30,ref31}
+\citation{ref32,ref33}
+\citation{ref68,ref69}
+\citation{ref55}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Materials and Methods}{3}{section.2}\protected@file@percent }
+\newlabel{sec:materials-and-methods}{{2}{3}{Materials and Methods}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Study Design and Overall Workflow}{3}{subsection.2.1}\protected@file@percent }
+\newlabel{sec:study-design-and-overall-workflow}{{2.1}{3}{Study Design and Overall Workflow}{subsection.2.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of the proposed VFM-guided ForeSplat workflow. RAP-FSAM3 adapts VFM outputs into reconstruction-aware potted-plant foreground priors, and ForeSplat injects these priors into 2DGS optimisation to produce foreground-object meshes and virtual trait measurements. M2M3-GO further refines Gaussian keep, densify and prune decisions through bidirectional mask--model micro-matching after the foreground-object target has been established.}}{4}{figure.1}\protected@file@percent }
+\newlabel{fig:workflow}{{1}{4}{Overview of the proposed VFM-guided ForeSplat workflow. RAP-FSAM3 adapts VFM outputs into reconstruction-aware potted-plant foreground priors, and ForeSplat injects these priors into 2DGS optimisation to produce foreground-object meshes and virtual trait measurements. M2M3-GO further refines Gaussian keep, densify and prune decisions through bidirectional mask--model micro-matching after the foreground-object target has been established}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Dataset, Acquisition Settings and Evaluation Protocol}{4}{subsection.2.2}\protected@file@percent }
+\newlabel{sec:dataset-acquisition-settings-and-sample}{{2.2}{4}{Dataset, Acquisition Settings and Evaluation Protocol}{subsection.2.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Dataset use and evaluation protocol. The foreground-prior rows refer to manually annotated evaluation frames sampled from all 20 RGB sequences.}}{4}{table.1}\protected@file@percent }
+\newlabel{tab:dataset-protocol}{{1}{4}{Dataset use and evaluation protocol. The foreground-prior rows refer to manually annotated evaluation frames sampled from all 20 RGB sequences}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Dataset coverage and end-to-end workflow execution for the two acquisition settings.}}{4}{table.2}\protected@file@percent }
+\newlabel{tab:dataset-coverage}{{2}{4}{Dataset coverage and end-to-end workflow execution for the two acquisition settings}{table.2}{}}
+\citation{ref38,ref39,ref71}
+\citation{ref42,ref43}
+\citation{ref40,ref64}
+\citation{ref44}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}RAP-FSAM3: Reconstruction-Aware Prompt-Adaptive Foreground Priors}{5}{subsection.2.3}\protected@file@percent }
+\newlabel{sec:rap-fsam3}{{2.3}{5}{RAP-FSAM3: Reconstruction-Aware Prompt-Adaptive Foreground Priors}{subsection.2.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.1}FFT-Based Frame-Quality Filtering}{5}{subsubsection.2.3.1}\protected@file@percent }
+\newlabel{sec:fft-based-frame-quality-filtering}{{2.3.1}{5}{FFT-Based Frame-Quality Filtering}{subsubsection.2.3.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.2}Multi-Prompt VFM Candidate Generation}{5}{subsubsection.2.3.2}\protected@file@percent }
+\newlabel{sec:multi-prompt-vfm-candidates}{{2.3.2}{5}{Multi-Prompt VFM Candidate Generation}{subsubsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.3}Semantic-Gated Multi-Prompt Selection}{5}{subsubsection.2.3.3}\protected@file@percent }
+\newlabel{sec:semantic-gated-selection}{{2.3.3}{5}{Semantic-Gated Multi-Prompt Selection}{subsubsection.2.3.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.4}Structure-Balanced Foreground--Background Prompt Refinement}{6}{subsubsection.2.3.4}\protected@file@percent }
+\newlabel{sec:foreground-background-refinement}{{2.3.4}{6}{Structure-Balanced Foreground--Background Prompt Refinement}{subsubsection.2.3.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.3.5}Geometry-Consistency Foreground Correction}{7}{subsubsection.2.3.5}\protected@file@percent }
+\newlabel{sec:geometry-consistency-correction}{{2.3.5}{7}{Geometry-Consistency Foreground Correction}{subsubsection.2.3.5}{}}
+\citation{ref16}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces RAP-FSAM3 foreground-prior generation. The module adapts VFM outputs to potted-plant reconstruction through semantic-gated multi-prompt selection, structure-balanced foreground--background prompt refinement and geometry-consistency foreground correction.}}{8}{figure.2}\protected@file@percent }
+\newlabel{fig:rap-fsam3}{{2}{8}{RAP-FSAM3 foreground-prior generation. The module adapts VFM outputs to potted-plant reconstruction through semantic-gated multi-prompt selection, structure-balanced foreground--background prompt refinement and geometry-consistency foreground correction}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Foreground-Object 2DGS Optimisation}{8}{subsection.2.4}\protected@file@percent }
+\newlabel{sec:foreground-object-2dgs}{{2.4}{8}{Foreground-Object 2DGS Optimisation}{subsection.2.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.1}Camera Pose Estimation and Foreground Trajectory Initialisation}{8}{subsubsection.2.4.1}\protected@file@percent }
+\newlabel{sec:camera-pose-estimation-and-foreground-tr}{{2.4.1}{8}{Camera Pose Estimation and Foreground Trajectory Initialisation}{subsubsection.2.4.1}{}}
+\citation{ref28}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.4.2}Foreground RGB Supervision and Opacity Constraints}{9}{subsubsection.2.4.2}\protected@file@percent }
+\newlabel{sec:foreground-rgb-supervision-and-opacity-c}{{2.4.2}{9}{Foreground RGB Supervision and Opacity Constraints}{subsubsection.2.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}View-Quality-Aware Soft Loss Weighting}{10}{subsection.2.5}\protected@file@percent }
+\newlabel{sec:view-quality-aware-soft-loss-weighting}{{2.5}{10}{View-Quality-Aware Soft Loss Weighting}{subsection.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Mask-Guided Multi-Cue Gaussian Pruning}{10}{subsection.2.6}\protected@file@percent }
+\newlabel{sec:mask-guided-multi-cue-gaussian-pruning}{{2.6}{10}{Mask-Guided Multi-Cue Gaussian Pruning}{subsection.2.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}M2M3-GO: Mask-to-Model and Model-to-Mask Micro-Matching Gaussian Optimisation}{10}{subsection.2.7}\protected@file@percent }
+\newlabel{sec:m2m3-go}{{2.7}{10}{M2M3-GO: Mask-to-Model and Model-to-Mask Micro-Matching Gaussian Optimisation}{subsection.2.7}{}}
+\citation{ref45,ref46}
+\citation{ref48,ref49}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Mesh Extraction, Scale Recovery and Phenotypic Measurement}{12}{subsection.2.8}\protected@file@percent }
+\newlabel{sec:mesh-extraction-scale-recovery-and-pheno}{{2.8}{12}{Mesh Extraction, Scale Recovery and Phenotypic Measurement}{subsection.2.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.9}Evaluation Metrics}{12}{subsection.2.9}\protected@file@percent }
+\newlabel{sec:evaluation-metrics}{{2.9}{12}{Evaluation Metrics}{subsection.2.9}{}}
+\citation{ref71}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{13}{section.3}\protected@file@percent }
+\newlabel{sec:results}{{3}{13}{Results}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}RAP-FSAM3 Improves VFM-Based Plant Foreground Priors}{13}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:vfm-baseline-results}{{3.1}{13}{RAP-FSAM3 Improves VFM-Based Plant Foreground Priors}{subsection.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Core automatic VFM foreground-prior comparison on manually annotated evaluation frames sampled from all 20 RGB sequences. Single-prompt SAM3 uses the same frozen SAM3 backbone as RAP-FSAM3 but without prompt adaptation, refinement or geometry-consistency correction.}}{13}{table.3}\protected@file@percent }
+\newlabel{tab:vfm-comparison}{{3}{13}{Core automatic VFM foreground-prior comparison on manually annotated evaluation frames sampled from all 20 RGB sequences. Single-prompt SAM3 uses the same frozen SAM3 backbone as RAP-FSAM3 but without prompt adaptation, refinement or geometry-consistency correction}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Qualitative comparison of VFM-based potted-plant foreground priors. RAP-FSAM3 reduces background leakage and improves boundary continuity compared with direct single-prompt and general VFM baselines.}}{14}{figure.3}\protected@file@percent }
+\newlabel{fig:vfm-comparison}{{3}{14}{Qualitative comparison of VFM-based potted-plant foreground priors. RAP-FSAM3 reduces background leakage and improves boundary continuity compared with direct single-prompt and general VFM baselines}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Prompt Sensitivity Reveals Semantic Bias in Direct VFM Prompting}{14}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:prompt-robustness-results}{{3.2}{14}{Prompt Sensitivity Reveals Semantic Bias in Direct VFM Prompting}{subsection.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Prompt robustness of direct VFM foreground extraction on the same manually annotated evaluation frames.}}{14}{table.4}\protected@file@percent }
+\newlabel{tab:prompt-robustness}{{4}{14}{Prompt robustness of direct VFM foreground extraction on the same manually annotated evaluation frames}{table.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Prompt sensitivity of direct VFM segmentation in potted-plant scenes. Single-prompt outputs exhibit semantic bias across plant forms, motivating prompt-adaptive foreground-prior generation.}}{15}{figure.4}\protected@file@percent }
+\newlabel{fig:prompt-failure}{{4}{15}{Prompt sensitivity of direct VFM segmentation in potted-plant scenes. Single-prompt outputs exhibit semantic bias across plant forms, motivating prompt-adaptive foreground-prior generation}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Ablation of RAP-FSAM3 Adaptation Modules}{15}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:rap-ablation-results}{{3.3}{15}{Ablation of RAP-FSAM3 Adaptation Modules}{subsection.3.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Ablation of RAP-FSAM3 adaptation components on the same manually annotated evaluation frames. The geometry-only selector is a diagnostic variant used to evaluate the necessity of semantic-gated multi-prompt selection. The fixed plant-instance prompt and the full RAP-FSAM3 correspond to the shared baseline and final method in Table~\ref {tab:vfm-comparison}.}}{15}{table.5}\protected@file@percent }
+\newlabel{tab:rap-ablation}{{5}{15}{Ablation of RAP-FSAM3 adaptation components on the same manually annotated evaluation frames. The geometry-only selector is a diagnostic variant used to evaluate the necessity of semantic-gated multi-prompt selection. The fixed plant-instance prompt and the full RAP-FSAM3 correspond to the shared baseline and final method in Table~\ref {tab:vfm-comparison}}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}VFM-Prior Injection into 2DGS Is Necessary for Foreground-Object Reconstruction}{15}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:injection-ablation-results}{{3.4}{15}{VFM-Prior Injection into 2DGS Is Necessary for Foreground-Object Reconstruction}{subsection.3.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Foreground-object optimisation with a lightweight M2M3-GO refinement layer. RAP-FSAM3 foreground priors are injected into sparse-track initialisation, foreground-conditioned rendering losses, opacity constraints and view-quality weighting. After the foreground-object target has been established, M2M3-GO converts pixel-level masks into primitive-level Gaussian utility scores through mask-to-model support, model-to-mask coverage deficit and boundary support, supporting keep, densify and prune decisions before mesh extraction. The module is used as a refinement layer rather than as an independent compression component.}}{16}{figure.5}\protected@file@percent }
+\newlabel{fig:algorithm}{{5}{16}{Foreground-object optimisation with a lightweight M2M3-GO refinement layer. RAP-FSAM3 foreground priors are injected into sparse-track initialisation, foreground-conditioned rendering losses, opacity constraints and view-quality weighting. After the foreground-object target has been established, M2M3-GO converts pixel-level masks into primitive-level Gaussian utility scores through mask-to-model support, model-to-mask coverage deficit and boundary support, supporting keep, densify and prune decisions before mesh extraction. The module is used as a refinement layer rather than as an independent compression component}{figure.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Ablation of VFM-prior injection positions in 2DGS optimisation on a representative broad-leaf foreground morphology.}}{17}{table.6}\protected@file@percent }
+\newlabel{tab:injection-ablation}{{6}{17}{Ablation of VFM-prior injection positions in 2DGS optimisation on a representative broad-leaf foreground morphology}{table.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Micro-level M2M3-GO primitive refinement mechanism. The module bridges pixel-level foreground priors and Gaussian-level operations by computing mask-to-model support, model-to-mask coverage deficit and boundary support for each primitive. These cues are integrated into a Gaussian utility score that controls keep, densify and prune decisions. Broad-leaf, compact flowering and low-canopy foreground patterns are shown as mechanism examples, while the Floor40 gate denotes an optional local lower-bound safeguard against over-aggressive primitive removal.}}{17}{figure.6}\protected@file@percent }
+\newlabel{fig:m2m3-go-micro}{{6}{17}{Micro-level M2M3-GO primitive refinement mechanism. The module bridges pixel-level foreground priors and Gaussian-level operations by computing mask-to-model support, model-to-mask coverage deficit and boundary support for each primitive. These cues are integrated into a Gaussian utility score that controls keep, densify and prune decisions. Broad-leaf, compact flowering and low-canopy foreground patterns are shown as mechanism examples, while the Floor40 gate denotes an optional local lower-bound safeguard against over-aggressive primitive removal}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Visual evidence for VFM-prior injection in 2DGS. Training-time foreground-object optimisation suppresses background learning more effectively than input masking or post hoc pruning.}}{18}{figure.7}\protected@file@percent }
+\newlabel{fig:injection-ablation}{{7}{18}{Visual evidence for VFM-prior injection in 2DGS. Training-time foreground-object optimisation suppresses background learning more effectively than input masking or post hoc pruning}{figure.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Workflow-Level Reconstruction, Mesh Generation and Phenotypic Validation}{18}{subsection.3.5}\protected@file@percent }
+\newlabel{sec:workflow-validation-results}{{3.5}{18}{Workflow-Level Reconstruction, Mesh Generation and Phenotypic Validation}{subsection.3.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Workflow-level reconstruction quality and processing efficiency under a unified 20-sequence protocol. Values are averaged over all 20 RGB sequences. The same input frame sampling, train/test view split, image resolution and computing environment were used for all methods whenever applicable. Neural-rendering methods were trained for 30,000 iterations.}}{19}{table.7}\protected@file@percent }
+\newlabel{tab:reconstruction}{{7}{19}{Workflow-level reconstruction quality and processing efficiency under a unified 20-sequence protocol. Values are averaged over all 20 RGB sequences. The same input frame sampling, train/test view split, image resolution and computing environment were used for all methods whenever applicable. Neural-rendering methods were trained for 30,000 iterations}{table.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Representative reconstruction and mesh outputs. ForeSplat reduces background residue and produces foreground-object meshes suitable for virtual phenotypic measurement.}}{19}{figure.8}\protected@file@percent }
+\newlabel{fig:reconstruction}{{8}{19}{Representative reconstruction and mesh outputs. ForeSplat reduces background residue and produces foreground-object meshes suitable for virtual phenotypic measurement}{figure.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Agreement between manual and virtual phenotypic measurements across all plant samples. Plant height and canopy width were evaluated at the plant level (n = 21), while leaf length and leaf width were evaluated on three representative leaves per plant (n = 63). Bias is defined as virtual measurement minus manual measurement. \(R^2\) values are rounded to three decimal places.}}{20}{table.8}\protected@file@percent }
+\newlabel{tab:phenotyping}{{8}{20}{Agreement between manual and virtual phenotypic measurements across all plant samples. Plant height and canopy width were evaluated at the plant level (n = 21), while leaf length and leaf width were evaluated on three representative leaves per plant (n = 63). Bias is defined as virtual measurement minus manual measurement. \(R^2\) values are rounded to three decimal places}{table.8}{}}
+\citation{ref65,ref66,ref67}
+\citation{ref70}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Agreement between manual measurements and virtual phenotypic measurements. Scatter plots, residual distributions and summary metrics show that ForeSplat supports plant height, canopy width, leaf length and leaf width measurement.}}{21}{figure.9}\protected@file@percent }
+\newlabel{fig:phenotyping}{{9}{21}{Agreement between manual measurements and virtual phenotypic measurements. Scatter plots, residual distributions and summary metrics show that ForeSplat supports plant height, canopy width, leaf length and leaf width measurement}{figure.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{21}{section.4}\protected@file@percent }
+\newlabel{sec:discussion}{{4}{21}{Discussion}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Vision Foundation Models Require Agricultural Prompt Adaptation}{21}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:vfm-prompt-adaptation}{{4.1}{21}{Vision Foundation Models Require Agricultural Prompt Adaptation}{subsection.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Foreground Priors Should Define the 3D Optimisation Target}{21}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:vfm-priors-to-3d-objective}{{4.2}{21}{Foreground Priors Should Define the 3D Optimisation Target}{subsection.4.2}{}}
+\citation{ref57,ref58}
+\citation{ref35}
+\citation{ref34}
+\citation{ref36}
+\citation{ref37}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}From Foreground-Object Supervision to Primitive-Level Capacity Allocation}{22}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:primitive-level-capacity-allocation}{{4.3}{22}{From Foreground-Object Supervision to Primitive-Level Capacity Allocation}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Phenotyping-Oriented Reconstruction and Boundary-Sensitive Traits}{22}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:phenotyping-boundary-errors}{{4.4}{22}{Phenotyping-Oriented Reconstruction and Boundary-Sensitive Traits}{subsection.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Relationship to Reference Studies}{22}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:relationship-to-reference-studies}{{4.5}{22}{Relationship to Reference Studies}{subsection.4.5}{}}
+\bibstyle{elsarticle-num-names}
+\bibdata{cas-refs}
+\csxdef{lastpage}{23}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{23}{section.5}\protected@file@percent }
+\newlabel{sec:conclusion}{{5}{23}{Conclusion}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{Funding}{23}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Data Availability}{23}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Ethics Statement}{23}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Competing Interests}{23}{section*.4}\protected@file@percent }
+\gdef \@abspage@last{24}

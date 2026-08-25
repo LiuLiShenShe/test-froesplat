@@ -1,0 +1,28 @@
+{
+  "stage": "S24-E4b-mask-source-2DGS-closed-loop",
+  "sample": "XianKeLai1",
+  "mask_source_id": "FSAM3_base",
+  "mask_source_label": "FSAM3-base",
+  "source_path": "/data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/04-sanitized_for_A6/XianKeLai1",
+  "raw_mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/04-fsam3_masks/XianKeLai1/最终掩膜",
+  "prepared_mask_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/06-实验输出/XianKeLai1/E4b_FSAM3_base/prepared_masks",
+  "repo_path": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "iterations": 30000,
+  "resolution": 4,
+  "eval": true,
+  "image_count": 203,
+  "missing_mask_count": 0,
+  "missing_masks": [],
+  "fixed_2dgs_setting": {
+    "mask_mode": "alpha",
+    "init_pcd_mode": "foreground_track",
+    "use_foreground_rgb_loss": true,
+    "use_mask_loss": true,
+    "use_bg_opacity_loss": true,
+    "pruning_mode": "mask",
+    "lambda_mask": 0.08,
+    "lambda_bg": 0.02,
+    "mask_loss_type": "l1_dice"
+  }
+}

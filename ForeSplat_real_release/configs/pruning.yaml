@@ -1,0 +1,22 @@
+name: mask_guided_gaussian_pruning
+criteria:
+  outside_mask_ratio:
+    enabled: true
+    threshold: 0.65
+  low_opacity:
+    enabled: true
+    threshold: 0.005
+  weak_foreground_support:
+    enabled: true
+    threshold: 0.20
+schedule:
+  iterations:
+    - 18000
+    - 21000
+    - 24000
+    - 27000
+    - 30000
+  max_prune_fraction_per_step: 0.20
+preservation:
+  protect_boundary_supported_primitives: true
+  protect_sparse_track_supported_primitives: true

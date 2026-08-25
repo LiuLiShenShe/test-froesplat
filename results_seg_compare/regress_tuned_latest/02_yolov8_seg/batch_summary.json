@@ -1,0 +1,30 @@
+{
+  "method": "YOLOv8-Seg",
+  "target_definition": "green_plant_canopy",
+  "total_folders": 1,
+  "total_time_sec": 0.71,
+  "parameters": {
+    "model": "/data/fj/yolov8_seg/yolov8n-seg.pt",
+    "classes": "all",
+    "conf": 0.25,
+    "iou": 0.7,
+    "mask_threshold": 0.5,
+    "imgsz": 1024,
+    "green_refine": false,
+    "green_threshold_mode": "otsu",
+    "green_threshold_percentile": 65.0,
+    "green_threshold_fixed": 128.0,
+    "pp_open_kernel_size": 3,
+    "pp_close_kernel_size": 9,
+    "pp_fill_holes": true,
+    "pp_keep_components": 0,
+    "pp_min_area_ratio": 0.0002
+  },
+  "folders": [
+    {
+      "folder": "DouBanLv1",
+      "images": 1,
+      "time_sec": 0.71
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "sample": "XianKeLai1",
+  "runs": {
+    "A6": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/XianKeLai1/A6_foreground_track_init_fg_rgb_alpha_bg",
+      "gaussians_30000": 253827,
+      "PSNR": 22.62584766974816,
+      "SSIM": 0.9286578091291281,
+      "LPIPS": 0.07558391945293316,
+      "PSNR_fg": 23.727610661433292,
+      "SSIM_fg": 0.8278282789083627,
+      "LPIPS_fg_black_bg": 0.030883122163896378,
+      "leakage_energy_ratio_mean": 0.037885093273451693,
+      "outside_nonblack_ratio_mean": 0.04835627048921127
+    },
+    "A6+M4": {
+      "output_dir": "00-论文优化重构/数据管理/06-实验输出/XianKeLai1/A6_M4_mask_pruning_20260519_151007",
+      "gaussians_30000": 251047,
+      "PSNR": 22.694555796109714,
+      "SSIM": 0.928792478946539,
+      "LPIPS": 0.07610112213744567,
+      "PSNR_fg": 23.72558014209454,
+      "SSIM_fg": 0.8278823288587424,
+      "LPIPS_fg_black_bg": 0.030979518492061358,
+      "leakage_energy_ratio_mean": 0.03762469046677534,
+      "outside_nonblack_ratio_mean": 0.048601801292254374
+    }
+  },
+  "delta_A6_M4_minus_A6": {
+    "gaussians_30000": -2780,
+    "PSNR": 0.06870812636155237,
+    "SSIM": 0.00013466981741085358,
+    "LPIPS": 0.0005172026845125046,
+    "PSNR_fg": -0.0020305193387522546,
+    "SSIM_fg": 0.00005404995037970086,
+    "LPIPS_fg_black_bg": 0.00009639532816498006,
+    "leakage_energy_ratio_mean": -0.00026040280667635086,
+    "outside_nonblack_ratio_mean": 0.00024553080304310445
+  },
+  "pruning_reports": [
+    {
+      "iteration": 18000,
+      "gaussians_before": 253581,
+      "gaussians_after": 252197,
+      "removed": 1384,
+      "pruning_ratio": 0.0054578221554454
+    },
+    {
+      "iteration": 21000,
+      "gaussians_before": 252197,
+      "gaussians_after": 251664,
+      "removed": 533,
+      "pruning_ratio": 0.002113427201751012
+    },
+    {
+      "iteration": 24000,
+      "gaussians_before": 251664,
+      "gaussians_after": 251352,
+      "removed": 312,
+      "pruning_ratio": 0.0012397482357428952
+    },
+    {
+      "iteration": 27000,
+      "gaussians_before": 251352,
+      "gaussians_after": 251169,
+      "removed": 183,
+      "pruning_ratio": 0.0007280626372577103
+    },
+    {
+      "iteration": 30000,
+      "gaussians_before": 251169,
+      "gaussians_after": 251047,
+      "removed": 122,
+      "pruning_ratio": 0.0004857287324470775
+    }
+  ]
+}

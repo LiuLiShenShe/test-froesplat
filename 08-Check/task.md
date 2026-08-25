@@ -1,0 +1,9 @@
+05-2DGS-new是我的2DGS模型的高斯点云。
+07-SuGaR-GS是我的3DGS模型的高斯点云。
+06-MESH是2DGS的mesh。
+07-SuGaR-Mesh是3DGS的mesh。
+对这些文件夹的所有的高斯点云和mesh文件，进行评定。
+采用PSNR、SSIM、LPIPS。
+并且告知我在点云不同迭代阶段。各文件分别最终点云数量与相机个数与位姿。
+所有输出的结果存放在D:\CAAS\08-Check，保持命名规范。
+有不明白的随时向我提问。

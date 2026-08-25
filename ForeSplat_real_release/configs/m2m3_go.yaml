@@ -1,0 +1,20 @@
+name: m2m3_go
+description: Mask-to-model and model-to-mask Gaussian optimisation controller.
+features:
+  mask_to_model_support:
+    enabled: true
+    min_support: 0.35
+  model_to_mask_deficit:
+    enabled: true
+    target_coverage: 0.92
+  boundary_support:
+    enabled: true
+    boundary_band_pixels: 12
+utility_score:
+  keep_threshold: 0.25
+  densify_threshold: 0.65
+  prune_threshold: 0.15
+schedule:
+  start_iteration: 6000
+  update_every: 1000
+  stop_iteration: 24000

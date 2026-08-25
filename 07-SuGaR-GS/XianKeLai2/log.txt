@@ -1,0 +1,1835 @@
+2026-02-20 15:33:56 [INFO] Processing scene: XianKeLai2
+2026-02-20 15:33:56 [INFO] Log file: D:\CAAS\07-SuGaR-GS\XianKeLai2\log.txt
+2026-02-20 15:33:56 [INFO] [Step 1/5] Vanilla 3DGS - SKIPPED (checkpoint exists: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2\point_cloud\iteration_7000\point_cloud.ply)
+2026-02-20 15:33:56 [INFO] ============================================================
+2026-02-20 15:33:56 [INFO] [Step 1.5/5] 清废光 (clean_3dgs_ply_v2)
+2026-02-20 15:33:56 [INFO] [Step 1.5/5] SKIPPED (already cleaned, backup exists: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2\point_cloud\iteration_7000\point_cloud_original.ply)
+2026-02-20 15:33:56 [INFO] ============================================================
+2026-02-20 15:33:56 [INFO] [Steps 2-5] SuGaR pipeline (coarse → mesh → refine → texture)
+2026-02-20 15:33:56 [INFO] 运行命令: D:\CAAS\SuGaR-main\.venv\Scripts\python.exe D:\CAAS\SuGaR-main\train.py -s D:\CAAS\04-COLMAP\XianKeLai2 ...
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Using original 3DGS rasterizer from Inria.
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Will export a UV-textured mesh as an .obj file.
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Will export a ply file with the refined 3D Gaussians at the end of the training.
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Changing sh_levels to match the loaded model: 4
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] -----Parsed parameters-----
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Source path: D:\CAAS\04-COLMAP\XianKeLai2
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR]    > Content: 8
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Gaussian Splatting checkpoint path: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR]    > Content: 4
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] SUGAR checkpoint path: ./output/coarse\XianKeLai2\sugarcoarse_3Dgs7000_densityestim02_sdfnorm02/
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Iteration to load: 7000
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Output directory: ./output/coarse\XianKeLai2
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Depth-Normal consistency factor: 0.05
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] SDF estimation factor: 0.2
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] SDF better normal factor: 0.2
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Eval split: False
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] White background: False
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] ---------------------------
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Using device: 0
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |                  PyTorch CUDA memory summary, device ID 0                 |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |            CUDA OOMs: 0            |        cudaMalloc retries: 0         |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |        Metric         | Cur Usage  | Peak Usage | Tot Alloc  | Tot Freed  |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Allocated memory      |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Active memory         |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Requested memory      |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | GPU reserved memory   |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Non-releasable memory |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 B   |      0 B   |      0 B   |      0 B   |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Allocations           |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Active allocs         |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | GPU reserved segments |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Non-releasable allocs |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from large pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Oversize allocations  |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] | Oversize GPU segments |       0    |       0    |       0    |       0    |
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 15:34:03 [INFO]   [Steps2-5-SuGaR] Loading config D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2...
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Found image extension .jpg
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] 208 training images detected.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] The model has been trained for 7000 steps.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Camera resolution scaled to 1920 x 1073
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Initializing model from trained 3DGS...
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Point cloud generated. Number of points: 44264
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Use min to initialize scales.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Initialized radiuses for 3D Gauss Rasterizer
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Initializing 3D gaussians from 3D gaussians...
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] SuGaR model has been initialized.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] SuGaR()
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Number of parameters: 2611576
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Checkpoints will be saved in ./output/coarse\XianKeLai2\sugarcoarse_3Dgs7000_densityestim02_sdfnorm02/
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Model parameters:
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] _points
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 3])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] all_densities
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 1])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] _scales
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 3])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] _quaternions
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 4])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_dc
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 1, 3])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_rest
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] torch.Size([44264, 15, 3])
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Using camera spatial extent as spatial_lr_scale: 6.954218387603761
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Optimizer initialized.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Optimization parameters:
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] OptimizationParams(
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             iterations=15000,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             position_lr_init=0.00016,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             position_lr_final=1.6e-06,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             position_lr_delay_mult=0.01,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             position_lr_max_steps=30000,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             feature_lr=0.0025,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             opacity_lr=0.05,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             scaling_lr=0.005,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             rotation_lr=0.001,
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR]             )
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Optimizable parameters:
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] points 0.0011126749420166018
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] sh_coordinates_dc 0.0025
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] sh_coordinates_rest 0.000125
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] all_densities 0.05
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] scales 0.005
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] quaternions 0.001
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Densifier initialized.
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Using loss function: l1+dssim
+2026-02-20 15:34:33 [INFO]   [Steps2-5-SuGaR] Starting regularization...
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Iteration: 7000
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] loss: 0.281044  [ 7000/15000] computed in 0.007853440443674723 minutes.
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Points:   -13.718087196350098   18.014930725097656   1.1014771461486816   4.831889629364014
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.4984407126903534   0.03079048916697502   0.03440983593463898
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9175716638565063   0.9999865889549255   0.23355184495449066   0.4421025216579437
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8036351203918457   4.05673360824585   0.4155885577201843   0.6706899404525757
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.33116504549980164   0.40773993730545044   0.0011568141635507345   0.04219653084874153
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Opacities:   0.009517233818769455   1.0   0.3638891875743866   0.3318016529083252
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Starting entropy regularization.
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:34:34 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Iteration: 7200
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] loss: 0.230011  [ 7200/15000] computed in 0.10375570058822632 minutes.
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Points:   -13.704057693481445   18.015302658081055   1.1015193462371826   4.831846714019775
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.6060816049575806   0.030283914878964424   0.033369407057762146
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9140214323997498   0.9999799132347107   0.23352797329425812   0.4421151280403137
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8036351203918457   3.9544456005096436   0.37747257947921753   0.6719057559967041
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.33450955152511597   0.41415008902549744   0.0009753321064636111   0.042488355189561844
+2026-02-20 15:34:40 [INFO]   [Steps2-5-SuGaR] Opacities:   0.00017248584481421858   1.0   0.31102174520492554   0.44593513011932373
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Iteration: 7400
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] loss: 0.121876  [ 7400/15000] computed in 0.09674269755681356 minutes.
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.013826370239258   1.1015552282333374   4.831807613372803
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.7294562458992004   0.030198097229003906   0.03346564248204231
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.904339075088501   0.9999799132347107   0.23321039974689484   0.4422827363014221
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8036351203918457   3.9183995723724365   0.365260511636734   0.6762518882751465
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3396521210670471   0.41552743315696716   0.0008675162098370492   0.042836304754018784
+2026-02-20 15:34:46 [INFO]   [Steps2-5-SuGaR] Opacities:   5.7104432926280424e-05   1.0   0.3074479401111603   0.45416325330734253
+2026-02-20 15:34:49 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:34:49 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Iteration: 7600
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] loss: 0.117015  [ 7600/15000] computed in 0.09678621292114258 minutes.
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014328002929688   1.101564884185791   4.831793308258057
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.8145424723625183   0.030160946771502495   0.033701516687870026
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8992399573326111   0.9999799132347107   0.23285456001758575   0.4424701929092407
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8922663927078247   3.9021413326263428   0.3575534224510193   0.6797839403152466
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3456495702266693   0.4187611937522888   0.0007916286122053862   0.04318925738334656
+2026-02-20 15:34:51 [INFO]   [Steps2-5-SuGaR] Opacities:   2.889652387239039e-05   1.0   0.30613940954208374   0.4569873809814453
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Iteration: 7800
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] loss: 0.087096  [ 7800/15000] computed in 0.0946299155553182 minutes.
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014358520507812   1.1015619039535522   4.831786155700684
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.8641687631607056   0.03019634261727333   0.03415771573781967
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9172623753547668   0.9999902248382568   0.23263822495937347   0.44258394837379456
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9323742389678955   3.899461030960083   0.35333818197250366   0.6828787922859192
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3492110073566437   0.42162439227104187   0.0007479870691895485   0.04353289678692818
+2026-02-20 15:34:57 [INFO]   [Steps2-5-SuGaR] Opacities:   1.755332232278306e-05   1.0   0.30580928921699524   0.45784321427345276
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Iteration: 8000
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] loss: 0.165875  [ 8000/15000] computed in 0.09628829956054688 minutes.
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1015207767486572   4.831786155700684
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   0.8845329880714417   0.030215436592698097   0.03456549346446991
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9088360071182251   0.9999799132347107   0.2322438806295395   0.44279101490974426
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.938713788986206   3.8956260681152344   0.34941813349723816   0.6864385008811951
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3539533317089081   0.4233012795448303   0.0007034056470729411   0.04389306530356407
+2026-02-20 15:35:03 [INFO]   [Steps2-5-SuGaR] Opacities:   1.1804666428361088e-05   1.0   0.30561378598213196   0.4586080014705658
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Iteration: 8200
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] loss: 0.246935  [ 8200/15000] computed in 0.09921849568684896 minutes.
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1015090942382812   4.831788063049316
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   1.055149793624878   0.030215950682759285   0.03514403849840164
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8972784280776978   0.9999799132347107   0.232060506939888   0.44288715720176697
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.003396511077881   3.896371841430664   0.34634163975715637   0.6893389821052551
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3570658266544342   0.4247342050075531   0.0006929669179953635   0.04421341419219971
+2026-02-20 15:35:09 [INFO]   [Steps2-5-SuGaR] Opacities:   8.460306162305642e-06   1.0   0.3054039478302002   0.45901820063591003
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Iteration: 8400
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] loss: 0.135959  [ 8400/15000] computed in 0.10202706654866536 minutes.
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1014705896377563   4.831777095794678
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   1.6159591674804688   0.030326733365654945   0.035862937569618225
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8910815715789795   0.9999799132347107   0.23175624012947083   0.4430464506149292
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.003396511077881   3.8967485427856445   0.3463563024997711   0.6920717358589172
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.35945889353752136   0.42596909403800964   0.0006551073165610433   0.04458098113536835
+2026-02-20 15:35:15 [INFO]   [Steps2-5-SuGaR] Opacities:   6.340468189591775e-06   1.0   0.3054163455963135   0.459323912858963
+2026-02-20 15:35:18 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:18 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Iteration: 8600
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] loss: 0.092085  [ 8600/15000] computed in 0.1034563700358073 minutes.
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1014512777328491   4.831789016723633
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   2.2159359455108643   0.030319567769765854   0.0365159846842289
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8988800048828125   0.9999799132347107   0.2315601110458374   0.44314897060394287
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.0202834606170654   3.900106191635132   0.34478387236595154   0.6951385736465454
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3634914457798004   0.4301387369632721   0.0006305606802925467   0.04488924890756607
+2026-02-20 15:35:21 [INFO]   [Steps2-5-SuGaR] Opacities:   4.894170615443727e-06   1.0   0.3053779900074005   0.4595063626766205
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Iteration: 8800
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] loss: 0.216656  [ 8800/15000] computed in 0.105644690990448 minutes.
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1014387607574463   4.831785202026367
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   2.4928653240203857   0.03038439340889454   0.03729138895869255
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8959846496582031   0.9999799132347107   0.23131266236305237   0.4432782232761383
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.03782057762146   3.9350948333740234   0.344071626663208   0.6979402899742126
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3679729700088501   0.4311017096042633   0.0006158579490147531   0.04519573599100113
+2026-02-20 15:35:28 [INFO]   [Steps2-5-SuGaR] Opacities:   3.888540504703997e-06   1.0   0.3053598701953888   0.4596583843231201
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Stopping entropy regularization.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Iteration: 9000
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] loss: 0.329835  [ 9000/15000] computed in 0.10759985446929932 minutes.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Points:   -13.702693939208984   18.014408111572266   1.1014339923858643   4.831777572631836
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.647275509914948e-09   2.8029909133911133   0.030420320108532906   0.03813272342085838
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.8952878713607788   0.9999799132347107   0.23115776479244232   0.44335898756980896
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.0647268295288086   3.9330923557281494   0.3431016206741333   0.7003139853477478
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.37262555956840515   0.43232327699661255   0.000584644905757159   0.045499540865421295
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Opacities:   3.139889031444909e-06   1.0   0.3053514063358307   0.45977291464805603
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Pruning gaussians with low-opacity for further optimization...
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Pruning finished: 13505 gaussians left.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Starting depth-normal consistency.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Starting SDF regularization.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Starting SDF estimation loss.
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:35:34 [INFO]   [Steps2-5-SuGaR] Starting SDF better normal loss.
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Iteration: 9200
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] loss: 0.313980  [ 9200/15000] computed in 0.8535848180452983 minutes.
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Points:   -13.641372680664062   18.01384925842285   1.2220059633255005   5.142576217651367
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Scaling factors:   7.85685794202351e-10   7.010517120361328   0.036142800003290176   0.07284938544034958
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9607584476470947   0.9999042749404907   0.22042720019817352   0.4487934708595276
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.168194532394409   3.9021661281585693   0.1343773901462555   0.7286618947982788
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.37714409828186035   0.43340516090393066   0.00142199476249516   0.0634584128856659
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Opacities:   0.3124745786190033   1.0   0.9990394115447998   0.014771860092878342
+2026-02-20 15:36:25 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9264, device='cuda:0')
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Iteration: 9400
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] loss: 0.275147  [ 9400/15000] computed in 0.8691774169603984 minutes.
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Points:   -13.647787094116211   18.02150535583496   1.222060203552246   5.142601013183594
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Scaling factors:   5.152240301065092e-10   9.717473983764648   0.03658615052700043   0.08592084795236588
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9768539071083069   0.9999085664749146   0.21834205090999603   0.4498116075992584
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.168194532394409   3.935678482055664   0.13538675010204315   0.7341715693473816
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3802529573440552   0.4365486800670624   0.0013729393249377608   0.0641741082072258
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Opacities:   0.30388423800468445   1.0   0.9990715980529785   0.014754904434084892
+2026-02-20 15:37:17 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9277, device='cuda:0')
+2026-02-20 15:37:43 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:37:43 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Iteration: 9600
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] loss: 0.235319  [ 9600/15000] computed in 0.8754515687624613 minutes.
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Points:   -13.651330947875977   18.024511337280273   1.222091555595398   5.142627239227295
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Scaling factors:   4.168251577230109e-10   9.75209903717041   0.03707180172204971   0.09313193708658218
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9883196353912354   0.999852180480957   0.21668703854084015   0.4506112337112427
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.168194532394409   4.016139507293701   0.14027149975299835   0.7410758137702942
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.391688734292984   0.43646806478500366   0.0013240030966699123   0.06483899056911469
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Opacities:   0.24974866211414337   1.0   0.9990739822387695   0.015196816064417362
+2026-02-20 15:38:10 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8196, device='cuda:0')
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Iteration: 9800
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] loss: 0.203681  [ 9800/15000] computed in 0.8782281239827474 minutes.
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Points:   -13.654479026794434   18.027315139770508   1.2221462726593018   5.142617225646973
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Scaling factors:   3.6206523890136566e-10   12.298515319824219   0.037421971559524536   0.10566248744726181
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9847820997238159   0.9998342990875244   0.21558654308319092   0.45113876461982727
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.069302558898926   0.14041396975517273   0.7462530732154846
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.40263596177101135   0.4396383464336395   0.0013130826409906149   0.06537152826786041
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Opacities:   0.22680029273033142   1.0   0.9990796446800232   0.015340988524258137
+2026-02-20 15:39:03 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(11808, device='cuda:0')
+2026-02-20 15:39:55 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:39:55 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:39:55 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:39:55 [INFO]   [Steps2-5-SuGaR] Iteration: 10000
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] loss: 0.182944  [10000/15000] computed in 0.8805752952893575 minutes.
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Points:   -13.661121368408203   18.02651023864746   1.222176194190979   5.142620086669922
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Scaling factors:   3.282042138064156e-10   13.419082641601562   0.03786974400281906   0.11200685054063797
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9800075888633728   0.9997981190681458   0.21482163667678833   0.4515035152435303
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.076118469238281   0.13800841569900513   0.7509629726409912
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4092765748500824   0.44064831733703613   0.0013188060838729143   0.06581515818834305
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Opacities:   0.2351716309785843   1.0   0.9990512728691101   0.01588764227926731
+2026-02-20 15:39:56 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9352, device='cuda:0')
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Iteration: 10200
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] loss: 0.405644  [10200/15000] computed in 0.8824369311332703 minutes.
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Points:   -13.662327766418457   18.02591896057129   1.2221976518630981   5.1426191329956055
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Scaling factors:   3.1289640323173273e-10   13.327590942382812   0.038330577313899994   0.11401771754026413
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9730515480041504   0.9996731281280518   0.21391822397708893   0.45193225145339966
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.08595085144043   0.13910603523254395   0.7543139457702637
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.41630440950393677   0.4413949251174927   0.0012928320793434978   0.06624159961938858
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Opacities:   0.10013923048973083   1.0   0.9989665150642395   0.018273722380399704
+2026-02-20 15:40:48 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9413, device='cuda:0')
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Iteration: 10400
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] loss: 0.195160  [10400/15000] computed in 0.8804468154907227 minutes.
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Points:   -13.665194511413574   18.027793884277344   1.222220540046692   5.142601490020752
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.936050014223923e-10   14.37429141998291   0.03856610506772995   0.11896753311157227
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9733691811561584   0.9998961687088013   0.21330204606056213   0.45222342014312744
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.090696811676025   0.1349583864212036   0.7588866949081421
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4231775403022766   0.4435838460922241   0.0012860313290730119   0.06662698835134506
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Opacities:   0.14233794808387756   1.0   0.9988628625869751   0.01985342986881733
+2026-02-20 15:41:41 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9440, device='cuda:0')
+2026-02-20 15:42:08 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:42:08 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Iteration: 10600
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] loss: 0.685070  [10600/15000] computed in 0.8797426780064901 minutes.
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Points:   -13.666489601135254   18.026901245117188   1.2222414016723633   5.142585754394531
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.73878308920672e-10   14.824506759643555   0.039005715399980545   0.12233684957027435
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9725075364112854   0.9999753832817078   0.21259364485740662   0.45255687832832336
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.092506408691406   0.13496720790863037   0.7620914578437805
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.42963293194770813   0.4499101936817169   0.0012513473629951477   0.06703830510377884
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Opacities:   0.04442354291677475   1.0   0.9987796545028687   0.021060260012745857
+2026-02-20 15:42:34 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9649, device='cuda:0')
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Iteration: 10800
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] loss: 0.205048  [10800/15000] computed in 0.8823864221572876 minutes.
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Points:   -13.665059089660645   18.027738571166992   1.222266674041748   5.142577171325684
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.4324514624751714e-10   16.703901290893555   0.039363302290439606   0.13134552538394928
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9714703559875488   0.999897301197052   0.21199098229408264   0.45283952355384827
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.0932841300964355   0.1315537691116333   0.765313446521759
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4352192282676697   0.45576798915863037   0.001265276107005775   0.0673976019024849
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Opacities:   0.019888626411557198   1.0   0.9985793828964233   0.024148840457201004
+2026-02-20 15:43:27 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9401, device='cuda:0')
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Iteration: 11000
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] loss: 0.183113  [11000/15000] computed in 0.8812116225560506 minutes.
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Points:   -13.670454978942871   18.02887725830078   1.2222667932510376   5.142579078674316
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.3113200242619314e-10   16.97121810913086   0.039623670279979706   0.13353610038757324
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9701600074768066   0.9997319579124451   0.21132966876029968   0.4531484842300415
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.093624591827393   0.13079530000686646   0.7682468295097351
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.43718019127845764   0.46062564849853516   0.0012487248750403523   0.06778480112552643
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Opacities:   0.01175153162330389   1.0   0.9984719157218933   0.02483079582452774
+2026-02-20 15:44:20 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9325, device='cuda:0')
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Iteration: 11200
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] loss: 0.170541  [11200/15000] computed in 0.8775100946426392 minutes.
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Points:   -13.673995018005371   18.027690887451172   1.222285509109497   5.142568111419678
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Scaling factors:   2.0702975445097138e-10   18.007692337036133   0.03997156769037247   0.13871140778064728
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.974206805229187   0.9999173879623413   0.21078811585903168   0.45340070128440857
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.094105243682861   0.12886889278888702   0.7716039419174194
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.43794941902160645   0.4664528965950012   0.0012468484928831458   0.06814879924058914
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Opacities:   0.011815986596047878   1.0   0.9982640743255615   0.02698877453804016
+2026-02-20 15:45:13 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9352, device='cuda:0')
+2026-02-20 15:46:05 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:46:05 [INFO]   [Steps2-5-SuGaR] Iteration: 11400
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] loss: 0.198482  [11400/15000] computed in 0.881233791510264 minutes.
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Points:   -13.674190521240234   18.028247833251953   1.2222920656204224   5.142569541931152
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.8575804783260708e-10   19.56009292602539   0.040259115397930145   0.14567044377326965
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9642696380615234   0.9998995065689087   0.21026766300201416   0.4536423087120056
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2297911643981934   4.09424352645874   0.12778407335281372   0.7749211192131042
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.44416797161102295   0.47153085470199585   0.001235815929248929   0.06852096319198608
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Opacities:   0.009359161369502544   1.0   0.9980934262275696   0.028914421796798706
+2026-02-20 15:46:06 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8629, device='cuda:0')
+2026-02-20 15:46:32 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:46:32 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Iteration: 11600
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] loss: 0.119589  [11600/15000] computed in 0.881657866636912 minutes.
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Points:   -13.675007820129395   18.028038024902344   1.222306728363037   5.142573356628418
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.776933045150031e-10   20.845706939697266   0.04065963253378868   0.15152575075626373
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9621581435203552   0.9999303221702576   0.20983609557151794   0.45384204387664795
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.3186402320861816   4.0944719314575195   0.12773674726486206   0.7776913046836853
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4461400806903839   0.47588086128234863   0.0012195315212011337   0.06886362284421921
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Opacities:   0.00792083702981472   1.0   0.997918426990509   0.03036637045443058
+2026-02-20 15:46:58 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8608, device='cuda:0')
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Iteration: 11800
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] loss: 0.257497  [11800/15000] computed in 0.8806939601898194 minutes.
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Points:   -13.678625106811523   18.028066635131836   1.2223113775253296   5.142575740814209
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.66115607380668e-10   21.844066619873047   0.041031718254089355   0.15734437108039856
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.960923969745636   0.9998283386230469   0.20948943495750427   0.4540022015571594
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.4762349128723145   4.094581604003906   0.12666021287441254   0.7802917957305908
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.451803058385849   0.480694979429245   0.0012211869470775127   0.06920616328716278
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Opacities:   0.007476245053112507   1.0   0.9975194334983826   0.03473107889294624
+2026-02-20 15:47:51 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8321, device='cuda:0')
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Iteration: 12000
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] loss: 0.194886  [12000/15000] computed in 0.8842604716618856 minutes.
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Points:   -13.68309497833252   18.02836799621582   1.2223211526870728   5.142580509185791
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.5549288245875204e-10   23.478071212768555   0.04137876257300377   0.16495105624198914
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.989418625831604   0.9998661279678345   0.2090061753988266   0.4542248845100403
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.607964515686035   4.094655513763428   0.1260855346918106   0.7831651568412781
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.45455795526504517   0.4843202829360962   0.001220130710862577   0.06954950839281082
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Opacities:   0.006566845811903477   1.0   0.9966933727264404   0.04112197458744049
+2026-02-20 15:48:44 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8840, device='cuda:0')
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Iteration: 12200
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] loss: 0.674548  [12200/15000] computed in 0.8843823552131653 minutes.
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Points:   -13.682775497436523   18.028194427490234   1.2223260402679443   5.142589092254639
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.5046817958275227e-10   24.645008087158203   0.041754547506570816   0.17182518541812897
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9583593010902405   0.9998785853385925   0.20866389572620392   0.4543822109699249
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.8516006469726562   4.094692707061768   0.12578485906124115   0.7859441637992859
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4563392400741577   0.48858335614204407   0.0012252089800313115   0.06987924873828888
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Opacities:   0.005780043546110392   1.0   0.9919294714927673   0.07167094945907593
+2026-02-20 15:49:37 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9630, device='cuda:0')
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Iteration: 12400
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] loss: 0.173365  [12400/15000] computed in 0.8836684823036194 minutes.
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Points:   -13.681604385375977   18.028404235839844   1.2223342657089233   5.1425933837890625
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.4930746916608229e-10   26.047489166259766   0.042174115777015686   0.17959806323051453
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9634518623352051   0.9997157454490662   0.20826531946659088   0.45456501841545105
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.874511480331421   4.094715118408203   0.12554851174354553   0.7881146669387817
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4584311246871948   0.491300493478775   0.0012312066974118352   0.07018861919641495
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Opacities:   0.005589970387518406   1.0   0.9801257252693176   0.11932395398616791
+2026-02-20 15:50:30 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9854, device='cuda:0')
+2026-02-20 15:50:57 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:50:57 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Iteration: 12600
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] loss: 0.182638  [12600/15000] computed in 0.909136156241099 minutes.
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Points:   -13.682852745056152   18.02901840209961   1.2223381996154785   5.1425957679748535
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.4162108985527055e-10   27.43157958984375   0.04261573404073715   0.18814194202423096
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9740991592407227   0.999952495098114   0.207767054438591   0.4547930061817169
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.0628883838653564   4.094724655151367   0.12493540346622467   0.7907159924507141
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4602396786212921   0.49497050046920776   0.001241393736563623   0.07049577683210373
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0037473300471901894   1.0   0.9526792168617249   0.19008076190948486
+2026-02-20 15:51:25 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9482, device='cuda:0')
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Iteration: 12800
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] loss: 0.124894  [12800/15000] computed in 0.9535818219184875 minutes.
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Points:   -13.685419082641602   18.0299072265625   1.2223351001739502   5.142600059509277
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.3236615969969279e-10   29.370731353759766   0.04307050257921219   0.19832780957221985
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9757200479507446   0.9998815655708313   0.2073410600423813   0.45498737692832947
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.203639268875122   4.094734191894531   0.12496686726808548   0.7931612133979797
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46146634221076965   0.5004293322563171   0.001240357756614685   0.07075393944978714
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0018525003688409925   1.0   0.8995727896690369   0.2762804925441742
+2026-02-20 15:52:22 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(7831, device='cuda:0')
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Iteration: 13000
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] loss: 0.111747  [13000/15000] computed in 0.9109714150428772 minutes.
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Points:   -13.6884765625   18.029356002807617   1.2223318815231323   5.142609119415283
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.2905278234942585e-10   30.15616798400879   0.04349004849791527   0.20574966073036194
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9756274223327637   0.9996883869171143   0.20689521729946136   0.4551903009414673
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094738483428955   0.12459539622068405   0.7953612804412842
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46398431062698364   0.5028068423271179   0.0012477254495024681   0.07103531062602997
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0011866394197568297   1.0   0.8462737202644348   0.335782915353775
+2026-02-20 15:53:17 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8176, device='cuda:0')
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Iteration: 13200
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] loss: 0.233127  [13200/15000] computed in 0.8877002199490865 minutes.
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Points:   -13.689621925354004   18.03113555908203   1.2223291397094727   5.142611503601074
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.2946105298894395e-10   31.49619483947754   0.043957069516181946   0.21555159986019135
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.973712682723999   0.9998031258583069   0.20628638565540314   0.45546653866767883
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094750881195068   0.12364155054092407   0.7979304790496826
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46433812379837036   0.5079505443572998   0.0012464564060792327   0.0712859034538269
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008561542490497231   1.0   0.8033482432365417   0.37111136317253113
+2026-02-20 15:54:10 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8217, device='cuda:0')
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Iteration: 13400
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] loss: 0.234120  [13400/15000] computed in 0.8848704179128011 minutes.
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Points:   -13.689752578735352   18.03143882751465   1.2223191261291504   5.1426191329956055
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.3149148436752967e-10   32.59883499145508   0.04428385943174362   0.22453704476356506
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9822680950164795   0.9998478293418884   0.2059355527162552   0.4556252360343933
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12332630902528763   0.8003352284431458
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4662899374961853   0.5111609697341919   0.0012658064952120185   0.07155796885490417
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006719300872646272   1.0   0.7665455937385559   0.3947199285030365
+2026-02-20 15:55:03 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8328, device='cuda:0')
+2026-02-20 15:55:29 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:55:29 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Iteration: 13600
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] loss: 0.635038  [13600/15000] computed in 0.8890799403190612 minutes.
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Points:   -13.689190864562988   18.031843185424805   1.2223180532455444   5.142629146575928
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.225212431510414e-10   33.52261734008789   0.04485953226685524   0.23435507714748383
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.975705623626709   0.9998767971992493   0.20549261569976807   0.4558252692222595
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.1224004253745079   0.8035134673118591
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46840059757232666   0.5182342529296875   0.0012726050335913897   0.07181161642074585
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0005165562615729868   1.0   0.7368979454040527   0.4091324508190155
+2026-02-20 15:55:57 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9382, device='cuda:0')
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Iteration: 13800
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] loss: 0.393921  [13800/15000] computed in 0.8925676862398784 minutes.
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Points:   -13.690613746643066   18.03115463256836   1.2223222255706787   5.14263391494751
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.0988830678737571e-10   34.91382598876953   0.04551209881901741   0.24661067128181458
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9859655499458313   0.9998793005943298   0.2051635980606079   0.45597341656684875
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12234248965978622   0.8065569996833801
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4707794785499573   0.5198302865028381   0.001277749426662922   0.07209070771932602
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0003702264802996069   1.0   0.7107793688774109   0.41943851113319397
+2026-02-20 15:56:50 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9537, device='cuda:0')
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Iteration: 14000
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] loss: 0.131185  [14000/15000] computed in 0.8868834535280864 minutes.
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Points:   -13.690807342529297   18.031435012817383   1.2223262786865234   5.142642021179199
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Scaling factors:   1.0798282407131765e-10   37.11051940917969   0.046017203480005264   0.2589280307292938
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9836283922195435   0.9998364448547363   0.204850971698761   0.45611393451690674
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.1228187084197998   0.8083918690681458
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.47411900758743286   0.5225595831871033   0.0013052974827587605   0.07233279943466187
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0002781555522233248   1.0   0.6879256963729858   0.4280128479003906
+2026-02-20 15:57:43 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9570, device='cuda:0')
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Iteration: 14200
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] loss: 0.235846  [14200/15000] computed in 0.8942213455835978 minutes.
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Points:   -13.694235801696777   18.031803131103516   1.2223321199417114   5.142651557922363
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Scaling factors:   9.630330560783662e-11   37.47316360473633   0.04664955660700798   0.26951491832733154
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9810125231742859   0.9999390244483948   0.2043355256319046   0.4563450813293457
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12352633476257324   0.8105891942977905
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.47567176818847656   0.523526668548584   0.001301510026678443   0.07260435819625854
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Opacities:   0.00020215121912769973   1.0   0.6670987606048584   0.43466395139694214
+2026-02-20 15:58:37 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8225, device='cuda:0')
+2026-02-20 15:59:30 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 15:59:30 [INFO]   [Steps2-5-SuGaR] Iteration: 14400
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] loss: 0.160649  [14400/15000] computed in 0.8914984305699666 minutes.
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Points:   -13.69694995880127   18.03221321105957   1.222336769104004   5.1426615715026855
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Scaling factors:   7.60619622841574e-11   39.95621109008789   0.04731239378452301   0.28450700640678406
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.970706045627594   0.999917209148407   0.2040768563747406   0.4564608335494995
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12204921990633011   0.8149560689926147
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4754822254180908   0.5266757011413574   0.0013285716995596886   0.07282403111457825
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0001512392336735502   1.0   0.6481107473373413   0.440387099981308
+2026-02-20 15:59:31 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(11880, device='cuda:0')
+2026-02-20 15:59:57 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 15:59:57 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Iteration: 14600
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] loss: 0.167883  [14600/15000] computed in 0.8954687476158142 minutes.
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Points:   -13.699301719665527   18.03134536743164   1.2223535776138306   5.142666339874268
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.105493194352718e-11   40.558231353759766   0.04777504503726959   0.29277780652046204
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9700804352760315   0.9997262358665466   0.20375652611255646   0.45660391449928284
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12264005094766617   0.8173878192901611
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4790703058242798   0.5301240682601929   0.0013255139347165823   0.07309349626302719
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Opacities:   0.00011984448065049946   1.0   0.6326317191123962   0.44495999813079834
+2026-02-20 16:00:24 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(8583, device='cuda:0')
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Iteration: 14800
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] loss: 0.511813  [14800/15000] computed in 0.8964722196261088 minutes.
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Points:   -13.69968032836914   18.031484603881836   1.222348928451538   5.142672538757324
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Scaling factors:   4.962500202432274e-11   42.21308135986328   0.048381827771663666   0.3036960959434509
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9733268618583679   0.9997637271881104   0.20350231230258942   0.45671728253364563
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12302703410387039   0.8199639320373535
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.48125120997428894   0.5322496294975281   0.001345900003798306   0.07335165143013
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Opacities:   9.877685806713998e-05   1.0   0.6175180077552795   0.44894683361053467
+2026-02-20 16:01:18 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9333, device='cuda:0')
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] ---INFO---
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Resetting neighbors...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Iteration: 15000
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] loss: 0.178009  [15000/15000] computed in 0.896515679359436 minutes.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Points:   -13.700806617736816   18.0310115814209   1.2223658561706543   5.142673492431641
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Scaling factors:   4.1993949984053813e-11   43.42218017578125   0.04891121760010719   0.31306716799736023
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.9717802405357361   0.999788761138916   0.20318175852298737   0.4568599760532379
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -3.2739503383636475   4.094753265380859   0.12207821011543274   0.8232646584510803
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4827437996864319   0.5363572835922241   0.0013725709868595004   0.07359417527914047
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Opacities:   8.225592318922281e-05   1.0   0.604719877243042   0.452088862657547
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Number of gaussians used for sampling in SDF regularization: tensor(9327, device='cuda:0')
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Saving model...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Model saved.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Training finished after 15000 iterations with loss=0.17800922691822052.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Saving final model...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Final model saved.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] -----Parameters-----
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Source path: D:\CAAS\04-COLMAP\XianKeLai2
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Gaussian Splatting Checkpoint path: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Coarse model Checkpoint path: ./output/coarse\XianKeLai2\sugarcoarse_3Dgs7000_densityestim02_sdfnorm02/15000.pt
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Mesh output path: ./output/coarse_mesh\XianKeLai2
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Surface levels:
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] [0.3]
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Decimation targets:
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] [1000000]
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Project mesh on surface points: True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use custom bbox: False
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use eval split: False
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] GPU: 0
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use centers to extract mesh: False
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use marching cubes: False
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use vanilla 3DGS: False
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] --------------------
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Loading the initial 3DGS model from path D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Found image extension .jpg
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] 208 training images detected.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] The model has been trained for 7000 steps.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Loading the coarse SuGaR model from path 
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] ./output/coarse\XianKeLai2\sugarcoarse_3Dgs7000_densityestim02_sdfnorm02/15000.pt...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Use min to initialize scales.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Initialized radiuses for 3D Gauss Rasterizer
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Coarse model loaded.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Coarse model parameters:
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] _points
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 3])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] all_densities
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 1])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] _scales
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 3])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] _quaternions
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 4])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_dc
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 1, 3])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_rest
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] torch.Size([13505, 15, 3])
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Number of gaussians: 13505
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Opacities min/max/mean: tensor(8.2256e-05, device='cuda:0') tensor(1., device='cuda:0') tensor(0.6047, device='cuda:0')
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.0: 8.225592318922281e-05
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.1: 0.001262777834199369
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.2: 0.008792659267783165
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.3: 0.06943170726299286
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.4: 0.5008281469345093
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.5: 0.9847148060798645
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.6: 0.9998677372932434
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.7: 0.9999814033508301
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.8: 0.9999938011169434
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.9: 0.9999994039535522
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Starting pruning low opacity gaussians...
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] WARNING! During optimization, you should use a densifier to prune low opacity points.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] This function does not preserve the state of an optimizer, and sets requires_grad=False to all parameters.
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Number of gaussians left: 8103
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Opacities min/max/mean: tensor(0.5015, device='cuda:0') tensor(1., device='cuda:0') tensor(0.9631, device='cuda:0')
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.0: 0.5014733672142029
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.1: 0.8478817939758301
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.2: 0.9976062774658203
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.3: 0.9997711777687073
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.4: 0.9999494552612305
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.5: 0.9999814033508301
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.6: 0.9999911785125732
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.7: 0.999995231628418
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.8: 0.9999988079071045
+2026-02-20 16:02:12 [INFO]   [Steps2-5-SuGaR] Quantile 0.9: 1.0
+2026-02-20 16:02:13 [INFO]   [Steps2-5-SuGaR] Processing frame 0/208...
+2026-02-20 16:02:13 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 0 points.
+2026-02-20 16:02:31 [INFO]   [Steps2-5-SuGaR] Processing frame 30/208...
+2026-02-20 16:02:31 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 1265613 points.
+2026-02-20 16:02:50 [INFO]   [Steps2-5-SuGaR] Processing frame 60/208...
+2026-02-20 16:02:50 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 2549078 points.
+2026-02-20 16:03:08 [INFO]   [Steps2-5-SuGaR] Processing frame 90/208...
+2026-02-20 16:03:08 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 3790717 points.
+2026-02-20 16:03:26 [INFO]   [Steps2-5-SuGaR] Processing frame 120/208...
+2026-02-20 16:03:26 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 4788976 points.
+2026-02-20 16:03:44 [INFO]   [Steps2-5-SuGaR] Processing frame 150/208...
+2026-02-20 16:03:44 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 6089794 points.
+2026-02-20 16:04:03 [INFO]   [Steps2-5-SuGaR] Processing frame 180/208...
+2026-02-20 16:04:03 [INFO]   [Steps2-5-SuGaR] Current point cloud for level 0.3 has 6949258 points.
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] ========== Processing surface level 0.3 ==========
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Final point cloud for level 0.3 has 7718203 points.
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Using default, camera based bounding box.
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Centering bounding box.
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Foreground points:
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([7527326, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([7527326, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([7527326, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Background points:
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([187549, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([187549, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] torch.Size([187549, 3])
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] -----Foreground mesh-----
+2026-02-20 16:04:20 [INFO]   [Steps2-5-SuGaR] Computing points, colors and normals...
+2026-02-20 16:04:54 [INFO]   [Steps2-5-SuGaR] Cleaning Point Cloud...
+2026-02-20 16:04:55 [INFO]   [Steps2-5-SuGaR] Finished computing points, colors and normals.
+2026-02-20 16:04:55 [INFO]   [Steps2-5-SuGaR] Now computing mesh...
+2026-02-20 16:04:58 [INFO]   [Steps2-5-SuGaR] [WARNING] C:\Open3D\build\poisson\src\ext_poisson\PoissonRecon\Src\FEMTree.Initialize.inl (Line 193)
+2026-02-20 16:04:58 [INFO]   [Steps2-5-SuGaR]           FEMTreeInitializer<3,float>::Initialize
+2026-02-20 16:04:58 [INFO]   [Steps2-5-SuGaR]           Found bad data: 43031
+2026-02-20 16:06:03 [INFO]   [Steps2-5-SuGaR] [WARNING] C:\Open3D\build\poisson\src\ext_poisson\PoissonRecon\Src\FEMTree.IsoSurface.specialized.inl (Line 1858)
+2026-02-20 16:06:03 [INFO]   [Steps2-5-SuGaR]           IsoSurfaceExtractor<3,float,class open3d::geometry::`anonymous namespace'::Open3DVertex<float> >::Extract
+2026-02-20 16:06:03 [INFO]   [Steps2-5-SuGaR]           bad average roots: 2
+2026-02-20 16:06:04 [INFO]   [Steps2-5-SuGaR] Removing vertices with low densities...
+2026-02-20 16:06:06 [INFO]   [Steps2-5-SuGaR] -----Background mesh-----
+2026-02-20 16:06:06 [INFO]   [Steps2-5-SuGaR] Computing points, colors and normals...
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR] Cleaning Point Cloud...
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR] Finished computing points, colors and normals.
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR] Now computing mesh...
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR] [WARNING] C:\Open3D\build\poisson\src\ext_poisson\PoissonRecon\Src\FEMTree.Initialize.inl (Line 193)
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR]           FEMTreeInitializer<3,float>::Initialize
+2026-02-20 16:06:07 [INFO]   [Steps2-5-SuGaR]           Found bad data: 128
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Removing vertices with low densities...
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Finished computing meshes.
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Foreground mesh: TriangleMesh with 2949548 points and 5838686 triangles.
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Background mesh: TriangleMesh with 171420 points and 337982 triangles.
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] -----Decimating and cleaning meshes-----
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Processing decimation target: 1000000
+2026-02-20 16:06:10 [INFO]   [Steps2-5-SuGaR] Decimating foreground mesh...
+2026-02-20 16:08:04 [INFO]   [Steps2-5-SuGaR] Finished decimating foreground mesh.
+2026-02-20 16:08:04 [INFO]   [Steps2-5-SuGaR] Decimating background mesh...
+2026-02-20 16:08:05 [INFO]   [Steps2-5-SuGaR] Finished decimating background mesh.
+2026-02-20 16:08:05 [INFO]   [Steps2-5-SuGaR] Cleaning mesh...
+2026-02-20 16:08:09 [INFO]   [Steps2-5-SuGaR] Merging foreground and background meshes.
+2026-02-20 16:08:09 [INFO]   [Steps2-5-SuGaR] Projecting mesh on surface points to recover better details...
+2026-02-20 16:08:25 [INFO]   [Steps2-5-SuGaR] Cleaning projected mesh...
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Projection done.
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Mesh saved at ./output/coarse_mesh\XianKeLai2\sugarmesh_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000.ply
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] -----Parsed parameters-----
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Source path: D:\CAAS\04-COLMAP\XianKeLai2
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR]    > Content: 8
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Gaussian Splatting checkpoint path: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR]    > Content: 4
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] SUGAR checkpoint path: 
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] ./output/refined\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gausspe
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] rface1/
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Surface mesh to bind to: 
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] ./output/coarse_mesh\XianKeLai2\sugarmesh_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000.ply
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Iteration to load: 7000
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Normal consistency factor: 0.1
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Number of gaussians per surface triangle: 1
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Number of vertices in the foreground: 1000000
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Use eval split: False
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Use white background: False
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Export ply at the end: True
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] ----------------------------
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Using device: 0
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |                  PyTorch CUDA memory summary, device ID 0                 |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |            CUDA OOMs: 0            |        cudaMalloc retries: 0         |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |        Metric         | Cur Usage  | Peak Usage | Tot Alloc  | Tot Freed  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Allocated memory      |  16640 KiB |   8725 MiB |  96874 GiB |  96874 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |  16640 KiB |   8707 MiB |  96360 GiB |  96360 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 KiB |     28 MiB |    514 GiB |    514 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Active memory         |  16640 KiB |   8725 MiB |  96874 GiB |  96874 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |  16640 KiB |   8707 MiB |  96360 GiB |  96360 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 KiB |     28 MiB |    514 GiB |    514 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Requested memory      |  16640 KiB |   8615 MiB |  96253 GiB |  96253 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |  16640 KiB |   8598 MiB |  95741 GiB |  95741 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 KiB |     27 MiB |    511 GiB |    511 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | GPU reserved memory   |  11922 MiB |  11922 MiB |  11928 MiB |   6144 KiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |  11890 MiB |  11890 MiB |  11890 MiB |      0 KiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |     32 MiB |     32 MiB |     38 MiB |   6144 KiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Non-releasable memory |  73472 KiB |   1249 MiB |  34677 GiB |  34677 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |  73472 KiB |   1246 MiB |  34130 GiB |  34130 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |      0 KiB |     16 MiB |    547 GiB |    547 GiB |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Allocations           |       2    |    1308    |   10506 K  |   10506 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |       2    |     293    |    3059 K  |    3059 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |    1022    |    7446 K  |    7446 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Active allocs         |       2    |    1308    |   10506 K  |   10506 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |       2    |     293    |    3059 K  |    3059 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |    1022    |    7446 K  |    7446 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | GPU reserved segments |     278    |     278    |     281    |       3    |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |     262    |     262    |     262    |       0    |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |      16    |      16    |      19    |       3    |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Non-releasable allocs |       3    |      75    |    5649 K  |    5649 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from large pool |       3    |      32    |    1130 K  |    1130 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |       from small pool |       0    |      50    |    4519 K  |    4519 K  |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Oversize allocations  |       0    |       0    |       0    |       0    |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |---------------------------------------------------------------------------|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] | Oversize GPU segments |       0    |       0    |       0    |       0    |
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] |===========================================================================|
+2026-02-20 16:08:28 [INFO]   [Steps2-5-SuGaR] Loading config D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2...
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] Found image extension .jpg
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] 208 training images detected.
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] The model has been trained for 7000 steps.
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] Camera resolution scaled to 1920 x 1073
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] Loading mesh to bind to: 
+2026-02-20 16:08:55 [INFO]   [Steps2-5-SuGaR] ./output/coarse_mesh\XianKeLai2\sugarmesh_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000.ply...
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Mesh to bind to loaded.
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Binding radiance cloud to surface mesh...
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] SuGaR model has been initialized.
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] SuGaR()
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Number of parameters: 53877788
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Checkpoints will be saved in 
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] ./output/refined\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gausspe
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] rface1/
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Model parameters:
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _surface_mesh_faces
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 3])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] False
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] surface_mesh_thickness
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] False
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _points
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([509578, 3])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] all_densities
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 1])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _scales
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 2])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _quaternions
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 2])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_dc
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 1, 3])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] _sh_coordinates_rest
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] torch.Size([987718, 15, 3])
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] True
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Using as spatial_lr_scale: 0.06954218387603761 with bbox_radius: 6.954218387603761 and n_vertices_in_fg: 1000000
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Optimizer initialized.
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Optimization parameters:
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] OptimizationParams(
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             iterations=15000,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             position_lr_init=0.00016,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             position_lr_final=1.6e-06,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             position_lr_delay_mult=0.01,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             position_lr_max_steps=30000,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             feature_lr=0.0025,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             opacity_lr=0.05,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             scaling_lr=0.005,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             rotation_lr=0.001,
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR]             )
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Optimizable parameters:
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] points 1.1126749420166018e-05
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] sh_coordinates_dc 0.0025
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] sh_coordinates_rest 0.000125
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] all_densities 0.05
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] scales 0.005
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] quaternions 0.001
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Using loss function: l1+dssim
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Iteration: 1
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] loss: 0.169169  [    1/15000] computed in 0.007669921716054281 minutes.
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Points:   -24.504291534423828   28.034381866455078   1.4858201742172241   3.1712276935577393
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.14492815732955933   0.005947931203991175   0.0064062331803143024
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068584561347961   0.9999117851257324   0.21596506237983704   0.4509536027908325
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.774953842163086   1.3625400066375732   -1.6417239904403687   0.39593976736068726
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:08:56 [INFO]   [Steps2-5-SuGaR] Opacities:   0.09558913111686707   0.10459084808826447   0.10066581517457962   0.0029259033035486937
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Iteration: 200
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] loss: 0.104510  [  200/15000] computed in 0.5507622202237447 minutes.
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Points:   -24.504619598388672   28.033889770507812   1.4858213663101196   3.1712300777435303
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.15622533857822418   0.006132463458925486   0.006597429979592562
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7070701122283936   0.999954879283905   0.21580736339092255   0.45102909207344055
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.814691424369812   1.4118154048919678   -1.6542683839797974   0.4098607003688812
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:09:29 [INFO]   [Steps2-5-SuGaR] Opacities:   0.003992886748164892   0.9376481175422668   0.153206467628479   0.12229781597852707
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Iteration: 400
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] loss: 0.610511  [  400/15000] computed in 0.5708041548728943 minutes.
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Points:   -24.50362205505371   28.033958435058594   1.4858217239379883   3.171231508255005
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.15653261542320251   0.006171192973852158   0.00667308084666729
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7063672542572021   0.9999794960021973   0.2156737744808197   0.45109298825263977
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8146964311599731   1.4356937408447266   -1.6531133651733398   0.41765764355659485
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:10:04 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0034058510791510344   0.9903563857078552   0.16717423498630524   0.16255028545856476
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Iteration: 600
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] loss: 0.098705  [  600/15000] computed in 0.5664205988248189 minutes.
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Points:   -24.502315521240234   28.034515380859375   1.4858225584030151   3.1712327003479004
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.1566167175769806   0.006200484465807676   0.006736052688211203
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066312432289124   0.9999732971191406   0.21554048359394073   0.4511566758155823
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8263463973999023   1.4481230974197388   -1.6520248651504517   0.4223563075065613
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:10:38 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0029017983470112085   0.9969139099121094   0.17408746480941772   0.1831802874803543
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Iteration: 800
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] loss: 0.148064  [  800/15000] computed in 0.5671837409337361 minutes.
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Points:   -24.501667022705078   28.035789489746094   1.4858242273330688   3.171234607696533
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.1669536679983139   0.0062295799143612385   0.006806534714996815
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066444754600525   0.9999901056289673   0.21545147895812988   0.45119917392730713
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8346214294433594   1.4874264001846313   -1.6512317657470703   0.42551472783088684
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:11:12 [INFO]   [Steps2-5-SuGaR] Opacities:   0.002675839699804783   0.9989386200904846   0.17873702943325043   0.19870294630527496
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Iteration: 1000
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] loss: 0.064200  [ 1000/15000] computed in 0.5720362901687622 minutes.
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Points:   -24.501541137695312   28.03738021850586   1.4858258962631226   3.171236276626587
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.18344086408615112   0.006255119573324919   0.006881440058350563
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706923246383667   0.9999887943267822   0.21532471477985382   0.45125970244407654
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8346214294433594   1.5044276714324951   -1.6506303548812866   0.42808327078819275
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   0.0   0.0   0.0   0.0
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0013771278318017721   0.9996852874755859   0.18154582381248474   0.20952099561691284
+2026-02-20 16:11:46 [INFO]   [Steps2-5-SuGaR] Increasing number of spherical harmonics levels to 2
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Iteration: 1200
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] loss: 0.069917  [ 1200/15000] computed in 0.5655862768491109 minutes.
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Points:   -24.501522064208984   28.038721084594727   1.4858269691467285   3.1712377071380615
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.308220773935318   0.006278383079916239   0.006961898412555456
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066264152526855   0.9999948740005493   0.21521809697151184   0.45131057500839233
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8393288850784302   1.5490496158599854   -1.6501680612564087   0.4298493266105652
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.03422988951206207   0.03054145537316799   1.88305348274298e-05   0.0013660681433975697
+2026-02-20 16:12:20 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0011427004355937243   0.999812662601471   0.18332035839557648   0.21718290448188782
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Iteration: 1400
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] loss: 0.115404  [ 1400/15000] computed in 0.5774797320365905 minutes.
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Points:   -24.501466751098633   28.039766311645508   1.4858275651931763   3.171238899230957
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.4245782494544983   0.006300917826592922   0.007057013921439648
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067210078239441   0.9999840259552002   0.21506419777870178   0.45138394832611084
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8580902814865112   1.596392035484314   -1.6498042345046997   0.43144723773002625
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.05435967072844505   0.04769602417945862   2.53089838224696e-05   0.0018366794101893902
+2026-02-20 16:12:55 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0010883542709052563   0.9998775720596313   0.1844017207622528   0.22329430282115936
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Iteration: 1600
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] loss: 0.060506  [ 1600/15000] computed in 0.5660332957903544 minutes.
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Points:   -24.50141143798828   28.040586471557617   1.485827922821045   3.1712396144866943
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.4357057213783264   0.006319291889667511   0.007162450347095728
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065292596817017   0.999923050403595   0.21495524048805237   0.4514358341693878
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8581644296646118   1.6697944402694702   -1.6495264768600464   0.4329301118850708
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.07059650123119354   0.06584931164979935   2.6831876311916858e-05   0.002165924059227109
+2026-02-20 16:13:29 [INFO]   [Steps2-5-SuGaR] Opacities:   0.001017860253341496   0.9999535083770752   0.1848275512456894   0.22872009873390198
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Iteration: 1800
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] loss: 0.116714  [ 1800/15000] computed in 0.5756311019261678 minutes.
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Points:   -24.501371383666992   28.041114807128906   1.4858283996582031   3.1712400913238525
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.5225809812545776   0.006339149549603462   0.007277034688740969
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069042325019836   0.9999948740005493   0.21489518880844116   0.4514644145965576
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8860629796981812   1.6251592636108398   -1.6494988203048706   0.43356260657310486
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.08936913311481476   0.07881612330675125   2.8441170798032545e-05   0.0024224373046308756
+2026-02-20 16:14:04 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0010174980852752924   0.9999756813049316   0.18536846339702606   0.23321828246116638
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Iteration: 2000
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] loss: 0.065606  [ 2000/15000] computed in 0.5685637354850769 minutes.
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Points:   -24.50132942199707   28.04145050048828   1.4858287572860718   3.1712403297424316
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   0.6719896793365479   0.0063628992065787315   0.007412610575556755
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069697380065918   0.9999511241912842   0.21481336653232574   0.45150333642959595
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8860657215118408   1.732090950012207   -1.6494241952896118   0.43444111943244934
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.10768648982048035   0.08457478880882263   2.696827141335234e-05   0.0026318698655813932
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0009641451179049909   0.99997878074646   0.18669621646404266   0.2379608303308487
+2026-02-20 16:14:38 [INFO]   [Steps2-5-SuGaR] Increasing number of spherical harmonics levels to 3
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Iteration: 2200
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] loss: 0.094595  [ 2200/15000] computed in 0.5747176289558411 minutes.
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Points:   -24.501291275024414   28.041574478149414   1.4858287572860718   3.1712405681610107
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   1.142565369606018   0.0064013623632490635   0.007620810065418482
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069485783576965   0.9999897480010986   0.2147592008113861   0.4515291154384613
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8926283121109009   1.7801517248153687   -1.6494522094726562   0.434927761554718
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.10889752954244614   0.09469746053218842   2.7652735298033804e-05   0.0032760133035480976
+2026-02-20 16:15:12 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0009412514045834541   0.9999864101409912   0.1906770020723343   0.24508509039878845
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Iteration: 2400
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] loss: 0.173580  [ 2400/15000] computed in 0.5795072078704834 minutes.
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Points:   -24.501291275024414   28.04155158996582   1.4858289957046509   3.171241044998169
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   1.5295844078063965   0.006432580295950174   0.00784126203507185
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066196203231812   0.9999566674232483   0.2146626114845276   0.45157504081726074
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.8985919952392578   1.7956373691558838   -1.6495121717453003   0.43526506423950195
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.11955799907445908   0.11290015280246735   2.405660598014947e-05   0.003698998596519232
+2026-02-20 16:15:47 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008807220729067922   0.9999926090240479   0.19349844753742218   0.250112920999527
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Iteration: 2600
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] loss: 0.113305  [ 2600/15000] computed in 0.5694125572840373 minutes.
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Points:   -24.501256942749023   28.041419982910156   1.48582923412323   3.171241521835327
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   1.7059406042099   0.006459513679146767   0.008097762241959572
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069122195243835   0.9999286532402039   0.21458980441093445   0.45160967111587524
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9016449451446533   1.853105068206787   -1.6493936777114868   0.43604037165641785
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.1296665072441101   0.11845836043357849   2.3936014258651994e-05   0.004016666207462549
+2026-02-20 16:16:21 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008807220729067922   0.9999955892562866   0.19568321108818054   0.25541260838508606
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Iteration: 2800
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] loss: 0.104643  [ 2800/15000] computed in 0.5846474488576253 minutes.
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Points:   -24.501256942749023   28.04109001159668   1.485829472541809   3.1712422370910645
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.1198880672454834   0.006484797224402428   0.008330549113452435
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069827914237976   0.9999342560768127   0.21451424062252045   0.4516455829143524
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   1.853417992591858   -1.649364948272705   0.43661636114120483
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.14175507426261902   0.12754403054714203   1.9858092855429277e-05   0.004311172291636467
+2026-02-20 16:16:56 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008649139199405909   0.9999967813491821   0.19740130007266998   0.25929856300354004
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Iteration: 3000
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] loss: 0.160003  [ 3000/15000] computed in 0.5711720148722331 minutes.
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.040706634521484   1.4858298301696777   3.1712427139282227
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.233830451965332   0.0065064262598752975   0.00853660423308611
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066913843154907   0.9999745488166809   0.2144664078950882   0.45166826248168945
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   1.8430166244506836   -1.6492500305175781   0.43737536668777466
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.1528416872024536   0.13548603653907776   1.8478203855920583e-05   0.00456071924418211
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008649076917208731   0.999997615814209   0.19886153936386108   0.26299580931663513
+2026-02-20 16:17:31 [INFO]   [Steps2-5-SuGaR] Increasing number of spherical harmonics levels to 4
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Iteration: 3200
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] loss: 0.109651  [ 3200/15000] computed in 0.5860853989919027 minutes.
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.040294647216797   1.4858299493789673   3.171243190765381
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.433612585067749   0.006524879485368729   0.008709262125194073
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706709623336792   0.9999827742576599   0.21441106498241425   0.451694518327713
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   1.8468098640441895   -1.6492840051651   0.4376315474510193
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.161716490983963   0.1443435698747635   8.319706466863863e-06   0.005081323441118002
+2026-02-20 16:18:06 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008649076917208731   0.9999977350234985   0.2001672089099884   0.26623398065567017
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Iteration: 3400
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] loss: 0.098331  [ 3400/15000] computed in 0.578599230448405 minutes.
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Points:   -24.501220703125   28.039812088012695   1.4858299493789673   3.171243906021118
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.378868341445923   0.0065437727607786655   0.008892197161912918
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068830728530884   0.9999843239784241   0.2143314778804779   0.4517323076725006
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   1.9024194478988647   -1.649130940437317   0.4384962320327759
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.1617426723241806   0.15099215507507324   6.637367846451525e-07   0.005445078946650028
+2026-02-20 16:18:41 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008649076917208731   0.9999991655349731   0.20092329382896423   0.26905494928359985
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Iteration: 3600
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] loss: 0.070615  [ 3600/15000] computed in 0.5790254632631938 minutes.
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.039323806762695   1.4858301877975464   3.1712448596954346
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3403263092041016   0.006558703258633614   0.009031637571752071
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706933319568634   0.9999863505363464   0.21429648995399475   0.45174890756607056
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   1.9782111644744873   -1.6490464210510254   0.4390261471271515
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.16436219215393066   0.15672855079174042   -2.2586025352211436e-06   0.005802274215966463
+2026-02-20 16:19:16 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008398107020184398   0.999998927116394   0.20201562345027924   0.27208104729652405
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Iteration: 3800
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] loss: 0.120394  [ 3800/15000] computed in 0.5841930230458577 minutes.
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.038833618164062   1.485830307006836   3.171245574951172
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.352689504623413   0.006582255940884352   0.00918881967663765
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068824768066406   0.9999435544013977   0.21422846615314484   0.45178118348121643
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   2.027642011642456   -1.649009346961975   0.4394230544567108
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.1655786633491516   0.1632269322872162   -8.006250936887227e-06   0.006122780963778496
+2026-02-20 16:19:51 [INFO]   [Steps2-5-SuGaR] Opacities:   0.000839735905174166   0.9999997615814209   0.20364823937416077   0.27531468868255615
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Iteration: 4000
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] loss: 0.067955  [ 4000/15000] computed in 0.573333736260732 minutes.
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Points:   -24.501220703125   28.038362503051758   1.485830307006836   3.171246290206909
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3623569011688232   0.006601381581276655   0.009351581335067749
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065491676330566   0.9999199509620667   0.21416278183460236   0.4518122971057892
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   2.067049026489258   -1.6489403247833252   0.43995124101638794
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.176034614443779   0.16635897755622864   -1.1242274013056885e-05   0.006424902472645044
+2026-02-20 16:20:25 [INFO]   [Steps2-5-SuGaR] Opacities:   0.000839735905174166   0.9999996423721313   0.2046307474374771   0.27803027629852295
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Iteration: 4200
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] loss: 0.093746  [ 4200/15000] computed in 0.5918642560640971 minutes.
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.037975311279297   1.485830307006836   3.1712470054626465
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.379389524459839   0.0066195158287882805   0.009502004832029343
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066758871078491   0.9999595284461975   0.21410265564918518   0.4518407881259918
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9207963943481445   2.1500868797302246   -1.6488531827926636   0.4404727518558502
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.18054348230361938   0.17116501927375793   -1.3783695067104418e-05   0.006699553225189447
+2026-02-20 16:21:01 [INFO]   [Steps2-5-SuGaR] Opacities:   0.000839735905174166   0.9999997615814209   0.20551244914531708   0.2802835702896118
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Iteration: 4400
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] loss: 0.153659  [ 4400/15000] computed in 0.5748492439587911 minutes.
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.037612915039062   1.485830307006836   3.171248197555542
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3816497325897217   0.006633484270423651   0.009631268680095673
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066121697425842   0.9999234080314636   0.21402962505817413   0.4518754184246063
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9402599334716797   2.16508412361145   -1.6488040685653687   0.44087326526641846
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.18772763013839722   0.17505545914173126   -1.5196149433904793e-05   0.006965738255530596
+2026-02-20 16:21:35 [INFO]   [Steps2-5-SuGaR] Opacities:   0.000839735905174166   0.9999998807907104   0.20615363121032715   0.2823490798473358
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] Iteration: 4600
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] loss: 0.035823  [ 4600/15000] computed in 0.586938488483429 minutes.
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] Points:   -24.501220703125   28.037324905395508   1.4858304262161255   3.1712491512298584
+2026-02-20 16:22:10 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3479206562042236   0.006656967103481293   0.009783728048205376
+2026-02-20 16:22:11 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068660259246826   0.9999552965164185   0.2139633297920227   0.45190680027008057
+2026-02-20 16:22:11 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9402599334716797   2.1796200275421143   -1.6487486362457275   0.4412674903869629
+2026-02-20 16:22:11 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.19348610937595367   0.17841219902038574   -1.676879037404433e-05   0.00721181882545352
+2026-02-20 16:22:11 [INFO]   [Steps2-5-SuGaR] Opacities:   0.000839735905174166   0.9999998807907104   0.2074265480041504   0.28499916195869446
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Iteration: 4800
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] loss: 0.195294  [ 4800/15000] computed in 0.5857161601384481 minutes.
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.03706932067871   1.485830307006836   3.1712498664855957
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.323343515396118   0.006671471055597067   0.009925800375640392
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706803560256958   0.9999468922615051   0.21390163898468018   0.4519360065460205
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9402599334716797   2.2162649631500244   -1.64867103099823   0.44182294607162476
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.19627943634986877   0.1810796856880188   -1.806106956792064e-05   0.007456151768565178
+2026-02-20 16:22:46 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008188471547327936   0.9999998807907104   0.2078593373298645   0.28674572706222534
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Iteration: 5000
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] loss: 0.156035  [ 5000/15000] computed in 0.5806046565373738 minutes.
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.036846160888672   1.485830307006836   3.171250820159912
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3112967014312744   0.006693284958600998   0.01006641797721386
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069103717803955   0.9999187588691711   0.21385031938552856   0.4519602954387665
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9402599334716797   2.2181105613708496   -1.6486109495162964   0.4422439932823181
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.19959160685539246   0.18406899273395538   -1.98347643163288e-05   0.007681307382881641
+2026-02-20 16:23:21 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008096317178569734   0.9999998807907104   0.20896399021148682   0.2890005111694336
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Iteration: 5200
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] loss: 0.354498  [ 5200/15000] computed in 0.589761737982432 minutes.
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Points:   -24.501220703125   28.036640167236328   1.485830307006836   3.1712517738342285
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.249528408050537   0.006708898581564426   0.010172785259783268
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065746188163757   0.9999130964279175   0.21382299065589905   0.45197319984436035
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9497469663619995   2.265126943588257   -1.6485035419464111   0.4428394138813019
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.20327599346637726   0.18857237696647644   -2.1091636881465092e-05   0.007905070669949055
+2026-02-20 16:23:56 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008096140227280557   1.0   0.20948950946331024   0.29054510593414307
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Iteration: 5400
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] loss: 0.124904  [ 5400/15000] computed in 0.5755350073178609 minutes.
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.036460876464844   1.485830307006836   3.171252727508545
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.3565099239349365   0.006732838694006205   0.01036803238093853
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065048217773438   0.9998471140861511   0.21375760436058044   0.4520041346549988
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9893308877944946   2.2765865325927734   -1.6484872102737427   0.4431498348712921
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2073775678873062   0.19609495997428894   -2.2732745492248796e-05   0.008121983148157597
+2026-02-20 16:24:31 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008096140227280557   1.0   0.21074973046779633   0.2926388084888458
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Iteration: 5600
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] loss: 0.192327  [ 5600/15000] computed in 0.5920087218284606 minutes.
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Points:   -24.501222610473633   28.036314010620117   1.4858301877975464   3.1712536811828613
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.4555535316467285   0.006751494947820902   0.01053206343203783
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066637277603149   0.99995356798172   0.2137071043252945   0.4520280063152313
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.0292630195617676   2.286877155303955   -1.6483726501464844   0.4436916410923004
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2096269577741623   0.20211516320705414   -2.5339495550724678e-05   0.008330443874001503
+2026-02-20 16:25:06 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008096140227280557   1.0   0.21165765821933746   0.29448771476745605
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Iteration: 5800
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] loss: 0.082128  [ 5800/15000] computed in 0.6065577189127604 minutes.
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Points:   -24.50121307373047   28.03618621826172   1.485830307006836   3.171254873275757
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.658999443054199   0.006774594075977802   0.010712916031479836
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067760825157166   0.9999970197677612   0.21365536749362946   0.452052503824234
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.013124465942383   2.318495750427246   -1.6483286619186401   0.4440747797489166
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.21645775437355042   0.20815390348434448   -2.762502117548138e-05   0.008535368368029594
+2026-02-20 16:25:43 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.212965726852417   0.2965516448020935
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Iteration: 6000
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] loss: 0.132491  [ 6000/15000] computed in 0.5835021893183391 minutes.
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03605842590332   1.4858301877975464   3.1712558269500732
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.5887160301208496   0.006790713407099247   0.010873665101826191
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069094181060791   0.999967634677887   0.21359685063362122   0.4520801603794098
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.0346968173980713   2.3289382457733154   -1.6482133865356445   0.4446674585342407
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2298962026834488   0.21499021351337433   -2.7883765142178163e-05   0.008731321431696415
+2026-02-20 16:26:18 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21349716186523438   0.29796478152275085
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Iteration: 6200
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] loss: 0.131006  [ 6200/15000] computed in 0.5846282164255778 minutes.
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.035932540893555   1.485830307006836   3.1712570190429688
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.679741144180298   0.006806050427258015   0.011022823862731457
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068065404891968   0.9999165534973145   0.21356868743896484   0.4520934224128723
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.010268211364746   2.3395586013793945   -1.6481554508209229   0.4450800120830536
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2453322410583496   0.2194119244813919   -2.884340392483864e-05   0.008925550617277622
+2026-02-20 16:26:53 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21383878588676453   0.2991616129875183
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Iteration: 6400
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] loss: 0.063174  [ 6400/15000] computed in 0.5830834825833638 minutes.
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.035871505737305   1.4858301877975464   3.171257972717285
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   2.7319602966308594   0.006823434494435787   0.01117872353643179
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065879702568054   0.9999685287475586   0.2135503590106964   0.4521021246910095
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -1.9893325567245483   2.3295445442199707   -1.6480809450149536   0.44554072618484497
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.25116825103759766   0.22574979066848755   -3.1484469218412414e-05   0.009112603031098843
+2026-02-20 16:27:28 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21436446905136108   0.30034616589546204
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Iteration: 6600
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] loss: 0.131107  [ 6600/15000] computed in 0.5900885184605916 minutes.
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485830307006836   3.1712589263916016
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.364823341369629   0.0068427338264882565   0.0113802095875144
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706773042678833   0.9999839663505554   0.21348711848258972   0.4521319568157196
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.011028528213501   2.3529698848724365   -1.648003101348877   0.44597217440605164
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2618211805820465   0.2335880845785141   -3.165742600685917e-05   0.009302363730967045
+2026-02-20 16:28:03 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21502035856246948   0.30177658796310425
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] Iteration: 6800
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] loss: 0.075794  [ 6800/15000] computed in 0.5842777371406556 minutes.
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485830307006836   3.171260118484497
+2026-02-20 16:28:38 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.481534004211426   0.006860509514808655   0.011595510877668858
+2026-02-20 16:28:39 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066742777824402   0.9999784231185913   0.21345628798007965   0.4521465003490448
+2026-02-20 16:28:39 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.0397040843963623   2.3422322273254395   -1.6479437351226807   0.4463488459587097
+2026-02-20 16:28:39 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2675844728946686   0.2398499697446823   -3.271003151894547e-05   0.009482775814831257
+2026-02-20 16:28:39 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.2154678851366043   0.3029731810092926
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Iteration: 7000
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] loss: 0.074063  [ 7000/15000] computed in 0.5851142446200053 minutes.
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485830307006836   3.1712615489959717
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.624746799468994   0.006880058906972408   0.011762863025069237
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065687775611877   0.9999493360519409   0.21343067288398743   0.4521586298942566
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.061156988143921   2.3646328449249268   -1.6478593349456787   0.4468705356121063
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2706514000892639   0.24635232985019684   -3.442198067205027e-05   0.00966161023825407
+2026-02-20 16:29:14 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21620754897594452   0.30422544479370117
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Iteration: 7200
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] loss: 0.079492  [ 7200/15000] computed in 0.5912539084752401 minutes.
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485830307006836   3.171262741088867
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.6727945804595947   0.006896361242979765   0.011926465667784214
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7063453197479248   0.9998815655708313   0.21339008212089539   0.4521777629852295
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1190226078033447   2.3922014236450195   -1.647740364074707   0.4473837614059448
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.27394407987594604   0.2513457238674164   -3.394786472199485e-05   0.009831705130636692
+2026-02-20 16:29:49 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.2164999544620514   0.30519044399261475
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Iteration: 7400
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] loss: 0.161085  [ 7400/15000] computed in 0.579234516620636 minutes.
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858304262161255   3.1712636947631836
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.516963005065918   0.006912439130246639   0.012024073861539364
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7063491344451904   0.9998637437820435   0.2133459448814392   0.4521986246109009
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.147895574569702   2.4255383014678955   -1.6476858854293823   0.4477589428424835
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2789061665534973   0.25746846199035645   -3.6027038731845096e-05   0.010004736483097076
+2026-02-20 16:30:24 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21687458455562592   0.30623307824134827
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] Iteration: 7600
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] loss: 0.145241  [ 7600/15000] computed in 0.5906236171722412 minutes.
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858306646347046   3.171265125274658
+2026-02-20 16:30:59 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.663074016571045   0.006932190619409084   0.012274732813239098
+2026-02-20 16:31:00 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067750096321106   0.9999574422836304   0.2133011370897293   0.45221972465515137
+2026-02-20 16:31:00 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1452388763427734   2.51723575592041   -1.6475954055786133   0.4482640027999878
+2026-02-20 16:31:00 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.27848517894744873   0.2649201452732086   -3.6077261029277e-05   0.010172338224947453
+2026-02-20 16:31:00 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.2174072563648224   0.30736294388771057
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Iteration: 7800
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] loss: 0.115872  [ 7800/15000] computed in 0.578166417280833 minutes.
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858307838439941   3.1712663173675537
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   3.714911460876465   0.006946638226509094   0.01243592705577612
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067999839782715   0.9999515414237976   0.21325063705444336   0.45224353671073914
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1850972175598145   2.5765390396118164   -1.6474621295928955   0.448879212141037
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.28434664011001587   0.2708951234817505   -3.739714884432033e-05   0.01032999251037836
+2026-02-20 16:31:34 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21751347184181213   0.3082229793071747
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Iteration: 8000
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] loss: 0.146235  [ 8000/15000] computed in 0.5889271457990011 minutes.
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858310222625732   3.171267509460449
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   4.115072727203369   0.006963820196688175   0.012688067741692066
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066667675971985   0.9999765157699585   0.21322672069072723   0.4522548317909241
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.147573709487915   2.6080551147460938   -1.6474376916885376   0.4491530954837799
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.28575554490089417   0.2771620750427246   -3.790638947975822e-05   0.010499714873731136
+2026-02-20 16:32:10 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.2178172618150711   0.3089723587036133
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Iteration: 8200
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] loss: 0.106761  [ 8200/15000] computed in 0.5822773655255635 minutes.
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858312606811523   3.1712687015533447
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   4.155633926391602   0.006980338133871555   0.012919054366648197
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066329121589661   0.9999759793281555   0.21320122480392456   0.4522668421268463
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2143959999084473   2.625401020050049   -1.6473058462142944   0.4497285485267639
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.28973886370658875   0.28525498509407043   -3.862907396978699e-05   0.010657037608325481
+2026-02-20 16:32:45 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21836966276168823   0.31005677580833435
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Iteration: 8400
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] loss: 0.035343  [ 8400/15000] computed in 0.582751460870107 minutes.
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858312606811523   3.1712701320648193
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   4.56143856048584   0.0069950236938893795   0.013048243708908558
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067932486534119   0.9999500513076782   0.21315571665763855   0.45228829979896545
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1547958850860596   2.6715893745422363   -1.6472285985946655   0.45016440749168396
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.2973315715789795   0.2916015088558197   -3.948293306166306e-05   0.01081651821732521
+2026-02-20 16:33:20 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21853893995285034   0.3109185993671417
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Iteration: 8600
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] loss: 0.143479  [ 8600/15000] computed in 0.5903780261675516 minutes.
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858314990997314   3.171271324157715
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   5.456836700439453   0.00701547646895051   0.01333638932555914
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069239616394043   0.9999556541442871   0.21313466131687164   0.45229822397232056
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.140115976333618   2.730084180831909   -1.6471357345581055   0.4506690800189972
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.30402234196662903   0.29763275384902954   -3.961741822422482e-05   0.010968033224344254
+2026-02-20 16:33:55 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.2191324681043625   0.3118845224380493
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Iteration: 8800
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] loss: 0.073685  [ 8800/15000] computed in 0.5791593035062154 minutes.
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485831618309021   3.1712727546691895
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   5.776594638824463   0.007025956176221371   0.01356692798435688
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706652820110321   0.9999808669090271   0.21310380101203918   0.45231276750564575
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1400656700134277   2.7793421745300293   -1.6470487117767334   0.45111677050590515
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.31137651205062866   0.30624350905418396   -3.9424234273610637e-05   0.011134513653814793
+2026-02-20 16:34:30 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21908795833587646   0.3125268816947937
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Iteration: 9000
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] loss: 0.110709  [ 9000/15000] computed in 0.5980957746505737 minutes.
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485831618309021   3.171273946762085
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   6.215889930725098   0.00704419519752264   0.013856453821063042
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7063743472099304   0.9999798536300659   0.2130548357963562   0.45233580470085144
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1854636669158936   2.806487798690796   -1.6469241380691528   0.45168161392211914
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3178069591522217   0.31064021587371826   -4.0214894397649914e-05   0.01127618458122015
+2026-02-20 16:35:06 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21922720968723297   0.3132893145084381
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Iteration: 9200
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] loss: 0.045308  [ 9200/15000] computed in 0.5882549484570821 minutes.
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858318567276   3.1712753772735596
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   6.81962251663208   0.007057637441903353   0.014041981659829617
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065742015838623   0.9999820590019226   0.2130214422941208   0.45235157012939453
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.187896251678467   2.848113536834717   -1.646814227104187   0.4522307515144348
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.32594364881515503   0.31904661655426025   -4.1069946746574715e-05   0.011438527144491673
+2026-02-20 16:35:41 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.21951887011528015   0.31403040885925293
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Iteration: 9400
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] loss: 0.182603  [ 9400/15000] computed in 0.5861673672993978 minutes.
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858319759368896   3.171276569366455
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   7.34666109085083   0.0070772008039057255   0.014368095435202122
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068337202072144   0.9999872446060181   0.21299168467521667   0.45236557722091675
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.1909828186035156   2.876438856124878   -1.6467289924621582   0.4527309536933899
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3321860730648041   0.3241841793060303   -4.066697147209197e-05   0.011590644717216492
+2026-02-20 16:36:16 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0008076678495854139   1.0   0.22004550695419312   0.31507933139801025
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Iteration: 9600
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] loss: 0.088270  [ 9600/15000] computed in 0.5881477355957031 minutes.
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858319759368896   3.1712777614593506
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   7.910608291625977   0.0070941695012152195   0.01460647489875555
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065387964248657   0.9999909996986389   0.21295008063316345   0.45238515734672546
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.195488929748535   2.899127960205078   -1.6466389894485474   0.4532335698604584
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.33848312497138977   0.3307438790798187   -4.093451934750192e-05   0.011736053973436356
+2026-02-20 16:36:52 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0007120207883417606   1.0   0.2206445187330246   0.3160422146320343
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Iteration: 9800
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] loss: 0.063460  [ 9800/15000] computed in 0.5863704999287923 minutes.
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171278953552246
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   8.32809066772461   0.007109990809112787   0.014898324385285378
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706679105758667   0.9999920129776001   0.21293027698993683   0.4523944854736328
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.196337938308716   2.9460465908050537   -1.646479845046997   0.4539302587509155
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.34612616896629333   0.3376142978668213   -4.120256198802963e-05   0.011886375024914742
+2026-02-20 16:37:27 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22101999819278717   0.31692394614219666
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Iteration: 10000
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] loss: 0.166418  [10000/15000] computed in 0.5977158268292745 minutes.
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712803840637207
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   8.6599760055542   0.007128213532269001   0.01518222875893116
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069095969200134   0.9999927878379822   0.2129206657409668   0.45239898562431335
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.200841188430786   3.010744571685791   -1.6463522911071777   0.45457568764686584
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3514184057712555   0.34458914399147034   -4.225610973662697e-05   0.012031392194330692
+2026-02-20 16:38:03 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22162342071533203   0.31792062520980835
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Iteration: 10200
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] loss: 0.121309  [10200/15000] computed in 0.5888731956481934 minutes.
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171281576156616
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   10.043488502502441   0.007152320817112923   0.01575969159603119
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706832230091095   0.999993085861206   0.21289026737213135   0.45241332054138184
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.04886794090271   -1.646233081817627   0.4551728665828705
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.35762619972229004   0.351762592792511   -4.0980183257488534e-05   0.012178637087345123
+2026-02-20 16:38:38 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22274985909461975   0.3192465305328369
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Iteration: 10400
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] loss: 0.151912  [10400/15000] computed in 0.5906524459520975 minutes.
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171283006668091
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   9.310866355895996   0.007176064886152744   0.01600358448922634
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069478034973145   0.9999929070472717   0.21287576854228973   0.45242008566856384
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.1121537685394287   -1.6461236476898193   0.45578110218048096
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3639201819896698   0.35895439982414246   -4.113735121791251e-05   0.012323682196438313
+2026-02-20 16:39:14 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22388486564159393   0.32064077258110046
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Iteration: 10600
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] loss: 0.110955  [10600/15000] computed in 0.5963378389676411 minutes.
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712841987609863
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   9.727773666381836   0.007193996105343103   0.016439996659755707
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069676518440247   0.9999920129776001   0.2128547579050064   0.45243000984191895
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.1578192710876465   -1.6459873914718628   0.4564332664012909
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.37020230293273926   0.365339457988739   -4.024613735964522e-05   0.012462950311601162
+2026-02-20 16:39:50 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22444544732570648   0.3216750919818878
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Iteration: 10800
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] loss: 0.061151  [10800/15000] computed in 0.5836460550626119 minutes.
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858324527740479   3.171285390853882
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   8.801848411560059   0.007214982993900776   0.016739243641495705
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7070079445838928   0.9999908208847046   0.2128332406282425   0.45244014263153076
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.2084455490112305   -1.6459197998046875   0.45688769221305847
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.37595444917678833   0.37101009488105774   -4.0691047615837306e-05   0.01260477863252163
+2026-02-20 16:40:25 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22506561875343323   0.322735071182251
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Iteration: 11000
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] loss: 0.152615  [11000/15000] computed in 0.5972360213597615 minutes.
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712865829467773
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   9.734253883361816   0.007238343823701143   0.017399929463863373
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706922173500061   0.9999789595603943   0.21280811727046967   0.4524519741535187
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.308037519454956   -1.6457939147949219   0.4574812650680542
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.38295188546180725   0.3777788281440735   -4.000444823759608e-05   0.012746134772896767
+2026-02-20 16:41:01 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22650542855262756   0.3241359293460846
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Iteration: 11200
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] loss: 0.086346  [11200/15000] computed in 0.5857511361440023 minutes.
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858324527740479   3.171287775039673
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   10.919028282165527   0.007255289237946272   0.018144013360142708
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7070236206054688   0.999977171421051   0.21277473866939545   0.4524676501750946
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.372626543045044   -1.6456184387207031   0.4582926332950592
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.38833391666412354   0.3819698691368103   -4.029117553727701e-05   0.01288228016346693
+2026-02-20 16:41:36 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22678537666797638   0.3249336779117584
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Iteration: 11400
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] loss: 0.105613  [11400/15000] computed in 0.5975411295890808 minutes.
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712892055511475
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   11.355829238891602   0.007285912521183491   0.01866535097360611
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069118618965149   0.9999867677688599   0.21276338398456573   0.452472984790802
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.4367263317108154   -1.6455464363098145   0.4587474763393402
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.3932352662086487   0.38845494389533997   -3.950843165512197e-05   0.01302400417625904
+2026-02-20 16:42:12 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2285713255405426   0.3266236484050751
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Iteration: 11600
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] loss: 0.102277  [11600/15000] computed in 0.5968159675598145 minutes.
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171290159225464
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   11.902929306030273   0.007302025333046913   0.019286762923002243
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069724798202515   0.9999837279319763   0.21273431181907654   0.45248666405677795
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.493807077407837   -1.6454238891601562   0.45936721563339233
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.40074750781059265   0.39452868700027466   -3.903724064002745e-05   0.013161352835595608
+2026-02-20 16:42:48 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.22937534749507904   0.3278593122959137
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Iteration: 11800
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] loss: 0.141293  [11800/15000] computed in 0.5835972865422566 minutes.
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712911128997803
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   10.555197715759277   0.007324465550482273   0.019405508413910866
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068880200386047   0.9999774694442749   0.212711900472641   0.4524971842765808
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.5411598682403564   -1.6452962160110474   0.46003609895706177
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4062294065952301   0.39991772174835205   -3.909520455636084e-05   0.01329872291535139
+2026-02-20 16:43:23 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23040983080863953   0.3292946517467499
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Iteration: 12000
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] loss: 0.193591  [12000/15000] computed in 0.5993219772974651 minutes.
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712920665740967
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   11.738213539123535   0.007343513425439596   0.01992136985063553
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706709623336792   0.9999753832817078   0.21269665658473969   0.45250436663627625
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.600538969039917   -1.6451915502548218   0.4605933427810669
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4116823375225067   0.40254393219947815   -3.8641472201561555e-05   0.013427452184259892
+2026-02-20 16:43:59 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23155805468559265   0.3307841122150421
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Iteration: 12200
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] loss: 0.194019  [12200/15000] computed in 0.5856983900070191 minutes.
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171293258666992
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   13.168567657470703   0.007366291247308254   0.02041124552488327
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067410945892334   0.999973475933075   0.2126726657152176   0.4525156319141388
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.667581558227539   -1.6450468301773071   0.46130162477493286
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4180072546005249   0.4049423635005951   -3.8005800888640806e-05   0.013555597513914108
+2026-02-20 16:44:34 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23319995403289795   0.33261945843696594
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Iteration: 12400
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] loss: 0.137132  [12400/15000] computed in 0.5992486596107482 minutes.
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.1712939739227295
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   15.760309219360352   0.007380212657153606   0.021412234753370285
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067617177963257   0.9999716281890869   0.21265719830989838   0.4525229036808014
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.7216110229492188   -1.6449168920516968   0.46200528740882874
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.42250338196754456   0.4089990258216858   -3.573552749003284e-05   0.013697374612092972
+2026-02-20 16:45:10 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2339719831943512   0.3341030776500702
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Iteration: 12600
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] loss: 0.262358  [12600/15000] computed in 0.598060150941213 minutes.
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858323335647583   3.171294927597046
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   15.977849006652832   0.007395356893539429   0.021622948348522186
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066382169723511   0.9999697208404541   0.21263456344604492   0.4525335431098938
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.7817983627319336   -1.6447619199752808   0.46273693442344666
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.42634570598602295   0.41201505064964294   -3.5630153433885425e-05   0.013820910826325417
+2026-02-20 16:45:46 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23460042476654053   0.3356248736381531
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] Iteration: 12800
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] loss: 0.091020  [12800/15000] computed in 0.592946191628774 minutes.
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858324527740479   3.1712958812713623
+2026-02-20 16:46:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   16.7675838470459   0.0074090552516281605   0.022260431200265884
+2026-02-20 16:46:22 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068629860877991   0.9999685883522034   0.21260932087898254   0.4525453746318817
+2026-02-20 16:46:22 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2123234272003174   3.7703146934509277   -1.6446470022201538   0.46337148547172546
+2026-02-20 16:46:22 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.43027228116989136   0.4168397784233093   -3.539353565429337e-05   0.013957108370959759
+2026-02-20 16:46:22 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2352312207221985   0.33705469965934753
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Iteration: 13000
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] loss: 0.148760  [13000/15000] computed in 0.6023187597592672 minutes.
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485832691192627   3.1712968349456787
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   18.833223342895508   0.007429555989801884   0.023031603544950485
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067985534667969   0.9999666810035706   0.21259522438049316   0.4525519907474518
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.851349115371704   -1.6444822549819946   0.464153528213501
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4363366365432739   0.4196130037307739   -3.533484414219856e-05   0.014089678414165974
+2026-02-20 16:46:58 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23589111864566803   0.3383500576019287
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Iteration: 13200
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] loss: 0.129156  [13200/15000] computed in 0.5894755999247233 minutes.
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485832691192627   3.171297550201416
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   19.96031951904297   0.007437483407557011   0.023861728608608246
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7069444060325623   0.9999651312828064   0.21256986260414124   0.45256391167640686
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   3.9388813972473145   -1.6443463563919067   0.46487462520599365
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.44133204221725464   0.42369288206100464   -3.4506570955272764e-05   0.014219408854842186
+2026-02-20 16:47:33 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2358131855726242   0.3394339084625244
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Iteration: 13400
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] loss: 0.065392  [13400/15000] computed in 0.6031352758407593 minutes.
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485832691192627   3.1712982654571533
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   20.748991012573242   0.0074655949138104916   0.024652419611811638
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068852782249451   0.9999651312828064   0.2125605344772339   0.45256832242012024
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.212583065032959   3.9921159744262695   -1.6442749500274658   0.4653156101703644
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4462026357650757   0.4285798668861389   -3.391410064068623e-05   0.01434286031872034
+2026-02-20 16:48:09 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23691612482070923   0.3409197926521301
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Iteration: 13600
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] loss: 0.071917  [13600/15000] computed in 0.5981048504511516 minutes.
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.485832691192627   3.1712989807128906
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   22.100122451782227   0.007478252984583378   0.025079064071178436
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067668437957764   0.9999670386314392   0.21253114938735962   0.45258209109306335
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2036592960357666   4.009990692138672   -1.6441164016723633   0.4660720229148865
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4509308636188507   0.42945554852485657   -3.3734602766344324e-05   0.014478393830358982
+2026-02-20 16:48:45 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23724575340747833   0.34181612730026245
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Iteration: 13800
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] loss: 0.090873  [13800/15000] computed in 0.5959762612978617 minutes.
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858330488204956   3.171299695968628
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   22.63514518737793   0.007493230514228344   0.025553617626428604
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066173553466797   0.9999675750732422   0.21252968907356262   0.45258280634880066
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.2365121841430664   4.09617805480957   -1.6439781188964844   0.46678322553634644
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4557395279407501   0.4332215189933777   -3.355764420120977e-05   0.014599663205444813
+2026-02-20 16:49:21 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23736760020256042   0.34273117780685425
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Iteration: 14000
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] loss: 0.188471  [14000/15000] computed in 0.6027124881744385 minutes.
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858330488204956   3.1713004112243652
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   23.875669479370117   0.007517889607697725   0.026358231902122498
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7068049907684326   0.9999675750732422   0.21249887347221375   0.4525972902774811
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.236532211303711   4.131542205810547   -1.6438093185424805   0.4675767421722412
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46030402183532715   0.43789005279541016   -3.409895725781098e-05   0.014730170369148254
+2026-02-20 16:49:57 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23806393146514893   0.3436436653137207
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Iteration: 14200
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] loss: 0.091708  [14200/15000] computed in 0.5924997727076212 minutes.
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858330488204956   3.1713011264801025
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   25.824050903320312   0.00753657054156065   0.02730651944875717
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7066843509674072   0.9999668002128601   0.21248947083950043   0.45260167121887207
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.236532211303711   4.188084602355957   -1.6437249183654785   0.4680576026439667
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4646989107131958   0.4406103491783142   -3.2564996217843145e-05   0.01485086977481842
+2026-02-20 16:50:33 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2382560819387436   0.34454941749572754
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Iteration: 14400
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] loss: 0.051111  [14400/15000] computed in 0.6060365557670593 minutes.
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858332872390747   3.17130184173584
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   27.144990921020508   0.007553743664175272   0.02788046933710575
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7064266204833984   0.9999656677246094   0.21247023344039917   0.45261073112487793
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.237595558166504   4.232510566711426   -1.6435459852218628   0.4689330756664276
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.46997568011283875   0.44442522525787354   -3.2603275030851364e-05   0.014982989057898521
+2026-02-20 16:51:09 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2384379357099533   0.34520357847213745
+2026-02-20 16:51:45 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Iteration: 14600
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] loss: 0.098974  [14600/15000] computed in 0.6001516898473104 minutes.
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858332872390747   3.171302556991577
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   29.226940155029297   0.007574643939733505   0.028923919424414635
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7065104842185974   0.9999628663063049   0.21247446537017822   0.45260870456695557
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.236532211303711   4.247563362121582   -1.6434346437454224   0.4695294499397278
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.47531628608703613   0.44877171516418457   -3.1634564948035404e-05   0.015105288475751877
+2026-02-20 16:51:46 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.23883740603923798   0.3459184169769287
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Iteration: 14800
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] loss: 0.075042  [14800/15000] computed in 0.5954351623853048 minutes.
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858332872390747   3.1713030338287354
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   30.713306427001953   0.007596287410706282   0.02999967709183693
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.706778883934021   0.9999607801437378   0.212463840842247   0.4526137113571167
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.271329164505005   4.255096912384033   -1.6432360410690308   0.4704389274120331
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4787435233592987   0.4520513415336609   -3.091588587267324e-05   0.015225326642394066
+2026-02-20 16:52:21 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2390674203634262   0.34661853313446045
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] -------------------
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Iteration: 15000
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] loss: 0.114667  [15000/15000] computed in 0.6022905468940735 minutes.
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] ------Stats-----
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] ---Min, Max, Mean, Std
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Points:   -24.501190185546875   28.03586769104004   1.4858332872390747   3.1713037490844727
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Scaling factors:   6.954218406463042e-06   31.468242645263672   0.007615374401211739   0.03068144991993904
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Quaternions:   -0.7067744731903076   0.999984085559845   0.21244923770427704   0.45262056589126587
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates dc:   -2.296217918395996   4.285118103027344   -1.6431450843811035   0.4709646701812744
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Sh coordinates rest:   -0.4838190972805023   0.45675209164619446   -3.030590232810937e-05   0.015353729948401451
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Opacities:   0.0006945490022189915   1.0   0.2394605576992035   0.34718483686447144
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Training finished after 15000 iterations with loss=0.11466696113348007.
+2026-02-20 16:52:57 [INFO]   [Steps2-5-SuGaR] Saving final model...
+2026-02-20 16:53:07 [INFO]   [Steps2-5-SuGaR] Final model saved.
+2026-02-20 16:53:07 [INFO]   [Steps2-5-SuGaR] Exporting ply file with refined Gaussians...
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Ply file exported. This file is needed for using the dedicated viewer.
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] ==================================================
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Starting extracting texture from refined SuGaR model:
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Scene path: D:\CAAS\04-COLMAP\XianKeLai2
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Iteration to load: 7000
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Vanilla 3DGS checkpoint path: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2\
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Refined model path: 
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] ./output/refined\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gausspe
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] rface1/15000.pt
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Coarse mesh path: ./output/coarse_mesh/XianKeLai2\sugarmesh_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000.ply
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Mesh output directory: ./output/refined_mesh\XianKeLai2
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Mesh save path: 
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] ./output/refined_mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_ga
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] ussperface1.obj
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Number of gaussians per surface triangle: 1
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Square size: 8
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Postprocess mesh: False
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] ==================================================
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Source path: D:\CAAS\04-COLMAP\XianKeLai2
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Gaussian splatting checkpoint path: D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2\
+2026-02-20 16:53:17 [INFO]   [Steps2-5-SuGaR] Loading Vanilla 3DGS model config D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2\...
+2026-02-20 16:53:18 [INFO]   [Steps2-5-SuGaR] Found image extension .jpg
+2026-02-20 16:53:18 [INFO]   [Steps2-5-SuGaR] Vanilla 3DGS Loaded.
+2026-02-20 16:53:18 [INFO]   [Steps2-5-SuGaR] 208 training images detected.
+2026-02-20 16:53:18 [INFO]   [Steps2-5-SuGaR] The model has been trained for 7000 steps.
+2026-02-20 16:53:18 [INFO]   [Steps2-5-SuGaR] 0.044264 M gaussians detected.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Binding radiance cloud to surface mesh...
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Nvdiffrast not found. Using PyTorch3D rasterizer instead.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] With Nvdiffrast, the rendering is much faster; For instance, computing atexture for a mesh using a collection of images can be done in just a few seconds.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Without Nvdiffrast, the rendering is much slower and computing the texture can take a few minutes.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Building UV map done.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Processing images...
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Texture extracted.
+2026-02-20 16:55:50 [INFO]   [Steps2-5-SuGaR] Saving textured mesh...
+2026-02-20 17:01:09 [INFO]   [Steps2-5-SuGaR] Texture saved at: 
+2026-02-20 17:01:09 [INFO]   [Steps2-5-SuGaR] ./output/refined_mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_ga
+2026-02-20 17:01:09 [INFO]   [Steps2-5-SuGaR] ussperface1.obj
+2026-02-20 17:01:10 [INFO] Steps2-5-SuGaR 完成，耗时 5235s (87.2min)
+2026-02-20 17:01:10 [INFO] [Steps 2-5] Done
+2026-02-20 17:01:10 [INFO] ============================================================
+2026-02-20 17:01:10 [INFO] [Collect] Copying outputs to final directories
+2026-02-20 17:01:10 [INFO]   Copied D:\CAAS\SuGaR-main\output\coarse\XianKeLai2 -> D:\CAAS\07-SuGaR-GS\XianKeLai2\coarse
+2026-02-20 17:01:10 [INFO]   Copied D:\CAAS\SuGaR-main\output\coarse_mesh\XianKeLai2 -> D:\CAAS\07-SuGaR-GS\XianKeLai2\coarse_mesh
+2026-02-20 17:01:11 [INFO]   Copied D:\CAAS\SuGaR-main\output\refined\XianKeLai2 -> D:\CAAS\07-SuGaR-GS\XianKeLai2\refined
+2026-02-20 17:01:11 [INFO]   Copied D:\CAAS\SuGaR-main\output\refined_mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.mtl -> D:\CAAS\07-SuGaR-Mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.mtl
+2026-02-20 17:01:11 [INFO]   Copied D:\CAAS\SuGaR-main\output\refined_mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.obj -> D:\CAAS\07-SuGaR-Mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.obj
+2026-02-20 17:01:11 [INFO]   Copied D:\CAAS\SuGaR-main\output\refined_mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.png -> D:\CAAS\07-SuGaR-Mesh\XianKeLai2\sugarfine_3Dgs7000_densityestim02_sdfnorm02_level03_decim1000000_normalconsistency01_gaussperface1.png
+2026-02-20 17:01:11 [INFO]   Copied GS checkpoint -> D:\CAAS\07-SuGaR-GS\XianKeLai2\vanilla_gs
+2026-02-20 17:01:11 [INFO] [Collect] Done
+2026-02-20 17:01:11 [INFO]   Cleaned up D:\CAAS\SuGaR-main\output\vanilla_gs\XianKeLai2
+2026-02-20 17:01:11 [INFO]   Cleaned up D:\CAAS\SuGaR-main\output\coarse\XianKeLai2
+2026-02-20 17:01:11 [INFO]   Cleaned up D:\CAAS\SuGaR-main\output\coarse_mesh\XianKeLai2
+2026-02-20 17:01:11 [INFO]   Cleaned up D:\CAAS\SuGaR-main\output\refined\XianKeLai2
+2026-02-20 17:01:11 [INFO]   Cleaned up D:\CAAS\SuGaR-main\output\refined_mesh\XianKeLai2
+2026-02-20 17:01:11 [INFO] 
+2026-02-20 17:01:11 [INFO] ============================================================
+2026-02-20 17:01:11 [INFO] 场景 XianKeLai2 耗时统计:
+2026-02-20 17:01:11 [INFO]   Step 1   Vanilla 3DGS:      0.0 min
+2026-02-20 17:01:11 [INFO]   Step 1.5 清废光:            0.0 min
+2026-02-20 17:01:11 [INFO]   Steps 2-5 SuGaR:          87.2 min
+2026-02-20 17:01:11 [INFO]   Collect outputs:            0.0 min
+2026-02-20 17:01:11 [INFO]   ───────────────────────────────
+2026-02-20 17:01:11 [INFO]   总计:                      87.3 min (1.45 h)
+2026-02-20 17:01:11 [INFO] ============================================================

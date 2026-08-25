@@ -1,0 +1,107 @@
+{
+  "stage": "S17_M1_soft_cross_sample",
+  "completed_at": "2026-05-21",
+  "purpose": "Validate whether A6+M1-soft weighting is a cross-sample positive M1 candidate rather than a KongQueZhuYu-only result.",
+  "foreground_only_thresholds": {
+    "outside_nonblack_ratio_mean": 0.05,
+    "leakage_energy_ratio_mean": 0.10
+  },
+  "rows": [
+    {
+      "sample": "KongQueZhuYu",
+      "variant": "A6",
+      "eval_images": 27,
+      "PSNR_fg": 25.0072,
+      "SSIM_fg": 0.8548,
+      "LPIPS_fg_black_bg": 0.0438,
+      "outside_nonblack_ratio_mean": 0.0294,
+      "leakage_energy_ratio_mean": 0.0189,
+      "gaussians_30000": 591623,
+      "full_PSNR": 6.2555,
+      "full_SSIM": 0.2684,
+      "full_LPIPS": 0.5567
+    },
+    {
+      "sample": "KongQueZhuYu",
+      "variant": "A6+M1-soft",
+      "eval_images": 27,
+      "PSNR_fg": 24.9566,
+      "SSIM_fg": 0.8543,
+      "LPIPS_fg_black_bg": 0.0440,
+      "outside_nonblack_ratio_mean": 0.0284,
+      "leakage_energy_ratio_mean": 0.0184,
+      "gaussians_30000": 532264,
+      "full_PSNR": 6.2539,
+      "full_SSIM": 0.2681,
+      "full_LPIPS": 0.5567
+    },
+    {
+      "sample": "XianKeLai1",
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 23.7276,
+      "SSIM_fg": 0.8278,
+      "LPIPS_fg_black_bg": 0.0309,
+      "outside_nonblack_ratio_mean": 0.0484,
+      "leakage_energy_ratio_mean": 0.0379,
+      "gaussians_30000": 253827,
+      "full_PSNR": 22.6258,
+      "full_SSIM": 0.9287,
+      "full_LPIPS": 0.0756
+    },
+    {
+      "sample": "XianKeLai1",
+      "variant": "A6+M1-soft",
+      "eval_images": 26,
+      "PSNR_fg": 23.6632,
+      "SSIM_fg": 0.8274,
+      "LPIPS_fg_black_bg": 0.0312,
+      "outside_nonblack_ratio_mean": 0.0478,
+      "leakage_energy_ratio_mean": 0.0374,
+      "gaussians_30000": 220947,
+      "full_PSNR": 22.7146,
+      "full_SSIM": 0.9290,
+      "full_LPIPS": 0.0755
+    },
+    {
+      "sample": "CaoMei2",
+      "variant": "A6",
+      "eval_images": 26,
+      "PSNR_fg": 25.0833,
+      "SSIM_fg": 0.8121,
+      "LPIPS_fg_black_bg": 0.0250,
+      "outside_nonblack_ratio_mean": 0.0147,
+      "leakage_energy_ratio_mean": 0.0081,
+      "gaussians_30000": 370844,
+      "full_PSNR": 5.1344,
+      "full_SSIM": 0.1076,
+      "full_LPIPS": 0.7066
+    },
+    {
+      "sample": "CaoMei2",
+      "variant": "A6+M1-soft",
+      "eval_images": 26,
+      "PSNR_fg": 25.0046,
+      "SSIM_fg": 0.8107,
+      "LPIPS_fg_black_bg": 0.0253,
+      "outside_nonblack_ratio_mean": 0.0140,
+      "leakage_energy_ratio_mean": 0.0077,
+      "gaussians_30000": 249944,
+      "full_PSNR": 5.1332,
+      "full_SSIM": 0.1074,
+      "full_LPIPS": 0.7067
+    }
+  ],
+  "delta_summary": {
+    "mean_delta_PSNR_fg": -0.0646,
+    "mean_delta_SSIM_fg": -0.0008,
+    "mean_delta_LPIPS_fg_black_bg": 0.0002,
+    "mean_delta_outside_nonblack_ratio_mean": -0.0007,
+    "mean_delta_leakage_energy_ratio_mean": -0.0005,
+    "total_A6_gaussians": 1216294,
+    "total_A6_M1_soft_gaussians": 1003155,
+    "total_gaussian_reduction": 213139,
+    "total_gaussian_reduction_percent": 17.52
+  },
+  "conclusion": "Across three representative samples, A6+M1-soft preserves foreground reconstruction quality, slightly reduces leakage/outside metrics, and reduces Gaussian count. This is positive cross-sample evidence for correcting M1 from hard view deletion to soft view weighting."
+}

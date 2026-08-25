@@ -1,0 +1,62 @@
+table: table6_vfm_prior_injection_ablation
+description: Template for foreground-prior injection and M2M3-GO ablation.
+dataset: representative_broad_leaf_sequence
+shared_settings:
+  train_iterations: 30000
+  image_resolution: matched
+  eval_protocol: heldout_views
+  foreground_metrics:
+    - psnr_fg
+    - outside_mask_non_black_ratio
+    - leakage_energy_ratio
+    - gaussian_count
+    - phenotype_ready
+variants:
+  - name: full_scene_2dgs
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    opacity_regularisation: none
+    m2m3_go: false
+    posthoc_pruning: false
+  - name: input_domain_foreground_masking
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    input_masking: true
+    opacity_regularisation: none
+    m2m3_go: false
+  - name: alpha_mask_consistency_only
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    opacity_regularisation: alpha
+    m2m3_go: false
+  - name: background_opacity_suppression_only
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    opacity_regularisation: background
+    m2m3_go: false
+  - name: joint_alpha_background_regularisation
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    opacity_regularisation: joint
+    m2m3_go: false
+  - name: foreground_object_loss_injection
+    foreground_track_init: false
+    foreground_rgb_supervision: true
+    opacity_regularisation: joint
+    m2m3_go: false
+  - name: complete_foresplat_without_m2m3_go
+    foreground_track_init: true
+    foreground_rgb_supervision: true
+    opacity_regularisation: joint
+    m2m3_go: false
+  - name: complete_foresplat
+    foreground_track_init: true
+    foreground_rgb_supervision: true
+    opacity_regularisation: joint
+    m2m3_go: true
+  - name: posthoc_mask_pruning_after_full_scene_training
+    foreground_track_init: false
+    foreground_rgb_supervision: false
+    opacity_regularisation: none
+    m2m3_go: false
+    posthoc_pruning: true

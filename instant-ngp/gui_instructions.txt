@@ -1,0 +1,21 @@
+# instant-ngp GUI 使用指南
+
+# 启动 GUI（在本地有显示器的电脑上）
+cd /data/fj/instant-ngp
+./instant-ngp /data/fj/10-Instant-NGP/CaoMei1
+
+# GUI 中的操作：
+# 1. 按 'T' 键开始/停止训练
+# 2. 按 'R' 键渲染当前视角
+# 3. 导出菜单：
+#    - Save snapshot (保存 .msgpack)
+#    - Export point cloud (导出点云)
+#    - Export mesh (导出网格)
+# 4. 相机控制：
+#    - WASD/箭头键: 旋转相机
+#    - 鼠标: 交互操作
+# 5. 按 ESC 或 Q 退出
+
+# 导出到 CloudCompare 兼容格式：
+# 1. 使用 Export point cloud → PLY 格式
+# 2. PLY 文件可以在 CloudCompare 中直接打开

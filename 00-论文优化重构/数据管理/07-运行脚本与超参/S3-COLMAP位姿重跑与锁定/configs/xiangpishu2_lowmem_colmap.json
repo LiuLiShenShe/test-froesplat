@@ -1,0 +1,34 @@
+{
+  "sample": "XiangPiShu2",
+  "reason": "normal sequential and exhaustive reruns were killed during CPU SIFT feature extraction with exit code -9",
+  "source_root": "/data/fj/F2DMAS/02-FFT",
+  "output_root": "/data/fj/F2DMAS/04-COLMAP-rerun-original",
+  "attempts": [
+    "sequential_lowmem",
+    "exhaustive_lowmem_if_needed"
+  ],
+  "colmap": {
+    "version_observed": "3.9.1 without CUDA",
+    "camera_model": "OPENCV",
+    "single_camera": true,
+    "use_gpu": false
+  },
+  "feature_extraction": {
+    "SiftExtraction.num_threads": 4,
+    "SiftExtraction.max_image_size": 2000,
+    "SiftExtraction.max_num_features": 6000,
+    "SiftExtraction.estimate_affine_shape": 0,
+    "SiftExtraction.domain_size_pooling": 0
+  },
+  "matching": {
+    "SiftMatching.num_threads": 4,
+    "SiftMatching.guided_matching": 1,
+    "SequentialMatching.overlap": 20,
+    "SequentialMatching.quadratic_overlap": 1,
+    "SequentialMatching.loop_detection": 0
+  },
+  "success_threshold": {
+    "registration_rate_percent": 70.0,
+    "points3d_min": 1
+  }
+}

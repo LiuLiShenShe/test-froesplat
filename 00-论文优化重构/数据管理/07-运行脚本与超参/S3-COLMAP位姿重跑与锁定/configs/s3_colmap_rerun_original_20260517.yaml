@@ -1,0 +1,31 @@
+stage: S3-COLMAP位姿重跑与锁定
+date: 2026-05-17
+source_root: /data/fj/F2DMAS/02-FFT
+output_root: /data/fj/F2DMAS/04-COLMAP-rerun-original
+data_management_root: /data/fj/F2DMAS/00-论文优化重构/数据管理
+samples:
+  - CaoMei2
+  - ChangShouHua1
+  - ChangShouHua3
+  - KongQueZhuYu
+  - XiangPiShu2
+colmap:
+  command: colmap
+  min_registration_rate: 70.0
+  first_matcher: sequential
+  fallback_matcher: exhaustive
+  camera_model: OPENCV
+  single_camera: true
+  use_gpu: false
+  max_image_size: 3200
+  max_num_features: 12000
+  estimate_affine_shape: true
+  domain_size_pooling: true
+  guided_matching: true
+  sequential_overlap: 20
+  sequential_quadratic_overlap: true
+  sequential_loop_detection: false
+notes:
+  - Do not overwrite legacy 04-COLMAP outputs.
+  - Use original RGB frames retained by FFT rather than masked/crop images.
+  - Refresh 数据管理/00-规范与索引/dataset_index.csv after rerun.

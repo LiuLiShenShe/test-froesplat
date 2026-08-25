@@ -1,0 +1,320 @@
+#!/usr/bin/env python3
+"""
+完整的批处理脚本：处理所有植株数据并训练（修复版）
+解决问题：
+1. RGBA PNG → RGB JPG 转换
+2. 移除 transforms.json 中的 null 值
+3. 使用完整路径保存快照
+"""
+
+import os
+import sys
+import shutil
+import subprocess
+import json
+from pathlib import Path
+from datetime import datetime
+from PIL import Image
+
+# 配置
+SOURCE_DIR = "/data/fj/04-COLMAP"
+TARGET_DIR = "/data/fj/10-Instant-NGP"
+INSTANT_NGP_DIR = "/data/fj/instant-ngp"
+TRAIN_STEPS = 30000
+
+# 植株列表
+PLANTS = [
+    "BaiZhang", "CaoMei1", "CaoMei2", "ChangShouHua2",
+    "DouBanLv1", "DouBanLv2", "DouBanLv3",
+    "HongZhang", "KongQueZhuYu",
+    "WangWenCao1", "WangWenCao2",
+    "WanNianQing1", "WanNianQing2",
+    "XiangPiShu1",
+    "XianKeLai1", "XianKeLai2", "XianKeLai3"
+]
+
+def log(message):
+    """打印带时间戳的日志"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] {message}")
+    sys.stdout.flush()
+
+def convert_rgba_to_rgb(src_img_path, dst_img_path):
+    """将RGBA PNG转换为RGB JPG"""
+    try:
+        img = Image.open(src_img_path)
+
+        # Convert RGBA to RGB
+        if img.mode == 'RGBA':
+            # 使用白色背景
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])  # 3 is the alpha channel
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+
+        # Save as JPG
+        img.save(dst_img_path, quality=95)
+        return True
+    except Exception as e:
+        # 记录损坏的文件但继续处理
+        return False
+
+def copy_and_convert_images(plant_name):
+    """复制并转换图像（RGBA PNG → RGB JPG）"""
+    log(f"复制并转换 {plant_name} 的图像...")
+
+    source_plant = Path(SOURCE_DIR) / plant_name
+    target_plant = Path(TARGET_DIR) / plant_name
+
+    # 创建目标目录
+    target_plant.mkdir(parents=True, exist_ok=True)
+
+    # 复制并转换图像
+    source_images = source_plant / "images_rgba"
+    target_images = target_plant / "images"
+
+    if not source_images.exists():
+        log(f"  ✗ 未找到 images_rgba")
+        return False
+
+    if target_images.exists():
+        shutil.rmtree(target_images)
+    target_images.mkdir()
+
+    # 转换所有PNG为JPG
+    png_files = list(source_images.glob('*.png'))
+    skipped = []
+    for i, png_file in enumerate(png_files):
+        jpg_file = target_images / f'{png_file.stem}.jpg'
+        success = convert_rgba_to_rgb(png_file, jpg_file)
+        if not success:
+            skipped.append(png_file.name)
+            continue
+
+        if (i + 1) % 50 == 0:
+            log(f"  转换进度: {i+1}/{len(png_files)}")
+
+    converted = len(png_files) - len(skipped)
+    log(f"  ✓ 转换图像: {converted} 张 (RGBA PNG → RGB JPG)")
+
+    if skipped:
+        log(f"  ⚠ 跳过损坏文件 ({len(skipped)}): {', '.join(skipped[:5])}")
+        if len(skipped) > 5:
+            log(f"     ... 还有 {len(skipped)-5} 个")
+
+    return converted > 50  # 至少要有50张有效图像
+
+    # 复制 sparse
+    source_sparse = source_plant / "sparse"
+    target_sparse = target_plant / "sparse"
+
+    if not source_sparse.exists():
+        log(f"  ✗ 未找到 sparse")
+        return False
+
+    if target_sparse.exists():
+        shutil.rmtree(target_sparse)
+    shutil.copytree(source_sparse, target_sparse)
+    log(f"  ✓ 复制 COLMAP 数据")
+
+    return True
+
+def generate_transforms(plant_name):
+    """生成 transforms.json"""
+    log(f"生成 {plant_name} 的 transforms.json...")
+
+    plant_dir = Path(TARGET_DIR) / plant_name
+    sparse_dir = plant_dir / "sparse" / "0"
+    images_dir = plant_dir / "images"
+    output_file = plant_dir / "transforms.json"
+
+    script_path = Path(INSTANT_NGP_DIR) / "pycolmap_to_nerf.py"
+
+    cmd = [
+        sys.executable,
+        str(script_path),
+        str(sparse_dir),
+        str(images_dir),
+        str(output_file),
+        "16"  # aabb_scale
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode == 0 and output_file.exists():
+            # 读取并清理 null 值
+            with open(output_file) as f:
+                data = json.load(f)
+
+            # 移除所有null值
+            data_clean = {k: v for k, v in data.items() if v is not None}
+
+            # 更新文件路径从 .png 到 .jpg
+            for frame in data_clean.get('frames', []):
+                if 'file_path' in frame:
+                    frame['file_path'] = frame['file_path'].replace('.png', '.jpg')
+
+            # 保存清理后的版本
+            with open(output_file, 'w') as f:
+                json.dump(data_clean, f, indent=2)
+
+            num_frames = len(data_clean.get('frames', []))
+            log(f"  ✓ 生成成功: {num_frames} 帧 (已清理null值并更新为JPG路径)")
+            return True
+        else:
+            log(f"  ✗ 生成失败")
+            if result.stderr:
+                log(f"     {result.stderr[:200]}")
+            return False
+
+    except Exception as e:
+        log(f"  ✗ 异常: {e}")
+        return False
+
+def train_plant(plant_name):
+    """训练单个植株"""
+    log(f"训练 {plant_name} ({TRAIN_STEPS} 步)...")
+
+    plant_dir = Path(TARGET_DIR) / plant_name
+    output_dir = plant_dir / "output"
+    output_dir.mkdir(exist_ok=True)
+
+    transforms_file = plant_dir / "transforms.json"
+    if not transforms_file.exists():
+        log(f"  ✗ 未找到 transforms.json")
+        return False
+
+    script_path = Path(INSTANT_NGP_DIR) / "scripts" / "run.py"
+    snapshot_path = output_dir / f"{plant_name}_trained.msgpack"
+
+    cmd = [
+        sys.executable,
+        str(script_path),
+        "--scene", str(plant_dir),
+        "--n_steps", str(TRAIN_STEPS),
+        "--save_snapshot", str(snapshot_path)  # 完整绝对路径
+    ]
+
+    log_file = output_dir / "training.log"
+
+    try:
+        with open(log_file, 'w') as log_f:
+            process = subprocess.Popen(
+                cmd,
+                cwd=INSTANT_NGP_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
+
+            # 实时写入日志并显示关键信息
+            for line in process.stdout:
+                log_f.write(line)
+                log_f.flush()
+                # 只显示关键信息
+                if any(k in line for k in ['SUCCESS', 'ERROR', 'loss=', 'Saving', 'Training complete']):
+                    print(f"  {line.rstrip()}")
+                    sys.stdout.flush()
+
+            process.wait()
+
+        if process.returncode == 0:
+            log(f"  ✓ 训练完成")
+            log(f"  快照: {snapshot_path} ({snapshot_path.stat().st_size / 1024 / 1024:.1f} MB)")
+            log(f"  日志: {log_file}")
+            return True
+        else:
+            log(f"  ✗ 训练失败: 返回码 {process.returncode}")
+            return False
+
+    except Exception as e:
+        log(f"  ✗ 异常: {e}")
+        return False
+
+def main():
+    """主函数"""
+    log("=" * 70)
+    log("Instant-NGP 批处理训练 - 植株数据（修复版）")
+    log("=" * 70)
+    log(f"源目录: {SOURCE_DIR}")
+    log(f"目标目录: {TARGET_DIR}")
+    log(f"训练步数: {TRAIN_STEPS}")
+    log(f"植株数量: {len(PLANTS)}")
+    log("=" * 70)
+
+    Path(TARGET_DIR).mkdir(parents=True, exist_ok=True)
+
+    stats = {
+        "total": len(PLANTS),
+        "copied": 0,
+        "transformed": 0,
+        "trained": 0,
+        "failed": []
+    }
+
+    start_time = datetime.now()
+
+    for i, plant in enumerate(PLANTS, 1):
+        log(f"\n{'='*70}")
+        log(f"[{i}/{len(PLANTS)}] 处理植株: {plant}")
+        log(f"{'='*70}")
+
+        # 1. 复制并转换图像
+        if not copy_and_convert_images(plant):
+            stats["failed"].append((plant, "复制/转换失败"))
+            continue
+        stats["copied"] += 1
+
+        # 2. 生成 transforms.json
+        if not generate_transforms(plant):
+            stats["failed"].append((plant, "生成 transforms 失败"))
+            continue
+        stats["transformed"] += 1
+
+        # 3. 训练
+        if not train_plant(plant):
+            stats["failed"].append((plant, "训练失败"))
+            continue
+        stats["trained"] += 1
+
+    end_time = datetime.now()
+    duration = end_time - start_time
+
+    # 打印总结
+    log("\n" + "=" * 70)
+    log("批处理完成！")
+    log("=" * 70)
+    log(f"总植株数: {stats['total']}")
+    log(f"图像转换成功: {stats['copied']}")
+    log(f"Transforms 生成成功: {stats['transformed']}")
+    log(f"训练成功: {stats['trained']}")
+    log(f"总耗时: {duration}")
+
+    if stats["failed"]:
+        log(f"\n失败的植株 ({len(stats['failed'])}):")
+        for plant, reason in stats["failed"]:
+            log(f"  - {plant}: {reason}")
+
+    log("=" * 70)
+
+    # 保存报告
+    report_file = Path(TARGET_DIR) / "batch_report.json"
+    with open(report_file, 'w') as f:
+        json.dump({
+            "timestamp": end_time.isoformat(),
+            "duration_seconds": duration.total_seconds(),
+            "stats": stats
+        }, f, indent=2)
+
+    log(f"报告已保存: {report_file}")
+
+if __name__ == "__main__":
+    main()
