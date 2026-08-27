@@ -39,6 +39,7 @@ BUILTIN_PROMPTS = {
     "P3": "leaves and stems",
     "P4": "crop seedling",
     "P5": "plant body without background",
+    "P6": "whole potted plant including the pot",
 }
 
 PROMPT_DIR_NAMES = {
@@ -47,6 +48,7 @@ PROMPT_DIR_NAMES = {
     "P3": "P3_叶和茎",
     "P4": "P4_作物幼苗",
     "P5": "P5_去背景植物体",
+    "P6": "P6_带盆整株",
 }
 
 
@@ -104,6 +106,398 @@ class ColmapObservation:
     image_name: str
     mask_stem: str
     points: np.ndarray
+
+
+@dataclass
+class ConsensusResult:
+    reference_mask: np.ndarray
+    per_frame_masks: dict[str, np.ndarray]
+    per_frame_info: dict[str, str | dict[str, Any]]
+    geo_support: np.ndarray | None = None
+    center_band_mask: np.ndarray | None = None
+
+
+def build_consensus_context(
+    selected_masks: dict[str, np.ndarray],
+    args: argparse.Namespace,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """A6 S1-S3: robust center estimate + center-weighted pixel vote support.
+
+    Returns (freq_map, weight_map, static_map). static_map marks pixels that are
+    masked in (nearly) every frame AND photometrically static across frames —
+    the signature of an off-center distractor (e.g. a neighbouring plant) that
+    never rotates with the turntable, as opposed to the target whose silhouette
+    changes every frame.
+    """
+    if not selected_masks:
+        raise ValueError("consensus requires at least one selected mask")
+    shape = next(iter(selected_masks.values())).shape
+    freq = np.zeros(shape, dtype=np.float32)
+    for mask in selected_masks.values():
+        freq += mask.astype(np.float32)
+    freq /= float(max(len(selected_masks), 1))
+
+    h, w = shape
+    centers_x, centers_y, widths, heights = [], [], [], []
+    for mask in selected_masks.values():
+        bbox = mask_bbox(mask)
+        if bbox is None:
+            continue
+        x0, y0, x1, y1 = bbox
+        centers_x.append(0.5 * (x0 + x1) / w)
+        centers_y.append(0.5 * (y0 + y1) / h)
+        widths.append((x1 - x0) / w)
+        heights.append((y1 - y0) / h)
+    if not centers_x:
+        return freq, np.ones(shape, dtype=np.float32), np.zeros(shape, dtype=bool)
+
+    cx = float(np.median(centers_x))
+    cy = float(np.median(centers_y))
+    band_half_w = max(float(np.median(widths)), args.consensus_center_band_ratio) / 2.0
+    band_half_h = max(float(np.median(heights)), args.consensus_center_band_ratio) / 2.0
+
+    xs = np.arange(w, dtype=np.float32)[None, :] / max(w - 1, 1)
+    ys = np.arange(h, dtype=np.float32)[:, None] / max(h - 1, 1)
+    dx = np.maximum(np.abs(xs - cx) - band_half_w, 0.0)
+    dy = np.maximum(np.abs(ys - cy) - band_half_h, 0.0)
+    dist = np.sqrt(dx * dx + dy * dy)
+    decay = float(args.consensus_center_decay)
+    weight = np.power(decay, dist / 0.25).astype(np.float32)
+
+    # Static-distractor evidence: near-constant mask coverage + near-constant
+    # appearance (low temporal std of grayscale inside the always-masked area).
+    # The turntable target rotates, so its pixels change every frame; a
+    # neighbouring plant that never enters the turntable stays photometrically
+    # fixed. Filled in by apply_cross_view_consensus, which owns the frames.
+    always = freq >= 0.98
+    static_map = np.zeros(shape, dtype=bool)
+    return freq, weight, static_map, always
+
+
+def estimate_static_distractor_map(
+    gray_by_stem: dict[str, np.ndarray],
+    always: np.ndarray,
+    center_band_mask: np.ndarray,
+    args: argparse.Namespace,
+) -> np.ndarray:
+    """A6 S3b: photometric-static + always-masked + off-center -> distractor.
+
+    The temporal std is computed at the (downscaled) gray resolution and the
+    resulting static map is resized back to full mask resolution.
+    """
+    static = np.zeros(always.shape, dtype=bool)
+    if not always.any() or len(gray_by_stem) < 3:
+        return static
+    gh, gw = next(iter(gray_by_stem.values())).shape
+    always_s = np.array(
+        Image.fromarray(always.astype(np.uint8) * 255).resize((gw, gh), Image.NEAREST)
+    ) > 127
+    band_s = np.array(
+        Image.fromarray(center_band_mask.astype(np.uint8) * 255).resize((gw, gh), Image.NEAREST)
+    ) > 127
+    stack = np.stack([g.astype(np.float32) / 255.0 for g in gray_by_stem.values()], axis=0)
+    std = stack.std(axis=0)
+    candidate = always_s & (std <= float(args.consensus_static_std_threshold)) & (~band_s)
+    min_area = max(16, int(candidate.size * args.consensus_min_area_ratio))
+    candidate = remove_small_components(candidate, min_area)
+    if candidate.any():
+        static = np.array(
+            Image.fromarray(candidate.astype(np.uint8) * 255).resize(
+                (always.shape[1], always.shape[0]), Image.BILINEAR
+            )
+        ) > 127
+        static = binary_opening(static, structure=kernel(5), iterations=1)
+        static = remove_small_components(static, min_area)
+    return static
+
+
+def apply_cross_view_consensus(
+    selected_masks: dict[str, np.ndarray],
+    gray_by_stem: dict[str, np.ndarray],
+    colmap_observations: dict[str, ColmapObservation],
+    dirs: dict[str, Path] | None,
+    args: argparse.Namespace,
+) -> ConsensusResult | None:
+    """A6 S4-S6: geometry-gated consensus refinement with per-frame fallback."""
+    n_frames = len(selected_masks)
+    if n_frames < max(2, args.consensus_min_frames):
+        return None
+
+    freq, weight, _unused_static, always = build_consensus_context(selected_masks, args)
+    support = freq * weight
+
+    # Center-band mask for the static-distractor test (recompute cheaply).
+    h, w = freq.shape
+    center_band_mask = np.zeros(freq.shape, dtype=bool)
+    centers_x, centers_y, widths, heights = [], [], [], []
+    for mask in selected_masks.values():
+        bbox = mask_bbox(mask)
+        if bbox is None:
+            continue
+        x0, y0, x1, y1 = bbox
+        centers_x.append(0.5 * (x0 + x1) / w)
+        centers_y.append(0.5 * (y0 + y1) / h)
+        widths.append((x1 - x0) / w)
+        heights.append((y1 - y0) / h)
+
+    # Geometry channel FIRST: COLMAP foreground-track support (S4). The
+    # turntable target is track-backed in every frame; the static neighbour
+    # plant is not (its pixels are never reconstructed as foreground points).
+    geo_support: np.ndarray | None = None
+    usable_obs = [
+        obs for stem, obs in colmap_observations.items() if stem in selected_masks and obs.points.size > 0
+    ]
+    if len(usable_obs) >= max(2, n_frames // 3):
+        geo_support = np.zeros(freq.shape, dtype=bool)
+        for obs in usable_obs:
+            geo_support |= points_to_support_mask(obs.points, freq.shape, args.consensus_geometry_dilation)
+
+    # Robust center prior from TRACK-BACKED core pixels, NOT from raw bboxes.
+    # Bboxes are polluted by the neighbour leak itself (median width can reach
+    # ~0.94 of the image), which would make the band cover the whole frame and
+    # disable every off-center test downstream.
+    core = (freq >= 0.98)
+    if geo_support is not None and core.sum() > int(freq.size * 0.001):
+        core = core & geo_support
+    if core.any():
+        ys_c, xs_c = np.nonzero(core)
+        cx = float(xs_c.mean()) / max(w - 1, 1)
+        cy = float(ys_c.mean()) / max(h - 1, 1)
+        xs_std = float(xs_c.std()) / max(w - 1, 1)
+        ys_std = float(ys_c.std()) / max(h - 1, 1)
+    else:
+        # Fallback to bbox medians; sane defaults keep the closure defined.
+        cx = float(np.median(centers_x)) if centers_x else 0.5
+        cy = float(np.median(centers_y)) if centers_y else 0.5
+        xs_std = float(np.median(widths)) / 4.0 if widths else args.consensus_center_band_ratio / 4.0
+        ys_std = float(np.median(heights)) / 4.0 if heights else args.consensus_center_band_ratio / 4.0
+    bw = max(3.0 * xs_std, args.consensus_center_band_ratio / 2.0)
+    bh = max(3.0 * ys_std, args.consensus_center_band_ratio / 2.0)
+    xs = np.arange(w, dtype=np.float32)[None, :] / max(w - 1, 1)
+    ys = np.arange(h, dtype=np.float32)[:, None] / max(h - 1, 1)
+    center_band_mask = (np.abs(xs - cx) <= bw) & (np.abs(ys - cy) <= bh)
+
+    static_map = estimate_static_distractor_map(gray_by_stem, always, center_band_mask, args)
+    # Static distractors lose their vote entirely.
+    support = support * np.where(static_map, float(args.consensus_static_weight), 1.0)
+
+    # Geometry channel: COLMAP foreground-track support (S4).
+    geo_support: np.ndarray | None = None
+    usable_obs = [
+        obs for stem, obs in colmap_observations.items() if stem in selected_masks and obs.points.size > 0
+    ]
+    if len(usable_obs) >= max(2, n_frames // 3):
+        geo_support = np.zeros(support.shape, dtype=bool)
+        for obs in usable_obs:
+            geo_support |= points_to_support_mask(obs.points, support.shape, args.consensus_geometry_dilation)
+
+    low_vote = support < float(args.consensus_low_vote_ratio)
+    high_vote = support >= float(args.consensus_support_ratio)
+    remove_region = static_map.copy()
+    recall_region = np.zeros(support.shape, dtype=bool)
+    if geo_support is not None:
+        # Over-segmentation fix: weak consensus AND no geometric backing.
+        remove_region |= low_vote & ~geo_support
+        # Under-segmentation recall: strong consensus AND geometric backing.
+        recall_region = high_vote & geo_support
+    else:
+        remove_region |= low_vote & (freq <= 0.05)
+        recall_region = high_vote & (freq >= float(args.consensus_recall_ratio))
+    remove_region = remove_region & ~(recall_region)
+    min_area = int(remove_region.size * args.consensus_min_area_ratio)
+    remove_region = remove_small_components(remove_region, min_area)
+    recall_region = binary_closing(recall_region, structure=kernel(9), iterations=1)
+    recall_region = binary_fill_holes(recall_region) & ~remove_region
+    recall_region = remove_small_components(recall_region, min_area)
+
+    # S5b: adhesion cutting. When the target physically overlaps a neighbouring
+    # plant they form ONE connected component (often through a thick bridge), so
+    # largest-component filtering AND morphological opening both fail. Instead we
+    # exploit the geometry channel: the neighbour sits off-center and its pixels
+    # carry no foreground track support, while the rotating target's silhouette
+    # is track-backed. Large off-center unsupported chunks inside the mask are
+    # cut; the center band guards the target core and thin leaf tips.
+    adhesion_min_ratio = float(getattr(args, "consensus_adhesion_min_area_ratio", 0.0))
+    cut_min_area = int(remove_region.size * adhesion_min_ratio)
+
+    def _cut_adhesion_bridge(base_mask: np.ndarray) -> tuple[np.ndarray, float]:
+        """Return (target_only_mask, removed_by_cut_ratio)."""
+        if geo_support is None or cut_min_area <= 0 or not base_mask.any():
+            return base_mask, 0.0
+        unsupported = base_mask & ~geo_support & ~center_band_mask
+        unsupported = remove_small_components(unsupported, cut_min_area)
+        if not unsupported.any():
+            return base_mask, 0.0
+        labels, n = ndimage.label(unsupported)
+        removed = np.zeros(base_mask.shape, dtype=bool)
+        for lab in range(1, n + 1):
+            comp = labels == lab
+            ys_c, xs_c = np.nonzero(comp)
+            dist_c = math.hypot(
+                float(xs_c.mean()) / max(w - 1, 1) - cx,
+                float(ys_c.mean()) / max(h - 1, 1) - cy,
+            )
+            # Only cut chunks whose centroid is clearly OFF the robust center:
+            # genuine target parts cluster around (cx, cy).
+            if dist_c > bw:
+                removed |= comp
+        if not removed.any():
+            return base_mask, 0.0
+        return base_mask & ~removed, float(removed.sum()) / float(max(base_mask.size, 1))
+
+    result = ConsensusResult(
+        reference_mask=high_vote,
+        per_frame_masks={},
+        per_frame_info={},
+        geo_support=geo_support,
+        center_band_mask=center_band_mask,
+    )
+    for stem, base_mask in selected_masks.items():
+        corrected = base_mask & ~remove_region
+        corrected = corrected | recall_region
+        corrected = keep_largest_component(corrected) if corrected.any() else corrected
+        cut_ratio = 0.0
+        if corrected.any():
+            # S5b: sever target-neighbour bridges BEFORE largest-component so the
+            # neighbour side actually drops off instead of dragging along.
+            corrected, cut_ratio = _cut_adhesion_bridge(corrected)
+            if corrected.any():
+                corrected = keep_largest_component(corrected)
+        iou = mask_iou(corrected, base_mask)
+        accepted = bool(iou >= args.consensus_fallback_iou)
+        info: dict[str, Any] = {
+            "图像": f"{stem}.png",
+            "共识启用": 1,
+            "共识接受": int(accepted),
+            "回退IoU": round(float(iou), 4),
+            "删除像素比例": round(float((base_mask & ~corrected).sum() / max(base_mask.size, 1)), 5),
+            "补回像素比例": round(float((corrected & ~base_mask).sum() / max(base_mask.size, 1)), 5),
+            "粘连切割像素比例": round(float(cut_ratio), 5),
+        }
+        # The fallback IoU is kept as a DIAGNOSTIC, not a hard gate: the corrected
+        # mask always enters Pass 2 as the "A6共识" variant, where the shared
+        # scoring function (plus the geometric leak penalty) decides between it
+        # and A1s. Adhesion cuts legitimately remove large neighbour chunks, so
+        # a low IoU alone must not discard a correct correction.
+        final = corrected
+        result.per_frame_masks[stem] = final
+        result.per_frame_info[stem] = info
+        if dirs is not None:
+            save_mask(final, dirs["consensus"] / f"mask_{stem}.png")
+    return result
+
+
+def load_sam3_video_predictor(args: argparse.Namespace):
+    """A7: build the SAM3 video predictor (memory engine) from the same repo/ckpt."""
+    if str(args.sam3_repo) not in sys.path:
+        sys.path.insert(0, str(args.sam3_repo))
+    from sam3.model_builder import build_sam3_video_predictor as _build
+
+    return _build(checkpoint_path=str(args.sam3_checkpoint))
+
+
+def propagate_memory_masks(
+    image_paths: dict[str, Path],
+    seed_stem: str,
+    seed_prompt_text: str,
+    seed_box_mask: np.ndarray | None,
+    stems_in_order: list[str],
+    args: argparse.Namespace,
+) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
+    """A7: text+box seeding on the best frame + bidirectional memory propagation.
+
+    Frames are re-materialized as a numbered temp directory because SAM3 video
+    sessions load frames from a folder of "<frame_index>.<ext>" files. Seeding
+    uses the text prompt PLUS a normalized xywh box derived from the seed
+    frame's consensus mask: the box anchors the CENTRAL target so the memory
+    engine does not also lock onto the neighbouring plant (which matches the
+    same text prompt).
+    """
+    import shutil
+    import tempfile
+
+    import torch
+
+    info: dict[str, Any] = {
+        "记忆后端": "sam3_video",
+        "种子帧": "",
+        "传播方向": "both" if args.memory_bidirectional else "forward",
+        "状态": "",
+    }
+    tmp_dir: Path | None = None
+    try:
+        predictor = load_sam3_video_predictor(args)
+        tmp_dir = Path(tempfile.mkdtemp(prefix="rapfsam3_mem_"))
+        ordered = list(stems_in_order)
+        if args.memory_max_frames and len(ordered) > int(args.memory_max_frames):
+            # Keep a symmetric window around the seed frame.
+            half = int(args.memory_max_frames) // 2
+            seed_pos = ordered.index(seed_stem)
+            lo = max(0, seed_pos - half)
+            ordered = ordered[lo : lo + int(args.memory_max_frames)]
+        for i, stem in enumerate(ordered):
+            src = image_paths[stem]
+            shutil.copy(src, tmp_dir / f"{i:06d}{src.suffix}")
+        response = predictor.handle_request(request=dict(type="start_session", resource_path=str(tmp_dir)))
+        session_id = response["session_id"]
+        seed_idx = ordered.index(seed_stem)
+        seed_request: dict[str, Any] = dict(
+            type="add_prompt",
+            session_id=session_id,
+            frame_index=seed_idx,
+            text=seed_prompt_text,
+            obj_id=0,
+        )
+        if seed_box_mask is not None and seed_box_mask.any():
+            ys_b, xs_b = np.nonzero(seed_box_mask)
+            h_img, w_img = seed_box_mask.shape
+            x0, x1 = float(xs_b.min()), float(xs_b.max())
+            y0, y1 = float(ys_b.min()), float(ys_b.max())
+            # Normalized xywh in 0~1, as expected by the video predictor.
+            seed_request["bounding_boxes"] = [[
+                x0 / w_img, y0 / h_img, (x1 - x0) / w_img, (y1 - y0) / h_img
+            ]]
+            seed_request["bounding_box_labels"] = [1]
+        response = predictor.handle_request(request=seed_request)
+        out = response.get("outputs", {})
+        n_seed_obj = len(out.get("out_obj_ids", []))
+        if n_seed_obj == 0:
+            info["状态"] = "seed_empty"
+            predictor.handle_request(request=dict(type="close_session", session_id=session_id))
+            return {}, info
+        info["种子帧"] = seed_stem
+
+        masks: dict[str, np.ndarray] = {}
+        request = dict(type="propagate_in_video", session_id=session_id, start_frame_index=seed_idx)
+        request["propagation_direction"] = "both" if args.memory_bidirectional else "forward"
+        for resp in predictor.handle_stream_request(request=request):
+            frame_idx = resp["frame_index"]
+            outputs = resp["outputs"]
+            obj_ids = outputs.get("out_obj_ids", [])
+            bin_masks = outputs.get("out_binary_masks", [])
+            combined = None
+            for oid, m in zip(obj_ids, bin_masks):
+                if hasattr(m, "detach"):
+                    arr = m.squeeze().detach().cpu().numpy().astype(bool)
+                else:
+                    arr = np.asarray(m, dtype=bool)
+                    if arr.ndim == 3:
+                        arr = arr[0]
+                combined = arr if combined is None else (combined | arr)
+            if combined is not None and frame_idx < len(ordered):
+                masks[ordered[frame_idx]] = combined
+        predictor.handle_request(request=dict(type="close_session", session_id=session_id))
+        info["状态"] = "ok"
+        return masks, info
+    except torch.cuda.OutOfMemoryError:
+        info["状态"] = "cuda_oom_fallback"
+        return {}, info
+    except Exception as exc:  # noqa: BLE001 - degrade to per-frame mode on any failure
+        info["状态"] = f"unavailable: {type(exc).__name__}: {exc}"
+        return {}, info
+    finally:
+        if tmp_dir is not None:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def parse_args() -> argparse.Namespace:
@@ -229,6 +623,28 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--geometry_enable_negative_correction", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--save_corrective_geometry_debug", action=argparse.BooleanOptionalAction, default=True)
 
+    parser.add_argument("--use_cross_view_consensus", action="store_true")
+    parser.add_argument("--consensus_support_ratio", type=float, default=0.55)
+    parser.add_argument("--consensus_low_vote_ratio", type=float, default=0.30)
+    parser.add_argument("--consensus_recall_ratio", type=float, default=0.70)
+    parser.add_argument("--consensus_center_band_ratio", type=float, default=0.35)
+    parser.add_argument("--consensus_center_decay", type=float, default=0.65)
+    parser.add_argument("--consensus_static_weight", type=float, default=0.60)
+    parser.add_argument("--consensus_static_std_threshold", type=float, default=0.02)
+    parser.add_argument("--consensus_bridge_kernel", type=int, default=31)
+    parser.add_argument("--consensus_adhesion_min_area_ratio", type=float, default=0.004)
+    parser.add_argument("--consensus_variant_leak_weight", type=float, default=0.0)
+    parser.add_argument("--use_spnp_evidence_guidance", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--consensus_geometry_dilation", type=int, default=19)
+    parser.add_argument("--consensus_min_area_ratio", type=float, default=0.0008)
+    parser.add_argument("--consensus_fallback_iou", type=float, default=0.75)
+    parser.add_argument("--consensus_min_frames", type=int, default=5)
+
+    parser.add_argument("--use_memory_propagation", action="store_true")
+    parser.add_argument("--memory_seed_mode", choices=["best_score", "consensus_best"], default="best_score")
+    parser.add_argument("--memory_bidirectional", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--memory_max_frames", type=int, default=0)
+
     parser.add_argument("--save_candidate_masks", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--save_intermediate_masks", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--save_foreground_rgb", action=argparse.BooleanOptionalAction, default=True)
@@ -302,6 +718,8 @@ def ensure_dirs(output_dir: Path) -> dict[str, Path]:
         "overlay": output_dir / "叠加图",
         "semantic_debug": output_dir / "语义门控框",
         "geometry_debug": output_dir / "几何修正提示图",
+        "consensus": output_dir / "共识投票掩膜",
+        "memory": output_dir / "记忆传播掩膜",
         "logs": output_dir / "日志",
     }
     for path in dirs.values():
@@ -961,6 +1379,65 @@ def sample_points(mask: np.ndarray, count: int, positive: bool, ring_radius: int
     return [(int(xs[i]), int(ys[i])) for i in indices]
 
 
+def sample_points_from_region(region: np.ndarray, count: int) -> list[tuple[int, int]]:
+    """Evidence-guided negative clicks: sample well inside the given region
+    (far from its boundary via the distance transform), spread apart."""
+    if count <= 0 or not region.any():
+        return []
+    dist = ndimage.distance_transform_edt(region)
+    ys, xs = np.where(dist > 0)
+    if len(xs) == 0:
+        return []
+    order = np.argsort(dist[ys, xs])[::-1]
+    chosen: list[tuple[int, int]] = []
+    blocked = np.zeros(region.shape, dtype=bool)
+    min_sep = max(4, int(min(region.shape) * 0.04))
+    yy, xx = np.ogrid[: region.shape[0], : region.shape[1]]
+    for idx in order:
+        y, x = int(ys[idx]), int(xs[idx])
+        if blocked[y, x]:
+            continue
+        chosen.append((x, y))
+        blocked |= (yy - y) ** 2 + (xx - x) ** 2 <= min_sep**2
+        if len(chosen) >= count:
+            break
+    return chosen
+
+
+def build_spnp_evidence(
+    base_mask: np.ndarray,
+    final_mask: np.ndarray,
+    geo_support: np.ndarray | None,
+) -> dict[str, np.ndarray] | None:
+    """Consensus-evidence-guided SPNP clicks.
+
+    negative_region: pixels the consensus stage cut away (neighbour plant) plus
+    the below-mask strip inside the mask bbox (pot / soil / table) — the two
+    places blind ring sampling misses and re-inference re-covers.
+    positive_core: track-backed part of the final mask; positive clicks are
+    restricted to it so re-inference cannot shrink the target.
+    """
+    if not final_mask.any():
+        return None
+    negative_region = base_mask & ~final_mask
+    below_strip = np.zeros_like(final_mask)
+    ys_m = np.where(final_mask.any(axis=1))[0]
+    xs_m = np.where(final_mask.any(axis=0))[0]
+    if len(ys_m) and len(xs_m):
+        y_bottom = int(ys_m.max())
+        if y_bottom + 1 < final_mask.shape[0]:
+            below_strip[y_bottom + 1 :, xs_m.min() : xs_m.max() + 1] = True
+    negative_region = (negative_region | below_strip) & ~final_mask
+    positive_core = final_mask & geo_support if geo_support is not None else None
+    if not negative_region.any() and (positive_core is None or not positive_core.any()):
+        return None
+    return {
+        "negative_region": negative_region,
+        "below_strip": below_strip & ~final_mask,
+        "positive_core": positive_core,
+    }
+
+
 def normalized_box_from_xyxy(
     x0: int,
     y0: int,
@@ -1027,15 +1504,37 @@ def sam3_box_refinement(
     processor: Any,
     torch_module: Any,
     args: argparse.Namespace,
+    evidence: dict[str, np.ndarray] | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     if processor is None or torch_module is None:
         raise RuntimeError("--spnp_backend sam3_if_supported requires a loaded SAM3 processor")
 
-    positive_box = mask_to_positive_box(mask, args.spnp_positive_box_padding)
-    negative_boxes = [
-        point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
-        for point in negative_points[: args.spnp_negative_points]
-    ]
+    # Evidence-guided mode: positive box hugs the track-backed core (NOT the
+    # full mask bbox, whose rectangle covers the pot), negative boxes sit on
+    # consensus-cut pixels and the below-mask pot strip.
+    if evidence is not None:
+        core = evidence["positive_core"]
+        positive_box = (
+            mask_to_positive_box(core, args.spnp_positive_box_padding)
+            if core is not None and core.any()
+            else mask_to_positive_box(mask, args.spnp_positive_box_padding)
+        )
+        neg_region = evidence["negative_region"]
+        neg_points: list[tuple[int, int]] = sample_points_from_region(neg_region, args.spnp_negative_points)
+        if evidence["below_strip"].any() and neg_points:
+            # Guarantee at least two clicks on the pot strip when it exists.
+            pot_points = sample_points_from_region(evidence["below_strip"], 2)
+            neg_points = pot_points + neg_points
+        negative_boxes = [
+            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
+            for point in neg_points[: max(args.spnp_negative_points, 0) + 2]
+        ]
+    else:
+        positive_box = mask_to_positive_box(mask, args.spnp_positive_box_padding)
+        negative_boxes = [
+            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
+            for point in negative_points[: args.spnp_negative_points]
+        ]
     if args.spnp_use_lower_negative:
         lower_box = lower_negative_box(mask, args.spnp_lower_band_ratio)
         if lower_box is not None:
@@ -1090,14 +1589,25 @@ def apply_spnp_refinement(
     args: argparse.Namespace,
     processor: Any = None,
     torch_module: Any = None,
+    evidence: dict[str, np.ndarray] | None = None,
 ) -> tuple[np.ndarray, list[dict[str, Any]], dict[str, Any]]:
     points: list[dict[str, Any]] = []
-    pos = sample_points(mask, args.spnp_positive_points, True, args.spnp_ring_radius)
-    neg = sample_points(mask, args.spnp_negative_points, False, args.spnp_ring_radius)
-    for x, y in pos:
-        points.append({"image": image_name, "label": 1, "x": x, "y": y, "source": "distance_transform"})
-    for x, y in neg:
-        points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "outer_ring"})
+    if evidence is not None:
+        # Log evidence-guided clicks instead of blind ring samples.
+        core = evidence["positive_core"]
+        pos = sample_points_from_region(core, args.spnp_positive_points) if core is not None and core.any() else []
+        neg = sample_points_from_region(evidence["negative_region"], args.spnp_negative_points)
+        for x, y in pos:
+            points.append({"image": image_name, "label": 1, "x": x, "y": y, "source": "track_core"})
+        for x, y in neg:
+            points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "consensus_cut_or_pot"})
+    else:
+        pos = sample_points(mask, args.spnp_positive_points, True, args.spnp_ring_radius)
+        neg = sample_points(mask, args.spnp_negative_points, False, args.spnp_ring_radius)
+        for x, y in pos:
+            points.append({"image": image_name, "label": 1, "x": x, "y": y, "source": "distance_transform"})
+        for x, y in neg:
+            points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "outer_ring"})
 
     if not args.use_spnp_refinement:
         return mask, points, {"backend": "disabled", "accepted": 0, "reason": "module_off"}
@@ -1110,6 +1620,7 @@ def apply_spnp_refinement(
             processor=processor,
             torch_module=torch_module,
             args=args,
+            evidence=evidence,
         )
         return refined, points, info
     if args.spnp_backend == "sam_family":
@@ -1747,6 +2258,19 @@ def main() -> int:
     run_log: list[dict[str, Any]] = []
     start_time = time.time()
 
+    consensus_result: ConsensusResult | None = None
+    memory_masks: dict[str, np.ndarray] = {}
+    memory_info: dict[str, Any] = {}
+    consensus_summary: dict[str, Any] = {}
+
+    # Pass 1: per-frame candidate generation, scoring and A1s selection.
+    # A6/A7 are global passes, so per-frame refinement waits until pass 2.
+    candidates_by_stem: dict[str, list[Candidate]] = {}
+    contexts_by_stem: dict[str, SemanticGateContext | None] = {}
+    selected_by_stem: dict[str, np.ndarray] = {}
+    scores_by_stem: dict[str, float] = {}
+    prompts_by_stem: dict[str, str] = {}
+
     for idx, image_path in enumerate(images, start=1):
         t0 = time.time()
         image = Image.open(image_path).convert("RGB")
@@ -1799,10 +2323,171 @@ def main() -> int:
                 selected_mask,
                 dirs["semantic_debug"] / f"semantic_gate_{image_path.stem}.png",
             )
-        if args.save_intermediate_masks:
+        if args.save_intermediate_masks and not (args.use_cross_view_consensus or args.use_memory_propagation):
             save_mask(selected_mask, dirs["selected"] / f"mask_{image_path.stem}.png")
 
-        selected_prompt_text = prompt_texts.get(selected_prompt, prompt_texts.get(args.default_prompt_id, "visual"))
+        elapsed = time.time() - t0
+        print(f"[{idx}/{len(images)}] {image_path.name} selected={selected_prompt} score={selected_score:.4f} time={elapsed:.2f}s")
+
+        candidates_by_stem[image_path.stem] = candidates
+        contexts_by_stem[image_path.stem] = semantic_context
+        selected_by_stem[image_path.stem] = selected_mask
+        scores_by_stem[image_path.stem] = float(selected_score)
+        prompts_by_stem[image_path.stem] = selected_prompt
+        for item in candidates:
+            prev_prompt_masks[item.prompt_id] = item.mask
+
+    stems_in_order = [p.stem for p in images]
+
+    # A6: cross-view consensus voting (global).
+    if args.use_cross_view_consensus:
+        consensus_observations = (
+            colmap_observations
+            if args.use_corrective_geometry and args.corrective_geometry_backend == "colmap_tracks"
+            else load_colmap_observations({p.stem for p in images}, args)
+        )
+        gray_by_stem: dict[str, np.ndarray] = {}
+        for p in images:
+            img = Image.open(p).convert("L").resize((512, 910))
+            gray_by_stem[p.stem] = np.array(img)
+        # Upsample the 512-wide grayscale back to mask resolution inside the estimator.
+        consensus_result = apply_cross_view_consensus(
+            selected_by_stem,
+            gray_by_stem,
+            consensus_observations,
+            dirs,
+            args,
+        )
+        if consensus_result is not None:
+            accepted = sum(int(v["共识接受"]) for v in consensus_result.per_frame_info.values())
+            removed_total = sum(float(v["删除像素比例"]) for v in consensus_result.per_frame_info.values())
+            recall_total = sum(float(v["补回像素比例"]) for v in consensus_result.per_frame_info.values())
+            consensus_summary = {
+                "帧数": len(consensus_result.per_frame_masks),
+                "接受修正帧数": accepted,
+                "总删除像素比例": round(removed_total, 5),
+                "总补回像素比例": round(recall_total, 5),
+                "几何通道可用": bool(consensus_observations),
+            }
+            print(
+                f"[A6] frames={consensus_summary['帧数']} accepted={accepted} "
+                f"removed_ratio={consensus_summary['总删除像素比例']}"
+            )
+        else:
+            consensus_summary = {"状态": "skipped_insufficient_frames", "最少帧数": args.consensus_min_frames}
+            print("[A6] skipped: insufficient frames")
+
+    # A7: memory-engine propagation seeded from the safest frame (never the raw first frame).
+    if args.use_memory_propagation:
+        base_for_memory = (
+            consensus_result.per_frame_masks if consensus_result is not None else selected_by_stem
+        )
+        seed_dir = dirs["memory"] / "_seed输入"
+        seed_dir.mkdir(parents=True, exist_ok=True)
+        for stem, mask in base_for_memory.items():
+            save_mask(mask, seed_dir / f"mask_{stem}.png")
+        if args.memory_seed_mode == "consensus_best" and consensus_result is not None:
+            seed_stem = max(
+                consensus_result.per_frame_info,
+                key=lambda s: float(consensus_result.per_frame_info[s]["回退IoU"]),
+            )
+        else:
+            seed_stem = max(scores_by_stem, key=scores_by_stem.get)
+        image_paths = {p.stem: p for p in images}
+        try:
+            memory_masks, memory_info = propagate_memory_masks(
+                image_paths,
+                seed_stem,
+                prompt_texts.get(args.default_prompt_id, "plant"),
+                base_for_memory.get(seed_stem),
+                stems_in_order,
+                args,
+            )
+        except Exception as exc:  # noqa: BLE001 - degrade to per-frame mode on any failure
+            memory_masks, memory_info = {}, {
+                "记忆后端": "sam3_video",
+                "种子帧": seed_stem,
+                "状态": f"unavailable: {type(exc).__name__}: {exc}",
+            }
+        memory_info.setdefault("种子帧", seed_stem)
+        memory_info["记忆候选帧数"] = len(memory_masks)
+        print(f"[A7] backend={memory_info.get('记忆后端')} state={memory_info.get('状态')} masks={len(memory_masks)}")
+        (dirs["logs"] / "记忆传播.json").write_text(
+            json.dumps(json_ready({"汇总": memory_info}), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+    # Pass 2: final variant selection {A1s, A6, A7} with the same scoring function,
+    # then the existing SPNP -> residual repair -> A5c refinement chain.
+    for idx, image_path in enumerate(images, start=1):
+        t0 = time.time()
+        image = Image.open(image_path).convert("RGB")
+        stem = image_path.stem
+
+        variants: list[Candidate] = [
+            Candidate(prompt_id="A1s", prompt_text=prompts_by_stem[stem], mask=selected_by_stem[stem], scores=[], raw_detection_count=0)
+        ]
+        if consensus_result is not None and stem in consensus_result.per_frame_masks:
+            variants.append(
+                Candidate(prompt_id="A6共识", prompt_text="cross_view_consensus", mask=consensus_result.per_frame_masks[stem], scores=[], raw_detection_count=0)
+            )
+        if memory_masks and stem in memory_masks:
+            variants.append(
+                Candidate(prompt_id="A7记忆", prompt_text="memory_propagation", mask=memory_masks[stem], scores=[], raw_detection_count=0)
+            )
+        variant_records = [
+            score_candidate(
+                image_path,
+                image,
+                item,
+                {},
+                score_weights,
+                args,
+                semantic_context=contexts_by_stem.get(stem),
+            )
+            for item in variants
+        ]
+        # Geometric leak penalty: pixels that are OFF the robust center band AND
+        # lack COLMAP track support are the signature of neighbour-plant leakage.
+        # Without this term the plain score favours the "fuller" A1s mask even
+        # when it contains the whole neighbour. Eroded target edges pay in the
+        # area/edge terms instead, so the two effects counterbalance.
+        leak_penalty = 0.0
+        if (
+            consensus_result is not None
+            and getattr(consensus_result, "geo_support", None) is not None
+            and getattr(args, "consensus_variant_leak_weight", 0.0) > 0
+        ):
+            band = consensus_result.center_band_mask
+            geo = consensus_result.geo_support
+            for rec, item in zip(variant_records, variants):
+                m = item.mask
+                if not m.any():
+                    continue
+                leak_ratio = float((m & ~band & ~geo).sum()) / max(int(m.sum()), 1)
+                penalty = args.consensus_variant_leak_weight * leak_ratio
+                rec.total_score = rec.total_score - penalty
+                rec.leak_penalty = penalty  # type: ignore[attr-defined]
+        best_record = max(variant_records, key=lambda r: r.total_score)
+        best_variant = variants[variant_records.index(best_record)]
+        selected_mask = best_variant.mask if best_variant.mask.any() else selected_by_stem[stem]
+        selected_prompt = best_variant.prompt_id
+        selected_score = best_record.total_score
+        if args.save_intermediate_masks:
+            save_mask(selected_mask, dirs["selected"] / f"mask_{stem}.png")
+
+        selected_prompt_text = prompt_texts.get(prompts_by_stem[stem], prompt_texts.get(args.default_prompt_id, "visual"))
+        spnp_evidence = None
+        if (
+            args.use_spnp_evidence_guidance
+            and consensus_result is not None
+            and getattr(consensus_result, "geo_support", None) is not None
+        ):
+            spnp_evidence = build_spnp_evidence(
+                selected_by_stem.get(stem, selected_mask),
+                selected_mask,
+                consensus_result.geo_support,
+            )
         spnp_mask, points, spnp_info = apply_spnp_refinement(
             image,
             selected_mask,
@@ -1811,6 +2496,7 @@ def main() -> int:
             args,
             processor=processor,
             torch_module=torch_module,
+            evidence=spnp_evidence,
         )
         point_rows.extend(points)
         if args.save_intermediate_masks:
@@ -1869,22 +2555,29 @@ def main() -> int:
             }
         )
 
-        final_masks[image_path.stem] = final_mask
-        for item in candidates:
-            prev_prompt_masks[item.prompt_id] = item.mask
+        final_masks[stem] = final_mask
         prev_final_mask = final_mask
         prev_image = image
 
+        consensus_info = (
+            consensus_result.per_frame_info.get(stem, {}) if consensus_result is not None else {}
+        )
         selection_rows.append(
             {
                 "图像": image_path.name,
                 "选择提示词": selected_prompt,
                 "选择分数": selected_score,
+                "A1s基础分数": scores_by_stem.get(stem, ""),
                 "前景面积比例": final_mask.sum() / final_mask.size,
                 "恢复细结构像素": int(restored.sum()),
-                "A5c接受": corrective_info.get("接受", ""),
-                "A5c原因": corrective_info.get("原因", ""),
-                "A5c修正像素比例": corrective_info.get("几何修正像素比例", ""),
+                "共识启用": consensus_info.get("共识启用", 0),
+                "共识接受": consensus_info.get("共识接受", ""),
+                "共识回退IoU": consensus_info.get("回退IoU", ""),
+                "共识删除像素比例": consensus_info.get("删除像素比例", ""),
+                "共识补回像素比例": consensus_info.get("补回像素比例", ""),
+                "记忆后端": memory_info.get("记忆后端", "") if args.use_memory_propagation else "",
+                "记忆种子帧": memory_info.get("种子帧", "") if args.use_memory_propagation else "",
+                "记忆候选采用": int(selected_prompt == "A7记忆") if args.use_memory_propagation else "",
                 "重提示标记": int(reprompt_flag),
                 "SPNP后端": spnp_info.get("backend", ""),
                 "SPNP接受": spnp_info.get("accepted", ""),
@@ -1901,6 +2594,8 @@ def main() -> int:
                 "index": idx,
                 "total": len(images),
                 "selected_prompt": selected_prompt,
+                "consensus_accepted": consensus_info.get("共识接受", ""),
+                "memory_state": memory_info.get("状态", "") if args.use_memory_propagation else "",
                 "spnp_backend": spnp_info.get("backend", ""),
                 "spnp_accepted": spnp_info.get("accepted", ""),
                 "a5c_accepted": corrective_info.get("接受", ""),
@@ -1942,6 +2637,20 @@ def main() -> int:
     if semantic_gate_rows:
         write_csv(args.output_dir / "语义门控评分.csv", semantic_gate_rows)
     write_csv(args.output_dir / "提示词选择.csv", selection_rows)
+    if consensus_result is not None:
+        write_csv(
+            args.output_dir / "共识投票.csv",
+            [consensus_result.per_frame_info[stem] for stem in stems_in_order if stem in consensus_result.per_frame_info],
+        )
+        (dirs["logs"] / "共识汇总.json").write_text(
+            json.dumps(json_ready(consensus_summary), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    if memory_info:
+        (dirs["logs"] / "记忆传播.json").write_text(
+            json.dumps(json_ready({"汇总": memory_info}), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
     write_csv(args.output_dir / "正负提示点.csv", point_rows, ["image", "label", "x", "y", "source"])
     write_csv(args.output_dir / "重提示帧标记.csv", reprompt_rows)
     if corrective_rows:
