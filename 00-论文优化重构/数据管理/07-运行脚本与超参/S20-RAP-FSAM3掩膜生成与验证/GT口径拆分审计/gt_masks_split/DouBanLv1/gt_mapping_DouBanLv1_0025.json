@@ -1,0 +1,49 @@
+{
+  "sample": "DouBanLv1",
+  "frame": "0025",
+  "target_scope_default": "plant_plus_pot",
+  "shapes": [
+    {
+      "shape_index": 1,
+      "label": "1",
+      "shape_type": "linestrip",
+      "points": 6,
+      "area_px": 29000,
+      "area_ratio": 0.0035,
+      "centroid_y_ratio": 0.6675,
+      "bbox_x0": 1,
+      "bbox_y0": 2453,
+      "bbox_x1": 144,
+      "bbox_y1": 2678,
+      "inferred_role": "plant",
+      "confidence": 0.6,
+      "rule": "large_but_not_upper→plant(low_conf)",
+      "color_bgr": [
+        177.5,
+        120.6,
+        111.4
+      ]
+    },
+    {
+      "shape_index": 2,
+      "label": "1",
+      "shape_type": "linestrip",
+      "points": 293,
+      "area_px": 1368669,
+      "area_ratio": 0.16501,
+      "centroid_y_ratio": 0.436,
+      "bbox_x0": 427,
+      "bbox_y0": 658,
+      "bbox_x1": 1682,
+      "bbox_y1": 2619,
+      "inferred_role": "plant",
+      "confidence": 0.9,
+      "rule": "large+upper→plant",
+      "color_bgr": [
+        89.7,
+        125.6,
+        126.9
+      ]
+    }
+  ]
+}

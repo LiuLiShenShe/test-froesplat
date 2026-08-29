@@ -40,6 +40,9 @@ BUILTIN_PROMPTS = {
     "P4": "crop seedling",
     "P5": "plant body without background",
     "P6": "whole potted plant including the pot",
+    # ── 阶段十一 §5 独立语义候选（P2/P6 不再共用终选掩膜）──
+    "POT": "flowerpot and tray",
+    "CUBE": "blue calibration cube",
 }
 
 PROMPT_DIR_NAMES = {
@@ -49,6 +52,8 @@ PROMPT_DIR_NAMES = {
     "P4": "P4_作物幼苗",
     "P5": "P5_去背景植物体",
     "P6": "P6_带盆整株",
+    "POT": "POT_花盆托盘",
+    "CUBE": "CUBE_蓝色标定块",
 }
 
 
@@ -59,7 +64,13 @@ class Candidate:
     mask: np.ndarray
     scores: list[float]
     raw_detection_count: int
-
+    # ── 阶段十一扩展：逐实例候选（per_instance）所需字段 ──
+    instance_id: int = 0
+    box: tuple[int, int, int, int] | None = None
+    sam_score: float = 0.0
+    mask_threshold: float = 0.5
+    source_stage: str = "raw"
+    prompt_mode: str = "legacy_union"
 
 @dataclass
 class ScoreRecord:
@@ -82,6 +93,7 @@ class ScoreRecord:
     bottom_leak_fraction: float
     side_leak_fraction: float
     sam_scores: str
+    instance_id: int = 0
     semantic_enabled: bool = False
     semantic_total: float = 0.0
     target_box_score: float = 0.0
@@ -89,6 +101,8 @@ class ScoreRecord:
     pot_overlap_penalty: float = 0.0
     side_distractor_penalty: float = 0.0
     center_prior_score: float = 0.0
+    leak_penalty: float = 0.0
+    empty_flag: bool = False
 
 
 @dataclass
@@ -515,6 +529,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry_run", action="store_true")
     parser.add_argument("--reuse_existing_candidates", action="store_true")
     parser.add_argument("--candidate_source_dir", type=Path, default=None)
+    parser.add_argument(
+        "--candidate_mode",
+        choices=["legacy_union", "per_instance"],
+        default="per_instance",
+        help="legacy_union: 旧行为，同一 prompt 多次检测 OR 合并+最大连通域；"
+             "per_instance: 每个 SAM3 实例独立成为 Candidate，生成阶段不做 OR/最大连通域，"
+             "合并仅在评分+目标关联后发生。",
+    )
+    parser.add_argument(
+        "--sam3_mask_threshold", type=float, default=0.5,
+        help="per_instance 模式下从 SAM3 logits 重新二值化的阈值（默认 0.5，与旧行为一致）。",
+    )
+    parser.add_argument(
+        "--save_raw_instance_masks", action=argparse.BooleanOptionalAction, default=True,
+        help="保存每个 prompt 的每个 SAM3 原始实例掩膜到 候选掩膜/raw_instance_<prompt>_<i>.png，用于阶段证据。",
+    )
 
     parser.add_argument("--prompt_list", default="P2")
     parser.add_argument("--prompt_texts_json", type=Path, default=None)
@@ -527,9 +557,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--fusion_threshold", type=float, default=0.5)
     parser.add_argument("--score_weights", default="area=1,comp=1,edge=1,temp=1,contrast=1")
+    # 阶段十一 §4.5 时序对齐门控：仅在显式配准后启用时序项，否则置中性 0.5
+    parser.add_argument("--use_temporal_alignment", action="store_true",
+                        help="§4.5：启用光流/单应配准后的时序 IoU；默认关（Pass2 关），未配准时序项置中性值。")
+    # 阶段十一 §4.6 硬门控
+    parser.add_argument("--vertical_coverage_min_ratio", type=float, default=0.30,
+                        help="§4.6：植株纵向覆盖（上半区占比）低于此值标记为高风险（疑似只割到盆/条带）。")
+    parser.add_argument("--box_track_overlap_min", type=float, default=0.20,
+                        help="§4.6：与 COLMAP track 投影重叠度低于此值标记高风险。")
     parser.add_argument("--area_min_ratio", type=float, default=0.01)
     parser.add_argument("--area_max_ratio", type=float, default=0.80)
     parser.add_argument("--area_target_ratio", type=float, default=0.0)
+    parser.add_argument("--collapse_area_threshold", type=float, default=0.05,
+                        help="§5 P2/P6 语义坍缩判定：面积差比与盆区覆盖差比均低于此值即判坍缩")
     parser.add_argument("--component_min_area_ratio", type=float, default=0.0005)
     parser.add_argument("--leakage_bottom_start_ratio", type=float, default=0.62)
     parser.add_argument("--leakage_max_bottom_fraction", type=float, default=0.02)
@@ -578,7 +618,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--spnp_max_remove_ratio", type=float, default=0.15)
     parser.add_argument("--spnp_positive_box_padding", type=float, default=0.03)
     parser.add_argument("--spnp_negative_box_radius", type=int, default=12)
-    parser.add_argument("--spnp_min_refined_iou", type=float, default=0.10)
+    parser.add_argument("--spnp_min_refined_iou", type=float, default=0.65,
+                        help="阶段十一 §7.3：接受 SPNP 细化结果的 IoU 阈值（由原 0.10 提高，"
+                             "范围 0.60–0.75 可配）。避免低 IoU 接受错误 mask 强化。")
 
     parser.add_argument("--use_residual_repair", action="store_true")
     parser.add_argument("--opening_kernel", type=int, default=3)
@@ -597,6 +639,10 @@ def parse_args() -> argparse.Namespace:
         default="none",
     )
     parser.add_argument("--reprompt_threshold", type=float, default=0.5)
+    parser.add_argument("--reprompt_score_gap", type=float, default=0.05,
+                        help="§4.7：top1 与 top2 候选分差小于此值则触发重提示（不静默接受）。")
+    parser.add_argument("--reprompt_min_score", type=float, default=0.2,
+                        help="§4.7：最佳候选总分低于此值（或空掩膜）则触发重提示。")
     parser.add_argument("--reprompt_weights", default="iou=0.35,area=0.25,ssim=0.25,edge=0.15")
 
     parser.add_argument("--use_geometry_feedback", action="store_true")
@@ -835,6 +881,62 @@ def sam3_autocast(torch_module: Any, args: argparse.Namespace):
     return torch_module.autocast("cuda", dtype=dtype)
 
 
+def _masks_scores_boxes(output: Any, h: int, w: int) -> tuple[list[np.ndarray], list[float], list[tuple[int, int, int, int]]]:
+    """从 SAM3 output 提取逐实例 (mask, score, box)。
+
+    output 含 'masks' [K,H,W] bool、'masks_logits' [K,H,W] sigmoid、'scores' [K]、
+    'boxes' [K,4] (x0,y0,x1,y1)。per_instance 模式直接逐实例取出，不在此 OR。
+    """
+    import torch as _torch
+
+    masks_logits = output.get("masks_logits", None)
+    masks_bool = output.get("masks", None)
+    scores_t = output.get("scores", None)
+    boxes_t = output.get("boxes", None)
+
+    per_masks: list[np.ndarray] = []
+    per_scores: list[float] = []
+    per_boxes: list[tuple[int, int, int, int]] = []
+
+    if masks_logits is not None:
+        logits = masks_logits
+        if hasattr(logits, "detach"):
+            logits = logits.detach().cpu().numpy()
+        logits = np.asarray(logits).astype(np.float32)
+        k = logits.shape[0] if logits.ndim == 4 else 0
+        for i in range(k):
+            m = logits[i, 0] > 0.5
+            per_masks.append(m.astype(bool))
+    elif masks_bool is not None:
+        mb = masks_bool
+        if hasattr(mb, "detach"):
+            mb = mb.detach().cpu().numpy()
+        mb = np.asarray(mb).astype(bool)
+        k = mb.shape[0] if mb.ndim == 3 else 0
+        for i in range(k):
+            per_masks.append(mb[i].astype(bool))
+
+    if scores_t is not None:
+        if hasattr(scores_t, "detach"):
+            scores_t = scores_t.detach().float().cpu().numpy()
+        scores_t = np.asarray(scores_t).astype(np.float32).reshape(-1)
+        per_scores = [float(s) for s in scores_t]
+
+    if boxes_t is not None:
+        if hasattr(boxes_t, "detach"):
+            boxes_t = boxes_t.detach().float().cpu().numpy()
+        boxes_t = np.asarray(boxes_t).astype(np.float32).reshape(-1, 4)
+        for b in boxes_t:
+            per_boxes.append((int(round(b[0])), int(round(b[1])), int(round(b[2])), int(round(b[3]))))
+
+    n = len(per_masks)
+    while len(per_scores) < n:
+        per_scores.append(0.0)
+    while len(per_boxes) < n:
+        per_boxes.append((0, 0, 0, 0))
+    return per_masks, per_scores, per_boxes
+
+
 def infer_candidates(
     image: Image.Image,
     image_name: str,
@@ -857,17 +959,57 @@ def infer_candidates(
                 if raw_scores is not None and len(raw_scores) > 0
                 else []
             )
-            raw_mask = combine_sam_masks(output.get("masks", None), (h, w))
-            cleaned = basic_cleanup(raw_mask, args)
-            candidates.append(
-                Candidate(
-                    prompt_id=prompt_id,
-                    prompt_text=prompt_texts[prompt_id],
-                    mask=cleaned,
-                    scores=scores,
-                    raw_detection_count=len(scores),
+
+            if args.candidate_mode == "per_instance":
+                # 逐实例候选：每个 SAM3 实例独立成为 Candidate，生成阶段不做 OR/最大连通域
+                per_masks, per_scores, per_boxes = _masks_scores_boxes(output, h, w)
+                if not per_masks:
+                    # 退化保护：无实例时回退到空候选（评分阶段会被空 mask 硬门拦截）
+                    candidates.append(
+                        Candidate(
+                            prompt_id=prompt_id, prompt_text=prompt_texts[prompt_id],
+                            mask=np.zeros((h, w), dtype=bool), scores=scores,
+                            raw_detection_count=0, instance_id=0, box=None,
+                            sam_score=0.0, mask_threshold=0.5, source_stage="raw",
+                            prompt_mode="per_instance",
+                        )
+                    )
+                    continue
+                for i, (m, sc, box) in enumerate(zip(per_masks, per_scores, per_boxes)):
+                    candidates.append(
+                        Candidate(
+                            prompt_id=prompt_id,
+                            prompt_text=prompt_texts[prompt_id],
+                            mask=m,
+                            scores=scores,
+                            raw_detection_count=len(scores),
+                            instance_id=i,
+                            box=box,
+                            sam_score=float(sc),
+                            mask_threshold=0.5,
+                            source_stage="raw",
+                            prompt_mode="per_instance",
+                        )
+                    )
+            else:
+                # legacy_union：旧行为，OR 合并 + basic_cleanup
+                raw_mask = combine_sam_masks(output.get("masks", None), (h, w))
+                cleaned = basic_cleanup(raw_mask, args)
+                candidates.append(
+                    Candidate(
+                        prompt_id=prompt_id,
+                        prompt_text=prompt_texts[prompt_id],
+                        mask=cleaned,
+                        scores=scores,
+                        raw_detection_count=len(scores),
+                        instance_id=0,
+                        box=None,
+                        sam_score=float(scores[0]) if scores else 0.0,
+                        mask_threshold=0.5,
+                        source_stage="raw",
+                        prompt_mode="legacy_union",
+                    )
                 )
-            )
     return candidates
 
 
@@ -881,6 +1023,33 @@ def load_existing_candidates(
     candidates = []
     source_dir = candidate_source_dir if candidate_source_dir is not None else output_dir
     for prompt_id in prompt_ids:
+        # 优先复用 per_instance 原始实例（raw_instance_<prompt>_<i>.png）
+        raw_dir = source_dir / "候选掩膜" / f"raw_instance_{prompt_id}"
+        raw_files = sorted(raw_dir.glob(f"mask_{image_path.stem}_*.png")) if raw_dir.exists() else []
+        if raw_files:
+            for i, rp in enumerate(raw_files):
+                inst = 0
+                try:
+                    suffix = rp.stem.split("_")[-1]
+                    inst = int(suffix)
+                except (ValueError, IndexError):
+                    inst = i
+                candidates.append(
+                    Candidate(
+                        prompt_id=prompt_id,
+                        prompt_text=prompt_texts[prompt_id],
+                        mask=load_mask(rp),
+                        scores=[],
+                        raw_detection_count=len(raw_files),
+                        instance_id=inst,
+                        box=None,
+                        sam_score=0.0,
+                        mask_threshold=0.5,
+                        source_stage="reused",
+                        prompt_mode="per_instance",
+                    )
+                )
+            continue
         mask_path = source_dir / "候选掩膜" / prompt_dir_name(prompt_id) / f"mask_{image_path.stem}.png"
         if not mask_path.exists():
             raise FileNotFoundError(f"Existing candidate mask not found: {mask_path}")
@@ -891,6 +1060,12 @@ def load_existing_candidates(
                 mask=load_mask(mask_path),
                 scores=[],
                 raw_detection_count=0,
+                instance_id=0,
+                box=None,
+                sam_score=0.0,
+                mask_threshold=0.5,
+                source_stage="reused",
+                prompt_mode="legacy_union",
             )
         )
     return candidates
@@ -937,10 +1112,36 @@ def area_quality(area_ratio: float, args: argparse.Namespace) -> float:
 
 
 def edge_density(mask: np.ndarray) -> float:
+    """单位面积边界像素数（越高=细碎叶片越多/越细）。"""
     area = float(mask.sum())
     if area <= 0:
         return 1.0
     return float(mask_boundary(mask).sum() / max(math.sqrt(area), 1.0))
+
+
+def edge_quality(mask: np.ndarray, args: argparse.Namespace) -> float:
+    """阶段十一 §4.4 边界置信度：奖励**不贴合图像边缘**的对象边界。
+
+    旧 `q_edge = 1/(1+density/20)` 反而奖励"边界越少越好"，会惩罚细叶/多叶。
+    新口径改为：边界与图像四边的贴合度越低（对象内部干净、不溢出图像框），
+    置信度越高；细叶高 boundary_density 不再自动低分。中性基准 1.0。
+    """
+    if not mask.any():
+        return 1.0
+    h, w = mask.shape
+    bnd = mask_boundary(mask)
+    ys, xs = np.where(bnd)
+    if len(ys) == 0:
+        return 1.0
+    # 贴合图像边缘的边界像素比例（四边 2px 带）
+    border_band = 2
+    on_border = int(
+        ((ys < border_band) | (ys >= h - border_band)
+         | (xs < border_band) | (xs >= w - border_band)).sum()
+    )
+    adherence = on_border / max(len(ys), 1)
+    # 贴合度越高 → 置信度越低（对象贴边/溢出框，疑似截断或背景粘连）
+    return float(max(0.0, 1.0 - adherence))
 
 
 def bottom_leak_fraction(mask: np.ndarray, args: argparse.Namespace) -> float:
@@ -1241,6 +1442,21 @@ def score_candidate(
     semantic_context: SemanticGateContext | None = None,
 ) -> ScoreRecord:
     mask = candidate.mask
+    # ── 阶段十一 §4.1 空掩膜硬门：不再因时序默认满分得高分 ──
+    if not mask.any():
+        return ScoreRecord(
+            image_name=image_path.name,
+            prompt_id=candidate.prompt_id,
+            prompt_text=candidate.prompt_text,
+            total_score=0.0,
+            q_area=0.0, q_comp=0.0, q_edge=0.0, q_temp=0.0,
+            q_contrast=0.0, q_leak=0.0, q_side=0.0,
+            area_ratio=0.0, component_count=0, boundary_density=0.0,
+            temporal_iou=0.0, contrast=0.0, bottom_leak_fraction=0.0, side_leak_fraction=0.0,
+            sam_scores=";".join(f"{s:.6f}" for s in candidate.scores),
+            instance_id=candidate.instance_id,
+            empty_flag=True,
+        )
     total_pixels = mask.size
     area_ratio = float(mask.sum() / total_pixels) if total_pixels else 0.0
     min_area = max(1, int(total_pixels * args.component_min_area_ratio))
@@ -1250,15 +1466,19 @@ def score_candidate(
     leak_fraction = bottom_leak_fraction(mask, args)
     side_fraction = side_leak_fraction(mask, args)
     prev = prev_prompt_masks.get(candidate.prompt_id)
-    temporal_iou = mask_iou(mask, prev) if prev is not None else 1.0
+    temporal_iou = mask_iou(mask, prev) if (prev is not None and getattr(args, "use_temporal_alignment", False)) else 0.5
 
     q_area = area_quality(area_ratio, args)
     q_comp = 1.0 / (1.0 + max(comp_count - 1, 0))
-    q_edge = 1.0 / (1.0 + boundary_density / 20.0)
-    q_temp = temporal_iou
+    # 阶段十一 §4.4：边界置信度改为边缘贴合度（不奖励"边界越少越好"）
+    q_edge = edge_quality(mask, args)
+    # 阶段十一 §4.5 时序对齐门控：未显式配准时序项置中性 0.5，不默认满分
+    q_temp = temporal_iou if getattr(args, "use_temporal_alignment", False) else 0.5
     q_contrast = min(1.0, contrast / 0.25)
     q_leak = leakage_quality(leak_fraction, args)
     q_side = side_leakage_quality(side_fraction, args)
+    # ── 阶段十一 §4.2 纳入 SAM3 实例 score（sigmoid 归一化到 [0,1]）──
+    q_sam = 1.0 / (1.0 + math.exp(-6.0 * (float(candidate.sam_score) - 0.5)))
     denom = max(sum(weights.values()), 1e-6)
     base_total = (
         weights.get("area", 0.0) * q_area
@@ -1268,7 +1488,20 @@ def score_candidate(
         + weights.get("contrast", 0.0) * q_contrast
         + weights.get("leak", 0.0) * q_leak
         + weights.get("side", 0.0) * q_side
+        + weights.get("sam", 0.0) * q_sam
     ) / denom
+    # ── 阶段十一 §4.6 硬门控：纵向覆盖不足 / 与 track 重叠低 → 高风险惩罚 ──
+    risk_penalty = 0.0
+    h, w = mask.shape
+    ys = np.where(mask.any(axis=1))[0]
+    upper_coverage = float(ys.min() / max(h, 1)) if len(ys) else 1.0  # 上部覆盖深度（越小越偏下）
+    vertical_coverage = 1.0 - upper_coverage
+    if vertical_coverage < getattr(args, "vertical_coverage_min_ratio", 0.30):
+        risk_penalty += 0.25  # 仅下部小区域覆盖，疑似只割到盆/条带
+    track_mask = getattr(candidate, "track_mask", None)
+    if track_mask is not None and track_mask.any():
+        if mask_iou(mask, track_mask.astype(bool)) < getattr(args, "box_track_overlap_min", 0.20):
+            risk_penalty += 0.15
     semantic = {
         "semantic_total": 0.0,
         "target_box_score": 0.0,
@@ -1279,7 +1512,7 @@ def score_candidate(
     }
     if args.use_semantic_gate and semantic_context is not None:
         semantic = semantic_gate_scores(mask, semantic_context, args)
-    total = base_total + semantic["semantic_total"]
+    total = base_total + semantic["semantic_total"] - risk_penalty
     return ScoreRecord(
         image_name=image_path.name,
         prompt_id=candidate.prompt_id,
@@ -1300,6 +1533,7 @@ def score_candidate(
         bottom_leak_fraction=leak_fraction,
         side_leak_fraction=side_fraction,
         sam_scores=";".join(f"{score:.6f}" for score in candidate.scores),
+        instance_id=candidate.instance_id,
         semantic_enabled=bool(args.use_semantic_gate and semantic_context is not None),
         semantic_total=float(semantic["semantic_total"]),
         target_box_score=float(semantic["target_box_score"]),
@@ -1307,6 +1541,7 @@ def score_candidate(
         pot_overlap_penalty=float(semantic["pot_overlap_penalty"]),
         side_distractor_penalty=float(semantic["side_distractor_penalty"]),
         center_prior_score=float(semantic["center_prior_score"]),
+        leak_penalty=float(risk_penalty),
     )
 
 
@@ -1324,7 +1559,7 @@ def select_mask(
             selectable = score_records
         best = max(selectable, key=lambda row: row.total_score)
         mask = next(item.mask for item in candidates if item.prompt_id == best.prompt_id)
-        return mask.copy(), best.prompt_id, best.total_score
+        return mask.copy(), best.prompt_id, best.total_score, False
     if args.use_prompt_ensemble and args.prompt_selection_mode == "weighted_fusion":
         score_by_prompt = {row.prompt_id: max(row.total_score, 0.0) for row in score_records}
         score_sum = sum(score_by_prompt.values())
@@ -1335,16 +1570,118 @@ def select_mask(
         fused = np.zeros_like(candidates[0].mask, dtype=np.float32)
         for item in candidates:
             fused += weights.get(item.prompt_id, 0.0) * item.mask.astype(np.float32)
-        return fused >= args.fusion_threshold, "weighted_fusion", float(max(score_by_prompt.values(), default=0.0))
+        return fused >= args.fusion_threshold, "weighted_fusion", float(max(score_by_prompt.values(), default=0.0)), False
 
     prompt_id = args.default_prompt_id
     if prompt_id not in prompt_texts:
         raise ValueError(f"Unknown --default_prompt_id: {prompt_id}")
-    for item in candidates:
-        if item.prompt_id == prompt_id:
-            row = next((r for r in score_records if r.prompt_id == prompt_id), None)
-            return item.mask.copy(), prompt_id, float(row.total_score if row else 0.0)
-    raise ValueError(f"Default prompt {prompt_id} was not generated for {image_path.name}")
+    default_cands = [item for item in candidates if item.prompt_id == prompt_id]
+    if not default_cands:
+        raise ValueError(f"Default prompt {prompt_id} was not generated for {image_path.name}")
+    # per_instance 模式：default_prompt 下有多个实例候选，按评分选最佳实例
+    if len(default_cands) > 1 and args.candidate_mode == "per_instance":
+        rec_by_id = {(r.prompt_id, getattr(r, "instance_id", 0)): r for r in score_records}
+        best_item = None
+        best_score = -1e9
+        for item in default_cands:
+            r = rec_by_id.get((item.prompt_id, item.instance_id))
+            sc = float(r.total_score) if r is not None else 0.0
+            if sc > best_score:
+                best_score = sc
+                best_item = item
+        # §4.7 重提示触发：top1 与 top2 分差 < 阈值 → 候选不确定，需重提示
+        sorted_recs = sorted(score_records, key=lambda r: r.total_score, reverse=True)
+        needs_reprompt = len(sorted_recs) >= 2 and (sorted_recs[0].total_score - sorted_recs[1].total_score) < args.reprompt_score_gap
+        return best_item.mask.copy(), f"{prompt_id}#{best_item.instance_id}", float(best_score), bool(needs_reprompt)
+    row = next((r for r in score_records if r.prompt_id == prompt_id), None)
+    # 单一候选：空掩膜或低分 → 触发重提示
+    needs_reprompt = (row is None) or (row.total_score < args.reprompt_min_score) or bool(getattr(row, "empty_flag", False))
+    return default_cands[0].mask.copy(), prompt_id, float(row.total_score if row else 0.0), bool(needs_reprompt)
+
+
+# ────────────────────────────────────────────────────────────────────────
+# 阶段十一 §5 P2/P6 语义坍缩检测与受控组合
+# ────────────────────────────────────────────────────────────────────────
+def detect_semantic_collapse(
+    p2_mask: np.ndarray,
+    p6_mask: np.ndarray,
+    args: argparse.Namespace | None = None,
+) -> bool:
+    """P2 与 P6 不应在面积/框/盆区覆盖上几乎相同（否则语义坍缩）。
+
+    返回 True 表示检测到坍缩（需触发重推理）。
+    """
+    if not p2_mask.any() or not p6_mask.any():
+        return False
+    a2 = float(p2_mask.sum())
+    a6 = float(p6_mask.sum())
+    if a2 <= 0:
+        return False
+    area_diff_ratio = abs(a6 - a2) / a2
+    # 盆区（图像下 40%）覆盖率是否几乎一致
+    h = p2_mask.shape[0]
+    lo = int(h * 0.4)
+    p2_pot = float(p2_mask[lo:, :].sum())
+    p6_pot = float(p6_mask[lo:, :].sum())
+    pot_diff_ratio = (abs(p6_pot - p2_pot) / max(a2, 1e-6)) if p6_pot or p2_pot else 0.0
+    threshold = 0.05 if args is None else getattr(args, "collapse_area_threshold", 0.05)
+    return bool(area_diff_ratio < threshold and pot_diff_ratio < threshold)
+
+
+def compose_plant_only(
+    plant_cands: list[np.ndarray],
+    pot_cands: list[np.ndarray],
+    track_support: np.ndarray | None = None,
+    args: argparse.Namespace | None = None,
+) -> np.ndarray:
+    """受控组合 plant_only：植株候选并集 − 明确 POT 候选区域。
+
+    - 叶片召回来自 plant_cands（P2/P3 实例），不在此做最大连通域。
+    - 减去经 POT 候选确认的盆区，避免盆体被当植株召回。
+    """
+    plant = np.zeros_like(plant_cands[0], dtype=bool) if plant_cands else np.zeros((1, 1), dtype=bool)
+    for m in plant_cands:
+        plant |= m.astype(bool)
+    if pot_cands:
+        pot = np.zeros_like(plant)
+        for m in pot_cands:
+            pot |= m.astype(bool)
+        plant &= ~pot
+    return plant
+
+
+def compose_potted(
+    plant_only: np.ndarray,
+    pot_cands: list[np.ndarray],
+) -> np.ndarray:
+    """P6 = plant_only ∪ POT 候选（独立生成，不取 P2 终选 mask）。"""
+    out = plant_only.astype(bool).copy()
+    for m in pot_cands:
+        out |= m.astype(bool)
+    return out
+
+
+# ────────────────────────────────────────────────────────────────────────
+# 阶段十一 §8 A7 单对象 ID 选择（禁止 OR 所有 object ID）
+# ────────────────────────────────────────────────────────────────────────
+def select_single_object_id(
+    object_masks: list[np.ndarray],
+    seed_mask: np.ndarray,
+) -> int:
+    """从 A7 多 object ID 输出中选一个与 seed 最匹配的 ID（IoU 最大）。
+
+    禁止把多个 object ID 直接 OR 合并。
+    """
+    if not object_masks:
+        return -1
+    best_iou = -1.0
+    best_id = 0
+    for i, om in enumerate(object_masks):
+        iou = mask_iou(om.astype(bool), seed_mask.astype(bool))
+        if iou > best_iou:
+            best_iou = iou
+            best_id = i
+    return best_id
 
 
 def sample_points(mask: np.ndarray, count: int, positive: bool, ring_radius: int) -> list[tuple[int, int]]:
@@ -2113,6 +2450,25 @@ def score_to_dict(row: ScoreRecord) -> dict[str, Any]:
     }
 
 
+def candidate_to_dict(item: Candidate, image_name: str, rank: int = 0) -> dict[str, Any]:
+    """逐实例候选元数据行（用于 候选评分明细.csv / 阶段证据）。"""
+    box = item.box
+    return {
+        "图像": image_name,
+        "提示词编号": item.prompt_id,
+        "实例编号": item.instance_id,
+        "提示词文本": item.prompt_text,
+        "SAM3分数": round(float(item.sam_score), 6),
+        "外接框": (f"{box[0]},{box[1]},{box[2]},{box[3]}" if box else ""),
+        "面积比例": float(item.mask.sum()) / item.mask.size if item.mask.size else 0.0,
+        "掩膜阈值": item.mask_threshold,
+        "来源阶段": item.source_stage,
+        "候选模式": item.prompt_mode,
+        "排名": rank,
+        "是否空掩膜": int(not item.mask.any()),
+    }
+
+
 def build_failure_summary(
     score_rows: list[dict[str, Any]],
     selection_rows: list[dict[str, Any]],
@@ -2288,8 +2644,14 @@ def main() -> int:
 
         if args.save_candidate_masks and not args.reuse_existing_candidates:
             for item in candidates:
-                out_path = dirs["candidate"] / prompt_dir_name(item.prompt_id) / f"mask_{image_path.stem}.png"
-                save_mask(item.mask, out_path)
+                if args.candidate_mode == "per_instance":
+                    # 逐实例：保存每个原始实例 + 每 prompt 合并结果（受控合并前）
+                    if args.save_raw_instance_masks:
+                        raw_path = dirs["candidate"] / f"raw_instance_{item.prompt_id}" / f"mask_{image_path.stem}_{item.instance_id:02d}.png"
+                        save_mask(item.mask, raw_path)
+                else:
+                    out_path = dirs["candidate"] / prompt_dir_name(item.prompt_id) / f"mask_{image_path.stem}.png"
+                    save_mask(item.mask, out_path)
 
         semantic_context = (
             build_semantic_gate_context(image_path, image, candidates, semantic_overrides, args)
@@ -2308,12 +2670,29 @@ def main() -> int:
             )
             for item in candidates
         ]
-        for row in score_records:
-            row_dict = score_to_dict(row)
+        # ── 按 total_score 降序排名，回填 rank（逐实例） ──
+        ranked_indices = sorted(range(len(score_records)), key=lambda i: score_records[i].total_score, reverse=True)
+        rank_map = {orig_idx: rank for rank, orig_idx in enumerate(ranked_indices)}
+        for row_idx in ranked_indices:
+            score_records[row_idx].instance_id = candidates[row_idx].instance_id
+        per_frame_detail: list[dict[str, Any]] = []
+        for row_idx, rec in enumerate(score_records):
+            cand = candidates[row_idx]
+            row_dict = score_to_dict(rec)
+            rank = rank_map.get(row_idx, 0)
+            per_frame_detail.append(candidate_to_dict(cand, image_path.name, rank=rank))
             all_score_rows.append(row_dict)
             if args.use_semantic_gate:
                 semantic_gate_rows.append(row_dict)
-        selected_mask, selected_prompt, selected_score = select_mask(
+        # 保存逐帧候选评分明细 CSV
+        if args.save_candidate_masks:
+            detail_path = dirs["candidate"] / f"候选评分明细_{image_path.stem}.csv"
+            detail_fields = [
+                "图像", "提示词编号", "实例编号", "提示词文本", "SAM3分数", "外接框",
+                "面积比例", "掩膜阈值", "来源阶段", "候选模式", "排名", "是否空掩膜",
+            ]
+            write_csv(detail_path, per_frame_detail, detail_fields)
+        selected_mask, selected_prompt, selected_score, needs_reprompt = select_mask(
             image_path, candidates, score_records, prompt_texts, args
         )
         if args.use_semantic_gate and semantic_context is not None and args.save_semantic_gate_debug:
@@ -2334,6 +2713,7 @@ def main() -> int:
         selected_by_stem[image_path.stem] = selected_mask
         scores_by_stem[image_path.stem] = float(selected_score)
         prompts_by_stem[image_path.stem] = selected_prompt
+        reprompt_stems.add(image_path.stem) if needs_reprompt else None
         for item in candidates:
             prev_prompt_masks[item.prompt_id] = item.mask
 

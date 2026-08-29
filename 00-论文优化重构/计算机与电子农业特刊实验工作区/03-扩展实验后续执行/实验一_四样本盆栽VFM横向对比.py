@@ -46,6 +46,8 @@ PROMPT_POTTED = "whole potted plant including flowerpot"
 GROUNDING_PROMPT = "potted plant."
 FLORENCE2_TASK = "<REFERRING_EXPRESSION_SEGMENTATION>"
 TARGET_DEFINITION = "project LabelMe GT foreground: union of closed target-object linestrips"
+# 口径拆分：plant_only = P2 去盆比较对象；plant_plus_pot = P6 带盆比较对象；cube 不进 GT
+TARGET_SCOPE = "plant_plus_pot"
 
 METHOD_ORDER = [
     "SEEM_existing",
@@ -101,6 +103,21 @@ METHOD_PROTOCOL = {
     "RAP-FSAM3-v2": "ours: multi-prompt selection + refinement + geometry correction",
     "UNet_fewshot_seqcv": "leave-one-sequence-out few-shot training",
     "DeepLabV3PlusLite_fewshot_seqcv": "leave-one-sequence-out few-shot training",
+}
+
+# GT 口径映射：方法名 → GT 拆分口径（P2 去盆，带盆方法含盆，cube 永不进入）
+METHOD_GT_SCOPE = {
+    "SAM3_P2": "plant_only",
+    "RAP-FSAM3-v2": "plant_only",
+    "SEEM_existing": "plant_only",
+    "SAM_existing": "plant_only",
+    "CLIPSeg_potted": "plant_plus_pot",
+    "GroundedSAM1_potted": "plant_plus_pot",
+    "GroundedSAM2_potted": "plant_plus_pot",
+    "Florence2_potted": "plant_plus_pot",
+    "SAM2_oracle_box": "plant_plus_pot",
+    "UNet_fewshot_seqcv": "plant_only",
+    "DeepLabV3PlusLite_fewshot_seqcv": "plant_only",
 }
 
 MAIN_TABLE_METHODS = {
@@ -191,7 +208,8 @@ def shape_to_mask(shape: dict[str, object], height: int, width: int) -> np.ndarr
     return mask
 
 
-def convert_labelme(json_path: Path) -> tuple[np.ndarray, dict[str, object], list[dict[str, object]]]:
+def convert_labelme_legacy(json_path: Path) -> tuple[np.ndarray, dict[str, object], list[dict[str, object]]]:
+    """旧行为：无条件 OR 所有 shape（保留用于 --legacy_union_gt 对照）。"""
     data = json.loads(json_path.read_text(encoding="utf-8"))
     height = int(data["imageHeight"])
     width = int(data["imageWidth"])
@@ -234,6 +252,135 @@ def convert_labelme(json_path: Path) -> tuple[np.ndarray, dict[str, object], lis
     return mask, meta, shape_rows
 
 
+# 拆分常量（与 gt_audit_convert.py 保持一致，避免跨文件依赖）
+_GT_SMALL_AREA_RATIO = 0.08
+_GT_POT_GAP_RATIO = 0.04
+_GT_BLUE_MARGIN = 15
+
+
+def _shape_color(image: np.ndarray | None, mask: np.ndarray) -> tuple[float, float, float] | None:
+    if image is None or not mask.any():
+        return None
+    ys, xs = np.where(mask > 0)
+    if len(ys) == 0:
+        return None
+    patch = image[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    return tuple(float(v) for v in patch.reshape(-1, 3).mean(0))
+
+
+def _is_blue(color: tuple[float, float, float] | None) -> bool:
+    if color is None:
+        return False
+    b, g, r = color[0], color[1], color[2]
+    if not (b >= r and b >= g):
+        return False
+    if (b - r) < _GT_BLUE_MARGIN or (b - g) < _GT_BLUE_MARGIN:
+        return False
+    if (r + g) >= b * 1.2:
+        return False
+    return True
+
+
+def convert_labelme_scoped(json_path: Path, target_scope: str = "plant_plus_pot",
+                           image_path: Path | None = None) -> tuple[np.ndarray, dict[str, object], list[dict[str, object]]]:
+    """按口径拆分 GT：几何 + 原图颜色启发式找出 plant/pot/cube。
+
+    cube 永不进入 plant / potted GT；P2(去盆) 用 plant_only，P6(带盆) 用 plant_plus_pot。
+    无样本名硬编码。
+    """
+    data = json.loads(json_path.read_text(encoding="utf-8"))
+    height = int(data["imageHeight"])
+    width = int(data["imageWidth"])
+    image = None
+    if image_path is not None and image_path.exists():
+        b = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
+        if b is not None:
+            image = b
+
+    geoms: list[dict[str, object]] = []
+    masks: list[np.ndarray] = []
+    for idx, shape in enumerate(data.get("shapes", []), start=1):
+        sm = shape_to_mask(shape, height, width)
+        masks.append(sm)
+        area_px = int((sm > 0).sum())
+        ys, xs = (np.where(sm > 0) if area_px > 0 else ([], []))
+        cy = float(np.mean(ys)) if area_px else 0.0
+        color = _shape_color(image, sm)
+        geoms.append({
+            "index": idx, "mask": sm, "area_px": area_px,
+            "area_ratio": area_px / float(sm.size) if sm.size else 0.0,
+            "centroid_y_ratio": cy / height if height else 0.0,
+            "min_y": int(np.min(ys)) if area_px else 0,
+            "max_y": int(np.max(ys)) if area_px else 0,
+            "color": color, "role": "plant", "confidence": 0.9,
+            "label": shape.get("label", ""), "shape_type": shape.get("shape_type", ""),
+            "points": len(shape.get("points", [])),
+        })
+
+    # 植株主体 = 面积最大 shape
+    non_empty = [g for g in geoms if g["area_px"] > 0]
+    plant_body = max(non_empty, key=lambda g: g["area_px"]) if non_empty else None
+    plant_max_y = plant_body["max_y"] if plant_body else height
+
+    for g in geoms:
+        if g["area_px"] == 0:
+            g["role"] = "ignore"
+            g["confidence"] = 1.0
+            continue
+        is_small = g["area_ratio"] < _GT_SMALL_AREA_RATIO
+        below_plant = g["min_y"] > (plant_max_y + _GT_POT_GAP_RATIO * height)
+        blue = _is_blue(g["color"])
+        if is_small and below_plant:
+            if blue:
+                g["role"] = "reference_cube"
+            else:
+                g["role"] = "pot"
+        else:
+            g["role"] = "plant"
+
+    plant = np.zeros((height, width), np.uint8)
+    pot = np.zeros((height, width), np.uint8)
+    for g in geoms:
+        if g["role"] == "plant":
+            plant = np.maximum(plant, g["mask"])
+        elif g["role"] == "pot":
+            pot = np.maximum(pot, g["mask"])
+    if target_scope == "plant_only":
+        mask_bool = plant > 0
+    elif target_scope == "plant_plus_pot":
+        mask_bool = np.logical_or(plant, pot)
+    else:
+        mask_bool = np.logical_or(plant, pot)
+
+    mask = (mask_bool.astype(np.uint8) * 255)
+    shape_rows = [
+        {
+            "shape_index": g["index"], "label": g["label"], "shape_type": g["shape_type"],
+            "points": g["points"], "area_px": g["area_px"],
+            "area_ratio": round(g["area_ratio"], 5),
+            "centroid_y_ratio": round(g["centroid_y_ratio"], 4),
+            "inferred_role": g["role"], "color_bgr": [round(c, 1) for c in g["color"]] if g["color"] else None,
+        }
+        for g in geoms
+    ]
+    meta = {
+        "width": width, "height": height,
+        "image_path": data.get("imagePath", json_path.with_suffix(".jpg").name),
+        "shape_count": len(shape_rows),
+        "gt_area_ratio": float(mask_bool.sum() / mask_bool.size) if mask_bool.size else 0.0,
+        "target_scope": target_scope,
+    }
+    return mask, meta, shape_rows
+
+
+def convert_labelme(json_path: Path, target_scope: str = "plant_plus_pot",
+                    image_path: Path | None = None) -> tuple[np.ndarray, dict[str, object], list[dict[str, object]]]:
+    """统一入口：默认走口径拆分；legacy_union_gt=True 时回退无条件 OR。"""
+    if getattr(convert_labelme, "_legacy_union", False):
+        return convert_labelme_legacy(json_path)
+    return convert_labelme_scoped(json_path, target_scope=target_scope, image_path=image_path)
+
+
 def prepare_dataset() -> None:
     selected_dir = BENCH_ROOT / "selected_frames"
     gt_dir = BENCH_ROOT / "gt_masks"
@@ -253,7 +400,8 @@ def prepare_dataset() -> None:
             image_out = selected_dir / f"{sample}_{frame}.jpg"
             gt_out = gt_dir / f"mask_{sample}_{frame}.png"
             shutil.copy2(source_image, image_out)
-            mask, meta, rows = convert_labelme(gt_json)
+            mask, meta, rows = convert_labelme(
+                gt_json, target_scope=TARGET_SCOPE, image_path=source_image)
             cv2.imwrite(str(gt_out), mask)
             manifest_rows.append(
                 {
@@ -965,6 +1113,11 @@ def component_count(mask: np.ndarray, min_area_ratio: float = 0.0005) -> int:
 
 def evaluate_method(method_name: str, mask_dir: Path, boundary_tol: int) -> tuple[dict[str, object], list[dict[str, object]]]:
     records = load_manifest()
+    # 按方法选择 GT 口径：P2(去盆) 用 plant_only，带盆方法用 plant_plus_pot
+    if method_name in METHOD_GT_SCOPE:
+        target_scope = METHOD_GT_SCOPE[method_name]
+    else:
+        target_scope = "plant_plus_pot" if ("potted" in method_name.lower() or "p6" in method_name.lower()) else "plant_only"
     frame_rows: list[dict[str, object]] = []
     tp = fp = fn = tn = 0
     areas: list[float] = []
@@ -978,7 +1131,18 @@ def evaluate_method(method_name: str, mask_dir: Path, boundary_tol: int) -> tupl
     for record in records:
         stem = record.stem
         pred_path = mask_dir / f"mask_{stem}.png"
-        gt = read_mask(record.gt_mask)
+        if not Path(record.gt_json).exists():
+            missing.append(stem)
+            continue
+        # 按口径生成 GT（缓存到 BENCH_ROOT/gt_masks，避免重复计算）
+        gt_path = BENCH_ROOT / "gt_masks" / f"mask_{target_scope}_{stem}.png"
+        if not gt_path.exists():
+            sample = record.sample
+            gt_json = GT_ROOT / sample / f"{record.frame}.json"
+            img_path = GT_ROOT / sample / f"{record.frame}.jpg"
+            gm, _, _ = convert_labelme_scoped(gt_json, target_scope=target_scope, image_path=img_path)
+            save_mask(gm, gt_path)
+        gt = read_mask(gt_path)
         if not pred_path.exists():
             missing.append(stem)
             continue
@@ -1038,6 +1202,7 @@ def evaluate_method(method_name: str, mask_dir: Path, boundary_tol: int) -> tupl
         "main_table_candidate": "yes" if method_name in MAIN_TABLE_METHODS else "no",
         "mask_dir": str(mask_dir),
         "target_definition": TARGET_DEFINITION,
+        "gt_scope": target_scope,
         "sample_count": len({r.sample for r in records}),
         "gt_frames": len(records),
         "eval_frames": len(frame_rows),
@@ -1078,6 +1243,7 @@ def evaluate_all(boundary_tol: int = 3) -> None:
         "main_table_candidate",
         "mask_dir",
         "target_definition",
+        "gt_scope",
         "sample_count",
         "gt_frames",
         "eval_frames",
@@ -1458,7 +1624,16 @@ def main() -> int:
     parser.add_argument("--text-threshold", type=float, default=0.2)
     parser.add_argument("--boundary-tol", type=int, default=3)
     parser.add_argument("--panel-width", type=int, default=520)
+    parser.add_argument("--target-scope", choices=["plant_only", "plant_plus_pot"],
+                        default="plant_plus_pot",
+                        help="GT 口径拆分：plant_only=P2 去盆；plant_plus_pot=P6 带盆。cube 永不进 GT。")
+    parser.add_argument("--legacy-union-gt", action="store_true",
+                        help="恢复旧行为：GT 无条件 OR 所有 shape（忽略口径拆分），用于对照。")
     args = parser.parse_args()
+    # 全局开关（供 convert_labelme 统一入口读取）
+    global TARGET_SCOPE
+    TARGET_SCOPE = args.target_scope
+    convert_labelme._legacy_union = bool(args.legacy_union_gt)
 
     start = time.time()
     if args.step == "clean":

@@ -1,0 +1,49 @@
+{
+  "sample": "ChangShouHua2",
+  "frame": "0100",
+  "target_scope_default": "plant_plus_pot",
+  "shapes": [
+    {
+      "shape_index": 1,
+      "label": "1",
+      "shape_type": "linestrip",
+      "points": 8,
+      "area_px": 33172,
+      "area_ratio": 0.004,
+      "centroid_y_ratio": 0.7641,
+      "bbox_x0": 829,
+      "bbox_y0": 2825,
+      "bbox_x1": 1027,
+      "bbox_y1": 3037,
+      "inferred_role": "pot",
+      "confidence": 0.9,
+      "rule": "small+below_plant+warm→pot",
+      "color_bgr": [
+        71.7,
+        46.5,
+        40.2
+      ]
+    },
+    {
+      "shape_index": 2,
+      "label": "1",
+      "shape_type": "linestrip",
+      "points": 563,
+      "area_px": 2673181,
+      "area_ratio": 0.32229,
+      "centroid_y_ratio": 0.373,
+      "bbox_x0": 1,
+      "bbox_y0": 181,
+      "bbox_x1": 2157,
+      "bbox_y1": 2447,
+      "inferred_role": "plant",
+      "confidence": 0.9,
+      "rule": "large+upper→plant",
+      "color_bgr": [
+        85.1,
+        112.8,
+        107.4
+      ]
+    }
+  ]
+}
