@@ -556,7 +556,8 @@ def parse_args() -> argparse.Namespace:
         default="single",
     )
     parser.add_argument("--fusion_threshold", type=float, default=0.5)
-    parser.add_argument("--score_weights", default="area=1,comp=1,edge=1,temp=1,contrast=1")
+    parser.add_argument("--score_weights", default="area=1,comp=1,edge=1,temp=1,contrast=1,sam=0.5",
+                        help="阶段十二 §三.4：评分权重，默认含 sam=0.5（非零）")
     # 阶段十一 §4.5 时序对齐门控：仅在显式配准后启用时序项，否则置中性 0.5
     parser.add_argument("--use_temporal_alignment", action="store_true",
                         help="§4.5：启用光流/单应配准后的时序 IoU；默认关（Pass2 关），未配准时序项置中性值。")
@@ -881,11 +882,13 @@ def sam3_autocast(torch_module: Any, args: argparse.Namespace):
     return torch_module.autocast("cuda", dtype=dtype)
 
 
-def _masks_scores_boxes(output: Any, h: int, w: int) -> tuple[list[np.ndarray], list[float], list[tuple[int, int, int, int]]]:
+def _masks_scores_boxes(output: Any, h: int, w: int, mask_threshold: float = 0.5) -> tuple[list[np.ndarray], list[float], list[tuple[int, int, int, int]]]:
     """从 SAM3 output 提取逐实例 (mask, score, box)。
 
     output 含 'masks' [K,H,W] bool、'masks_logits' [K,H,W] sigmoid、'scores' [K]、
     'boxes' [K,4] (x0,y0,x1,y1)。per_instance 模式直接逐实例取出，不在此 OR。
+
+    阶段十二 §三.2：mask_threshold 参数化，不再硬编码 0.5。
     """
     import torch as _torch
 
@@ -905,7 +908,7 @@ def _masks_scores_boxes(output: Any, h: int, w: int) -> tuple[list[np.ndarray], 
         logits = np.asarray(logits).astype(np.float32)
         k = logits.shape[0] if logits.ndim == 4 else 0
         for i in range(k):
-            m = logits[i, 0] > 0.5
+            m = logits[i, 0] > mask_threshold
             per_masks.append(m.astype(bool))
     elif masks_bool is not None:
         mb = masks_bool
@@ -962,7 +965,7 @@ def infer_candidates(
 
             if args.candidate_mode == "per_instance":
                 # 逐实例候选：每个 SAM3 实例独立成为 Candidate，生成阶段不做 OR/最大连通域
-                per_masks, per_scores, per_boxes = _masks_scores_boxes(output, h, w)
+                per_masks, per_scores, per_boxes = _masks_scores_boxes(output, h, w, mask_threshold=args.sam3_mask_threshold)
                 if not per_masks:
                     # 退化保护：无实例时回退到空候选（评分阶段会被空 mask 硬门拦截）
                     candidates.append(
@@ -1553,13 +1556,21 @@ def select_mask(
     args: argparse.Namespace,
 ) -> tuple[np.ndarray, str, float]:
     if args.use_prompt_ensemble and args.prompt_selection_mode == "score_select":
-        non_empty_prompts = {item.prompt_id for item in candidates if item.mask.any()}
-        selectable = [row for row in score_records if row.prompt_id in non_empty_prompts]
+        # 阶段十二 §三.1：score_select 按 (prompt_id, instance_id) 选最佳实例，不只按 prompt_id
+        non_empty = {item.prompt_id for item in candidates if item.mask.any()}
+        selectable = [row for row in score_records if row.prompt_id in non_empty]
         if not selectable:
             selectable = score_records
         best = max(selectable, key=lambda row: row.total_score)
-        mask = next(item.mask for item in candidates if item.prompt_id == best.prompt_id)
-        return mask.copy(), best.prompt_id, best.total_score, False
+        # 找到与 best 匹配的候选（同 prompt_id + instance_id）
+        best_cand = next(
+            (item for item in candidates
+             if item.prompt_id == best.prompt_id and item.instance_id == best.instance_id),
+            next((item for item in candidates if item.prompt_id == best.prompt_id), None),
+        )
+        if best_cand is None:
+            raise ValueError(f"No candidate found for {best.prompt_id}#{best.instance_id}")
+        return best_cand.mask.copy(), best.prompt_id, best.total_score, False
     if args.use_prompt_ensemble and args.prompt_selection_mode == "weighted_fusion":
         score_by_prompt = {row.prompt_id: max(row.total_score, 0.0) for row in score_records}
         score_sum = sum(score_by_prompt.values())
@@ -2626,6 +2637,7 @@ def main() -> int:
     selected_by_stem: dict[str, np.ndarray] = {}
     scores_by_stem: dict[str, float] = {}
     prompts_by_stem: dict[str, str] = {}
+    reprompt_stems: set[str] = set()
 
     for idx, image_path in enumerate(images, start=1):
         t0 = time.time()
@@ -2695,6 +2707,12 @@ def main() -> int:
         selected_mask, selected_prompt, selected_score, needs_reprompt = select_mask(
             image_path, candidates, score_records, prompt_texts, args
         )
+        # 阶段十二 §三.4：空掩膜检测 — 记录所有候选为空的帧
+        _any_nonzero = any(item.mask.any() for item in candidates)
+        if not _any_nonzero:
+            print(f"  ⚠ {image_path.name}：所有候选掩膜为空，score={selected_score:.4f}")
+        elif not selected_mask.any():
+            print(f"  ⚠ {image_path.name}：选中掩膜为空（{selected_prompt}，score={selected_score:.4f}）")
         if args.use_semantic_gate and semantic_context is not None and args.save_semantic_gate_debug:
             save_semantic_gate_debug(
                 image,
