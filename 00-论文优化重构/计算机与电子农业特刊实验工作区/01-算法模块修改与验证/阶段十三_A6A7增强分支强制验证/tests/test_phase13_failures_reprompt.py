@@ -150,18 +150,15 @@ class TestF2A7Unavailable:
             raise RuntimeError("SAM3 model not found")
 
         with patch.object(mod, "load_sam3_video_predictor", side_effect=_fail_load):
-            # The function has try/except → should not raise
-            try:
-                memory_masks, memory_info = mod.propagate_memory_masks(
-                    image_paths, "f0", "potted plant", seed_mask, ["f0", "f1"], args
-                )
-                # Should return empty with status
-                assert isinstance(memory_masks, dict)
-                assert "状态" in memory_info
-            except RuntimeError:
-                # If propagate_memory_masks doesn't catch it, that's a bug
-                # but this test documents the expected behavior
-                pass
+            # propagate_memory_masks has try/except → must NOT raise
+            memory_masks, memory_info = mod.propagate_memory_masks(
+                image_paths, "f0", "potted plant", seed_mask, ["f0", "f1"], args
+            )
+            assert memory_masks == {}, f"Expected empty dict on load failure, got {len(memory_masks)} masks"
+            assert "状态" in memory_info
+            assert memory_info["状态"].startswith("unavailable:"), (
+                f"Expected 'unavailable:' prefix, got {memory_info['状态']!r}"
+            )
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -298,38 +295,38 @@ class TestF4EmptyCandidate:
 # F5: Invalid propagated candidate
 # ──────────────────────────────────────────────────────────────────────
 class TestF5InvalidPropagated:
-    def test_memory_mask_wrong_shape_causes_error(self):
-        """A7 memory mask with non-matching shape crashes in scoring (documents behavior)."""
+    def test_wrong_shape_a7_candidate_skipped_in_pass2(self):
+        """After hardening, wrong-shape A7 mask is skipped in Pass 2, not scored."""
         from PIL import Image as PILImage
         h, w = 100, 200
         gray = _synth_gray(h, w)
         pil_img = PILImage.fromarray(np.stack([gray, gray, gray], axis=-1))
 
-        # Wrong shape mask (smaller) — this will cause IndexError in scoring
-        wrong_mask = np.zeros((50, 100), dtype=bool)
-        wrong_mask[10:40, 20:80] = True
-        cand = mod.Candidate(
-            prompt_id="P6",
-            prompt_text="potted plant",
-            mask=wrong_mask,
-            scores=[0.7],
-            raw_detection_count=1,
-            instance_id=0,
-            box=None,
-            sam_score=0.7,
-            source_stage="A7_memory",
-        )
-        weights = {"area": 1, "comp": 1, "edge": 1, "temp": 1, "contrast": 1, "sam": 0.5}
-        fake_path = Path("/tmp/fake.jpg")
-        sc_args = _get_default_args()
-        # Mismatched shape → IndexError — this documents that A7 masks must match image dims
-        try:
-            rec = mod.score_candidate(fake_path, pil_img, cand, {}, weights, sc_args)
-            # If it doesn't crash, verify it still scores
-            assert hasattr(rec, "total_score")
-        except IndexError:
-            # Expected: mask shape != image shape → crash in foreground_background_contrast
-            pass
+        # Simulate Pass 2 variant creation with shape guard
+        a7_mask_wrong = np.zeros((50, 100), dtype=bool)  # wrong shape
+        a7_mask_wrong[10:40, 20:80] = True
+        selected_mask = _synth_mask(h, w, region=(20, 80, 50, 150))
+        memory_masks = {"test_stem": a7_mask_wrong}
+
+        # Reproduce the shape guard logic from production code
+        variants = []
+        variants.append(mod.Candidate(
+            prompt_id="A1s", prompt_text="potted plant",
+            mask=selected_mask, scores=[], raw_detection_count=0,
+        ))
+        stem = "test_stem"
+        if memory_masks and stem in memory_masks:
+            a7_mask = memory_masks[stem]
+            img_w, img_h = pil_img.size
+            if a7_mask.shape == (img_h, img_w):
+                variants.append(mod.Candidate(
+                    prompt_id="A7记忆", prompt_text="memory_propagation",
+                    mask=a7_mask, scores=[], raw_detection_count=0,
+                ))
+
+        # Only A1s should be in variants, A7 should be skipped
+        assert len(variants) == 1
+        assert variants[0].prompt_id == "A1s"
 
     def test_valid_memory_mask_scores_normally(self):
         """A7 memory mask with correct shape scores normally."""

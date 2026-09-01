@@ -2739,41 +2739,49 @@ def main() -> int:
 
     # A6: cross-view consensus voting (global).
     if args.use_cross_view_consensus:
-        consensus_observations = (
-            colmap_observations
-            if args.use_corrective_geometry and args.corrective_geometry_backend == "colmap_tracks"
-            else load_colmap_observations({p.stem for p in images}, args)
-        )
-        gray_by_stem: dict[str, np.ndarray] = {}
-        for p in images:
-            img = Image.open(p).convert("L").resize((512, 910))
-            gray_by_stem[p.stem] = np.array(img)
-        # Upsample the 512-wide grayscale back to mask resolution inside the estimator.
-        consensus_result = apply_cross_view_consensus(
-            selected_by_stem,
-            gray_by_stem,
-            consensus_observations,
-            dirs,
-            args,
-        )
-        if consensus_result is not None:
-            accepted = sum(int(v["共识接受"]) for v in consensus_result.per_frame_info.values())
-            removed_total = sum(float(v["删除像素比例"]) for v in consensus_result.per_frame_info.values())
-            recall_total = sum(float(v["补回像素比例"]) for v in consensus_result.per_frame_info.values())
-            consensus_summary = {
-                "帧数": len(consensus_result.per_frame_masks),
-                "接受修正帧数": accepted,
-                "总删除像素比例": round(removed_total, 5),
-                "总补回像素比例": round(recall_total, 5),
-                "几何通道可用": bool(consensus_observations),
-            }
-            print(
-                f"[A6] frames={consensus_summary['帧数']} accepted={accepted} "
-                f"removed_ratio={consensus_summary['总删除像素比例']}"
+        try:
+            consensus_observations = (
+                colmap_observations
+                if args.use_corrective_geometry and args.corrective_geometry_backend == "colmap_tracks"
+                else load_colmap_observations({p.stem for p in images}, args)
             )
-        else:
-            consensus_summary = {"状态": "skipped_insufficient_frames", "最少帧数": args.consensus_min_frames}
-            print("[A6] skipped: insufficient frames")
+            gray_by_stem: dict[str, np.ndarray] = {}
+            for p in images:
+                img = Image.open(p).convert("L").resize((512, 910))
+                gray_by_stem[p.stem] = np.array(img)
+            # Upsample the 512-wide grayscale back to mask resolution inside the estimator.
+            consensus_result = apply_cross_view_consensus(
+                selected_by_stem,
+                gray_by_stem,
+                consensus_observations,
+                dirs,
+                args,
+            )
+            if consensus_result is not None:
+                accepted = sum(int(v["共识接受"]) for v in consensus_result.per_frame_info.values())
+                removed_total = sum(float(v["删除像素比例"]) for v in consensus_result.per_frame_info.values())
+                recall_total = sum(float(v["补回像素比例"]) for v in consensus_result.per_frame_info.values())
+                consensus_summary = {
+                    "帧数": len(consensus_result.per_frame_masks),
+                    "接受修正帧数": accepted,
+                    "总删除像素比例": round(removed_total, 5),
+                    "总补回像素比例": round(recall_total, 5),
+                    "几何通道可用": bool(consensus_observations),
+                }
+                print(
+                    f"[A6] frames={consensus_summary['帧数']} accepted={accepted} "
+                    f"removed_ratio={consensus_summary['总删除像素比例']}"
+                )
+            else:
+                consensus_summary = {"状态": "skipped_insufficient_frames", "最少帧数": args.consensus_min_frames}
+                print("[A6] skipped: insufficient frames")
+        except Exception as exc:  # noqa: BLE001 - degrade to baseline on any failure
+            consensus_result = None
+            consensus_summary = {
+                "状态": f"unavailable: {type(exc).__name__}: {exc}",
+                "帧数": 0,
+            }
+            print(f"[A6] FAILED: {exc}")
 
     # A7: memory-engine propagation seeded from the safest frame (never the raw first frame).
     if args.use_memory_propagation:
@@ -2830,9 +2838,14 @@ def main() -> int:
                 Candidate(prompt_id="A6共识", prompt_text="cross_view_consensus", mask=consensus_result.per_frame_masks[stem], scores=[], raw_detection_count=0)
             )
         if memory_masks and stem in memory_masks:
-            variants.append(
-                Candidate(prompt_id="A7记忆", prompt_text="memory_propagation", mask=memory_masks[stem], scores=[], raw_detection_count=0)
-            )
+            a7_mask = memory_masks[stem]
+            img_w, img_h = image.size  # PIL: (width, height)
+            if a7_mask.shape == (img_h, img_w):
+                variants.append(
+                    Candidate(prompt_id="A7记忆", prompt_text="memory_propagation", mask=a7_mask, scores=[], raw_detection_count=0)
+                )
+            else:
+                print(f"[A7] SKIP {stem}: shape mismatch {a7_mask.shape} vs image ({img_h},{img_w})")
         variant_records = [
             score_candidate(
                 image_path,
