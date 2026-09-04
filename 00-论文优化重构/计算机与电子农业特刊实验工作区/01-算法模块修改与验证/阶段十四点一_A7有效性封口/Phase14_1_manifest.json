@@ -1,0 +1,42 @@
+{
+  "phase": "14.1",
+  "title": "Factorial Validity Closure (A7 Evidence Correction)",
+  "date": "2026-09-04",
+  "freeze_sha": "f9f091d82122148ef011a8063d4949fbccc94828",
+  "rerun_code_sha": "uncommitted (working tree)",
+  "regression": { "historical": 71, "phase14_1": 13, "total": 84, "status": "PASS" },
+  "gates": {
+    "G1_V01_no_global_oom": "PASS",
+    "G2_real_propagated_in_V01": "PASS",
+    "G3_propagated_scored_selected_distinct": "PASS",
+    "G4_per_sample_A7_status": "PASS",
+    "G5_V11_diagnostics_internally_consistent": "PASS",
+    "G6_stale_explanations_corrected": "PASS",
+    "G7_full_regression_84_84": "PASS",
+    "G8_frozen_p6_untouched": "PASS"
+  },
+  "variants": {
+    "V00": { "status": "reused_from_Phase14", "f1_mean": 0.9835, "f1_median": 0.9839 },
+    "V10": { "status": "reused_from_Phase14", "f1_mean": 0.9807, "f1_median": 0.9836 },
+    "V01_R1": { "status": "rerun_fixed_code", "f1_mean": 0.9836, "f1_median": 0.9850,
+                "samples_ok": 5, "propagated_total": 13, "selected_total": 9,
+                "sessions_started": 5, "sessions_closed": 5 },
+    "V11_R1": { "status": "rerun_fixed_code", "f1_mean": 0.9807, "f1_median": 0.9833,
+                 "samples_ok": 5, "propagated_total": 13, "selected_total": 5,
+                 "sessions_started": 5, "sessions_closed": 5 }
+  },
+  "factorial": {
+    "E_A6": -0.0028,
+    "E_A7": 0.0000,
+    "I_AB": -0.0001
+  },
+  "files": {
+    "report": "Phase14_1_report.md",
+    "correction_note": "Phase14_correction_note.md",
+    "manifest": "Phase14_1_manifest.json",
+    "a7_diagnostics": "Phase14_1_a7_diagnostics.csv",
+    "V01_R1": "V01_A7_rerun/",
+    "V11_R1": "V11_A6A7_rerun/",
+    "tests": "tests/test_phase14_1_lifecycle.py"
+  }
+}

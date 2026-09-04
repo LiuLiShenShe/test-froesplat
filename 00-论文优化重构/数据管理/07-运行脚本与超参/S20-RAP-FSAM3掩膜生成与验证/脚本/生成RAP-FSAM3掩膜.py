@@ -428,6 +428,7 @@ def propagate_memory_masks(
     engine does not also lock onto the neighbouring plant (which matches the
     same text prompt).
     """
+    import gc
     import shutil
     import tempfile
 
@@ -438,11 +439,39 @@ def propagate_memory_masks(
         "种子帧": "",
         "传播方向": "both" if args.memory_bidirectional else "forward",
         "状态": "",
+        "帧数": len(stems_in_order),
+        "传播掩膜数": 0,
     }
+
+    def _mem_state() -> dict[str, float]:
+        """CUDA memory snapshot (MiB) — diagnostics only, no inference change."""
+        if not torch.cuda.is_available():
+            return {"allocated_mib": 0.0, "reserved_mib": 0.0, "free_mib": 0.0, "total_mib": 0.0}
+        free, total = torch.cuda.mem_get_info()
+        return {
+            "allocated_mib": round(torch.cuda.memory_allocated() / 1024 ** 2, 1),
+            "reserved_mib": round(torch.cuda.memory_reserved() / 1024 ** 2, 1),
+            "free_mib": round(free / 1024 ** 2, 1),
+            "total_mib": round(total / 1024 ** 2, 1),
+        }
+
+    if seed_box_mask is not None and seed_box_mask.any():
+        _ys, _xs = np.nonzero(seed_box_mask)
+        _h, _w = seed_box_mask.shape
+        info["种子面积比例"] = round(float(seed_box_mask.sum()) / seed_box_mask.size, 4)
+        info["种子框比例"] = round(float((_xs.max() - _xs.min()) * (_ys.max() - _ys.min())) / (_h * _w), 4)
+        info["种子框像素"] = [int(_xs.min()), int(_ys.min()), int(_xs.max()), int(_ys.max())]
+    else:
+        info["种子面积比例"] = 0.0
+        info["种子框比例"] = 0.0
     tmp_dir: Path | None = None
+    session_id: str | None = None
+    mem: dict[str, dict[str, float]] = {}
     try:
+        mem["before_predictor_load"] = _mem_state()
         if predictor is None:
             predictor = load_sam3_video_predictor(args)
+        mem["after_predictor_load"] = _mem_state()
         tmp_dir = Path(tempfile.mkdtemp(prefix="rapfsam3_mem_"))
         ordered = list(stems_in_order)
         if args.memory_max_frames and len(ordered) > int(args.memory_max_frames):
@@ -454,8 +483,10 @@ def propagate_memory_masks(
         for i, stem in enumerate(ordered):
             src = image_paths[stem]
             shutil.copy(src, tmp_dir / f"{i:06d}{src.suffix}")
+        mem["before_start_session"] = _mem_state()
         response = predictor.handle_request(request=dict(type="start_session", resource_path=str(tmp_dir)))
         session_id = response["session_id"]
+        mem["after_start_session"] = _mem_state()
         seed_idx = ordered.index(seed_stem)
         seed_request: dict[str, Any] = dict(
             type="add_prompt",
@@ -474,18 +505,21 @@ def propagate_memory_masks(
                 x0 / w_img, y0 / h_img, (x1 - x0) / w_img, (y1 - y0) / h_img
             ]]
             seed_request["bounding_box_labels"] = [1]
+        mem["before_add_prompt"] = _mem_state()
         response = predictor.handle_request(request=seed_request)
+        mem["after_add_prompt"] = _mem_state()
         out = response.get("outputs", {})
         n_seed_obj = len(out.get("out_obj_ids", []))
         if n_seed_obj == 0:
             info["状态"] = "seed_empty"
-            predictor.handle_request(request=dict(type="close_session", session_id=session_id))
             return {}, info
         info["种子帧"] = seed_stem
+        info["种子物体数"] = n_seed_obj
 
         masks: dict[str, np.ndarray] = {}
         request = dict(type="propagate_in_video", session_id=session_id, start_frame_index=seed_idx)
         request["propagation_direction"] = "both" if args.memory_bidirectional else "forward"
+        mem["before_propagate"] = _mem_state()
         for resp in predictor.handle_stream_request(request=request):
             frame_idx = resp["frame_index"]
             outputs = resp["outputs"]
@@ -502,8 +536,8 @@ def propagate_memory_masks(
                 combined = arr if combined is None else (combined | arr)
             if combined is not None and frame_idx < len(ordered):
                 masks[ordered[frame_idx]] = combined
-        predictor.handle_request(request=dict(type="close_session", session_id=session_id))
         info["状态"] = "ok"
+        info["传播掩膜数"] = len(masks)
         return masks, info
     except torch.cuda.OutOfMemoryError:
         info["状态"] = "cuda_oom_fallback"
@@ -512,8 +546,62 @@ def propagate_memory_masks(
         info["状态"] = f"unavailable: {type(exc).__name__}: {exc}"
         return {}, info
     finally:
+        # Strict lifecycle: close the session on EVERY exit path (success,
+        # seed_empty, OOM, exception). Previously only the success path closed it;
+        # the OOM/exception paths leaked the session (see Phase 14.1 evidence audit).
+        if session_id is not None:
+            try:
+                predictor.handle_request(request=dict(type="close_session", session_id=session_id))
+            except Exception:  # noqa: BLE001 - never mask the primary outcome
+                pass
+            session_id = None
+        mem["after_close_session"] = _mem_state()
+        info["memory"] = mem
+        if info.get("状态") in ("cuda_oom_fallback",) or info.get("状态", "").startswith("unavailable"):
+            # Free cached blocks left behind by an aborted session. Diagnostic-only
+            # cleanup, not an algorithmic fix (confirmed leak: sessions were left
+            # open on the OOM/exception path, see Phase 14.1 evidence audit).
+            gc.collect()
+            torch.cuda.empty_cache()
         if tmp_dir is not None:
             shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+def _merge_sampled_memory_info(
+    samples_diag: dict[str, dict[str, Any]],
+    sample_groups: dict[str, list[str]],
+) -> dict[str, Any]:
+    """Merge per-sample A7 diagnostics into an aggregate summary (Phase 14.1).
+
+    Previously `merged_memory_info[k] = v` kept only the LAST sample's status,
+    so `状态=ok` could not be trusted across samples. This builds per-sample
+    entries + aggregate counters + a summary 状态 grounded in ALL samples.
+    """
+    info: dict[str, Any] = {"samples": samples_diag, "样本数": len(sample_groups)}
+    statuses = [v.get("状态", "") for v in samples_diag.values()]
+    info["samples_ok"] = int(sum(s == "ok" for s in statuses))
+    info["samples_seed_empty"] = int(sum(s == "seed_empty" for s in statuses))
+    info["samples_oom"] = int(sum(s == "cuda_oom_fallback" for s in statuses))
+    info["samples_unavailable"] = int(sum(s.startswith("unavailable") for s in statuses))
+    total_masks = sum(int(v.get("传播掩膜数", 0)) for v in samples_diag.values())
+    info["propagated_total"] = total_masks
+    info["candidate_total"] = total_masks  # all valid masks enter Pass-2 scoring
+    info["selected_total"] = 0  # filled after Pass-2 variant selection
+    if any(s == "cuda_oom_fallback" for s in statuses):
+        info["状态"] = "partial_oom"
+    elif any(s.startswith("unavailable") for s in statuses):
+        info["状态"] = "partial_unavailable"
+    elif any(s == "seed_empty" for s in statuses):
+        info["状态"] = "partial_seed_empty"
+    elif all(s == "ok" for s in statuses):
+        info["状态"] = "ok"
+    else:
+        info["状态"] = "partial"
+    info["种子帧"] = (
+        "multi_sample" if len(sample_groups) > 1
+        else next(iter(samples_diag.values()), {}).get("seed_stem", "")
+    )
+    return info
 
 
 def parse_args() -> argparse.Namespace:
@@ -2889,6 +2977,8 @@ def main() -> int:
 
         merged_memory_masks: dict[str, np.ndarray] = {}
         merged_memory_info: dict[str, Any] = {}
+        samples_diag: dict[str, dict[str, Any]] = {}
+        memory_seed_by_stem: dict[str, str] = {}
         image_paths = {p.stem: p for p in images}
         # Load SAM3 predictor once, reuse across all samples (avoids OOM from repeated loads).
         shared_predictor = None
@@ -2907,6 +2997,8 @@ def main() -> int:
             else:
                 sample_scores = {s: scores_by_stem.get(s, 0) for s in sample_stems}
                 seed_stem = max(sample_scores, key=sample_scores.get)
+            for s in sample_stems:
+                memory_seed_by_stem[s] = seed_stem
             try:
                 sub_masks, sub_info = propagate_memory_masks(
                     image_paths,
@@ -2920,14 +3012,37 @@ def main() -> int:
                 merged_memory_masks.update(sub_masks)
                 for k, v in sub_info.items():
                     merged_memory_info[k] = v
+                samples_diag[sample] = {
+                    "seed_stem": seed_stem,
+                    "帧数": len(sample_stems),
+                    "状态": sub_info.get("状态", ""),
+                    "传播掩膜数": len(sub_masks),
+                    "种子面积比例": sub_info.get("种子面积比例", ""),
+                    "种子框比例": sub_info.get("种子框比例", ""),
+                    "种子物体数": sub_info.get("种子物体数", ""),
+                    "memory": sub_info.get("memory", {}),
+                    "传播帧": sorted(sub_masks.keys()),
+                }
             except Exception as exc:  # noqa: BLE001
                 print(f"[A7] FAILED for {sample}: {exc}")
+                samples_diag[sample] = {
+                    "seed_stem": seed_stem,
+                    "帧数": len(sample_stems),
+                    "状态": f"unavailable: {type(exc).__name__}: {exc}",
+                    "传播掩膜数": 0,
+                }
 
         memory_masks = merged_memory_masks
         memory_info = merged_memory_info
-        memory_info.setdefault("种子帧", "multi_sample")
+        memory_info.update(
+            _merge_sampled_memory_info(samples_diag, sample_groups)
+        )
+        # Drop per-sample-only keys that the merge loop left from the LAST sample —
+        # they would otherwise leak one sample's numbers into the aggregate summary
+        # (the artifact Phase 14.1 corrects). Per-sample values live in samples[].
+        for _leaky in ("种子面积比例", "种子框比例", "种子框像素", "种子物体数", "帧数", "传播掩膜数", "memory"):
+            memory_info.pop(_leaky, None)
         memory_info["记忆候选帧数"] = len(memory_masks)
-        memory_info["样本数"] = len(sample_groups)
         print(f"[A7] per-sample: {len(sample_groups)} samples, masks={len(memory_masks)}")
         (dirs["logs"] / "记忆传播.json").write_text(
             json.dumps(json_ready({"汇总": memory_info}), ensure_ascii=False, indent=2),
@@ -2999,6 +3114,8 @@ def main() -> int:
         selected_mask = best_variant.mask if best_variant.mask.any() else selected_by_stem[stem]
         selected_prompt = best_variant.prompt_id
         selected_score = best_record.total_score
+        if selected_prompt == "A7记忆":
+            memory_info["selected_total"] = int(memory_info.get("selected_total", 0)) + 1
         if args.save_intermediate_masks:
             save_mask(selected_mask, dirs["selected"] / f"mask_{stem}.png")
 
@@ -3102,7 +3219,7 @@ def main() -> int:
                 "共识删除像素比例": consensus_info.get("删除像素比例", ""),
                 "共识补回像素比例": consensus_info.get("补回像素比例", ""),
                 "记忆后端": memory_info.get("记忆后端", "") if args.use_memory_propagation else "",
-                "记忆种子帧": memory_info.get("种子帧", "") if args.use_memory_propagation else "",
+                "记忆种子帧": memory_seed_by_stem.get(stem, "") if args.use_memory_propagation else "",
                 "记忆候选采用": int(selected_prompt == "A7记忆") if args.use_memory_propagation else "",
                 "重提示标记": int(reprompt_flag),
                 "SPNP后端": spnp_info.get("backend", ""),
