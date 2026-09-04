@@ -417,6 +417,7 @@ def propagate_memory_masks(
     seed_box_mask: np.ndarray | None,
     stems_in_order: list[str],
     args: argparse.Namespace,
+    predictor: Any | None = None,
 ) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """A7: text+box seeding on the best frame + bidirectional memory propagation.
 
@@ -440,7 +441,8 @@ def propagate_memory_masks(
     }
     tmp_dir: Path | None = None
     try:
-        predictor = load_sam3_video_predictor(args)
+        if predictor is None:
+            predictor = load_sam3_video_predictor(args)
         tmp_dir = Path(tempfile.mkdtemp(prefix="rapfsam3_mem_"))
         ordered = list(stems_in_order)
         if args.memory_max_frames and len(ordered) > int(args.memory_max_frames):
@@ -2149,15 +2151,25 @@ def colmap_mask_stem_candidates(image_name: str) -> list[str]:
     return candidates
 
 
-def load_colmap_observations(
+def _load_colmap_from_sparse(
+    sparse_dir: Path,
     mask_stems: set[str],
-    args: argparse.Namespace,
+    loader: Any,
 ) -> dict[str, ColmapObservation]:
-    if args.colmap_dir is None:
-        return {}
-    loader = load_colmap_loader(args.colmap_loader_path)
-    sparse_dir = find_sparse_dir(args.colmap_dir, mask_stems, loader)
+    """Load COLMAP observations from a single sparse model directory."""
     images = loader.read_extrinsics_binary(str(sparse_dir / "images.bin"))
+    # Detect sample-name prefix from the per-sample directory layout, e.g.
+    # .../03-final_locked/CaoMei1/sparse/0 -> prefix "CaoMei1"
+    # or .../03-final_locked/CaoMei1/distorted/sparse/0 -> prefix "CaoMei1"
+    sample_prefix = ""
+    for ancestor in (sparse_dir.parent, sparse_dir.parent.parent,
+                     sparse_dir.parent.parent.parent):
+        if ancestor.name.startswith("crop_"):
+            continue
+        if (ancestor / "sparse").exists() or (ancestor / "distorted").exists():
+            # ancestor is the sample directory
+            sample_prefix = ancestor.name
+            break
     observations: dict[str, ColmapObservation] = {}
     for image in images.values():
         mask_stem = ""
@@ -2165,6 +2177,12 @@ def load_colmap_observations(
             if candidate_stem in mask_stems:
                 mask_stem = candidate_stem
                 break
+            # Per-sample COLMAP: image name is "0000.jpg", stem is "CaoMei1_0000"
+            if sample_prefix:
+                prefixed = f"{sample_prefix}_{candidate_stem}"
+                if prefixed in mask_stems:
+                    mask_stem = prefixed
+                    break
         if not mask_stem:
             continue
         valid = image.point3D_ids >= 0
@@ -2176,6 +2194,34 @@ def load_colmap_observations(
             mask_stem=mask_stem,
             points=np.asarray(points, dtype=np.float32),
         )
+    return observations
+
+
+def load_colmap_observations(
+    mask_stems: set[str],
+    args: argparse.Namespace,
+) -> dict[str, ColmapObservation]:
+    if args.colmap_dir is None:
+        return {}
+    loader = load_colmap_loader(args.colmap_loader_path)
+
+    # --- single-model path (backward-compatible) ---
+    try:
+        sparse_dir = find_sparse_dir(args.colmap_dir, mask_stems, loader)
+        return _load_colmap_from_sparse(sparse_dir, mask_stems, loader)
+    except FileNotFoundError:
+        pass
+
+    # --- multi-sample fallback: scan child directories ---
+    observations: dict[str, ColmapObservation] = {}
+    for child in sorted(args.colmap_dir.iterdir()):
+        if not child.is_dir():
+            continue
+        try:
+            sparse_dir = find_sparse_dir(child, mask_stems, loader)
+        except FileNotFoundError:
+            continue
+        observations.update(_load_colmap_from_sparse(sparse_dir, mask_stems, loader))
     return observations
 
 
@@ -2737,7 +2783,9 @@ def main() -> int:
 
     stems_in_order = [p.stem for p in images]
 
-    # A6: cross-view consensus voting (global).
+    # A6: cross-view consensus voting — per-sample (not global).
+    # Cross-view consensus only makes sense within a single multi-view scene;
+    # feeding frames from different samples together produces meaningless results.
     if args.use_cross_view_consensus:
         try:
             consensus_observations = (
@@ -2749,27 +2797,63 @@ def main() -> int:
             for p in images:
                 img = Image.open(p).convert("L").resize((512, 910))
                 gray_by_stem[p.stem] = np.array(img)
-            # Upsample the 512-wide grayscale back to mask resolution inside the estimator.
-            consensus_result = apply_cross_view_consensus(
-                selected_by_stem,
-                gray_by_stem,
-                consensus_observations,
-                dirs,
-                args,
-            )
-            if consensus_result is not None:
-                accepted = sum(int(v["共识接受"]) for v in consensus_result.per_frame_info.values())
-                removed_total = sum(float(v["删除像素比例"]) for v in consensus_result.per_frame_info.values())
-                recall_total = sum(float(v["补回像素比例"]) for v in consensus_result.per_frame_info.values())
+
+            # Group frames by sample name (stem prefix before first '_NNNN').
+            def _sample_name(s: str) -> str:
+                return s.rsplit("_", 1)[0] if "_" in s else s
+
+            sample_groups: dict[str, list[str]] = {}
+            for stem in selected_by_stem:
+                sample_groups.setdefault(_sample_name(stem), []).append(stem)
+
+            # Run consensus independently per sample, then merge.
+            merged_masks: dict[str, np.ndarray] = {}
+            merged_info: dict[str, dict] = {}
+            merged_geo = None
+            merged_band = None
+            for sample, stems in sorted(sample_groups.items()):
+                sub_selected = {s: selected_by_stem[s] for s in stems}
+                sub_gray = {s: gray_by_stem[s] for s in stems if s in gray_by_stem}
+                sub_obs = {s: consensus_observations[s] for s in stems if s in consensus_observations}
+                sub_result = apply_cross_view_consensus(
+                    sub_selected, sub_gray, sub_obs, dirs, args,
+                )
+                if sub_result is not None:
+                    merged_masks.update(sub_result.per_frame_masks)
+                    merged_info.update(sub_result.per_frame_info)
+                    if sub_result.geo_support is not None:
+                        if merged_geo is None:
+                            merged_geo = sub_result.geo_support
+                        else:
+                            merged_geo = merged_geo | sub_result.geo_support
+                    if sub_result.center_band_mask is not None:
+                        if merged_band is None:
+                            merged_band = sub_result.center_band_mask
+                        else:
+                            merged_band = merged_band | sub_result.center_band_mask
+
+            if merged_masks:
+                consensus_result = ConsensusResult(
+                    reference_mask=next(iter(merged_masks.values()), np.zeros(1, dtype=bool)),
+                    per_frame_masks=merged_masks,
+                    per_frame_info=merged_info,
+                    geo_support=merged_geo,
+                    center_band_mask=merged_band if merged_band is not None else np.zeros(1, dtype=bool),
+                )
+                accepted = sum(int(v["共识接受"]) for v in merged_info.values())
+                removed_total = sum(float(v["删除像素比例"]) for v in merged_info.values())
+                recall_total = sum(float(v["补回像素比例"]) for v in merged_info.values())
                 consensus_summary = {
-                    "帧数": len(consensus_result.per_frame_masks),
+                    "帧数": len(merged_masks),
                     "接受修正帧数": accepted,
                     "总删除像素比例": round(removed_total, 5),
                     "总补回像素比例": round(recall_total, 5),
                     "几何通道可用": bool(consensus_observations),
+                    "样本数": len(sample_groups),
                 }
                 print(
-                    f"[A6] frames={consensus_summary['帧数']} accepted={accepted} "
+                    f"[A6] per-sample: {len(sample_groups)} samples, "
+                    f"frames={consensus_summary['帧数']} accepted={accepted} "
                     f"removed_ratio={consensus_summary['总删除像素比例']}"
                 )
             else:
@@ -2783,7 +2867,9 @@ def main() -> int:
             }
             print(f"[A6] FAILED: {exc}")
 
-    # A7: memory-engine propagation seeded from the safest frame (never the raw first frame).
+    # A7: memory-engine propagation — per-sample (not global).
+    # Cross-sample memory propagation is meaningless; seed must come from the
+    # same sample as the target frames.
     if args.use_memory_propagation:
         base_for_memory = (
             consensus_result.per_frame_masks if consensus_result is not None else selected_by_stem
@@ -2792,32 +2878,57 @@ def main() -> int:
         seed_dir.mkdir(parents=True, exist_ok=True)
         for stem, mask in base_for_memory.items():
             save_mask(mask, seed_dir / f"mask_{stem}.png")
-        if args.memory_seed_mode == "consensus_best" and consensus_result is not None:
-            seed_stem = max(
-                consensus_result.per_frame_info,
-                key=lambda s: float(consensus_result.per_frame_info[s]["回退IoU"]),
-            )
-        else:
-            seed_stem = max(scores_by_stem, key=scores_by_stem.get)
+
+        # Group frames by sample name (same logic as A6 per-sample).
+        def _a7_sample_name(s: str) -> str:
+            return s.rsplit("_", 1)[0] if "_" in s else s
+
+        sample_groups: dict[str, list[str]] = {}
+        for stem in stems_in_order:
+            sample_groups.setdefault(_a7_sample_name(stem), []).append(stem)
+
+        merged_memory_masks: dict[str, np.ndarray] = {}
+        merged_memory_info: dict[str, Any] = {}
         image_paths = {p.stem: p for p in images}
+        # Load SAM3 predictor once, reuse across all samples (avoids OOM from repeated loads).
+        shared_predictor = None
         try:
-            memory_masks, memory_info = propagate_memory_masks(
-                image_paths,
-                seed_stem,
-                prompt_texts.get(args.default_prompt_id, "plant"),
-                base_for_memory.get(seed_stem),
-                stems_in_order,
-                args,
-            )
-        except Exception as exc:  # noqa: BLE001 - degrade to per-frame mode on any failure
-            memory_masks, memory_info = {}, {
-                "记忆后端": "sam3_video",
-                "种子帧": seed_stem,
-                "状态": f"unavailable: {type(exc).__name__}: {exc}",
-            }
-        memory_info.setdefault("种子帧", seed_stem)
+            shared_predictor = load_sam3_video_predictor(args)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[A7] FAILED to load SAM3 predictor: {exc}")
+        for sample, sample_stems in sorted(sample_groups.items()):
+            # Select seed within this sample.
+            if args.memory_seed_mode == "consensus_best" and consensus_result is not None:
+                sample_consensus = {s: consensus_result.per_frame_info[s] for s in sample_stems if s in consensus_result.per_frame_info}
+                if sample_consensus:
+                    seed_stem = max(sample_consensus, key=lambda s: float(sample_consensus[s].get("回退IoU", 0)))
+                else:
+                    seed_stem = max(sample_stems, key=lambda s: scores_by_stem.get(s, 0))
+            else:
+                sample_scores = {s: scores_by_stem.get(s, 0) for s in sample_stems}
+                seed_stem = max(sample_scores, key=sample_scores.get)
+            try:
+                sub_masks, sub_info = propagate_memory_masks(
+                    image_paths,
+                    seed_stem,
+                    prompt_texts.get(args.default_prompt_id, "plant"),
+                    base_for_memory.get(seed_stem),
+                    sample_stems,
+                    args,
+                    predictor=shared_predictor,
+                )
+                merged_memory_masks.update(sub_masks)
+                for k, v in sub_info.items():
+                    merged_memory_info[k] = v
+            except Exception as exc:  # noqa: BLE001
+                print(f"[A7] FAILED for {sample}: {exc}")
+
+        memory_masks = merged_memory_masks
+        memory_info = merged_memory_info
+        memory_info.setdefault("种子帧", "multi_sample")
         memory_info["记忆候选帧数"] = len(memory_masks)
-        print(f"[A7] backend={memory_info.get('记忆后端')} state={memory_info.get('状态')} masks={len(memory_masks)}")
+        memory_info["样本数"] = len(sample_groups)
+        print(f"[A7] per-sample: {len(sample_groups)} samples, masks={len(memory_masks)}")
         (dirs["logs"] / "记忆传播.json").write_text(
             json.dumps(json_ready({"汇总": memory_info}), ensure_ascii=False, indent=2),
             encoding="utf-8",
@@ -2833,7 +2944,11 @@ def main() -> int:
         variants: list[Candidate] = [
             Candidate(prompt_id="A1s", prompt_text=prompts_by_stem[stem], mask=selected_by_stem[stem], scores=[], raw_detection_count=0)
         ]
-        if consensus_result is not None and stem in consensus_result.per_frame_masks:
+        if (
+            consensus_result is not None
+            and stem in consensus_result.per_frame_masks
+            and consensus_result.per_frame_info.get(stem, {}).get("共识接受", 0) == 1
+        ):
             variants.append(
                 Candidate(prompt_id="A6共识", prompt_text="cross_view_consensus", mask=consensus_result.per_frame_masks[stem], scores=[], raw_detection_count=0)
             )
