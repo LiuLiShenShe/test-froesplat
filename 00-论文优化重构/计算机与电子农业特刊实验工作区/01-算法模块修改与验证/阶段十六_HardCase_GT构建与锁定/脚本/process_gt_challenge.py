@@ -39,7 +39,6 @@ import argparse
 import csv
 import hashlib
 import json
-from collections import Counter
 from pathlib import Path
 
 import cv2
@@ -86,6 +85,8 @@ def process_frame(json_path: Path, img_path: Path | None):
     merged = {}
     for sh in shapes:
         lbl = sh.get("label", "").strip()
+        # normalize: "potted plant" → "potted_plant"
+        lbl = lbl.replace(" ", "_")
         m = shape_to_mask(sh, h, w).astype(bool)
         merged.setdefault(lbl, np.zeros((h, w), dtype=bool))
         merged[lbl] |= m
@@ -212,7 +213,7 @@ def main() -> None:
     pending = []
     skipped = []          # Q1 / Q7 rejections
     qa_fail = []          # Q4 / Q5 hard failures
-    checksums: dict[str, list[str]] = Counter()   # Q6: sha -> [stem,...]
+    checksums: dict[str, list[str]] = {}   # Q6: sha -> [stem,...]
 
     for sample_dir in sorted(GT_SRC.iterdir()):
         if not sample_dir.is_dir() or sample_dir.name.startswith("three"):
@@ -292,7 +293,7 @@ def main() -> None:
             # Q6: duplicate checksum
             sha = hashlib.sha256(clean_u.tobytes()).hexdigest()[:16]
             row["mask_sha256_16"] = sha
-            checksums[sha].append(stem)
+            checksums.setdefault(sha, []).append(stem)
 
             if img is not None:
                 vis = draw_overlay(img, result["masks"], shape)
