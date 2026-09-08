@@ -8,8 +8,8 @@
 ## 难度提示（启发式，标注时请人工确认）
 - primary:   邻居植株粘连 (D1_neighbor_plant_adhesion)
 - secondary: 背景杂乱
-- raw-image difficulty score: 0.7306
-- Phase-15 排名: 7
+- raw-image difficulty score: 762.0
+- Phase-15 排名: 
 
 ## 目标身份规则（关键）
 1. 本 sample 是时间序列，目标是**同一株个体植物**（跨帧一致）。

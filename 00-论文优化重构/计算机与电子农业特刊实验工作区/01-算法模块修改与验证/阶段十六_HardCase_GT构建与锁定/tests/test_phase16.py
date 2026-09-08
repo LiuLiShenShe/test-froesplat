@@ -101,7 +101,7 @@ class TestT11SplitIntersectionEmpty:
         dev_keys = {(r["sample"], r["frame"]) for r in dev}
         test_keys = {(r["sample"], r["frame"]) for r in test}
         assert dev_keys.isdisjoint(test_keys)
-        assert len(dev) == 26 and len(test) == 28, f"{len(dev)}/{len(test)}"
+        assert len(dev) == 28 and len(test) == 32, f"{len(dev)}/{len(test)}"
 
 
 # ---------------------------------------------------------------- T4 / T5 / T6
@@ -224,7 +224,7 @@ class TestT9ContextFrameLookup:
                 img = cv2.imread(str(p))
                 assert img is not None and img.shape[:2] == (3840, 2160), f"{p}"
                 n_ok += 1
-        assert n_ok >= 3 * 54, f"only {n_ok} package images verified"
+        assert n_ok >= 3 * 60, f"only {n_ok} package images verified"
 
 
 # ---------------------------------------------------------------- T10
