@@ -1,0 +1,86 @@
+{
+  "no_gt": true,
+  "no_gt_note": "Track B = 32 locked TEST frames with NO human GT. This file contains ONLY behavioral/execution statistics vs the U00 control. No accuracy metric is or can be reported.",
+  "n_frames": 32,
+  "n_samples": 8,
+  "acted_ratio_threshold": 0.0001,
+  "large_flip_ratio_threshold": 0.5,
+  "per_variant": {
+    "U00": {
+      "n": 0,
+      "acted": 0,
+      "noop": 0,
+      "empty_masks": 0
+    },
+    "U10": {
+      "n": 32,
+      "acted": 0,
+      "noop": 32,
+      "empty_masks": 0
+    },
+    "U01": {
+      "n": 32,
+      "acted": 1,
+      "noop": 31,
+      "empty_masks": 0
+    },
+    "U11": {
+      "n": 32,
+      "acted": 1,
+      "noop": 31,
+      "empty_masks": 0
+    }
+  },
+  "stability": {
+    "U00": {
+      "median_change_ratio": 0.0,
+      "max_change_ratio": 0.0,
+      "large_flip_count": 0,
+      "empty_mask_count": 0
+    },
+    "U10": {
+      "median_change_ratio": 0.0,
+      "max_change_ratio": 0.0,
+      "large_flip_count": 0,
+      "empty_mask_count": 0
+    },
+    "U01": {
+      "median_change_ratio": 0.0,
+      "max_change_ratio": 0.0374449,
+      "large_flip_count": 0,
+      "empty_mask_count": 0
+    },
+    "U11": {
+      "median_change_ratio": 0.0,
+      "max_change_ratio": 0.0374449,
+      "large_flip_count": 0,
+      "empty_mask_count": 0
+    }
+  },
+  "execution": {
+    "U00": {
+      "status": "success",
+      "elapsed_sec": 572.5,
+      "final_masks": 32,
+      "zero_final_masks": 0
+    },
+    "U10": {
+      "status": "success",
+      "elapsed_sec": 594.1,
+      "final_masks": 32,
+      "zero_final_masks": 0
+    },
+    "U01": {
+      "status": "success",
+      "elapsed_sec": 626.6,
+      "final_masks": 32,
+      "zero_final_masks": 0
+    },
+    "U11": {
+      "status": "success",
+      "elapsed_sec": 660.5,
+      "final_masks": 32,
+      "zero_final_masks": 0
+    }
+  }
+}

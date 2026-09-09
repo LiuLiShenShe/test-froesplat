@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "phase": "17A",
+  "description": "Phase 17A budgeted pilot GT10 frozen manifest",
+  "role": "PILOT_GT10",
+  "role_note": "10 human-labeled frames from DEV material (BaiZhang + DouBanLv2). Budgeted pilot subset, NOT a held-out confirmatory test. No pseudo-GT created for unlabeled TEST frames.",
+  "frozen_at_utc": "2026-09-09T04:39:42Z",
+  "gt10_targets": 10,
+  "gt10_samples": [
+    "BaiZhang",
+    "DouBanLv2"
+  ],
+  "gt10_frames": {
+    "BaiZhang": [
+      "0033",
+      "0034",
+      "0035",
+      "0036",
+      "0037"
+    ],
+    "DouBanLv2": [
+      "0037",
+      "0038",
+      "0039",
+      "0040",
+      "0041"
+    ]
+  },
+  "gt_masks_exist_all": true,
+  "gt_masks_missing": [],
+  "no_pseudo_gt": true,
+  "sha256_gt10_manifest": "f596b41775dff82f85156d54a8978969defb4c9e66622358715922687183c7bd",
+  "phase16_test_manifest_sha256_ref": "7504fcbbc2a495502534a6fbbd27e9a57fb6b24ccefb573291851478d08c0157",
+  "phase16_test_manifest_note": "Immutable for Phase 17A (re-derived from CSV)",
+  "source_manifest": "Phase16_selection_manifest_preGT.csv"
+}

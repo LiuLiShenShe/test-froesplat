@@ -1,0 +1,85 @@
+{
+  "n_frames": 10,
+  "factorial_frame_level": {
+    "E_A6": {
+      "mean": -0.00754,
+      "median": -0.000346,
+      "min": -0.028071,
+      "max": 0.0,
+      "n": 10
+    },
+    "E_A7": {
+      "mean": 0.00049,
+      "median": 0.0,
+      "min": -0.0,
+      "max": 0.002798,
+      "n": 10
+    },
+    "I_AB": {
+      "mean": -0.00098,
+      "median": 0.0,
+      "min": -0.005597,
+      "max": 0.0,
+      "n": 10
+    }
+  },
+  "factorial_per_sample_mean": {
+    "BaiZhang": {
+      "E_A6": -0.015079,
+      "E_A7": 0.00098,
+      "I_AB": -0.001961
+    },
+    "DouBanLv2": {
+      "E_A6": 0.0,
+      "E_A7": 0.0,
+      "I_AB": 0.0
+    }
+  },
+  "statistical_caveat": "N=10, 2 sequences, adjacent frames within each sequence — dependent observations. Descriptive only; NO significance claim.",
+  "engagement_outcome": {
+    "P10": {
+      "acted": {
+        "f1_up": 0,
+        "f1_down": 4,
+        "neutral": 0
+      },
+      "not_acted": {
+        "f1_up": 0,
+        "f1_down": 0,
+        "neutral": 6
+      },
+      "noop_count": 6,
+      "acted_count": 4
+    },
+    "P11": {
+      "acted": {
+        "f1_up": 0,
+        "f1_down": 4,
+        "neutral": 0
+      },
+      "not_acted": {
+        "f1_up": 0,
+        "f1_down": 0,
+        "neutral": 6
+      },
+      "noop_count": 6,
+      "acted_count": 4
+    },
+    "P01": {
+      "acted": {
+        "f1_up": 1,
+        "f1_down": 0,
+        "neutral": 3
+      },
+      "not_acted": {
+        "f1_up": 0,
+        "f1_down": 0,
+        "neutral": 6
+      },
+      "noop_count": 6,
+      "acted_count": 4
+    }
+  },
+  "engagement_ratio_threshold": 0.0001,
+  "bitwise_noop_note": "accepted-but-identical-to-control frames are counted as noop."
+}

@@ -1,0 +1,71 @@
+{
+  "runs": {
+    "AP01": {
+      "present": true,
+      "n_samples": 2,
+      "n_seed_sample_ok": 2,
+      "n_cross_sample_leak": 0,
+      "leak_examples": [],
+      "n_missing_seed": 0,
+      "samples_ok": 2,
+      "samples_oom": 0,
+      "samples_seed_empty": 0,
+      "samples_unavailable": 0,
+      "status": "ok",
+      "dangling_session_markers_found": [],
+      "cross_run_isolation": "enforced-by-construction (fresh process per variant, CUDA_VISIBLE_DEVICES scoped)"
+    },
+    "AP11": {
+      "present": true,
+      "n_samples": 2,
+      "n_seed_sample_ok": 2,
+      "n_cross_sample_leak": 0,
+      "leak_examples": [],
+      "n_missing_seed": 0,
+      "samples_ok": 2,
+      "samples_oom": 0,
+      "samples_seed_empty": 0,
+      "samples_unavailable": 0,
+      "status": "ok",
+      "dangling_session_markers_found": [],
+      "cross_run_isolation": "enforced-by-construction (fresh process per variant, CUDA_VISIBLE_DEVICES scoped)"
+    },
+    "BU01": {
+      "present": true,
+      "n_samples": 8,
+      "n_seed_sample_ok": 8,
+      "n_cross_sample_leak": 0,
+      "leak_examples": [],
+      "n_missing_seed": 0,
+      "samples_ok": 8,
+      "samples_oom": 0,
+      "samples_seed_empty": 0,
+      "samples_unavailable": 0,
+      "status": "ok",
+      "dangling_session_markers_found": [],
+      "cross_run_isolation": "enforced-by-construction (fresh process per variant, CUDA_VISIBLE_DEVICES scoped)"
+    },
+    "BU11": {
+      "present": true,
+      "n_samples": 8,
+      "n_seed_sample_ok": 8,
+      "n_cross_sample_leak": 0,
+      "leak_examples": [],
+      "n_missing_seed": 0,
+      "samples_ok": 8,
+      "samples_oom": 0,
+      "samples_seed_empty": 0,
+      "samples_unavailable": 0,
+      "status": "ok",
+      "dangling_session_markers_found": [],
+      "cross_run_isolation": "enforced-by-construction (fresh process per variant, CUDA_VISIBLE_DEVICES scoped)"
+    }
+  },
+  "overall": {
+    "n_runs": 4,
+    "all_present": true,
+    "any_cross_sample_leak": false,
+    "any_dangling_session_marker": false,
+    "lifecycle_note": "Phase 14.1 fix verified: sessions closed via try/finally on every exit path; per-sample seed sample must equal output sample; each variant runs in an isolated process."
+  }
+}
