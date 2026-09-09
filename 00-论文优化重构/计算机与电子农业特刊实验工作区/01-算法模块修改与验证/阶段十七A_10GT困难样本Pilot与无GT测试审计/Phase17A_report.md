@@ -314,6 +314,8 @@ Track B reveals that A6 is **architecturally inert** on 4-frame TEST samples due
 - Phase16 TEST manifest SHA256 immutable (T1).
 - All pipeline runs use identical frozen config; only a6/a7 flags vary.
 - No pipeline code changes — invocation only.
+- **GPU assignment** (extracted from `logs/*.log` `GPU:` lines, round-robin over 2× RTX A6000): P00→0, P10→1, P01→0, P11→1, U00→0, U10→1, U01→0, U11→1. Recorded in `Phase17A_runs_manifest.json`.
+- **GPU state snapshot**: `logs/nvidia-smi_post_phase17a.txt` (post-hoc capture; the runner logged per-run `GPU:` assignment but not pre/post full dumps — documented, not fabricated).
 - Git commit locks state; **no push** per protocol.
 
 ---
@@ -321,8 +323,8 @@ Track B reveals that A6 is **architecturally inert** on 4-frame TEST samples due
 ## 16. Git Commit
 
 ```
-git add 阶段十七A_10GT困难样本Pilot与无GT测试审计/
-git commit -m "Phase17A: 10-GT hard-case pilot (descriptive) + 32-TEST behavioral audit (no GT, no pseudo-GT)"
+d0a9970b  Phase17A: 10-GT hard-case pilot (descriptive) + 32-TEST behavioral audit (no GT, no pseudo-GT)
+          + follow-up commit (runs-manifest cuda_device fill, nvidia-smi snapshot, report finalize)
 ```
 
 **Push: NOT executed** per user constraint "不得自动 push".
