@@ -1,6 +1,6 @@
 # Phase 16 — Hard-case GT Challenge Set Construction and Split Freeze
 
-**日期**: 2026-09-07 → 2026-09-08 更新（用户手动选帧 + 标注 10 帧）
+**日期**: 2026-09-07 → 2026-09-09 更新（用户手动选帧 + 标注 10 帧；TEST 32 帧脚本选出）
 **Scope**: 构建真正硬案例 GT 挑战集：确定性 sample-level DEV/TEST 切分、帧选择清单冻结、
 标注协议与标注包、GT QA 门控、清单 SHA256 锁定。**本阶段不进行任何 A6/A7 评估。**
 **Starting SHA**: `ad1c7395`（Phase 15 commit，工作树干净）
@@ -30,12 +30,12 @@ Phase 15 封口后状态：
 | 交付物 | 内容 | 状态 |
 |---|---|---|
 | `Phase16_input_audit.md` | 数据池完整审计 | ✅ 自动生成 |
-| `Phase16_selection_manifest_preGT.csv` | 26 目标帧清单（预 GT） | ✅ |
+| `Phase16_selection_manifest_preGT.csv` | 58 目标帧清单（预 GT） | ✅ |
 | `Phase16_DEV_manifest.csv` | 26 帧 / 2 sample（BaiZhang, DouBanLv2） | ✅ |
-| `Phase16_TEST_manifest.csv` | 0 帧 / 0 sample（TEST 待用户选帧） | ✅ |
-| `Phase16_manifest.json` | SHA256 冻结（清单 + 逐帧图像校验和 26/26） | ✅ |
+| `Phase16_TEST_manifest.csv` | 32 帧 / 8 sample | ✅ |
+| `Phase16_manifest.json` | SHA256 冻结（清单 + 58/58 逐帧图像校验和） | ✅ |
 | `Phase16_GT_annotation_protocol.md` | 标注协议（身份规则、包含/排除、QA 门） | ✅ |
-| `annotation_package/` | 26 个标注目录（target + 上下文 + 说明卡 + 联系表） | ✅ |
+| `annotation_package/` | 58 个标注目录（target + 上下文 + 说明卡 + 联系表） | ✅ |
 | `脚本/process_gt_challenge.py` | 升级版 GT 处理（Q1-Q8 QA 门控） | ✅ |
 | `tests/test_phase16.py` | T1-T12 测试（16 项断言） | ✅ 16/16 通过 |
 | `Phase16_report.md` | 本报告 | ✅ |
@@ -49,7 +49,7 @@ Phase 15 封口后状态：
 | 21 帧 easy set（Phase 12） | 21 | Yes | 历史基准（冻结，不碰） |
 | 15 non-GT samples | ~3,752 帧 | No | 挑战集数据池 |
 | 60 难度候选（Phase 15） | 60 | No | 帧选择候选池 |
-| **Phase 16 目标帧** | **26** | **10 已标注 / 16 待标注** | 挑战 GT |
+| **Phase 16 目标帧** | **58** | **10 已标注（人类 GT）/ 48 待标注** | 挑战 GT |
 | COLMAP sparse/0 | 15/15 | — | A6/A7 运行时依赖（Phase 17） |
 
 COLMAP 注意：WangWenCao1 注册率仅 70.6%，已放入 DEV（不入锁定 TEST）。
@@ -103,18 +103,23 @@ T2/T3/T11 测试锁定该不变式。
 3. 每个四分位取难度最高（composite max）的一帧。
 4. 不足则用剩余最难帧补齐（`select_targets` 的 fill-remainder 分支）。
 
-**结果**（用户手动选帧覆盖自动选择）：
+**结果**（用户手动选帧覆盖自动选择；TEST 由脚本按同一密度准则选出）：
 
 | Split | 帧数 | 样本 | 帧索引范围 |
 |---|---|---|---|
 | DEV | 26 | BaiZhang(13), DouBanLv2(13) | BaiZhang 0033–0045, DouBanLv2 0029–0041 |
-| TEST | 0 | （待用户选帧） | — |
+| TEST | 32 | 8 个 TEST 样本各 4 帧 | 见下 |
 | **已标注** | **10** | BaiZhang(5) + DouBanLv2(5) | BaiZhang 0033–0037, DouBanLv2 0037–0041 |
-| **待标注** | **16** | BaiZhang(8) + DouBanLv2(8) | BaiZhang 0038–0045, DouBanLv2 0029–0036 |
+| **待标注** | **48** | 剩余 DEV 16 + TEST 32 | — |
 
-26 帧由用户从 ffmpeg 目录手动挑选：要求画面背景可见其他植株/盆栽（多株共存场景），
+DEV 26 帧由用户从 ffmpeg 目录手动挑选：要求画面背景可见其他植株/盆栽（多株共存场景），
 已通过 multi-plant density metric（green% × 横向峰值）客观验证：
 BaiZhang 0033–0045（绿 25–34%，峰 8–15），DouBanLv2 0029–0041（绿 14–23%，峰 6–12）。
+
+TEST 32 帧由脚本按同一密度准则（green%×peaks 前 4）从 8 个 TEST 样本选出：
+CaoMei2(0007-0009,0146), ChangShouHua3(0189-0191,0200), DouBanLv3(0211,0220-0222),
+HongZhang(0134,0200,0202,0229), WangWenCao2(0014-0017), WanNianQing1(0223-0225,0227),
+XiangPiShu2(0133-0136), XianKeLai3(0117,0133,0141,0204)。
 
 ## §6. Difficulty Taxonomy (Heuristic, Model-Independent)
 
@@ -154,7 +159,7 @@ BaiZhang 0033–0045（绿 25–34%，峰 8–15），DouBanLv2 0029–0041（�
 - `context_start = max(0, frame-5)`
 - `context_end = min(total-1, frame+5)`
 
-54 帧（原始规划 54 帧）→ 当前 26 帧由用户手动选择，全部通过 T9 校验：上下文帧真实存在、窗口包含目标帧。标注包内置
+58 帧（26 用户手动 DEV + 32 脚本密度 TEST）→ 全部通过 T9 校验：上下文帧真实存在、窗口包含目标帧。标注包内置 `context_prev.jpg` / `context_next.jpg` 供标注员确认目标个体身份。
 `context_prev.jpg` / `context_next.jpg` 供标注员确认目标个体身份。
 
 **数据质量发现**：WangWenCao1_0220.jpg 损坏不可读（cv2.imread 返回 None）。
@@ -177,7 +182,7 @@ BaiZhang 0033–0045（绿 25–34%，峰 8–15），DouBanLv2 0029–0041（�
 
 ## §9. Annotation Package
 
-`annotation_package/`：26 个目录（用户手动选帧）+ 联系表 + 无模型输出。
+`annotation_package/`：58 个目录（26 DEV 用户选帧 + 32 TEST 脚本选帧）+ 联系表 + 无模型输出。
 
 ```
 annotation_package/
@@ -186,13 +191,14 @@ annotation_package/
 │   ├── context_prev.jpg     # 上下文前帧（±5 窗口内最近可用）
 │   ├── context_next.jpg     # 上下文后帧
 │   └── instruction_card.md  # 难度标签 + 身份规则 + 原始路径
-├── ...（26 目录）
+├── ...（58 目录）
 └── contact_sheets/
     ├── BaiZhang_contact.jpg # 该 sample 全部目标帧网格
-    └── DouBanLv2_contact.jpg
+    ├── DouBanLv2_contact.jpg
+    └── ...（8 张 TEST sample 联系表）
 ```
 
-验证：26/26 target 可读且形状正确、所有上下文文件存在、无 V10/V11/mask 等模型产物渗漏。
+验证：58/58 target 可读且形状正确、所有上下文文件存在、无 V10/V11/mask 等模型产物渗漏。
 
 ## §10. Manifest Freeze (SHA256)
 
@@ -200,11 +206,11 @@ annotation_package/
 
 | 哈希 | 值 |
 |---|---|
-| sha256_full_manifest | `063b33b9d7559eb0400528978993a63cbe0146e44e40f4c5d38fc0dfa7ba3cc6` |
+| sha256_full_manifest | `792a6724a2d7deaabaa562243dbcbd9f959e65690ee3ec6faa1ab1767a55f807` |
 | sha256_dev_manifest | `063b33b9d7559eb0400528978993a63cbe0146e44e40f4c5d38fc0dfa7ba3cc6` |
-| sha256_test_manifest | `7bd90c027063a01614ef6e96744a9cab95abec3bacc73ba863c77b4f770a0bdf` |
+| sha256_test_manifest | `7504fcbbc2a495502534a6fbbd27e9a57fb6b24ccefb573291851478d08c0157` |
 
-- 26/26 目标帧逐帧 SHA256 图像校验和（基于**原始帧**，非重编码副本）。
+- 58/58 目标帧逐帧 SHA256 图像校验和（基于**原始帧**，非重编码副本）。
 - 确定性：相同输入行 + 相同顺序 → 相同哈希（T8 验证：重算与 manifest.json 完全一致）。
 - **TEST manifest 对 Phase 17 不可变**（T12 锁定）。
 
@@ -242,8 +248,8 @@ annotation_package/
 | T8 | manifest.json SHA256 与 CSV 重算一致（full/DEV/TEST） |
 | T9 | 上下文帧存在、可读、形状正确、包含目标帧 |
 | T10 | 挑战 GT 输出路径与 Phase 12 冻结 GT 隔离；21 帧冻结 GT 未变 |
-| T11 | DEV/TEST manifest 行级交集为空，26/0 数量 |
-| T12 | TEST manifest 哈希冻结；26 帧原始图校验和与磁盘一致 |
+| T11 | DEV/TEST manifest 行级交集为空，26/32 数量 |
+| T12 | TEST manifest 哈希冻结；58 帧原始图校验和与磁盘一致 |
 
 **全量回归**：阶段十一/十二/十三/十四点一 + 阶段十六 = **100 passed**（84 历史 + 16 新增）。
 
@@ -292,12 +298,12 @@ annotation_package/
 | Gate | 判据 | 状态 |
 |---|---|---|
 | G1 | 15 non-GT samples 全部审计 | ✅ PASS（input audit） |
-| G2 | 候选选择协议冻结 | ✅ PASS（手动选帧 + manifest 确定性） |
+| G2 | 候选选择协议冻结 | ✅ PASS（用户手动选帧 DEV + 脚本密度选帧 TEST + manifest 确定性） |
 | G3 | 切分为 sample/sequence 级 | ✅ PASS（T3） |
 | G4 | DEV∩TEST sample = ∅ | ✅ PASS（T2） |
 | G5 | DEV∩TEST sequence = ∅ | ✅ PASS（T3） |
-| G6 | 48–60 GT 目标 | ⏸ PARTIAL（用户手动选 26 帧，INTDEV；TEST 待选） |
-| G7 | 26 帧 DEV GT 全部标注 | ⚠️ 10/26 已标注（16 待标注） |
+| G6 | 48–60 GT 目标 | ✅ PASS（58：26 DEV + 32 TEST） |
+| G7 | DEV GT 全部标注 | ⚠️ 10/26 已标注（16 待标注） |
 | G8 | GT QA 通过 | ✅ PASS（10/10 P6 valid，0 QA fail，0 重复） |
 | G9 | 目标身份协议文档化 | ✅ PASS（Phase16_GT_annotation_protocol.md §3） |
 | G10 | 最终 manifest SHA256 冻结 | ✅ PASS（Phase16_manifest.json） |
@@ -309,21 +315,20 @@ annotation_package/
 
 ## §18. Status and Next Steps
 
-**本阶段执行结果：PARTIAL — 人工 GT 标注进行中（10/26 完成）。**
+**本阶段执行结果：PARTIAL — 帧选择完成（58），人类 GT 标注 10/58。**
 
 当前状态：
-- ✅ 用户手动选帧 26（BaiZhang 0033–0045，DouBanLv2 0029–0041），全部 DEV。
+- ✅ DEV 26 帧（用户手动选帧：BaiZhang 0033–0045，DouBanLv2 0029–0041）。
+- ✅ TEST 32 帧（脚本按同一密度准则选出，8 样本各 4 帧）。
 - ✅ 用户已标注 10 帧（各 5 帧），QA 全部通过（Q1–Q8，10/10 P6 valid）。
-- ⏳ 剩余 16 帧待标注：BaiZhang 0038–0045、DouBanLv2 0029–0036。
-- ⛔ TEST 集尚无帧——用户是否继续选择 TEST 样本的帧待确认。
+- ⏳ 剩余 48 帧待标注：DEV 16 + TEST 32。
 
 下一步：
-1. 继续标注剩余 16 帧（待标注帧已备好在 annotation_package/HARD-*）
+1. 继续标注剩余帧（待标注帧已备好在 annotation_package/HARD-*）
 2. 标注输出到 `/data/fj/F2DMAS/03-GT-区分_challenge/<sample>/<frame>.json`
 3. 运行 `脚本/process_gt_challenge.py` → 更新 GT_potted_clean_challenge + QA
 4. 目视复核 QA 可视化
-5. （可选）用户从 ffmpeg 目录为 TEST split 样本选帧 → 更新 manifest → 重跑 freeze
-6. 全部标注完成后进入 Phase 17（锁定硬案例析因评估）
+5. TEST GT 就绪后进入 Phase 17（锁定硬案例析因评估）
 
 ## §19. Output Directory
 
@@ -333,11 +338,11 @@ annotation_package/
 ├── Phase16_GT_annotation_protocol.md  # 标注协议
 ├── Phase16_report.md               # 本报告
 ├── 挑战集列表/
-│   ├── Phase16_selection_manifest_preGT.csv  # 26 帧选择清单（gt_status 10 已标注/16 待标注）
+│   ├── Phase16_selection_manifest_preGT.csv  # 58 帧选择清单（gt_status 10 已标注/48 待标注）
 │   ├── Phase16_DEV_manifest.csv    # 26 帧 / 2 sample
-│   ├── Phase16_TEST_manifest.csv   # 0 帧（TEST 待选）
-│   └── Phase16_manifest.json       # SHA256 冻结
-├── annotation_package/             # 26 标注目录 + 联系表
+│   ├── Phase16_TEST_manifest.csv   # 32 帧 / 8 sample
+│   └── Phase16_manifest.json       # SHA256 冻结（58/58 校验和）
+├── annotation_package/             # 58 标注目录 + 联系表
 ├── GT_potted_clean_challenge/      # 10 张挑战 GT 掩膜（BaiZhang 0033-0037, DouBanLv2 0037-0041）
 ├── GT_QA_challenge/                # gt_audit_challenge.csv + 可视化复核
 ├── 脚本/
@@ -356,8 +361,8 @@ annotation_package/
 Python / env：  /home/test/biosoft/enter/envs/sam3/bin/python
 GPU：            未使用（零计算路径）
 输入：          Phase 15 difficulty_ranking.csv + dataset_index.json + raw_frames
-帧选择：        ffmpeg 目录手动选择（用户）+ multi-plant density 客观度量审计
-GT：            /data/fj/F2DMAS/03-GT-区分_challenge/（10 已标注 / 16 待标注）
+帧选择：        DEV 26 帧用户从 ffmpeg 手动选择；TEST 32 帧脚本按 multi-plant density（绿%×峰）选出
+GT：            /data/fj/F2DMAS/03-GT-区分_challenge/（10 已有标注 / 48 待标注）
 脚本：          阶段十六_HardCase_GT构建与锁定/脚本/ 下全部 .py
 测试：          tests/test_phase16.py（100/100 全量回归）
 ```

@@ -109,7 +109,7 @@ class TestT11SplitIntersectionEmpty:
         dev_keys = {(r["sample"], r["frame"]) for r in dev}
         test_keys = {(r["sample"], r["frame"]) for r in test}
         assert dev_keys.isdisjoint(test_keys)
-        assert len(dev) == 26 and len(test) == 0, f"{len(dev)}/{len(test)}"
+        assert len(dev) == 26 and len(test) == 32, f"{len(dev)}/{len(test)}"
 
 
 # ---------------------------------------------------------------- T4 / T5 / T6
@@ -232,7 +232,7 @@ class TestT9ContextFrameLookup:
                 img = cv2.imread(str(p))
                 assert img is not None and img.shape[:2] == (3840, 2160), f"{p}"
                 n_ok += 1
-        assert n_ok >= 3 * 26, f"only {n_ok} package images verified"
+        assert n_ok >= 3 * len(rows), f"only {n_ok} package images verified"
 
 
 # ---------------------------------------------------------------- T10
@@ -274,10 +274,10 @@ class TestT12TestManifestImmutable:
             return
         meta = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
         chk = meta.get("image_sha256", {})
-        assert len(chk) >= 26, f"only {len(chk)} image checksums recorded"
         # map challenge_id -> raw image_path (manifest records hashes of the
         # ORIGINAL raw frames, not the re-encoded package copies)
         rows = _load(MANIFEST)
+        assert len(chk) == len(rows), f"{len(chk)} image checksums != {len(rows)} rows"
         cid_to_path = {r["challenge_id"]: r["image_path"] for r in rows}
         for cid, sha in chk.items():
             raw_path = Path(cid_to_path[cid])
