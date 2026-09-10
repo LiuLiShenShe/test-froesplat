@@ -26,6 +26,7 @@ from PIL import Image
 from scipy import ndimage
 from scipy.ndimage import binary_closing, binary_dilation, binary_fill_holes, binary_opening
 from skimage.metrics import structural_similarity
+from ranking_policy import primary_and_tiebreak, select_best_policy, POLICY_NAMES
 
 
 ROOT = Path("/data/fj/F2DMAS")
@@ -103,6 +104,11 @@ class ScoreRecord:
     center_prior_score: float = 0.0
     leak_penalty: float = 0.0
     empty_flag: bool = False
+    # ── Phase 17C §17/§19: ranking-policy fields (diagnostics + counterfactual selection) ──
+    ranking_policy: str = "r1"
+    primary_score: float = 0.0
+    tie_break_score: float = 0.0
+    contrast_effective: float = 0.0
 
 
 @dataclass
@@ -648,6 +654,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fusion_threshold", type=float, default=0.5)
     parser.add_argument("--score_weights", default="area=1,comp=1,edge=1,temp=1,contrast=1,sam=0.5",
                         help="阶段十二 §三.4：评分权重，默认含 sam=0.5（非零）")
+    parser.add_argument("--ranking_policy",
+                        choices=["base", "r1", "r2", "r3"],
+                        default="r1",
+                        help="Phase 17C §17：候选排序策略。r1=修复后默认（q_contrast排除出主评分）；"
+                             "r1=剔除 q_contrast 的主评分；r2=r1 主评分 + q_contrast 仅精确平局决胜；"
+                             "r3=q_contrast×q_area 调制对比。仅结构变更，不涉及权重搜索。")
     # 阶段十一 §4.5 时序对齐门控：仅在显式配准后启用时序项，否则置中性 0.5
     parser.add_argument("--use_temporal_alignment", action="store_true",
                         help="§4.5：启用光流/单应配准后的时序 IoU；默认关（Pass2 关），未配准时序项置中性值。")
@@ -1537,6 +1549,7 @@ def score_candidate(
     mask = candidate.mask
     # ── 阶段十一 §4.1 空掩膜硬门：不再因时序默认满分得高分 ──
     if not mask.any():
+        empty_policy = getattr(args, "ranking_policy", "r1")
         return ScoreRecord(
             image_name=image_path.name,
             prompt_id=candidate.prompt_id,
@@ -1549,6 +1562,10 @@ def score_candidate(
             sam_scores=";".join(f"{s:.6f}" for s in candidate.scores),
             instance_id=candidate.instance_id,
             empty_flag=True,
+            ranking_policy=empty_policy,
+            primary_score=0.0,
+            tie_break_score=0.0,
+            contrast_effective=0.0,
         )
     total_pixels = mask.size
     area_ratio = float(mask.sum() / total_pixels) if total_pixels else 0.0
@@ -1606,6 +1623,19 @@ def score_candidate(
     if args.use_semantic_gate and semantic_context is not None:
         semantic = semantic_gate_scores(mask, semantic_context, args)
     total = base_total + semantic["semantic_total"] - risk_penalty
+    # ── Phase 17C §17: counterfactual ranking policy (pure function, no tuning) ──
+    policy = getattr(args, "ranking_policy", "r1")
+    primary_score, tie_break_score = primary_and_tiebreak(
+        base_total=base_total,
+        q_contrast=q_contrast,
+        q_area=q_area,
+        w_contrast=weights.get("contrast", 0.0),
+        denom=denom,
+        semantic_total=semantic["semantic_total"],
+        penalty=risk_penalty,
+        policy=policy,
+    )
+    contrast_effective = float(q_contrast * q_area)
     return ScoreRecord(
         image_name=image_path.name,
         prompt_id=candidate.prompt_id,
@@ -1635,6 +1665,10 @@ def score_candidate(
         side_distractor_penalty=float(semantic["side_distractor_penalty"]),
         center_prior_score=float(semantic["center_prior_score"]),
         leak_penalty=float(risk_penalty),
+        ranking_policy=policy,
+        primary_score=float(primary_score),
+        tie_break_score=float(tie_break_score),
+        contrast_effective=float(contrast_effective),
     )
 
 
@@ -1682,18 +1716,23 @@ def select_mask(
     # per_instance 模式：default_prompt 下有多个实例候选，按评分选最佳实例
     if len(default_cands) > 1 and args.candidate_mode == "per_instance":
         rec_by_id = {(r.prompt_id, getattr(r, "instance_id", 0)): r for r in score_records}
-        best_item = None
-        best_score = -1e9
-        for item in default_cands:
-            r = rec_by_id.get((item.prompt_id, item.instance_id))
-            sc = float(r.total_score) if r is not None else 0.0
-            if sc > best_score:
-                best_score = sc
-                best_item = item
+        default_recs = [
+            rec_by_id[(item.prompt_id, item.instance_id)]
+            for item in default_cands
+            if (item.prompt_id, item.instance_id) in rec_by_id
+        ]
+        # Phase 17C §17: selection uses ranking_policy pure function (single source of truth)
+        best_rec = select_best_policy(default_recs, getattr(args, "ranking_policy", "r1"))
+        best_item = next(
+            (item for item in default_cands
+             if item.prompt_id == best_rec.prompt_id and item.instance_id == best_rec.instance_id),
+            default_cands[0],
+        )
         # §4.7 重提示触发：top1 与 top2 分差 < 阈值 → 候选不确定，需重提示
         sorted_recs = sorted(score_records, key=lambda r: r.total_score, reverse=True)
         needs_reprompt = len(sorted_recs) >= 2 and (sorted_recs[0].total_score - sorted_recs[1].total_score) < args.reprompt_score_gap
-        return best_item.mask.copy(), f"{prompt_id}#{best_item.instance_id}", float(best_score), bool(needs_reprompt)
+        best_score = float(getattr(best_rec, "primary_score", best_rec.total_score))
+        return best_item.mask.copy(), f"{prompt_id}#{best_item.instance_id}", best_score, bool(needs_reprompt)
     row = next((r for r in score_records if r.prompt_id == prompt_id), None)
     # 单一候选：空掩膜或低分 → 触发重提示
     needs_reprompt = (row is None) or (row.total_score < args.reprompt_min_score) or bool(getattr(row, "empty_flag", False))
@@ -2592,6 +2631,10 @@ def score_to_dict(row: ScoreRecord) -> dict[str, Any]:
         "下方区域占比": row.bottom_leak_fraction,
         "侧边区域占比": row.side_leak_fraction,
         "SAM3原始分数": row.sam_scores,
+        "排名策略": getattr(row, "ranking_policy", "base"),
+        "主评分": getattr(row, "primary_score", 0.0),
+        "对比度调制": getattr(row, "contrast_effective", 0.0),
+        "平局决胜分": getattr(row, "tie_break_score", 0.0),
     }
 
 
@@ -2816,8 +2859,15 @@ def main() -> int:
             )
             for item in candidates
         ]
-        # ── 按 total_score 降序排名，回填 rank（逐实例） ──
-        ranked_indices = sorted(range(len(score_records)), key=lambda i: score_records[i].total_score, reverse=True)
+        # ── 按策略主评分降序排名，回填 rank（逐实例）；base 策略下等价于历史 total_score 排序 ──
+        ranked_indices = sorted(
+            range(len(score_records)),
+            key=lambda i: (
+                float(getattr(score_records[i], "primary_score", score_records[i].total_score)),
+                score_records[i].total_score,
+            ),
+            reverse=True,
+        )
         rank_map = {orig_idx: rank for rank, orig_idx in enumerate(ranked_indices)}
         for row_idx in ranked_indices:
             score_records[row_idx].instance_id = candidates[row_idx].instance_id

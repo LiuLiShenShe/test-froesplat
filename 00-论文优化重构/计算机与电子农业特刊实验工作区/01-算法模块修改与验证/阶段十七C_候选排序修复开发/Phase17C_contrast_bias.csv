@@ -1,0 +1,9 @@
+﻿subset,n,spearman_rho,spearman_p,mean_q_contrast,median_q_contrast,pct_q_contrast_ge_0.8,mean_q_contrast_small(a<0.06),mean_q_contrast_large(a>=0.06),note,verdict
+"ALL candidates (DEV10+Easy21, 182)",182,-0.2927,6.1e-05,0.7952,1.0,65.9,0.8836,0.5683,,NOT SUPPORTED (weak/absent negative correlation)
+DEV10 only (157),157,-0.2145,0.006982,0.8193,1.0,68.8,0.8799,0.5626,,
+Easy21 only (25),25,-0.2273,0.274458,0.6441,0.577,48.0,1.0,0.5764,,
+DEV10 GT-scope (30),30,-0.2425,0.196659,0.7088,0.8241,53.3,0.8131,0.5003,,
+Failure frames 0039/0040/0041 (14),14,-0.7187,0.003781,0.8259,1.0,78.6,1.0,0.1876,all 3 frames: selected spurious small instance,
+Oracle candidates (GT-scope),31,0.2029,0.273559,0.5518,0.5178,38.7,,0.5518,the correct instance per GT frame,
+Non-oracle candidates (GT-scope),24,0.3149,0.133906,0.8442,1.0,66.7,0.8442,,wrong / partial instances,
+Selected candidates (GT-scope),31,-0.078,0.67676,0.6304,0.7863,48.4,1.0,0.5909,what pipeline selected,

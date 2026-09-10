@@ -1,0 +1,31 @@
+{
+  "phase": "17C",
+  "description": "Candidate ranking rescue development (zero-inference counterfactual)",
+  "starting_sha": "26da29e6197ac4d009102a8ee43346c34dc58c55",
+  "phase17b_sha": "26da29e6197ac4d009102a8ee43346c34dc58c55",
+  "phase17a_sha": "d656851efd0e687e87238086857bd4d594f60cdd",
+  "phase16_test_manifest_sha256_ref": "7504fcbbc2a495502534a6fbbd27e9a57fb6b24ccefb573291851478d08c0157",
+  "no_a6a7": true,
+  "no_tuning": true,
+  "no_sam3_inference": true,
+  "zero_inference": true,
+  "denom": 5.5,
+  "frozen_weights": "area=1,comp=1,edge=1,temp=1,contrast=1,sam=0.5",
+  "dev10_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/01-算法模块修改与验证/阶段十七A_10GT困难样本Pilot与无GT测试审计/02_trackA_variants/P00_Control",
+  "easy21_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/01-算法模块修改与验证/阶段十四_A6A7真实数据析因消融/V00_Control",
+  "winner": "r1",
+  "steps_completed": {
+    "0_1": {"status": "PASS", "sha_recorded": "26da29e6"},
+    "3":   {"status": "PASS", "rows": 182},
+    "4_6": {"status": "PASS", "contrast_bias_spearman_full": -0.2927, "ablation_contrast_drop_rescue": "3/3"},
+    "8":   {"status": "PASS", "winner": "r1", "rescue_3_3": true, "dev_reg_0": true, "easy21_reg_0": true},
+    "17":  {"status": "PASS", "files": ["ranking_policy.py", "生成RAP-FSAM3掩膜.py (6 edits)"]},
+    "20":  {"status": "PASS", "tests": "11/11"},
+    "21":  {"status": "PASS", "replay_match": "31/31"},
+    "22":  {"status": "SKIPPED", "reason": "strict zero-inference (user choice)"},
+    "26":  {"status": "PASS", "frames": 32, "churn_pct": 6.2, "mask_iou": 0.9375, "empty": 0, "risk": "ok"},
+    "27":  {"status": "PASS", "default_changed": "base→r1", "location": "S20/生成RAP-FSAM3掩膜.py:659"},
+    "29":  {"status": "PASS", "historical": "131/131", "phase17c": "11/11", "total": "142/142"},
+    "30":  {"status": "PASS", "phase17b_preserved": true, "phase16_manifest_immutable": true, "old_reports_unchanged": true}
+  }
+}
