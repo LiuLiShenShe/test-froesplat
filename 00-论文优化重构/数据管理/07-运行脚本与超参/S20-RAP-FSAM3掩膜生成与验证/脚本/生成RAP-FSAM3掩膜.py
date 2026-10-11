@@ -27,6 +27,7 @@ from scipy import ndimage
 from scipy.ndimage import binary_closing, binary_dilation, binary_fill_holes, binary_opening
 from skimage.metrics import structural_similarity
 from ranking_policy import primary_and_tiebreak, select_best_policy, POLICY_NAMES
+from candidate_metadata import file_sha256, load_cache_metadata, metadata_for_mask
 
 
 ROOT = Path("/data/fj/F2DMAS")
@@ -72,6 +73,12 @@ class Candidate:
     mask_threshold: float = 0.5
     source_stage: str = "raw"
     prompt_mode: str = "legacy_union"
+    candidate_order: int = 0
+    metadata_status: str = "GENERATED"
+    source_image_name: str = ""
+    source_image_sha256: str = ""
+    mask_sha256: str = ""
+    score_precision: str = "GENERATED_FLOAT"
 
 @dataclass
 class ScoreRecord:
@@ -625,6 +632,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry_run", action="store_true")
     parser.add_argument("--reuse_existing_candidates", action="store_true")
     parser.add_argument("--candidate_source_dir", type=Path, default=None)
+    parser.add_argument("--candidate_metadata_dir", type=Path, default=None)
+    parser.add_argument("--candidate_metadata_strict", action="store_true")
     parser.add_argument(
         "--candidate_mode",
         choices=["legacy_union", "per_instance"],
@@ -1075,7 +1084,7 @@ def infer_candidates(
                             prompt_id=prompt_id, prompt_text=prompt_texts[prompt_id],
                             mask=np.zeros((h, w), dtype=bool), scores=scores,
                             raw_detection_count=0, instance_id=0, box=None,
-                            sam_score=0.0, mask_threshold=0.5, source_stage="raw",
+                            sam_score=0.0, mask_threshold=args.sam3_mask_threshold, source_stage="raw",
                             prompt_mode="per_instance",
                         )
                     )
@@ -1091,7 +1100,7 @@ def infer_candidates(
                             instance_id=i,
                             box=box,
                             sam_score=float(sc),
-                            mask_threshold=0.5,
+                            mask_threshold=args.sam3_mask_threshold,
                             source_stage="raw",
                             prompt_mode="per_instance",
                         )
@@ -1124,53 +1133,76 @@ def load_existing_candidates(
     prompt_texts: dict[str, str],
     output_dir: Path,
     candidate_source_dir: Path | None = None,
+    candidate_metadata_dir: Path | None = None,
+    candidate_metadata_strict: bool = False,
 ) -> list[Candidate]:
     candidates = []
     source_dir = candidate_source_dir if candidate_source_dir is not None else output_dir
+    metadata = load_cache_metadata(image_path, source_dir, candidate_metadata_dir)
     for prompt_id in prompt_ids:
         # 优先复用 per_instance 原始实例（raw_instance_<prompt>_<i>.png）
         raw_dir = source_dir / "候选掩膜" / f"raw_instance_{prompt_id}"
         raw_files = sorted(raw_dir.glob(f"mask_{image_path.stem}_*.png")) if raw_dir.exists() else []
         if raw_files:
-            for i, rp in enumerate(raw_files):
-                inst = 0
+            if candidate_metadata_strict:
+                mask_ids = {int(path.stem.rsplit("_", 1)[1]) for path in raw_files}
+                metadata_ids = {instance for prompt, instance in metadata if prompt == prompt_id}
+                if mask_ids != metadata_ids:
+                    raise ValueError(f"METADATA_UNVERIFIED: incomplete candidate identity set for {image_path.name}/{prompt_id}")
+            prompt_candidates = []
+            for rp in raw_files:
                 try:
                     suffix = rp.stem.split("_")[-1]
                     inst = int(suffix)
                 except (ValueError, IndexError):
-                    inst = i
-                candidates.append(
+                    raise ValueError(f"Candidate filename has no reliable instance identity: {rp}")
+                entry, status = metadata_for_mask(metadata, prompt_id, inst, rp, candidate_metadata_strict)
+                prompt_candidates.append(
                     Candidate(
                         prompt_id=prompt_id,
                         prompt_text=prompt_texts[prompt_id],
                         mask=load_mask(rp),
-                        scores=[],
-                        raw_detection_count=len(raw_files),
+                        scores=list(entry.get("scores", [])),
+                        raw_detection_count=int(entry.get("raw_detection_count", len(raw_files))),
                         instance_id=inst,
-                        box=None,
-                        sam_score=0.0,
-                        mask_threshold=0.5,
+                        box=entry.get("box"),
+                        sam_score=float(entry.get("sam_score", 0.0)),
+                        mask_threshold=float(entry.get("mask_threshold", 0.5)),
                         source_stage="reused",
                         prompt_mode="per_instance",
+                        candidate_order=int(entry.get("candidate_order", inst)),
+                        metadata_status=status,
+                        source_image_name=entry.get("source_image_name", image_path.name),
+                        source_image_sha256=entry.get("image_sha256", ""),
+                        mask_sha256=entry.get("mask_sha256", ""),
+                        score_precision=entry.get("score_precision", "ARCHIVED_UNKNOWN_PRECISION"),
                     )
                 )
+            candidates.extend(sorted(prompt_candidates, key=lambda item: item.candidate_order) if metadata else prompt_candidates)
             continue
         mask_path = source_dir / "候选掩膜" / prompt_dir_name(prompt_id) / f"mask_{image_path.stem}.png"
         if not mask_path.exists():
             raise FileNotFoundError(f"Existing candidate mask not found: {mask_path}")
+        entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
         candidates.append(
             Candidate(
                 prompt_id=prompt_id,
                 prompt_text=prompt_texts[prompt_id],
                 mask=load_mask(mask_path),
-                scores=[],
-                raw_detection_count=0,
+                scores=list(entry.get("scores", [])),
+                raw_detection_count=int(entry.get("raw_detection_count", 0)),
                 instance_id=0,
-                box=None,
-                sam_score=0.0,
-                mask_threshold=0.5,
+                box=entry.get("box"),
+                sam_score=float(entry.get("sam_score", 0.0)),
+                mask_threshold=float(entry.get("mask_threshold", 0.5)),
                 source_stage="reused",
                 prompt_mode="legacy_union",
+                candidate_order=int(entry.get("candidate_order", 0)),
+                metadata_status=status,
+                source_image_name=entry.get("source_image_name", image_path.name),
+                source_image_sha256=entry.get("image_sha256", ""),
+                mask_sha256=entry.get("mask_sha256", ""),
+                score_precision=entry.get("score_precision", "ARCHIVED_UNKNOWN_PRECISION"),
             )
         )
     return candidates
@@ -2826,6 +2858,8 @@ def main() -> int:
                 prompt_texts,
                 args.output_dir,
                 args.candidate_source_dir,
+                args.candidate_metadata_dir,
+                args.candidate_metadata_strict,
             )
         else:
             assert processor is not None and torch_module is not None
@@ -2888,6 +2922,25 @@ def main() -> int:
                 "面积比例", "掩膜阈值", "来源阶段", "候选模式", "排名", "是否空掩膜",
             ]
             write_csv(detail_path, per_frame_detail, detail_fields)
+            image_hash = file_sha256(image_path)
+            metadata_entries = []
+            for order, item in enumerate(candidates):
+                metadata_entries.append({
+                    "prompt_id": item.prompt_id, "instance_id": item.instance_id,
+                    "sam_score": float(item.sam_score), "box": item.box,
+                    "mask_threshold": item.mask_threshold, "candidate_order": order,
+                    "scores": item.scores, "raw_detection_count": item.raw_detection_count,
+                    "prompt_mode": item.prompt_mode, "metadata_status": item.metadata_status,
+                    "score_precision": item.score_precision,
+                    "mask_sha256": item.mask_sha256 or (
+                        file_sha256(dirs["candidate"] / f"raw_instance_{item.prompt_id}" / f"mask_{image_path.stem}_{item.instance_id:02d}.png")
+                        if args.candidate_mode == "per_instance" and args.save_raw_instance_masks and not args.reuse_existing_candidates
+                        else ""),
+                })
+            metadata_path = dirs["candidate"] / f"候选元数据_{image_path.stem}.json"
+            metadata_path.write_text(json.dumps({"schema_version": 1, "image_name": image_path.name,
+                                               "image_sha256": image_hash, "candidates": metadata_entries},
+                                              ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         selected_mask, selected_prompt, selected_score, needs_reprompt = select_mask(
             image_path, candidates, score_records, prompt_texts, args
         )

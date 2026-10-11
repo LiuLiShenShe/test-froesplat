@@ -1,0 +1,24 @@
+{"command": ["/home/test/biosoft/enter/bin/python", "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py", "--input_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/inputs/GT10", "--output_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V5/GT10", "--sam3_repo", "/data/fj/F2DMAS/第三方源码/SAM3-latest", "--sam3_checkpoint", "/data/fj/F2DMAS/sam3/sam3.pt", "--device", "cuda:0", "--candidate_mode", "per_instance", "--prompt_list", "P6", "--default_prompt_id", "P6", "--prompt_selection_mode", "single", "--score_weights", "area=1,comp=1,edge=1,temp=1,contrast=1,sam=0.5", "--ranking_policy", "base", "--candidate_source_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/candidates/GT10", "--reuse_existing_candidates", "--candidate_metadata_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/metadata/GT10", "--candidate_metadata_strict", "--force", "--use_spnp_refinement", "--spnp_backend", "sam3_if_supported"], "cwd": "/data/fj/F2DMAS", "config_sha256": "9375f3e4a78801ece7e0fddf51d3ea4d78f778f908cdfec04717f4d31c0d68b1", "production_sha256": "1cba5ae7f65f7ee8f5f07cf7083f5ee691a104ecf9079851868bab17ad379d6a", "metadata_loader_sha256": "fb678a98d13d084127fee866f5028698853a18737a48a929e3f4b3d498f2610c", "gpu": "index, name, memory.used [MiB], memory.free [MiB]\n0, NVIDIA RTX A6000, 1194 MiB, 47341 MiB\n1, NVIDIA RTX A6000, 14 MiB, 48528 MiB\n", "CUDA_VISIBLE_DEVICES": "0", "runtime_compat": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/runtime_compat:", "config": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/V4_V5_CONFIGS/GT10_V5.json", "smoke": null, "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V5/GT10"}
+/home/test/biosoft/enter/lib/python3.13/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[1/10] BaiZhang_0033.jpg selected=P6#2 score=0.7102 time=3.82s
+[2/10] BaiZhang_0034.jpg selected=P6#2 score=0.7386 time=5.55s
+[3/10] BaiZhang_0035.jpg selected=P6#3 score=0.7198 time=5.91s
+[4/10] BaiZhang_0036.jpg selected=P6 score=0.7178 time=1.62s
+[5/10] BaiZhang_0037.jpg selected=P6#1 score=0.8182 time=3.00s
+[6/10] DouBanLv2_0037.jpg selected=P6 score=0.6556 time=1.58s
+[7/10] DouBanLv2_0038.jpg selected=P6 score=0.6427 time=1.52s
+[8/10] DouBanLv2_0039.jpg selected=P6#0 score=0.6788 time=3.17s
+[9/10] DouBanLv2_0040.jpg selected=P6#1 score=0.6933 time=5.55s
+[10/10] DouBanLv2_0041.jpg selected=P6#0 score=0.7198 time=17.94s
+[1/10] BaiZhang_0033.jpg selected=A1s score=0.6289 area=0.3316 a5c=0 time=20.18s
+[2/10] BaiZhang_0034.jpg selected=A1s score=0.6574 area=0.3185 a5c=0 time=25.64s
+[3/10] BaiZhang_0035.jpg selected=A1s score=0.6387 area=0.2930 a5c=0 time=20.63s
+[4/10] BaiZhang_0036.jpg selected=A1s score=0.6364 area=0.2779 a5c=0 time=20.41s
+[5/10] BaiZhang_0037.jpg selected=A1s score=0.7371 area=0.2673 a5c=0 time=20.38s
+[6/10] DouBanLv2_0037.jpg selected=A1s score=0.5738 area=0.2148 a5c=0 time=19.91s
+[7/10] DouBanLv2_0038.jpg selected=A1s score=0.5611 area=0.1952 a5c=0 time=18.74s
+[8/10] DouBanLv2_0039.jpg selected=A1s score=0.6525 area=0.0358 a5c=0 time=18.62s
+[9/10] DouBanLv2_0040.jpg selected=A1s score=0.6511 area=0.0453 a5c=0 time=18.11s
+[10/10] DouBanLv2_0041.jpg selected=A1s score=0.6495 area=0.0291 a5c=0 time=17.79s
+Done. Output saved to /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V5/GT10

@@ -1,0 +1,36 @@
+{
+  "test_manifest_sha256": "7504fcbbc2a495502534a6fbbd27e9a57fb6b24ccefb573291851478d08c0157",
+  "dev_manifest_sha256": "063b33b9d7559eb0400528978993a63cbe0146e44e40f4c5d38fc0dfa7ba3cc6",
+  "frames": 32,
+  "samples": [
+    "CaoMei2",
+    "ChangShouHua3",
+    "DouBanLv3",
+    "HongZhang",
+    "WanNianQing1",
+    "WangWenCao2",
+    "XianKeLai3",
+    "XiangPiShu2"
+  ],
+  "labels": [
+    "potted_plant",
+    "plant",
+    "pot",
+    "blue_cube"
+  ],
+  "target_definition": "potted_clean = target_potted_plant & ~blue_cube; one manually confirmed target, exclude neighbors",
+  "human_review_required": true,
+  "tuning_forbidden": true,
+  "metrics": [
+    "f1",
+    "iou_fg",
+    "hd95_px",
+    "boundary_f1_3px",
+    "leakage_fp_per_image"
+  ],
+  "aggregation": [
+    "sample_equal_mean",
+    "frame_level_paired_difference"
+  ],
+  "candidate_generation": "P6/per_instance/single, frozen confidence/checkpoint; U00_Control source kept distinct"
+}

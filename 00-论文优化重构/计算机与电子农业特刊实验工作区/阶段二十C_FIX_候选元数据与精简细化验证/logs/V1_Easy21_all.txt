@@ -1,0 +1,44 @@
+{"command": ["/home/test/biosoft/enter/bin/python", "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py", "--input_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/inputs/Easy21", "--output_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V1/Easy21", "--sam3_repo", "/data/fj/F2DMAS/第三方源码/SAM3-latest", "--sam3_checkpoint", "/data/fj/F2DMAS/sam3/sam3.pt", "--device", "cpu", "--candidate_mode", "per_instance", "--prompt_list", "P6", "--default_prompt_id", "P6", "--prompt_selection_mode", "single", "--score_weights", "area=1,comp=1,edge=1,temp=1,contrast=1,sam=0.5", "--ranking_policy", "r1", "--candidate_source_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/candidates/Easy21", "--reuse_existing_candidates", "--candidate_metadata_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/metadata/Easy21", "--candidate_metadata_strict", "--force"], "cwd": "/data/fj/F2DMAS", "config_sha256": "04c6e7a405d02ca4e340f1c0c4db0d96b164d5aa003c671de64024906624d7fa", "production_sha256": "1cba5ae7f65f7ee8f5f07cf7083f5ee691a104ecf9079851868bab17ad379d6a", "metadata_loader_sha256": "5ba5dae756e39a1d229b8a74bafd160ceae52d9c250196b188e28d2fad136f85", "gpu": "index, name, memory.used [MiB], memory.free [MiB]\n0, NVIDIA RTX A6000, 6665 MiB, 41871 MiB\n1, NVIDIA RTX A6000, 14 MiB, 48528 MiB\n", "CUDA_VISIBLE_DEVICES": "0", "runtime_compat": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/runtime_compat:", "config": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/REPLAY_CONFIGS/Easy21_V1.json", "smoke": null, "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V1/Easy21"}
+[1/21] CaoMei1_0000.jpg selected=P6 score=0.6322 time=3.46s
+[2/21] CaoMei1_0025.jpg selected=P6 score=0.7692 time=5.66s
+[3/21] CaoMei1_0050.jpg selected=P6 score=0.6093 time=5.89s
+[4/21] CaoMei1_0075.jpg selected=P6 score=0.7308 time=1.16s
+[5/21] CaoMei1_0100.jpg selected=P6 score=0.6221 time=3.82s
+[6/21] ChangShouHua2_0000.jpg selected=P6 score=0.7793 time=1.41s
+[7/21] ChangShouHua2_0025.jpg selected=P6 score=0.7250 time=1.18s
+[8/21] ChangShouHua2_0050.jpg selected=P6 score=0.8060 time=1.20s
+[9/21] ChangShouHua2_0075.jpg selected=P6 score=0.6059 time=1.23s
+[10/21] ChangShouHua2_0100.jpg selected=P6 score=0.8611 time=1.20s
+[11/21] DouBanLv1_0000.jpg selected=P6 score=0.8229 time=1.16s
+[12/21] DouBanLv1_0025.jpg selected=P6 score=0.6453 time=1.14s
+[13/21] DouBanLv1_0050.jpg selected=P6 score=0.7668 time=1.18s
+[14/21] DouBanLv1_0075.jpg selected=P6 score=0.6815 time=1.17s
+[15/21] DouBanLv1_0100.jpg selected=P6 score=0.7668 time=1.23s
+[16/21] KongQueZhuYu_0000.jpg selected=P6#1 score=0.6367 time=2.22s
+[17/21] KongQueZhuYu_0025.jpg selected=P6 score=0.7310 time=1.22s
+[18/21] KongQueZhuYu_0050.jpg selected=P6 score=0.6622 time=1.19s
+[19/21] KongQueZhuYu_0075.jpg selected=P6 score=0.6350 time=1.20s
+[20/21] KongQueZhuYu_0100.jpg selected=P6#3 score=0.6636 time=4.21s
+[21/21] XianKeLai1_0000.jpg selected=P6 score=0.5743 time=1.16s
+[1/21] CaoMei1_0000.jpg selected=A1s score=0.5508 area=0.1274 a5c=0 time=11.25s
+[2/21] CaoMei1_0025.jpg selected=A1s score=0.6879 area=0.1281 a5c=0 time=14.71s
+[3/21] CaoMei1_0050.jpg selected=A1s score=0.5281 area=0.0792 a5c=0 time=12.68s
+[4/21] CaoMei1_0075.jpg selected=A1s score=0.6493 area=0.0925 a5c=0 time=13.12s
+[5/21] CaoMei1_0100.jpg selected=A1s score=0.5408 area=0.1164 a5c=0 time=12.99s
+[6/21] ChangShouHua2_0000.jpg selected=A1s score=0.6977 area=0.3373 a5c=0 time=12.78s
+[7/21] ChangShouHua2_0025.jpg selected=A1s score=0.6433 area=0.2307 a5c=0 time=13.96s
+[8/21] ChangShouHua2_0050.jpg selected=A1s score=0.7244 area=0.1918 a5c=0 time=11.94s
+[9/21] ChangShouHua2_0075.jpg selected=A1s score=0.5242 area=0.2256 a5c=0 time=13.26s
+[10/21] ChangShouHua2_0100.jpg selected=A1s score=0.7797 area=0.3137 a5c=0 time=13.07s
+[11/21] DouBanLv1_0000.jpg selected=A1s score=0.7411 area=0.2281 a5c=0 time=13.28s
+[12/21] DouBanLv1_0025.jpg selected=A1s score=0.5637 area=0.1635 a5c=0 time=13.97s
+[13/21] DouBanLv1_0050.jpg selected=A1s score=0.6853 area=0.1069 a5c=0 time=13.45s
+[14/21] DouBanLv1_0075.jpg selected=A1s score=0.5999 area=0.1589 a5c=0 time=15.05s
+[15/21] DouBanLv1_0100.jpg selected=A1s score=0.6853 area=0.1069 a5c=0 time=12.38s
+[16/21] KongQueZhuYu_0000.jpg selected=A1s score=0.6603 area=0.2240 a5c=0 time=16.21s
+[17/21] KongQueZhuYu_0025.jpg selected=A1s score=0.6493 area=0.3417 a5c=0 time=14.75s
+[18/21] KongQueZhuYu_0050.jpg selected=A1s score=0.5807 area=0.2276 a5c=0 time=14.68s
+[19/21] KongQueZhuYu_0075.jpg selected=A1s score=0.5541 area=0.2567 a5c=0 time=13.67s
+[20/21] KongQueZhuYu_0100.jpg selected=A1s score=0.6768 area=0.2882 a5c=0 time=13.65s
+[21/21] XianKeLai1_0000.jpg selected=A1s score=0.4928 area=0.1787 a5c=0 time=14.25s
+Done. Output saved to /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_FIX_候选元数据与精简细化验证/runs/V1/Easy21
