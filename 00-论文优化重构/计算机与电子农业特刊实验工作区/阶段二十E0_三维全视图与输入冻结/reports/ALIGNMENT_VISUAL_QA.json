@@ -1,0 +1,15 @@
+{
+  "method": "NATIVE_MODEL_DIRECT_IMAGE_VIEW",
+  "reviewed": [
+    "ALIGNMENT_QA_FIGURES/WanNianQing1_0000.jpg",
+    "ALIGNMENT_QA_FIGURES/WanNianQing1_0037.jpg",
+    "ALIGNMENT_QA_FIGURES/CaoMei2_0106.jpg",
+    "ALIGNMENT_QA_FIGURES/CaoMei2_0139.jpg",
+    "ALIGNMENT_QA_FIGURES/HongZhang_0000.jpg"
+  ],
+  "findings": "B/C first-view masks coincide; red edges follow pot and leaf silhouette on the true undistorted RGB. Raw A control retains full background and calibration cube. No cross-domain resize is inferred from this figure.",
+  "limitation": "Direct visual QA complements measured native RGB and sparse projection checks; not a human signature or accuracy GT.",
+  "switch_view_findings": "Direct image viewing: R0 selects a small background patch beside the main pot; R1 selects the main potted plant with some attached neighbor-leaf regions. Both masks are aligned to the same RGB grid. This is an observed qualitative switch, not independent GT accuracy or 3D improvement proof.",
+  "CaoMei2_findings": "Direct native image viewing: raw0106 B/C boundaries coincide and follow the visible pot and strawberry leaf silhouette. At actual registered switch raw0139/crop0124, R0 outlines a background plant patch on the left, while R1 follows the target pot and leaves. No shifted image-grid edge is visible. This is qualitative alignment, not independent GT accuracy or 3D benefit.",
+  "HongZhang_findings": "Direct native image viewing: first-view B/C edges coincide around the plant, pot and leaf/stem holes on canonical undistorted RGB; no image-grid shift is visible. Some fine inter-stem boundaries and holes are imperfect; this is not independent silhouette GT. All 213 source policies choose the same candidate, so this scene is a foreground-processing control, not a ranking-benefit test."
+}

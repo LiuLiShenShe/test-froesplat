@@ -1,0 +1,161 @@
+### pycolmap.FeatureExtractor.create() and extract()
+
+Source: https://github.com/colmap/colmap/blob/main/python/README.md
+
+Creates a feature extractor and extracts SIFT keypoints and descriptors from a grayscale bitmap. The extract method processes the image as-is without downscaling.
+
+```APIDOC
+## pycolmap.FeatureExtractor.create() and extract()
+
+### Description
+Creates a feature extractor and extracts SIFT keypoints and descriptors from a grayscale bitmap. The extract method processes the image as-is without downscaling.
+
+### Method
+create() and extract()
+
+### Parameters
+#### create() Parameters
+- **options** (pycolmap.FeatureExtractionOptions) - Optional - Default: SIFT options
+- **device** (pycolmap.Device) - Optional - Default: pycolmap.Device.auto (uses GPU if available)
+
+#### extract() Parameters
+- **bitmap** (pycolmap.Bitmap) - Required - Grayscale bitmap for SIFT extraction
+
+### Returns
+- **keypoints** (pycolmap.FeatureKeypoints) - Use pycolmap.keypoints_to_matrix(keypoints) for Nx4 array with format: x (j), y (i), scale, orientation
+- **descriptors** (pycolmap.FeatureDescriptors) - Use descriptors.to_float().data / 512 for Nx128 array of L2-normalized descriptors
+
+### Example
+```python
+import numpy as np
+import pycolmap
+from PIL import Image, ImageOps
+
+img = Image.open('image.jpg').convert('RGB')
+img = ImageOps.grayscale(img)
+bitmap = pycolmap.Bitmap.from_array(np.array(img))
+
+extractor = pycolmap.FeatureExtractor.create()
+keypoints, descriptors = extractor.extract(bitmap)
+```
+
+### Notes
+Unlike the removed pycolmap.Sift.extract, extract processes the image as-is. It does not downscale large images to options.eff_max_image_size() (3200 by default) and does not rescale keypoint coordinates and scales back to original resolution. Downscale large images yourself before extraction to reproduce old behavior; GPU backend requires images within its configured maximum dimension.
+```
+
+--------------------------------
+
+### SIFT Feature Extraction
+
+Source: https://github.com/colmap/colmap/blob/main/python/README.md
+
+Extracts SIFT features from a grayscale image using the FeatureExtractor class. Note that the extract method processes the image as-is without automatic downscaling.
+
+```python
+import numpy as np
+import pycolmap
+from PIL import Image, ImageOps
+
+# Input should be a grayscale bitmap.
+img = Image.open('image.jpg').convert('RGB')
+img = ImageOps.grayscale(img)
+bitmap = pycolmap.Bitmap.from_array(np.array(img))
+
+# Optional parameters:
+# - options: pycolmap.FeatureExtractionOptions (default: SIFT)
+# - device: default pycolmap.Device.auto uses the GPU if available
+extractor = pycolmap.FeatureExtractor.create()
+
+# Parameters:
+# - bitmap: pycolmap.Bitmap (grayscale for SIFT)
+keypoints, descriptors = extractor.extract(bitmap)
+# Returns:
+# - keypoints: pycolmap.FeatureKeypoints; use
+#   pycolmap.keypoints_to_matrix(keypoints) for the Nx4 array with
+#   format: x (j), y (i), scale, orientation
+# - descriptors: pycolmap.FeatureDescriptors; use
+#   descriptors.to_float().data / 512 for the Nx128 array of
+#   L2-normalized descriptors
+```
+
+--------------------------------
+
+### Convert principal point from OpenCV/Kalibr to COLMAP
+
+Source: https://github.com/colmap/colmap/blob/main/doc/faq.rst
+
+Add 0.5 to both cx and cy to convert a principal point from OpenCV/Kalibr pixel-center convention to COLMAP's top-left corner convention. Focal lengths and distortion coefficients are unaffected.
+
+```default
+cx_colmap = cx_opencv + 0.5
+cy_colmap = cy_opencv + 0.5
+```
+
+### SIFT Feature Extraction
+
+Source: https://github.com/colmap/colmap/blob/main/python/README.md
+
+## SIFT Feature Extraction
+
+```python
+import numpy as np
+import pycolmap
+from PIL import Image, ImageOps
+
+# Input should be a grayscale bitmap.
+img = Image.open('image.jpg').convert('RGB')
+img = ImageOps.grayscale(img)
+bitmap = pycolmap.Bitmap.from_array(np.array(img))
+
+# Optional parameters:
+# - options: pycolmap.FeatureExtractionOptions (default: SIFT)
+# - device: default pycolmap.Device.auto uses the GPU if available
+extractor = pycolmap.FeatureExtractor.create()
+
+# Parameters:
+# - bitmap: pycolmap.Bitmap (grayscale for SIFT)
+keypoints, descriptors = extractor.extract(bitmap)
+# Returns:
+# - keypoints: pycolmap.FeatureKeypoints; use
+#   pycolmap.keypoints_to_matrix(keypoints) for the Nx4 array with
+#   format: x (j), y (i), scale, orientation
+# - descriptors: pycolmap.FeatureDescriptors; use
+#   descriptors.to_float().data / 512 for the Nx128 array of
+#   L2-normalized descriptors
+```
+
+Note: unlike the removed `pycolmap.Sift.extract`, `extract` processes the
+image as-is. It does not downscale large images to
+`options.eff_max_image_size()` (3200 by default) and does not rescale the
+keypoint coordinates and scales back to the original resolution. Downscale
+large images yourself before extraction to reproduce the old behavior; in
+particular, the GPU backend requires images within its configured maximum
+dimension.
+
+--------------------------------
+
+### Python Bindings for COLMAP > Reconstruction Pipeline > Configuration Options
+
+Source: https://github.com/colmap/colmap/blob/main/python/README.md
+
+All of the above steps are easily configurable with python dicts which are recursively merged into their respective defaults, for example:
+
+```python
+pycolmap.extract_features(
+    database_path, image_dir,
+    extraction_options={"sift": {"max_num_features": 512}}
+)
+
+# Equivalent to:
+ops = pycolmap.FeatureExtractionOptions()
+ops.sift.max_num_features = 512
+pycolmap.extract_features(database_path, image_dir, extraction_options=ops)
+```
+
+To list available options and their default parameters:
+
+```python
+help(pycolmap.SiftExtractionOptions)
+```
+
+For another example of usage, see [`example.py`](./examples/example.py) or [`hloc/reconstruction.py`](https://github.com/cvg/Hierarchical-Localization/blob/master/hloc/reconstruction.py).

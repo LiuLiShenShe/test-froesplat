@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-12T20:48:49.194745+08:00",
+  "training_physical_gpu": "1",
+  "training_gpu_uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "gpus": [
+    {
+      "index": "0",
+      "uuid": "GPU-db3ec610-630b-fa4f-66f2-b69f269ca856",
+      "pci.bus_id": "00000000:18:00.0",
+      "name": "NVIDIA RTX A6000",
+      "driver_version": "590.48.01",
+      "memory.total": "49140",
+      "memory.free": "44619",
+      "memory.used": "3916"
+    },
+    {
+      "index": "1",
+      "uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+      "pci.bus_id": "00000000:D8:00.0",
+      "name": "NVIDIA RTX A6000",
+      "driver_version": "590.48.01",
+      "memory.total": "49140",
+      "memory.free": "44179",
+      "memory.used": "4364"
+    }
+  ],
+  "managed_disk_free_bytes": 837232443392,
+  "CPU_memory": "MemTotal:       131571772 kB\nMemFree:         9923328 kB\nMemAvailable:   70247576 kB\nBuffers:         5316108 kB\nCached:         51181648 kB\nSwapCached:        79736 kB\nActive:         37122848 kB\nInactive:       72436836 kB\nActive(anon):   32951116 kB\nInactive(anon): 20544628 kB\nActive(file):    4171732 kB\nInactive(file): 51892208 kB\nUnevictable:     1060648 kB\nMlocked:         1060648 kB\nSwapTotal:       8388604 kB\nSwapFree:          55404 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:            112508 kB\nWriteback:             0 kB\nAnonPages:      54043364 kB\nMapped:          2285088 kB\nShmem:            453920 kB\nKReclaimable:    5543380 kB\nSlab:            7213076 kB\nSReclaimable:    5543380 kB\nSUnreclaim:      1669696 kB\nKernelStack:      157680 kB\nPageTables:       530452 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    74174488 kB\nCommitted_AS:   188274676 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      395112 kB\nVmallocChunk:          0 kB\nPercpu:           102656 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:    782336 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:   5627904 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    100959568 kB\nDirectMap2M:    31795200 kB\nDirectMap1G:     3145728 kB\n",
+  "resource_scope": "Real preflight/inference resource availability only; no formal-training peak estimate; other GPU processes not modified",
+  "future_training_gate": "Confirm available GPU/host RAM/disk and comparable background workloads before matched runs"
+}

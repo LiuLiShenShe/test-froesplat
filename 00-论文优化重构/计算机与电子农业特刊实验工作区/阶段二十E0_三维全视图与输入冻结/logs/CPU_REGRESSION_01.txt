@@ -1,0 +1,200 @@
+/home/test/biosoft/enter/lib/python3.13/site-packages/pytest_asyncio/plugin.py:207: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+.......s.......................FF..........EEEE......................... [ 85%]
+............                                                             [100%]
+==================================== ERRORS ====================================
+________ ERROR at setup of test_confusion_and_empty_conventions[False] _________
+
+    @pytest.fixture(scope="module")
+    def evaluate():
+>       return metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+_________ ERROR at setup of test_confusion_and_empty_conventions[True] _________
+
+    @pytest.fixture(scope="module")
+    def evaluate():
+>       return metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+________ ERROR at setup of test_original_metric_implementation_is_used _________
+
+    @pytest.fixture(scope="module")
+    def evaluate():
+>       return metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+___________ ERROR at setup of test_single_empty_boundary_convention ____________
+
+    @pytest.fixture(scope="module")
+    def evaluate():
+>       return metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+=================================== FAILURES ===================================
+_______________ test_all32_both_method_metrics_recompute[opencv] _______________
+
+rasterizer = 'opencv'
+
+    @pytest.mark.parametrize("rasterizer", ["opencv", "pillow"])
+    def test_all32_both_method_metrics_recompute(rasterizer):
+>       evaluate = metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_delivery.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+_______________ test_all32_both_method_metrics_recompute[pillow] _______________
+
+rasterizer = 'pillow'
+
+    @pytest.mark.parametrize("rasterizer", ["opencv", "pillow"])
+    def test_all32_both_method_metrics_recompute(rasterizer):
+>       evaluate = metric_function()
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_delivery.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py:105: in metric_function
+    return module.load_segmentation_metrics()
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十C_R1与完整细化链联合验证/scripts/compute_phase20c_metrics.py:57: in load_segmentation_metrics
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    from __future__ import annotations
+    
+    from collections import defaultdict
+    import json
+    
+    import cv2
+    import numpy as np
+    
+>   from common import ALG, BENCH, DATA, P12, P16, ROOT, S20, WORK, dimensions, git_origin, load_module, markdown_table, mask, read_csv, relative, report, rgb_equal, sha256, write_csv
+E   ImportError: cannot import name 'ALG' from 'common' (/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/common.py)
+
+00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十B_历史实验与证据修复/scripts/segmentation.py:9: ImportError
+=========================== short test summary info ============================
+FAILED 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_delivery.py::test_all32_both_method_metrics_recompute[opencv]
+FAILED 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_delivery.py::test_all32_both_method_metrics_recompute[pillow]
+ERROR 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py::test_confusion_and_empty_conventions[False]
+ERROR 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py::test_confusion_and_empty_conventions[True]
+ERROR 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py::test_original_metric_implementation_is_used
+ERROR 00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/tests/test_metrics_and_statistics.py::test_single_empty_boundary_convention
+2 failed, 77 passed, 1 skipped, 4 errors in 77.58s (0:01:17)

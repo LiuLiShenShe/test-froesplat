@@ -1,0 +1,22 @@
+<stdin>:8: DeprecationWarning: pycolmap.Sift is deprecated, use pycolmap.FeatureExtractor.create() instead.
+I20261012 22:38:04.141828 124051563333440 sift.cc:765] Creating SIFT CPU feature extractor
+{"source_raw_frame": "0136", "raw_sha256": "2b300c816bd98e2e29c31038207a551843f11a5c55a9ec52aa6b0971f84db0c6", "target_registered_image_id": 133, "target_registered_name": "0136.jpg", "target_observations": 3312, "extracted_keypoints": 3038, "target_nn_median_px": 0.19532574388884522, "target_fraction_le_0_5px": 0.7315821256038647, "target_fraction_le_1px": 0.7952898550724637, "own_image_median_px": 0.19532574388884522, "own_fraction_le_1px": 0.7952898550724637, "seconds": 7.414870365522802}
+{"source_raw_frame": "0135", "raw_sha256": "a14ffb5ca62d09ddd5a401c800a7d6a037e40eff076e40e9851d68da43c334c0", "target_registered_image_id": 133, "target_registered_name": "0136.jpg", "target_observations": 3312, "extracted_keypoints": 5041, "target_nn_median_px": 13.219000209547614, "target_fraction_le_0_5px": 0.002113526570048309, "target_fraction_le_1px": 0.007548309178743961, "own_image_median_px": 0.14767026885154844, "own_fraction_le_1px": 0.8486979661661281, "seconds": 6.684569803997874}
+{"source_raw_frame": "0137", "raw_sha256": "3d1dac4862348a9db639fe62fd1ed0c0949607c54e728ff239d8332a2e16751e", "target_registered_image_id": 133, "target_registered_name": "0136.jpg", "target_observations": 3312, "extracted_keypoints": 3446, "target_nn_median_px": 17.481609401433026, "target_fraction_le_0_5px": 0.0009057971014492754, "target_fraction_le_1px": 0.006642512077294686, "own_image_median_px": 0.1884524406380097, "own_fraction_le_1px": 0.8115631691648822, "seconds": 6.600885374471545}
+{"source_raw_frame": "0138", "raw_sha256": "587959f3abf72b525d71f7949abbdcc0b7500bf89b5abaa84dc34794dedff19d", "target_registered_image_id": 133, "target_registered_name": "0136.jpg", "target_observations": 3312, "extracted_keypoints": 2487, "target_nn_median_px": 24.20102865333592, "target_fraction_le_0_5px": 0.0012077294685990338, "target_fraction_le_1px": 0.002113526570048309, "own_image_median_px": null, "own_fraction_le_1px": null, "seconds": 6.340271836146712}
+Traceback (most recent call last):
+  File "<stdin>", line 15, in <module>
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/phase20e_common.py", line 73, in write_json
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/test/biosoft/enter/lib/python3.13/json/__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/home/test/biosoft/enter/lib/python3.13/json/encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/home/test/biosoft/enter/lib/python3.13/json/encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "/home/test/biosoft/enter/lib/python3.13/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type FeatureExtractorType is not JSON serializable
