@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/write_reports.py", line 262, in <module>
+    main()
+    ~~~~^^
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/write_reports.py", line 58, in main
+    write_text(WORK / "R0_R1_SWITCH_CASES.md", "# Two real switch cases\n\n" +
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               table(switch_rows, ["frame", "rasterizer", "R0_ID", "R1_ID", "oracle_ID", "R0_F1", "R1_F1", "delta_F1", "R0_IoU", "R1_IoU", "R0_regret", "R1_regret", "effect"]) +
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+               "Figures: figures/comparison_CaoMei2_0146.png and figures/comparison_WanNianQing1_0227.png.\n"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               "Sources: R0_R1_TEST32_RESULTS.csv, SECONDARY_RESULTS.csv, ORACLE_ALL_CANDIDATES.csv, real production logs.")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/direct_common.py", line 66, in write_text
+    with path.open("x", encoding="utf-8") as handle:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/test/biosoft/enter/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/R0_R1_SWITCH_CASES.md'

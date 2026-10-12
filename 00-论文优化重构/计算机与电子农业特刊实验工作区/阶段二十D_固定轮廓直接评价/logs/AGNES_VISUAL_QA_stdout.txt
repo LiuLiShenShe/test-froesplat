@@ -1,0 +1,30 @@
+[
+  {
+    "path": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/figures/comparison_CaoMei2_0146.png",
+    "image_sha256": "4ad289b0cf42de71104a8aff3fd719f420d5f6e3091512d339bb151cb132d179",
+    "status": "OK",
+    "description": "\n\n观察到的内容：\n\n**主标题：**\nCaoMei2_0146 | D1;D3;D6;D11;D12 | R1-R0 F1=+0.985405 | GEOMETRY_AMBIGUITY: original contour retained\n\n**面板布局（从左到右）：**\n1. RGB面板 - 显示草莓植株照片，标注\"RGB\"\n2. Rasterized contour GT面板 - 黑色背景上显示较大白色轮廓，上方标注\"Rasterized contour GT / OpenCV, not Gate-certified\"，图内无标签\n3. R0面板 - 黑色背景上显示较小白色区域，右上角标注\"R0: CaoMei2_0146_04 / F1=0.0001, IoU=0.0001\"\n4. R1面板 - 黑色背景上显示白色区域（比R0大），右上角标注\"R1: CaoMei2_0146_03 / F1=0.9855, IoU=0.9714\"\n\n**检查结果：**\n- 文字截断：无\n- 文字遮挡：无\n- 面板缺失：无，四个面板完整显示\n- 黑白掩膜可见性：清晰，背景为纯黑，前景为纯白\n- 几何歧义提示：标题栏已包含\"GEOMETRY_AMBIGUITY: original contour retained\"",
+    "source": "图片内容由Agnes API识别; machinevisualQA only, nothumanreview"
+  },
+  {
+    "path": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/figures/comparison_WanNianQing1_0227.png",
+    "image_sha256": "1e76ee1af049a64162c9933a6a693c6acce7dcada188f491aee74936a571c9b6",
+    "status": "OK",
+    "description": "\n\n# 科学图件客观描述\n\n## 整体标题（顶部居中）\n> WanNianQing1_0227 | none | R1-R0 F1=+0.985010 | GEOMETRY_AMBIGUITY: original contour retained\n\n## 四面板描述\n\n| 面板 | 左上角标注 | 内容 |\n|------|-----------|------|\n| **Panel 0** | RGB | 彩色照片：万年青植株，绿底白纹叶片，背景为木板 |\n| **Panel 1** | Rasterized contour GT<br>OpenCV, not Gate-certified | 黑白二值掩膜：植物叶片区域为白色前景，背景为黑色；轮廓呈像素化锯齿状 |\n| **Panel 2** | R0: WanNianQing1_0227_00<br>F1=0.0000, IoU=0.0000 | **全黑（纯0值），无任何白色像素** |\n| **Panel 3** | R1: WanNianQing1_0227_01<br>F1=0.9850, IoU=0.9705 | 黑白二值掩膜：白色前景轮廓与Panel 1高度一致，呈现完整叶片轮廓 |\n\n## 文字与数值检查\n\n**截断/遮挡情况：**\n- 整体标题末尾\"original contour retained\"正常显示，无明显截断\n- Panel 2 标注\"F1=0.0000, IoU=0.0000\"完整可读\n- Panel 3 标注\"F1=0.9850, IoU=0.9705\"完整可读\n- 面板编号\"RGB\"、\"R0\"、\"R1\"均可见\n\n**关键数值汇总：**\n- `R1-R0 F1=+0.985010`（整体指标）\n- `R0: F1=0.0000, IoU=0.0000`\n- `R1: F1=0.9850, IoU=0.9705`\n\n## 特殊标记\n\n**GEOMETRY_AMBIGUITY** 标记已激活，备注\"original contour retained\"——表示该样本存在几何歧义问题，使用了原始轮廓而非修正版本。\n\n## 面板状态\n\n- **Panel 2（R0）** 为全黑掩膜，对应 F1=0.0000 和 IoU=0.0000，表示该预测结果无有效检测区域。",
+    "source": "图片内容由Agnes API识别; machinevisualQA only, nothumanreview"
+  },
+  {
+    "path": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/figures/comparison_WanNianQing1_0223.png",
+    "image_sha256": "cb1a41a8ac5adb0239fc4b5e43d5156842cc9bcbf6e0ec778f58c9d9af67ecd2",
+    "status": "OK",
+    "description": "\n\n**面板1：RGB**\n- 标题：RGB\n- 内容：植物叶片彩色图像，绿白相间纹理清晰，叶片边缘完整，背景可见部分木质表面和白色物体（疑似鞋子）。\n\n**面板2：Rasterized contour GT**\n- 标题：WanNianQing1_0223 | none | R1-R0 F1=+0.000000\n- 副标题：Rasterized contour GT OpenCV, not Gate-certified\n- 内容：白底黑边轮廓图，白色区域呈不规则叶形，边缘平滑，黑色背景占据大部分区域。\n\n**面板3：R0**\n- 标题：R0: WanNianQing1_0223_00 F1=0.0000, IoU=0.0000\n- 内容：纯黑色矩形，无可见内容或特征。\n\n**面板4：R1**\n- 标题：R1: WanNianQing1_0223_00 F1=0.0000, IoU=0.0000\n- 内容：纯黑色矩形，无可见内容或特征。\n\n**检查项**\n- 文字截断：无\n- 文字遮挡：无\n- 面板缺失：无\n- 黑白掩膜可见性：面板2可见黑白轮廓，面板3/4为全黑\n- 几何歧义：无",
+    "source": "图片内容由Agnes API识别; machinevisualQA only, nothumanreview"
+  },
+  {
+    "path": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/figures/paired_and_raster_sensitivity.png",
+    "image_sha256": "20616ddb657d9e4a826a060e0adca4a0832bbe7057a481c5bdf38d0b899e6d4f",
+    "status": "OK",
+    "description": "\n\n**图件描述**\n\n该图件包含两个垂直排列的面板：\n\n**面板1（上方）：柱状图**\n- 标题：\"Alli32 paired differences — zeros retained\"\n- Y轴标签：\"R1 - R0 F1\"，刻度范围0.0–1.0\n- X轴：样本ID（共36个），标签旋转90度垂直显示\n- 数据：仅两根蓝色柱子显著，高度接近1.0：\n  - `CaoMei2_0146_`\n  - `WanNianQing1_0227_`\n- 其余样本无柱或柱高为0\n\n**面板2（下方）：散点图**\n- 标题：\"OpenCV vs Pillow; magenta=geometry warning, green=other\"\n- Y轴标签：\"1 - cross-raster maskIoU\"，刻度范围0.0002–0.0010\n- X轴：与面板1相同的样本ID，同样旋转90度\n- 数据点：品红色(magenta)和绿色(green)散点，各对应一个样本\n- 品红色点（约7个）：CaoMei2_0007, CaoMei2_0146, ChangShouHua3_0189, DouBanLv3_0211, WangYiWenCao2_0015, XianKeLai3_0141, XiangPiShuZ_0134\n- 绿色点（约18个）：其余样本\n\n**检查结果**\n\n| 检查项 | 状态 |\n|--------|------|\n| 文字截断 | 无 |\n| 文字遮挡 | 无 |\n| 面板缺失 | 无 |\n| 黑白掩膜可见性 | 无 |\n| 几何歧义 | 无 |\n| 标题完整性 | 完整 |\n| 轴标签完整性 | 完整 |\n| 刻度值可读性 | 清晰 |\n| X轴标签可读性 | 清晰（旋转后无重叠） |\n\n所有文字、数值和标签均正常显示，未发现排版或质量问题。",
+    "source": "图片内容由Agnes API识别; machinevisualQA only, nothumanreview"
+  }
+]

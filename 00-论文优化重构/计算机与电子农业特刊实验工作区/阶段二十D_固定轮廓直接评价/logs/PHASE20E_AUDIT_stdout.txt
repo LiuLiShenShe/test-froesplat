@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/audit_phase20e.py", line 140, in <module>
+    main()
+    ~~~~^^
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/audit_phase20e.py", line 74, in main
+    input_width, input_height, input_mode, input_hash = image_info(input_path)
+                                                        ~~~~~~~~~~^^^^^^^^^^^^
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十D_固定轮廓直接评价/scripts/audit_phase20e.py", line 20, in image_info
+    with Image.open(path) as image:
+         ~~~~~~~~~~^^^^^^
+  File "/home/test/biosoft/enter/lib/python3.13/site-packages/PIL/Image.py", line 3715, in open
+    raise UnidentifiedImageError(msg)
+PIL.UnidentifiedImageError: cannot identify image file '/data/fj/F2DMAS/04-COLMAP/CaoMei2/input/crop_0096.png'

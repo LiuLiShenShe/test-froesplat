@@ -1,0 +1,32 @@
+{
+  "PHASE20D_DIRECT_EVALUATION": "PASS",
+  "RASTERIZED_MASKS": "32/32",
+  "GEOMETRY_AMBIGUITY": 13,
+  "MAIN_GT_GEOMETRY_AMBIGUITY": 10,
+  "TEST32_R0_F1": 0.8888725908186376,
+  "TEST32_R1_F1": 0.9504480538376888,
+  "TEST32_R1_MINUS_R0": 0.061575463019051174,
+  "SWITCH_CASES": "IMPROVED",
+  "RASTERIZATION_SENSITIVITY": "STABLE",
+  "FOREGROUND_METHOD": "ENGINEERING_LOCKED",
+  "PHASE20E_PILOT_READY": "CONDITIONAL",
+  "metric_scope": "Fixed-contour rasterization evaluation; sample-equal mean; all32",
+  "not_original_human_gate_certified": true,
+  "ranking_checks": {
+    "opencv": {
+      "all32_nonnegative_f1_iou": true,
+      "no_new_empty_masks": true,
+      "no_new_severe_failures": true
+    },
+    "pillow": {
+      "all32_nonnegative_f1_iou": true,
+      "no_new_empty_masks": true,
+      "no_new_severe_failures": true
+    }
+  },
+  "remaining_severe_frames": [
+    "WanNianQing1_0223"
+  ],
+  "full_config_path": "logs/full_r1_runtime_parameters.json",
+  "spec_sha256": "5e634f679d9cb6c36d2efd1855640b2dfa505163fea8aca44251d648de457f7b"
+}
