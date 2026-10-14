@@ -1,0 +1,96 @@
+Loading trained model at iteration 30000
+Reading camera 1/106Reading camera 2/106Reading camera 3/106Reading camera 4/106Reading camera 5/106Reading camera 6/106Reading camera 7/106Reading camera 8/106Reading camera 9/106Reading camera 10/106Reading camera 11/106Reading camera 12/106Reading camera 13/106Reading camera 14/106Reading camera 15/106Reading camera 16/106Reading camera 17/106Reading camera 18/106Reading camera 19/106Reading camera 20/106Reading camera 21/106Reading camera 22/106Reading camera 23/106Reading camera 24/106Reading camera 25/106Reading camera 26/106Reading camera 27/106Reading camera 28/106Reading camera 29/106Reading camera 30/106Reading camera 31/106Reading camera 32/106Reading camera 33/106Reading camera 34/106Reading camera 35/106Reading camera 36/106Reading camera 37/106Reading camera 38/106Reading camera 39/106Reading camera 40/106Reading camera 41/106Reading camera 42/106Reading camera 43/106Reading camera 44/106Reading camera 45/106Reading camera 46/106Reading camera 47/106Reading camera 48/106Reading camera 49/106Reading camera 50/106Reading camera 51/106Reading camera 52/106Reading camera 53/106Reading camera 54/106Reading camera 55/106Reading camera 56/106Reading camera 57/106Reading camera 58/106Reading camera 59/106Reading camera 60/106Reading camera 61/106Reading camera 62/106Reading camera 63/106Reading camera 64/106Reading camera 65/106Reading camera 66/106Reading camera 67/106Reading camera 68/106Reading camera 69/106Reading camera 70/106Reading camera 71/106Reading camera 72/106Reading camera 73/106Reading camera 74/106Reading camera 75/106Reading camera 76/106Reading camera 77/106Reading camera 78/106Reading camera 79/106Reading camera 80/106Reading camera 81/106Reading camera 82/106Reading camera 83/106Reading camera 84/106Reading camera 85/106Reading camera 86/106Reading camera 87/106Reading camera 88/106Reading camera 89/106Reading camera 90/106Reading camera 91/106Reading camera 92/106Reading camera 93/106Reading camera 94/106Reading camera 95/106Reading camera 96/106Reading camera 97/106Reading camera 98/106Reading camera 99/106Reading camera 100/106Reading camera 101/106Reading camera 102/106Reading camera 103/106Reading camera 104/106Reading camera 105/106Reading camera 106/106/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/lpips/lpips.py:107: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
+
+Loading Training Cameras
+Loading Test Cameras
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0095 PSNR=15.701514 SSIM=0.791108 LPIPS=0.524796
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0103 PSNR=30.126495 SSIM=0.910416 LPIPS=0.337841
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0111 PSNR=28.113462 SSIM=0.921941 LPIPS=0.335276
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0119 PSNR=25.797531 SSIM=0.900196 LPIPS=0.368165
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0136 PSNR=22.838068 SSIM=0.864013 LPIPS=0.437751
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0144 PSNR=19.802937 SSIM=0.847198 LPIPS=0.439461
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0152 PSNR=20.660830 SSIM=0.878302 LPIPS=0.421023
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0160 PSNR=21.923407 SSIM=0.870707 LPIPS=0.440647
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0168 PSNR=24.433731 SSIM=0.881852 LPIPS=0.425871
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0176 PSNR=27.243958 SSIM=0.901825 LPIPS=0.390745
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0184 PSNR=28.556929 SSIM=0.943992 LPIPS=0.319970
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0192 PSNR=30.998400 SSIM=0.951985 LPIPS=0.322760
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0200 PSNR=29.829378 SSIM=0.933581 LPIPS=0.324632
+EVALUATED CaoMei2_A_raw_RGB_control_v1 crop_0208 PSNR=25.720701 SSIM=0.912594 LPIPS=0.367906
+{
+  "sample": "CaoMei2",
+  "group": "A_raw_RGB_control_v1",
+  "iteration": 30000,
+  "Gaussian_count": 321451,
+  "all_PLY_parameters_finite": true,
+  "all_activated_parameters_finite": true,
+  "checkpoint_restore": "PASS",
+  "positive_scales_and_rotation_norms": true,
+  "opacity_bounds_valid": true,
+  "checkpoint_PLY_tensor_identity": "PASS",
+  "reload_render_max_abs_error": 0.0,
+  "checkpoint_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/CaoMei2/A_raw_RGB_control_v1/chkpnt30000.pth",
+  "checkpoint_bytes": 227596097,
+  "checkpoint_sha256": "634f394ff4669d9f72fe3e34da84b30af1a02d8a3e98558b9adf412ad046604d",
+  "final_PLY_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/CaoMei2/A_raw_RGB_control_v1/point_cloud/iteration_30000/point_cloud.ply",
+  "final_PLY_bytes": 78435552,
+  "final_PLY_sha256": "7b860a21a552c5a1e092757af323501094d6684ba9df93156e6fe71b7af09f89",
+  "parameter_tensor_sha256": {
+    "_xyz": "422274bed9a0bdd2df7d5988e17cbe751c823d533608163e3286da71e1b5d638",
+    "_features_dc": "c3079c63edc6afa0ad4b2329f7d3e06dac491bccc621f41a7ed5c7b2ce4752d2",
+    "_features_rest": "0bcb7922050c5923e33a13621a76bdeee83e1c6c1c916c18fe7e414256617e3b",
+    "_scaling": "e96771e9fad188ffca64b1ca65345361f0ddf0668b3380338098e898006af008",
+    "_rotation": "4b01c67275934b3e808bebab6c4cd6b52e1420fc0e639a82b6bc2b3548b2f8d1",
+    "_opacity": "81c4830f6a209aa9e2cf1ba8c8e1275869f5602c34d7607b04339ff2f340b44d"
+  },
+  "expected_heldout": 14,
+  "successful_heldout": 14,
+  "failed_heldout": [],
+  "empty_renders": 0,
+  "mean_render_seconds": 0.013944435931210006,
+  "evaluation_wall_seconds": 152.05296663101763,
+  "metric_versions": {
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "lpips": "0.1.4",
+    "Pillow": "12.1.1",
+    "numpy": "2.4.2",
+    "plyfile": "1.1.3",
+    "psnr_source_sha256": "9f7e4fd3c3eae0dcf1894e3f329ec7304eedf825a1e40e0c765e295465a9805d",
+    "ssim_source_sha256": "8f366bd24120741f1f0edd6935a3e69d6aad724af689023b6cedcc7abd8f38d1",
+    "lpips_weights_sha256": "a78928a0af1e5f0fcb1f3b9e8f8c3a2a5a3de244d830ad5c1feddc79b8432868",
+    "vgg16_weights_sha256": "397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0",
+    "evaluator_sha256": "8d49db010adb69f6563109c51fdae5acda8b3e8913a1b0e30a0348bf65b805f3",
+    "lpips_input_range": "[-1,1] via normalize=True",
+    "lpips_network": "vgg",
+    "reference_policy": "same canonical RAW RGB, independent of treatment",
+    "resize_policy": "production channelwise PIL default BICUBIC resolution=2"
+  },
+  "timestamp": "2026-10-13T15:38:52.985484+08:00",
+  "status": "PASS",
+  "Gaussian_distribution_descriptive": {
+    "opacity": {
+      "p01": 0.003885635989718139,
+      "p50": 0.9016897082328796,
+      "p95": 0.9999961853027344,
+      "p99": 1.0
+    },
+    "scale": {
+      "p01": 0.0019158540340140462,
+      "p50": 0.036391546949744225,
+      "p95": 0.29472233504056927,
+      "p99": 0.6472672277688979
+    },
+    "distance_from_sparse_centroid": {
+      "p01": 0.30538350343704224,
+      "p50": 5.64938497543335,
+      "p95": 27.146286964416504,
+      "p99": 69.64387512207031
+    }
+  }
+}

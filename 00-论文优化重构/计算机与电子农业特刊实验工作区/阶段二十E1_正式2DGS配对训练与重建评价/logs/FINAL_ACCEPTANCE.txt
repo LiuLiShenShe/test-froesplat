@@ -1,0 +1,117 @@
+{
+  "timestamp": "2026-10-14T11:38:47.283752+08:00",
+  "status": "PASS",
+  "gates": [
+    {
+      "gate": "G1",
+      "status": "PASS",
+      "evidence": "All 6831 E0 managed input records rehashed; camera symlinks/configs/production sources unchanged"
+    },
+    {
+      "gate": "G2",
+      "status": "PASS",
+      "evidence": "Exactly eight distinct required optimization groups, excluding HongZhang B"
+    },
+    {
+      "gate": "G3",
+      "status": "PASS",
+      "evidence": "All final runs reach native iteration 30000; preserved failed attempts excluded"
+    },
+    {
+      "gate": "G4",
+      "status": "PASS",
+      "evidence": "Full frozen paired configs equal except intended source/output paths"
+    },
+    {
+      "gate": "G5",
+      "status": "PASS",
+      "evidence": "Every optimizer checkpoint restored; PLY model independently loaded and rendered"
+    },
+    {
+      "gate": "G6",
+      "status": "PASS",
+      "evidence": "Stored and activated XYZ/scale/rotation/opacity/SH finite for all models"
+    },
+    {
+      "gate": "G7",
+      "status": "PASS",
+      "evidence": "All 177 unique model-camera held-out renders; 204 table rows include labelled aliases"
+    },
+    {
+      "gate": "G8",
+      "status": "PASS",
+      "evidence": "Original raw RGB and resized float reference SHA256 common across every group"
+    },
+    {
+      "gate": "G9",
+      "status": "PASS",
+      "evidence": "Source/config/input/split/camera/checkpoint/render SHA256 provenance closed"
+    },
+    {
+      "gate": "G10",
+      "status": "PASS",
+      "evidence": "B=C alias shares checkpoint/render bytes; not a second experiment"
+    },
+    {
+      "gate": "G11",
+      "status": "PASS",
+      "evidence": "A explicitly raw RGB control, never historical ForeSplat"
+    },
+    {
+      "gate": "G12",
+      "status": "PASS",
+      "evidence": "No independent 3D GT or fake Chamfer/F-score; 68/68 views lack matched fixed contours"
+    },
+    {
+      "gate": "G13",
+      "status": "PASS",
+      "evidence": "True timestamps, allocator peaks, sampled device memory and failed-cost records"
+    },
+    {
+      "gate": "G14",
+      "status": "PASS",
+      "evidence": "Metric code/package versions/weight SHA256 recorded per real evaluation"
+    },
+    {
+      "gate": "G15",
+      "status": "PASS",
+      "evidence": "All scene averages exactly recomputed; all 531 metrics from 177 float renders independently replayed within 1e-6"
+    },
+    {
+      "gate": "G16",
+      "status": "PASS",
+      "evidence": "Mixed/regressed views and compatibility-failed attempts preserved in full"
+    },
+    {
+      "gate": "G17",
+      "status": "PASS",
+      "evidence": "No R1, 2DGS, M2M3-GO core change; only stage-local logger compatibility"
+    },
+    {
+      "gate": "G18",
+      "status": "PASS",
+      "evidence": "No paper/source outside E1 modified"
+    },
+    {
+      "gate": "G19",
+      "status": "PASS",
+      "evidence": "Scene/order/split fixed; full same-seed retries are not validation tuning"
+    },
+    {
+      "gate": "G20",
+      "status": "PASS",
+      "evidence": "Pilot-specific next-stage decision, not default global retraining; no E2 execution"
+    }
+  ],
+  "outside_stage_changes": [],
+  "distinct_training_models": 8,
+  "primary_rows": 204,
+  "actual_model_camera_renders": 177,
+  "recomputed_float_render_metrics": 531,
+  "float_render_metric_recomputation_pass": true,
+  "failed_attempts": [
+    "logs/failed_attempts/WanNianQing1_B_R0_attempt_01/FAILED_ATTEMPT_INDEX.json",
+    "logs/failed_attempts/WanNianQing1_A_raw_RGB_control_v1_attempt_01/FAILED_ATTEMPT_INDEX.json"
+  ],
+  "source_protection": "57 production files rehashed in final preflight"
+}

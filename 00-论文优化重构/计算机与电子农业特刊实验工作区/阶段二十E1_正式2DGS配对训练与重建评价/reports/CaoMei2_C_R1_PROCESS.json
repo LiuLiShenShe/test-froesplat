@@ -1,0 +1,37 @@
+{
+  "sample": "CaoMei2",
+  "group": "C_R1",
+  "start_time": "2026-10-13T14:59:11.461107+08:00",
+  "end_time": "2026-10-13T15:36:01.830302+08:00",
+  "process_wall_seconds": 2210.3692256854847,
+  "exit_code": 0,
+  "pid": 1757554,
+  "observer_command": [
+    "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/scripts/train_observed.py",
+    "--sample",
+    "CaoMei2",
+    "--group",
+    "C_R1"
+  ],
+  "unchanged_E0_execution": [
+    "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/run_phase20e1.py",
+    "--sample",
+    "CaoMei2",
+    "--group",
+    "C_R1",
+    "--execute-optimization"
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "output_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/CaoMei2/C_R1",
+  "stdout_stderr_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/logs/CaoMei2_C_R1_STDOUT_STDERR.txt",
+  "stdout_stderr_sha256": "c6f674fc70c2f2478675f0fcc79fe04c4c16fa18fae09a43ff132e2ec3e46eca",
+  "sampled_gpu_peak_mib": 4054.0,
+  "sampling_interval_seconds": 2
+}

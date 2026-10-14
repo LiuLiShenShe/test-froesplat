@@ -1,0 +1,37 @@
+{
+  "sample": "HongZhang",
+  "group": "A_raw_RGB_control_v1",
+  "start_time": "2026-10-13T15:42:27.397186+08:00",
+  "end_time": "2026-10-13T16:36:53.293104+08:00",
+  "process_wall_seconds": 3265.895948205143,
+  "exit_code": 0,
+  "pid": 2085428,
+  "observer_command": [
+    "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/scripts/train_observed.py",
+    "--sample",
+    "HongZhang",
+    "--group",
+    "A_raw_RGB_control_v1"
+  ],
+  "unchanged_E0_execution": [
+    "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/run_phase20e1.py",
+    "--sample",
+    "HongZhang",
+    "--group",
+    "A_raw_RGB_control_v1",
+    "--execute-optimization"
+  ],
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "output_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/HongZhang/A_raw_RGB_control_v1",
+  "stdout_stderr_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/logs/HongZhang_A_raw_RGB_control_v1_STDOUT_STDERR.txt",
+  "stdout_stderr_sha256": "904f10468bb19b46c88756aea046b183d261fe5994569ac060bc8bbc42460b8d",
+  "sampled_gpu_peak_mib": 20036.0,
+  "sampling_interval_seconds": 2
+}

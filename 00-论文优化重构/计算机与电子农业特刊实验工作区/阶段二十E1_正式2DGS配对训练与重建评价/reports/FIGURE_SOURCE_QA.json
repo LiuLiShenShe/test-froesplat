@@ -1,0 +1,104 @@
+{
+  "source": "00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/scripts/figures.py",
+  "backend": "python",
+  "summary": {
+    "ready": true,
+    "strict": false,
+    "counts": {
+      "PASS": 12,
+      "WARN": 2,
+      "FAIL": 0
+    }
+  },
+  "findings": [
+    {
+      "check_id": "SOURCE-SYNTAX",
+      "level": "PASS",
+      "message": "Python source parses successfully",
+      "evidence": []
+    },
+    {
+      "check_id": "FONT-FAMILY",
+      "level": "PASS",
+      "message": "A publication-safe sans-serif family is configured",
+      "evidence": [
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    {
+      "check_id": "FONT-SIZE",
+      "level": "PASS",
+      "message": "All detected text sizes are at least 5 pt (minimum 6 pt)",
+      "evidence": []
+    },
+    {
+      "check_id": "COLOR-MAP",
+      "level": "PASS",
+      "message": "No rainbow/jet/hsv color mapping detected",
+      "evidence": []
+    },
+    {
+      "check_id": "EDITABLE-TEXT",
+      "level": "PASS",
+      "message": "SVG and PDF editable-text settings are configured",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-VECTOR",
+      "level": "PASS",
+      "message": "Both SVG and PDF exports are present",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "WARN",
+      "message": "PNG preview is present but no TIFF submission raster was found",
+      "evidence": []
+    },
+    {
+      "check_id": "RASTER-DPI",
+      "level": "WARN",
+      "message": "Raster export meets the 300 dpi floor but not the 600 dpi default",
+      "evidence": [
+        "300"
+      ]
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "PASS",
+      "message": "Detected width 182.9 mm matches a common journal column width",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-SAMPLING",
+      "level": "PASS",
+      "message": "No high-confidence row-sampling operation detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-EXCLUSION",
+      "level": "PASS",
+      "message": "No high-confidence missing-data exclusion detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DEMO-DATA",
+      "level": "PASS",
+      "message": "No obvious simulated-data generator detected",
+      "evidence": []
+    },
+    {
+      "check_id": "LOG-GUARD",
+      "level": "PASS",
+      "message": "No logarithmic transform or axis detected",
+      "evidence": []
+    },
+    {
+      "check_id": "BACKEND-EXCLUSIVE",
+      "level": "PASS",
+      "message": "No obvious cross-backend plotting reference found for python",
+      "evidence": []
+    }
+  ]
+}

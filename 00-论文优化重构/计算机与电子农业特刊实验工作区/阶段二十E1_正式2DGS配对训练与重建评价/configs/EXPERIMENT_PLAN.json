@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "3e909f93",
+  "physical_gpu": 1,
+  "seed": 0,
+  "iterations": 30000,
+  "scene_order": ["WanNianQing1", "CaoMei2", "HongZhang"],
+  "groups": {
+    "WanNianQing1": ["A_raw_RGB_control_v1", "B_R0", "C_R1"],
+    "CaoMei2": ["A_raw_RGB_control_v1", "B_R0", "C_R1"],
+    "HongZhang": ["A_raw_RGB_control_v1", "C_R1"]
+  },
+  "shared_reference": "E0/reports/EVALUATION_REFERENCE_MANIFEST.csv",
+  "metric_input": "Unquantized clamped CUDA RGB and canonical raw RGB resized with production PIL policy",
+  "PSNR": "utils.image_utils.psnr on [1,3,H,W], global RGB MSE, max intensity 1",
+  "SSIM": "utils.loss_utils.ssim, Gaussian window 11, sigma 1.5",
+  "LPIPS": "lpips 0.1.4, VGG, version 0.1; normalize RGB [0,1] to [-1,1]",
+  "figures_predefined_views": "Sorted frozen validation views at indices 0, floor(N/2), N-1",
+  "fixed_crop_normalized_xyxy": [0.25, 0.25, 0.75, 0.75],
+  "independent_spatial_ROI": "Fixed central rectangle above; descriptive only, not guaranteed foreground",
+  "predicted_ROI": "Frozen B_R0 validation mask shared by every treatment; descriptive proxy only, NOT independent GT",
+  "predicted_ROI_resize": "PIL nearest to actual render dimensions",
+  "alpha_threshold": 0.5,
+  "background_contamination_proxy": "Mean rendered RGB energy/alpha outside frozen R0 predicted ROI",
+  "holes_proxy": "Fraction alpha < 0.5 inside frozen R0 predicted ROI; NOT true geometric holes",
+  "independent_GT_policy": "Only calculate independent silhouette/Boundary-F1 if held-out manual contours with verified camera identity exist",
+  "no_3D_GT": true,
+  "model_distribution": "Opacity, scales and distance from inherited sparse-point centroid; not geometry accuracy",
+  "statistics": "Scene-level direction and per-view distributions, no significance claims",
+  "no_result_dependent_changes": true,
+  "mesh_or_phenotyping": false
+}

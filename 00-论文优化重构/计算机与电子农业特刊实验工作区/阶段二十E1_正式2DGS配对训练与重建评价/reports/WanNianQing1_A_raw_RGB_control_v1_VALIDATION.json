@@ -1,0 +1,72 @@
+{
+  "sample": "WanNianQing1",
+  "group": "A_raw_RGB_control_v1",
+  "iteration": 30000,
+  "Gaussian_count": 445086,
+  "all_PLY_parameters_finite": true,
+  "all_activated_parameters_finite": true,
+  "checkpoint_restore": "PASS",
+  "positive_scales_and_rotation_norms": true,
+  "opacity_bounds_valid": true,
+  "checkpoint_PLY_tensor_identity": "PASS",
+  "reload_render_max_abs_error": 0.0,
+  "checkpoint_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/A_raw_RGB_control_v1/chkpnt30000.pth",
+  "checkpoint_bytes": 315129281,
+  "checkpoint_sha256": "70bca23b89d60f777bfb900143ae4a7b7063fe0f76d13dfa35671dbd8bd21b53",
+  "final_PLY_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/A_raw_RGB_control_v1/point_cloud/iteration_30000/point_cloud.ply",
+  "final_PLY_bytes": 108602492,
+  "final_PLY_sha256": "db748a1485d4289a5826bed337ed8bd7b99e551d0741582aeb420b90f97bcb3b",
+  "parameter_tensor_sha256": {
+    "_xyz": "58641e0e051b5b3dfd4e23982cdcfa4bf2631028fcceea0707b9a3aa7638ced4",
+    "_features_dc": "6cc22e1ddc4b08541d626777a8e789cfd90fe1724bde4ce972e98d5ac624925d",
+    "_features_rest": "980d3c2737dc967da6c4a37f646b1d5e838c756b92da25572190b8f2714fe275",
+    "_scaling": "bd01b0a300fae148a7b10bbe1d2e7a6b0f402e286295f54faae0f93b3ace4d6f",
+    "_rotation": "3cc0d6263d38a42d5accdcfca8502b1025ea2ef586e54c309a2603bc5fb3e2ef",
+    "_opacity": "32d46487273cedc8a9e950521afbe453d0e7b52d61657c0981730f626aab7303"
+  },
+  "expected_heldout": 27,
+  "successful_heldout": 27,
+  "failed_heldout": [],
+  "empty_renders": 0,
+  "mean_render_seconds": 0.03242810067065336,
+  "evaluation_wall_seconds": 475.256886806339,
+  "metric_versions": {
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "lpips": "0.1.4",
+    "Pillow": "12.1.1",
+    "numpy": "2.4.2",
+    "plyfile": "1.1.3",
+    "psnr_source_sha256": "9f7e4fd3c3eae0dcf1894e3f329ec7304eedf825a1e40e0c765e295465a9805d",
+    "ssim_source_sha256": "8f366bd24120741f1f0edd6935a3e69d6aad724af689023b6cedcc7abd8f38d1",
+    "lpips_weights_sha256": "a78928a0af1e5f0fcb1f3b9e8f8c3a2a5a3de244d830ad5c1feddc79b8432868",
+    "vgg16_weights_sha256": "397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0",
+    "evaluator_sha256": "8d49db010adb69f6563109c51fdae5acda8b3e8913a1b0e30a0348bf65b805f3",
+    "lpips_input_range": "[-1,1] via normalize=True",
+    "lpips_network": "vgg",
+    "reference_policy": "same canonical RAW RGB, independent of treatment",
+    "resize_policy": "production channelwise PIL default BICUBIC resolution=2"
+  },
+  "timestamp": "2026-10-13T12:49:32.207155+08:00",
+  "status": "PASS",
+  "Gaussian_distribution_descriptive": {
+    "opacity": {
+      "p01": 0.0038501440547406675,
+      "p50": 0.9342501163482666,
+      "p95": 0.9999901056289673,
+      "p99": 0.9999996423721313
+    },
+    "scale": {
+      "p01": 0.001700059932190925,
+      "p50": 0.03196495585143566,
+      "p95": 0.17997678294777864,
+      "p99": 0.35934708327054987
+    },
+    "distance_from_sparse_centroid": {
+      "p01": 0.4881562188267708,
+      "p50": 9.123247146606445,
+      "p95": 14.651063919067383,
+      "p99": 16.25326519012452
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "sample": "WanNianQing1",
+  "group": "C_R1",
+  "iteration": 30000,
+  "Gaussian_count": 133425,
+  "all_PLY_parameters_finite": true,
+  "all_activated_parameters_finite": true,
+  "checkpoint_restore": "PASS",
+  "positive_scales_and_rotation_norms": true,
+  "opacity_bounds_valid": true,
+  "checkpoint_PLY_tensor_identity": "PASS",
+  "reload_render_max_abs_error": 0.0,
+  "checkpoint_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/C_R1/chkpnt30000.pth",
+  "checkpoint_bytes": 94473857,
+  "checkpoint_sha256": "e40262e411eabf2e5134e881c9256b5290aeb2fedd7953fc0edec7a833b95a38",
+  "final_PLY_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/C_R1/point_cloud/iteration_30000/point_cloud.ply",
+  "final_PLY_bytes": 32557208,
+  "final_PLY_sha256": "9de1619bc10ce1c54d3d75eee7fa69b71597cd0c161f26e0cf2b8db781aad37d",
+  "parameter_tensor_sha256": {
+    "_xyz": "2cb9512bf1c9b24744cc7bb5b73b43f2a08ed85c19dbb119027303b1d08b53fb",
+    "_features_dc": "43db8f4d8c00a4216eb343d0fa10ace991c5cb8b2005f738d0f1c111d8e1fa7c",
+    "_features_rest": "f56cb64c901a8887fe08a27bee4d471d852721c8d04944a13b84d83f859ab1a9",
+    "_scaling": "2b7e285e91bda7b18f4fb34a7b2c023f616d5b5934fa15143c60a3264db712d3",
+    "_rotation": "2ece23db787d54664dc6f580e8d884882c36b95b0b4af4c15e705f79ef58a559",
+    "_opacity": "e70ee776d63ffea0c1d403b6a6af9e009dc0c16bc8f492df44149c611c9a5253"
+  },
+  "expected_heldout": 27,
+  "successful_heldout": 27,
+  "failed_heldout": [],
+  "empty_renders": 0,
+  "mean_render_seconds": 0.010663958438844592,
+  "evaluation_wall_seconds": 381.1944448687136,
+  "metric_versions": {
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "lpips": "0.1.4",
+    "Pillow": "12.1.1",
+    "numpy": "2.4.2",
+    "plyfile": "1.1.3",
+    "psnr_source_sha256": "9f7e4fd3c3eae0dcf1894e3f329ec7304eedf825a1e40e0c765e295465a9805d",
+    "ssim_source_sha256": "8f366bd24120741f1f0edd6935a3e69d6aad724af689023b6cedcc7abd8f38d1",
+    "lpips_weights_sha256": "a78928a0af1e5f0fcb1f3b9e8f8c3a2a5a3de244d830ad5c1feddc79b8432868",
+    "vgg16_weights_sha256": "397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0",
+    "evaluator_sha256": "8d49db010adb69f6563109c51fdae5acda8b3e8913a1b0e30a0348bf65b805f3",
+    "lpips_input_range": "[-1,1] via normalize=True",
+    "lpips_network": "vgg",
+    "reference_policy": "same canonical RAW RGB, independent of treatment",
+    "resize_policy": "production channelwise PIL default BICUBIC resolution=2"
+  },
+  "timestamp": "2026-10-13T13:07:26.011022+08:00",
+  "status": "PASS",
+  "Gaussian_distribution_descriptive": {
+    "opacity": {
+      "p01": 0.0038318513613194226,
+      "p50": 0.976504385471344,
+      "p95": 0.999991774559021,
+      "p99": 0.9999986886978149
+    },
+    "scale": {
+      "p01": 0.0007485136744799092,
+      "p50": 0.009037258569151163,
+      "p95": 0.03670835252851246,
+      "p99": 0.06284644015133385
+    },
+    "distance_from_sparse_centroid": {
+      "p01": 0.38440868377685544,
+      "p50": 0.9662736654281616,
+      "p95": 1.3823223352432248,
+      "p99": 1.6623433780670174
+    }
+  }
+}

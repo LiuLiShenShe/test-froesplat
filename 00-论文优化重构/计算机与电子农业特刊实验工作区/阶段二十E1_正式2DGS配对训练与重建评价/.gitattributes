@@ -1,0 +1,6 @@
+# Retain csv.writer's original CRLF bytes without treating CR as trailing space.
+*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Matplotlib emits legal spaces inside multiline SVG path attributes.
+figures/*_training.svg whitespace=-blank-at-eol,blank-at-eof,space-before-tab
+# Preserve actual traceback source indentation, including indentation-only lines.
+logs/failed_attempts/*/*_STDOUT_STDERR.txt whitespace=-blank-at-eol,blank-at-eof,space-before-tab
