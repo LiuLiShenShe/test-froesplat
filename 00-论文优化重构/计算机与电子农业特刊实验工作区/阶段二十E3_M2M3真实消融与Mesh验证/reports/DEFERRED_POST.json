@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "start_time": "2026-10-15T22:15:32.106640+08:00",
+  "training_completed_time": "2026-10-16T01:52:03.007674+08:00",
+  "steps": [
+    {
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/execute_post.py"
+      ],
+      "cwd": "/data/fj/F2DMAS",
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_time": "2026-10-16T01:52:03.008364+08:00",
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/logs/DEFERRED_EXECUTE_POST.txt",
+      "end_time": "2026-10-16T03:09:41.572897+08:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "78778b9dc1bf8c39f8faa4fa325a4b346e172d293247b37963725b4d98735dd6"
+    },
+    {
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/summarize.py"
+      ],
+      "cwd": "/data/fj/F2DMAS",
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_time": "2026-10-16T03:09:41.574404+08:00",
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/logs/DEFERRED_SUMMARIZE.txt",
+      "end_time": "2026-10-16T03:09:43.887223+08:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "d62bc0c057e88428758c0382eac4cf1ec1b5037bf865daa79444b874d052c41a"
+    },
+    {
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/comparison_figures.py"
+      ],
+      "cwd": "/data/fj/F2DMAS",
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_time": "2026-10-16T03:09:43.888050+08:00",
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/logs/DEFERRED_COMPARISON_FIGURES.txt",
+      "end_time": "2026-10-16T03:11:06.145444+08:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/recompute_metrics.py"
+      ],
+      "cwd": "/data/fj/F2DMAS",
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "OMP_NUM_THREADS": "4",
+        "OPENBLAS_NUM_THREADS": "4",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "start_time": "2026-10-16T03:11:06.146664+08:00",
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/logs/DEFERRED_RECOMPUTE_METRICS.txt",
+      "end_time": "2026-10-16T03:16:55.691487+08:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "f95e4e513c7d8b4c2ef08333cc90842ed6a2907933e6231a0ffabbbbbe426eea"
+    }
+  ],
+  "end_time": "2026-10-16T03:16:55.760061+08:00"
+}

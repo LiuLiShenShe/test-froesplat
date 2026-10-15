@@ -1,0 +1,28 @@
+{
+  "recorded_at": "2026-10-15T22:21:48.543798+08:00",
+  "formal_M1_M2_results_observed": false,
+  "methods": [
+    "M0",
+    "M1",
+    "M2"
+  ],
+  "order": "Scene order WanNianQing1,CaoMei2,HongZhang; method order M0,M1,M2",
+  "physical_GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "camera_set": "Identical frozen held-out cameras per scene",
+  "native_renderer": true,
+  "SH_degree": 3,
+  "black_background": true,
+  "warmups": 3,
+  "measured_full_passes": 2,
+  "timers": [
+    "synchronized CUDA events",
+    "synchronized perf_counter wall"
+  ],
+  "scope_excludes": [
+    "model loading",
+    "GT metrics",
+    "PNG/float output serialization"
+  ],
+  "limitation": "One session with fixed order and shared host load; descriptive efficiency pilot, not a reproducible speedup guarantee",
+  "script_sha256": "0a9fff4f01a9642a100fdcdc7b374fee4fe644323135240082e5efca8e55c4f6"
+}

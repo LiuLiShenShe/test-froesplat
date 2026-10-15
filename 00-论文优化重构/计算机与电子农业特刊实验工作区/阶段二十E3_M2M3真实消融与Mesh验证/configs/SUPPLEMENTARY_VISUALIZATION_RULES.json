@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-10-15T22:10:03.549527+08:00",
+  "formal_M1_M2_results_observed": false,
+  "rule": "Sorted held-out first/middle/last; no quality ranking",
+  "comparison_rgb_difference": "Mean absolute channel difference to M0; fixed display interval [0, 0.1] for every scene/method",
+  "depth": "[0, scene frozen depth_trunc] shared by methods",
+  "surface_camera": "M0 post-mesh bounding-box center and 1.1 diagonal distance, first sorted held-out orientation plus 25-degree y-axis yaw, 720x720 60-degree FoV",
+  "surface_display": "All real triangles via CPU raycast; same camera and lighting for M0/M1/M2",
+  "provenance_limit": "Supplementary display rule recorded after inspecting M0 visualizations. It is not a preregistered primary evaluation camera. Metric cameras and TSDF remain frozen.",
+  "no_geometry_or_render_editing": true
+}

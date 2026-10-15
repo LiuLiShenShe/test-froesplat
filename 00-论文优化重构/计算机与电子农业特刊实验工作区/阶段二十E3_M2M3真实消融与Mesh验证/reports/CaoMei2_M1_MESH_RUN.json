@@ -1,0 +1,33 @@
+{
+  "sample": "CaoMei2",
+  "method": "M1",
+  "start_time": "2026-10-16T02:11:34.725790+08:00",
+  "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "command": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/extract_mesh.py",
+    "--sample",
+    "CaoMei2",
+    "--method",
+    "M1"
+  ],
+  "mesh_protocol_sha256": "e5a93163e86bbc95cc400826c50924ba1087595ac30de688032289626a3e493e",
+  "model_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/training/CaoMei2/M1/attempt_01",
+  "output_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/meshes/CaoMei2/M1/main",
+  "status": "PASS",
+  "source_sha256": "3f0d04b544b0740b3b0a2426fbaaeb5cb30d9497fcbb13e72199ee8140b81806",
+  "depth_units": "arbitrary inherited COLMAP units",
+  "checkpoint_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/training/CaoMei2/M1/attempt_01/chkpnt30000.pth",
+  "checkpoint_sha256": "5477e8c6f350e293638574e419a62aadc4983792783e37f50143dab0a07ade45",
+  "PLY_sha256": "37039a2c707b08672d0c799ed1adf9b773755e47183bcec5da91cf99757ed1ab",
+  "Gaussian_count": 119229,
+  "integration_camera_count": 92,
+  "timings": {
+    "depth_alpha_RGB_render_seconds": 20.811881998553872,
+    "TSDF_fusion_seconds": 9.231778021901846,
+    "postprocessing_validation_write_seconds": 10.917892868630588
+  },
+  "wall_seconds": 103.56009336188436,
+  "peak_cuda_allocated_bytes": 508306944,
+  "peak_cuda_reserved_bytes": 954204160,
+  "peak_process_RSS_KiB": 9636664
+}

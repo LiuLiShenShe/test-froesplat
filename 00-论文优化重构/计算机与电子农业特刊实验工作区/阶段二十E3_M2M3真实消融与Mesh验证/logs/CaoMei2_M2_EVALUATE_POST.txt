@@ -1,0 +1,25 @@
+Loading trained model at iteration 30000
+Reading camera 1/106Reading camera 2/106Reading camera 3/106Reading camera 4/106Reading camera 5/106Reading camera 6/106Reading camera 7/106Reading camera 8/106Reading camera 9/106Reading camera 10/106Reading camera 11/106Reading camera 12/106Reading camera 13/106Reading camera 14/106Reading camera 15/106Reading camera 16/106Reading camera 17/106Reading camera 18/106Reading camera 19/106Reading camera 20/106Reading camera 21/106Reading camera 22/106Reading camera 23/106Reading camera 24/106Reading camera 25/106Reading camera 26/106Reading camera 27/106Reading camera 28/106Reading camera 29/106Reading camera 30/106Reading camera 31/106Reading camera 32/106Reading camera 33/106Reading camera 34/106Reading camera 35/106Reading camera 36/106Reading camera 37/106Reading camera 38/106Reading camera 39/106Reading camera 40/106Reading camera 41/106Reading camera 42/106Reading camera 43/106Reading camera 44/106Reading camera 45/106Reading camera 46/106Reading camera 47/106Reading camera 48/106Reading camera 49/106Reading camera 50/106Reading camera 51/106Reading camera 52/106Reading camera 53/106Reading camera 54/106Reading camera 55/106Reading camera 56/106Reading camera 57/106Reading camera 58/106Reading camera 59/106Reading camera 60/106Reading camera 61/106Reading camera 62/106Reading camera 63/106Reading camera 64/106Reading camera 65/106Reading camera 66/106Reading camera 67/106Reading camera 68/106Reading camera 69/106Reading camera 70/106Reading camera 71/106Reading camera 72/106Reading camera 73/106Reading camera 74/106Reading camera 75/106Reading camera 76/106Reading camera 77/106Reading camera 78/106Reading camera 79/106Reading camera 80/106Reading camera 81/106Reading camera 82/106Reading camera 83/106Reading camera 84/106Reading camera 85/106Reading camera 86/106Reading camera 87/106Reading camera 88/106Reading camera 89/106Reading camera 90/106Reading camera 91/106Reading camera 92/106Reading camera 93/106Reading camera 94/106Reading camera 95/106Reading camera 96/106Reading camera 97/106Reading camera 98/106Reading camera 99/106Reading camera 100/106Reading camera 101/106Reading camera 102/106Reading camera 103/106Reading camera 104/106Reading camera 105/106Reading camera 106/106/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/lib/python3.12/site-packages/lpips/lpips.py:107: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
+
+Loading Training Cameras
+Loading Test Cameras
+EVALUATED CaoMei2_M2 crop_0095 4.720320224761963 16.827916329227055
+EVALUATED CaoMei2_M2 crop_0103 4.576955318450928 22.41810519739969
+EVALUATED CaoMei2_M2 crop_0111 5.118159294128418 23.52607983970545
+EVALUATED CaoMei2_M2 crop_0119 5.478086948394775 12.273550574918426
+EVALUATED CaoMei2_M2 crop_0136 5.1636433601379395 23.116283854248188
+EVALUATED CaoMei2_M2 crop_0144 5.121489524841309 23.33752117652282
+EVALUATED CaoMei2_M2 crop_0152 5.046300411224365 19.746549997838713
+EVALUATED CaoMei2_M2 crop_0160 4.647991180419922 18.327153489694233
+EVALUATED CaoMei2_M2 crop_0168 4.751171588897705 18.41340501307968
+EVALUATED CaoMei2_M2 crop_0176 5.076948165893555 22.48014969243318
+EVALUATED CaoMei2_M2 crop_0184 4.902571678161621 23.3516145769344
+EVALUATED CaoMei2_M2 crop_0192 4.847879886627197 26.151332396562992
+EVALUATED CaoMei2_M2 crop_0200 5.270342826843262 24.45495686977518
+EVALUATED CaoMei2_M2 crop_0208 4.804139137268066 20.492701471952948
+EVALUATION_COMPLETE CaoMei2_M2

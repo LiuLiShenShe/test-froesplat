@@ -1,0 +1,33 @@
+{
+  "sample": "HongZhang",
+  "method": "M2",
+  "start_time": "2026-10-16T02:32:18.785543+08:00",
+  "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "command": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/extract_mesh.py",
+    "--sample",
+    "HongZhang",
+    "--method",
+    "M2"
+  ],
+  "mesh_protocol_sha256": "08f8eadab89a3e4bb560a807b9961c19ab1ceebaa4e41047ab9d6bb59089cfcc",
+  "model_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/training/HongZhang/M2/attempt_01",
+  "output_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/meshes/HongZhang/M2/main",
+  "status": "PASS",
+  "source_sha256": "3f0d04b544b0740b3b0a2426fbaaeb5cb30d9497fcbb13e72199ee8140b81806",
+  "depth_units": "arbitrary inherited COLMAP units",
+  "checkpoint_path": "/data/fj/F2DMAS_phase20e3_data/1771e53f_v1/training/HongZhang/M2/attempt_01/chkpnt30000.pth",
+  "checkpoint_sha256": "627c1271adfc5febdeb7650c356d18fce3f125cdaeaf86d32464a33979d8bd87",
+  "PLY_sha256": "710706ce9e06563296a864465f9f998c8335b6ff124eb05ce70713d90ee853eb",
+  "Gaussian_count": 147876,
+  "integration_camera_count": 186,
+  "timings": {
+    "depth_alpha_RGB_render_seconds": 54.62630864512175,
+    "TSDF_fusion_seconds": 43.31333942897618,
+    "postprocessing_validation_write_seconds": 33.870058031752706
+  },
+  "wall_seconds": 303.81185090728104,
+  "peak_cuda_allocated_bytes": 595629056,
+  "peak_cuda_reserved_bytes": 2218786816,
+  "peak_process_RSS_KiB": 25012512
+}

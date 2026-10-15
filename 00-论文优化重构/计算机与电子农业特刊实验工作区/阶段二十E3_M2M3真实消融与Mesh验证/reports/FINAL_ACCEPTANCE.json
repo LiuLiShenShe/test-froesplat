@@ -1,0 +1,154 @@
+{
+  "status": "PASS",
+  "time": "2026-10-16T04:05:57.857441+08:00",
+  "baseline_commit": "1771e53fe147714e4c69bb9b833064ddddf098e9",
+  "gates": {
+    "G1_FROZEN_MODELS_AND_INPUTS": "PASS",
+    "G2_THREE_REFERENCE_MESHES": "PASS",
+    "G3_RELOADABLE_RECOMPUTABLE_MESHES": "PASS",
+    "G4_FROZEN_TSDF_PROTOCOL": "PASS",
+    "G5_NO_INVENTED_PHYSICAL_SCALE": "PASS",
+    "G6_PRUNING_CALL_CHAIN_AUDITED": "PASS",
+    "G7_PAIRED_INITIALIZATION_CONFIGURATIONS": "PASS",
+    "G8_STANDARD_BASELINE_REUSE": "PASS",
+    "G9_COMPLETE_TRAININGS_AND_CHECKPOINTS": "PASS",
+    "G10_ACTUAL_PRUNING_AND_BUDGETS": "PASS",
+    "G11_FLOOR_ACTIVATION_EVIDENCE": "PASS",
+    "G12_COMMON_CAMERAS_RAW_RGB_AND_FIXED_ROI": "PASS",
+    "G13_IDENTICAL_TSDF_RULES": "PASS",
+    "G14_PROXIES_DISTINGUISHED_FROM_GT": "PASS",
+    "G15_NO_UNIMPLEMENTED_BIDIRECTIONAL_CLAIM": "PASS",
+    "G16_PRODUCTION_MATH_UNCHANGED": "PASS",
+    "G17_NEGATIVE_AND_FAILED_EVIDENCE_RETAINED": "PASS",
+    "G18_MANUSCRIPT_CORRECTION_SPEC": "PASS",
+    "G19_TABLE7_UNVERIFIED_HISTORY_NOT_INHERITED": "PASS",
+    "G20_PHASE20F_SCALE_AND_MEASUREMENT_REQUIREMENTS": "PASS",
+    "EXTRA_ALL_FLOAT_METRICS_RECOMPUTED": "PASS"
+  },
+  "evidence": {
+    "G1_FROZEN_MODELS_AND_INPUTS": {
+      "SHA256_verified_files": 5868,
+      "historical_tracked_changes": 0
+    },
+    "G2_THREE_REFERENCE_MESHES": {
+      "checks": 3,
+      "all_passed": true
+    },
+    "G3_RELOADABLE_RECOMPUTABLE_MESHES": {
+      "independent_reloads": 18
+    },
+    "G4_FROZEN_TSDF_PROTOCOL": {
+      "checks": 3,
+      "all_passed": true
+    },
+    "G5_NO_INVENTED_PHYSICAL_SCALE": {
+      "checks": 18,
+      "all_passed": true
+    },
+    "G6_PRUNING_CALL_CHAIN_AUDITED": {
+      "entries": 17,
+      "source_unchanged": true,
+      "production_mathematics": "Inherited unchanged"
+    },
+    "G7_PAIRED_INITIALIZATION_CONFIGURATIONS": {
+      "scene_pairs": 3,
+      "same_initial_tensors_RNG_alpha_sparse": true,
+      "same_30000_camera_draws": true
+    },
+    "G8_STANDARD_BASELINE_REUSE": {
+      "status": "SOURCE_EQUIVALENT_DISABLED_PATH",
+      "shared": {
+        "scene/__init__.py": "BYTE_IDENTICAL",
+        "scene/gaussian_model.py": "BYTE_IDENTICAL",
+        "scene/dataset_readers.py": "BYTE_IDENTICAL",
+        "scene/cameras.py": "BYTE_IDENTICAL",
+        "utils/camera_utils.py": "BYTE_IDENTICAL",
+        "gaussian_renderer/__init__.py": "BYTE_IDENTICAL",
+        "utils/loss_utils.py": "BYTE_IDENTICAL",
+        "rgb_reconstruction_loss": "AST_IDENTICAL",
+        "mask_loss_terms": "AST_IDENTICAL",
+        "read_view_weights": "AST_IDENTICAL",
+        "get_view_weight": "AST_IDENTICAL",
+        "gaussian_brightness": "AST_IDENTICAL"
+      },
+      "disabled_conditions": {
+        "pruning_mode": "none",
+        "capacity_control_mode": "none"
+      },
+      "training_diff_review": "Only capacity validation/state/no-op update/extra pruning and logging added. Disabled prune returns before tensors or RNG. update_capacity_state(None) returns. No change to optimizer, loss, densification or schedules.",
+      "general_utils_difference": "colormap Agg tostring_rgb fallback only, no seed change; use same E1 compatibility wrapper",
+      "historical_limit": "Seed0 initial RNG hash absent; source-path equivalence, not claimed historical state identity",
+      "new_training_count": 6,
+      "M0_branch_control_required": false,
+      "additional_archived_initial_tensor_hash_checks": 24,
+      "archived_initial_fields": "xyz, scale, rotation, opacity; historical full RNG state remains unavailable"
+    },
+    "G9_COMPLETE_TRAININGS_AND_CHECKPOINTS": {
+      "new_full_trainings": 6,
+      "independent_checkpoint_PLY_checks": 9
+    },
+    "G10_ACTUAL_PRUNING_AND_BUDGETS": {
+      "actual_scheduled_events": 30,
+      "extra_removed": 54849
+    },
+    "G11_FLOOR_ACTIVATION_EVIDENCE": {
+      "M2_events": 15,
+      "floor_blocked_count_total": 0,
+      "activation": "NOT_TRIGGERED",
+      "evaluated_events": 15
+    },
+    "G12_COMMON_CAMERAS_RAW_RGB_AND_FIXED_ROI": {
+      "common_reference_views": 204,
+      "unique_heldout_cameras": 68
+    },
+    "G13_IDENTICAL_TSDF_RULES": {
+      "same_protocol_within_each_scene": true,
+      "scene_scale_rule": "depth=2*radius, voxel=depth/1024, sdf=5*voxel"
+    },
+    "G14_PROXIES_DISTINGUISHED_FROM_GT": {
+      "checks": 204,
+      "all_passed": true
+    },
+    "G15_NO_UNIMPLEMENTED_BIDIRECTIONAL_CLAIM": {
+      "checks": 2,
+      "all_passed": true
+    },
+    "G16_PRODUCTION_MATH_UNCHANGED": {
+      "checks": 1,
+      "all_passed": true
+    },
+    "G17_NEGATIVE_AND_FAILED_EVIDENCE_RETAINED": {
+      "all_declared_model_results": 9,
+      "all_new_training_logs": 6,
+      "quality_based_reruns": 0
+    },
+    "G18_MANUSCRIPT_CORRECTION_SPEC": {
+      "checks": 2,
+      "all_passed": true
+    },
+    "G19_TABLE7_UNVERIFIED_HISTORY_NOT_INHERITED": {
+      "checks": 2,
+      "all_passed": true
+    },
+    "G20_PHASE20F_SCALE_AND_MEASUREMENT_REQUIREMENTS": {
+      "checks": 1,
+      "all_passed": true
+    },
+    "EXTRA_ALL_FLOAT_METRICS_RECOMPUTED": {
+      "status": "PASS",
+      "views": 204,
+      "wall_seconds": 341.1176309324801,
+      "families": [
+        "full raw RGB",
+        "fixed R0 foreground proxy",
+        "background/normal/depth proxy"
+      ],
+      "tolerance": "Absolute2e-5 + relative2e-6, exact integer pixel/component counts",
+      "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+      "ROI_is_independent_GT": false,
+      "source_sha256": "bbbd8f835844338b77ca98be45c7507ab07a16d0a1333b0dd619d1c2f97dc892"
+    }
+  },
+  "wall_seconds": 300.5715843476355,
+  "acceptance_script_sha256": "a3458d9eafd27c33aed38d4d8144543dd6555d20e9d6d730eb4e9442fe48a35d"
+}

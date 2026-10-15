@@ -1,0 +1,352 @@
+--- main/train.py
++++ branch/train.py
+@@ -47,6 +47,18 @@
+         raise ValueError("--mask_mode preprocess/alpha requires --mask_dir <path>.")
+     if opt.view_weight_mode != "none" and not opt.view_weight_list:
+         raise ValueError("--view_weight_mode requires --view_weight_list <csv/txt>.")
++    if opt.capacity_control_mode not in ("none", "m2m3", "m2m3_floor"):
++        raise ValueError("--capacity_control_mode must be one of: none, m2m3, m2m3_floor.")
++    if opt.capacity_control_mode != "none" and opt.pruning_mode == "none":
++        raise ValueError("--capacity_control_mode requires --pruning_mode to be enabled.")
++    if opt.capacity_floor_reference not in ("initial", "max_seen", "current"):
++        raise ValueError("--capacity_floor_reference must be one of: initial, max_seen, current.")
++    if not 0.0 <= float(opt.capacity_floor_ratio) <= 1.0:
++        raise ValueError("--capacity_floor_ratio must be in [0, 1].")
++    if opt.m2m3_score_mode not in ("legacy", "topology"):
++        raise ValueError("--m2m3_score_mode must be one of: legacy, topology.")
++    if opt.m2m3_region_mode not in ("foreground", "all"):
++        raise ValueError("--m2m3_region_mode must be one of: foreground, all.")
+
+
+ def enabled_path(path):
+@@ -202,6 +214,116 @@
+     return rgb.mean(dim=1)
+
+
++def capacity_control_enabled(opt):
++    return opt.capacity_control_mode in ("m2m3", "m2m3_floor")
++
++
++def init_capacity_state(gaussians):
++    initial_count = int(gaussians.get_xyz.shape[0])
++    return {
++        "initial_count": initial_count,
++        "max_seen_count": initial_count,
++        "total_requested": 0,
++        "total_removed": 0,
++        "total_blocked_by_floor": 0,
++        "rounds": 0,
++        "floor_active_rounds": 0,
++    }
++
++
++def update_capacity_state(capacity_state, current_count):
++    if capacity_state is None:
++        return
++    capacity_state["max_seen_count"] = max(int(capacity_state.get("max_seen_count", 0)), int(current_count))
++
++
++def normalized_positive(values):
++    values = values.detach().float().clamp_min(0.0)
++    if values.numel() == 0:
++        return values
++    denom = values.max().clamp_min(1e-6)
++    return values / denom
++
++
++def m2m3_prune_scores(gaussians, opt, legacy_score, mask_scores=None):
++    if opt.m2m3_score_mode == "legacy":
++        return legacy_score.detach().float()
++
++    score = torch.zeros_like(legacy_score, dtype=torch.float32)
++    opacity = gaussians.get_opacity.detach().squeeze()
++    opacity_penalty = (float(opt.pruning_opacity_threshold) - opacity).clamp_min(0.0)
++    score += normalized_positive(opacity_penalty) * max(0.0, float(opt.m2m3_opacity_weight))
++
++    brightness = gaussian_brightness(gaussians)
++    brightness_penalty = (float(opt.pruning_brightness_threshold) - brightness).clamp_min(0.0)
++    score += normalized_positive(brightness_penalty) * max(0.0, float(opt.m2m3_brightness_weight))
++
++    if mask_scores is not None and opt.m2m3_region_mode == "foreground":
++        mask_penalty = (float(opt.pruning_mask_threshold) - mask_scores).clamp_min(0.0)
++        score += normalized_positive(mask_penalty) * max(0.0, float(opt.m2m3_mask_weight))
++
++    scales = gaussians.get_scaling.detach().max(dim=1).values
++    scale_penalty = (scales - scales.median()).clamp_min(0.0)
++    score += normalized_positive(scale_penalty) * max(0.0, float(opt.m2m3_scale_weight))
++
++    screen_penalty = gaussians.max_radii2D.detach().float().clamp_min(0.0)
++    score += normalized_positive(screen_penalty) * max(0.0, float(opt.m2m3_view_weight))
++    return score
++
++
++def capacity_floor_is_active(opt, iteration):
++    start_iter = int(opt.capacity_floor_start_iter) if int(opt.capacity_floor_start_iter) > 0 else int(opt.pruning_start_iter)
++    end_iter = int(opt.capacity_floor_end_iter) if int(opt.capacity_floor_end_iter) > 0 else int(opt.iterations)
++    return start_iter <= int(iteration) <= end_iter
++
++
++def resolve_capacity_floor_count(opt, capacity_state, current_count):
++    if int(opt.capacity_floor_count) > 0:
++        return min(int(opt.capacity_floor_count), int(current_count))
++    if opt.capacity_floor_reference == "initial":
++        reference_count = int(capacity_state.get("initial_count", current_count))
++    elif opt.capacity_floor_reference == "current":
++        reference_count = int(current_count)
++    else:
++        reference_count = int(capacity_state.get("max_seen_count", current_count))
++    floor_count = int(round(reference_count * float(opt.capacity_floor_ratio)))
++    return min(max(floor_count, 0), int(current_count))
++
++
++def select_top_prune_candidates(prune_mask, score, max_remove):
++    max_remove = int(max_remove)
++    if max_remove <= 0:
++        return torch.zeros_like(prune_mask)
++    requested = int(prune_mask.sum().item())
++    if requested <= max_remove:
++        return prune_mask
++    candidate_score = score.clone()
++    candidate_score[~prune_mask] = -float("inf")
++    topk = torch.topk(candidate_score, k=max_remove, largest=True).indices
++    limited = torch.zeros_like(prune_mask)
++    limited[topk] = True
++    return torch.logical_and(prune_mask, limited)
++
++
++def save_capacity_report(model_path, report):
++    capacity_dir = os.path.join(model_path, "capacity_control")
++    os.makedirs(capacity_dir, exist_ok=True)
++    with open(os.path.join(capacity_dir, f"capacity_iter_{report['iteration']}.json"), "w", encoding="utf-8") as f:
++        json.dump(report, f, indent=2)
++
++
++def should_save_capacity_report(opt, iteration):
++    interval = int(opt.capacity_report_interval)
++    return interval <= 0 or int(iteration) % interval == 0 or int(iteration) == int(opt.iterations)
++
++
++def save_capacity_summary(model_path, summary):
++    capacity_dir = os.path.join(model_path, "capacity_control")
++    os.makedirs(capacity_dir, exist_ok=True)
++    with open(os.path.join(capacity_dir, "capacity_summary.json"), "w", encoding="utf-8") as f:
++        json.dump(summary, f, indent=2)
++
++
+ def mask_consistency_scores(gaussians, cameras, max_views):
+     mask_cameras = [cam for cam in cameras if cam.gt_alpha_mask is not None]
+     if not mask_cameras:
+@@ -237,13 +359,14 @@
+     return scores
+
+
+-def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None):
++def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, capacity_state=None):
+     if opt.pruning_mode == "none":
+         return None
+     if iteration < opt.pruning_start_iter or iteration % opt.pruning_interval != 0:
+         return None
+
+     before = int(gaussians.get_xyz.shape[0])
++    update_capacity_state(capacity_state, before)
+     prune_mask = torch.zeros((before,), dtype=torch.bool, device="cuda")
+     removed_by_opacity = torch.zeros_like(prune_mask)
+     removed_by_brightness = torch.zeros_like(prune_mask)
+@@ -270,31 +393,83 @@
+
+     requested = int(prune_mask.sum().item())
+     if requested <= 0:
+-        return {
++        report = {
+             "iteration": iteration,
+             "mode": opt.pruning_mode,
++            "capacity_control_mode": opt.capacity_control_mode,
+             "gaussians_before": before,
+             "gaussians_after": before,
+             "removed": 0,
+         }
+-
+-    max_remove = int(before * max(0.0, min(opt.pruning_max_remove_ratio, 1.0)))
+-    if max_remove > 0 and requested > max_remove:
+-        candidate_score = prune_score.clone()
+-        candidate_score[~prune_mask] = -float("inf")
+-        topk = torch.topk(candidate_score, k=max_remove, largest=True).indices
+-        limited = torch.zeros_like(prune_mask)
+-        limited[topk] = True
+-        prune_mask = torch.logical_and(prune_mask, limited)
++        if capacity_control_enabled(opt) and opt.save_capacity_report and should_save_capacity_report(opt, iteration):
++            save_capacity_report(model_path, report)
++        return report
++
++    capacity_report = {}
++    if capacity_control_enabled(opt):
++        m2m3_score = m2m3_prune_scores(gaussians, opt, prune_score, mask_scores)
++        max_remove = int(before * max(0.0, min(float(opt.m2m3_max_remove_ratio), 1.0)))
++        if max_remove > 0:
++            prune_mask = select_top_prune_candidates(prune_mask, m2m3_score, max_remove)
++        after_budget = int(prune_mask.sum().item())
++
++        floor_active = opt.capacity_control_mode == "m2m3_floor" and capacity_floor_is_active(opt, iteration)
++        floor_count = 0
++        allowed_remove = before
++        blocked_by_floor = 0
++        if floor_active:
++            floor_count = resolve_capacity_floor_count(opt, capacity_state or {}, before)
++            allowed_remove = max(0, before - floor_count)
++            if after_budget > allowed_remove:
++                prune_mask = select_top_prune_candidates(prune_mask, m2m3_score, allowed_remove)
++            blocked_by_floor = max(0, after_budget - int(prune_mask.sum().item()))
++
++        capacity_report = {
++            "m2m3_requested": requested,
++            "m2m3_after_budget": after_budget,
++            "m2m3_budget_blocked": max(0, requested - after_budget),
++            "m2m3_score_mode": opt.m2m3_score_mode,
++            "m2m3_region_mode": opt.m2m3_region_mode,
++            "floor_active": floor_active,
++            "floor_count": floor_count,
++            "floor_allowed_remove": allowed_remove,
++            "floor_blocked": blocked_by_floor,
++            "capacity_floor_ratio": float(opt.capacity_floor_ratio),
++            "capacity_floor_reference": opt.capacity_floor_reference,
++        }
++        if capacity_state is not None:
++            capacity_state["rounds"] += 1
++            capacity_state["total_requested"] += requested
++            capacity_state["total_blocked_by_floor"] += blocked_by_floor
++            if floor_active:
++                capacity_state["floor_active_rounds"] += 1
++    else:
++        max_remove = int(before * max(0.0, min(opt.pruning_max_remove_ratio, 1.0)))
++        if max_remove > 0 and requested > max_remove:
++            prune_mask = select_top_prune_candidates(prune_mask, prune_score, max_remove)
+
+     removed = int(prune_mask.sum().item())
+     if removed <= 0:
+-        return None
++        report = {
++            "iteration": iteration,
++            "mode": opt.pruning_mode,
++            "capacity_control_mode": opt.capacity_control_mode,
++            "gaussians_before": before,
++            "gaussians_after": before,
++            "removed": 0,
++            **capacity_report,
++        }
++        if capacity_control_enabled(opt) and opt.save_capacity_report and should_save_capacity_report(opt, iteration):
++            save_capacity_report(model_path, report)
++        return report
+     gaussians.prune_points(prune_mask)
+     after = int(gaussians.get_xyz.shape[0])
++    if capacity_state is not None and capacity_control_enabled(opt):
++        capacity_state["total_removed"] += removed
+     report = {
+         "iteration": iteration,
+         "mode": opt.pruning_mode,
++        "capacity_control_mode": opt.capacity_control_mode,
+         "gaussians_before": before,
+         "gaussians_after": after,
+         "removed": removed,
+@@ -302,7 +477,10 @@
+         "removed_by_opacity": int(torch.logical_and(prune_mask, removed_by_opacity).sum().item()),
+         "removed_by_brightness": int(torch.logical_and(prune_mask, removed_by_brightness).sum().item()),
+         "removed_by_mask": int(torch.logical_and(prune_mask, removed_by_mask).sum().item()),
++        **capacity_report,
+     }
++    if capacity_state is not None and capacity_control_enabled(opt):
++        report["capacity_state"] = dict(capacity_state)
+     if mask_scores is not None:
+         report["mask_score_mean_removed"] = float(mask_scores[prune_mask].mean().item()) if removed > 0 else None
+         report["mask_score_min_removed"] = float(mask_scores[prune_mask].min().item()) if removed > 0 else None
+@@ -311,6 +489,8 @@
+         os.makedirs(pruning_dir, exist_ok=True)
+         with open(os.path.join(pruning_dir, f"pruning_iter_{iteration}.json"), "w", encoding="utf-8") as f:
+             json.dump(report, f, indent=2)
++    if capacity_control_enabled(opt) and opt.save_capacity_report and should_save_capacity_report(opt, iteration):
++        save_capacity_report(model_path, report)
+     return report
+
+
+@@ -330,6 +510,13 @@
+     if checkpoint:
+         (model_params, first_iter) = torch.load(checkpoint)
+         gaussians.restore(model_params, opt)
++    capacity_state = init_capacity_state(gaussians) if capacity_control_enabled(opt) else None
++    if capacity_state is not None:
++        print(
++            "[M2M3] capacity control enabled: "
++            f"mode={opt.capacity_control_mode}, floor_ratio={float(opt.capacity_floor_ratio):.3f}, "
++            f"reference={opt.capacity_floor_reference}, initial_count={capacity_state['initial_count']}"
++        )
+
+     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
+     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
+@@ -448,24 +635,34 @@
+
+                 if iteration % opt.opacity_reset_interval == 0 or (dataset.white_background and iteration == opt.densify_from_iter):
+                     gaussians.reset_opacity()
++            update_capacity_state(capacity_state, int(gaussians.get_xyz.shape[0]))
+
+             # Optimizer step
+             if iteration < opt.iterations:
+                 gaussians.optimizer.step()
+                 gaussians.optimizer.zero_grad(set_to_none = True)
+
+-            pruning_report = maybe_prune_gaussians(gaussians, opt, iteration, scene.model_path, scene.getTrainCameras())
++            pruning_report = maybe_prune_gaussians(
++                gaussians,
++                opt,
++                iteration,
++                scene.model_path,
++                scene.getTrainCameras(),
++                capacity_state=capacity_state,
++            )
+             if pruning_report is not None and pruning_report.get("removed", 0) > 0:
++                pruning_label = "M2M3 capacity pruning" if capacity_control_enabled(opt) else "Plant-aware pruning"
+                 print(
+-                    "\n[ITER {}] Plant-aware pruning removed {}/{} Gaussians ({:.2%})".format(
++                    "\n[ITER {}] {} removed {}/{} Gaussians ({:.2%})".format(
+                         iteration,
++                        pruning_label,
+                         pruning_report["removed"],
+                         pruning_report["gaussians_before"],
+                         pruning_report["pruning_ratio"],
+                     )
+                 )
+                 if iteration in saving_iterations:
+-                    print("\n[ITER {}] Re-saving Gaussians after Plant-aware pruning".format(iteration))
++                    print("\n[ITER {}] Re-saving Gaussians after {}".format(iteration, pruning_label))
+                     scene.save(iteration)
+
+             if (iteration in checkpoint_iterations):
+@@ -496,6 +693,30 @@
+                     # raise e
+                     network_gui.conn = None
+
++    if capacity_state is not None and opt.save_capacity_report:
++        final_count = int(gaussians.get_xyz.shape[0])
++        update_capacity_state(capacity_state, final_count)
++        summary = {
++            "capacity_control_mode": opt.capacity_control_mode,
++            "capacity_floor_ratio": float(opt.capacity_floor_ratio),
++            "capacity_floor_reference": opt.capacity_floor_reference,
++            "capacity_floor_count_override": int(opt.capacity_floor_count),
++            "capacity_floor_start_iter": int(opt.capacity_floor_start_iter) if int(opt.capacity_floor_start_iter) > 0 else int(opt.pruning_start_iter),
++            "capacity_floor_end_iter": int(opt.capacity_floor_end_iter) if int(opt.capacity_floor_end_iter) > 0 else int(opt.iterations),
++            "m2m3_score_mode": opt.m2m3_score_mode,
++            "m2m3_region_mode": opt.m2m3_region_mode,
++            "m2m3_max_remove_ratio": float(opt.m2m3_max_remove_ratio),
++            "initial_count": int(capacity_state.get("initial_count", 0)),
++            "max_seen_count": int(capacity_state.get("max_seen_count", 0)),
++            "final_count": final_count,
++            "total_requested": int(capacity_state.get("total_requested", 0)),
++            "total_removed": int(capacity_state.get("total_removed", 0)),
++            "total_blocked_by_floor": int(capacity_state.get("total_blocked_by_floor", 0)),
++            "rounds": int(capacity_state.get("rounds", 0)),
++            "floor_active_rounds": int(capacity_state.get("floor_active_rounds", 0)),
++        }
++        save_capacity_summary(scene.model_path, summary)
++
+ def prepare_output_and_logger(args):
+     if not args.model_path:
+         if os.getenv('OAR_JOB_ID'):

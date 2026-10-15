@@ -1,0 +1,29 @@
+test_disabled_training_ast_identical (test_protocol.ProtocolTest.test_disabled_training_ast_identical) ... ok
+test_floor_and_budget_native_functions (test_protocol.ProtocolTest.test_floor_and_budget_native_functions) ... ok
+test_foreground_normalization (test_protocol.ProtocolTest.test_foreground_normalization) ... ok
+test_frozen_pair_only_capacity_mode_differs (test_protocol.ProtocolTest.test_frozen_pair_only_capacity_mode_differs) ... ERROR
+test_mesh_known_open_square (test_protocol.ProtocolTest.test_mesh_known_open_square) ... ok
+test_native_seed_path_identical (test_protocol.ProtocolTest.test_native_seed_path_identical) ... ok
+
+======================================================================
+ERROR: test_frozen_pair_only_capacity_mode_differs (test_protocol.ProtocolTest.test_frozen_pair_only_capacity_mode_differs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/tests/test_protocol.py", line 33, in test_frozen_pair_only_capacity_mode_differs
+    a=read_json(STAGE/f'configs/{scene}_M1_TRAIN.json');b=read_json(STAGE/f'configs/{scene}_M2_TRAIN.json')
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/scripts/common.py", line 30, in read_json
+    def read_json(p):return json.loads(Path(p).read_text())
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/configs/WanNianQing1_M1_TRAIN.json'
+
+----------------------------------------------------------------------
+Ran 6 tests in 59.672s
+
+FAILED (errors=1)

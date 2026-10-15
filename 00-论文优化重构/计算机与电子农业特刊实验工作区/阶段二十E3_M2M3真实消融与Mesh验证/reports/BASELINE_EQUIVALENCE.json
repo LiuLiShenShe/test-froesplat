@@ -1,0 +1,26 @@
+{
+  "status": "SOURCE_EQUIVALENT_DISABLED_PATH",
+  "shared": {
+    "scene/__init__.py": "BYTE_IDENTICAL",
+    "scene/gaussian_model.py": "BYTE_IDENTICAL",
+    "scene/dataset_readers.py": "BYTE_IDENTICAL",
+    "scene/cameras.py": "BYTE_IDENTICAL",
+    "utils/camera_utils.py": "BYTE_IDENTICAL",
+    "gaussian_renderer/__init__.py": "BYTE_IDENTICAL",
+    "utils/loss_utils.py": "BYTE_IDENTICAL",
+    "rgb_reconstruction_loss": "AST_IDENTICAL",
+    "mask_loss_terms": "AST_IDENTICAL",
+    "read_view_weights": "AST_IDENTICAL",
+    "get_view_weight": "AST_IDENTICAL",
+    "gaussian_brightness": "AST_IDENTICAL"
+  },
+  "disabled_conditions": {
+    "pruning_mode": "none",
+    "capacity_control_mode": "none"
+  },
+  "training_diff_review": "Only capacity validation/state/no-op update/extra pruning and logging added. Disabled prune returns before tensors or RNG. update_capacity_state(None) returns. No change to optimizer, loss, densification or schedules.",
+  "general_utils_difference": "colormap Agg tostring_rgb fallback only, no seed change; use same E1 compatibility wrapper",
+  "historical_limit": "Seed0 initial RNG hash absent; source-path equivalence, not claimed historical state identity",
+  "new_training_count": 6,
+  "M0_branch_control_required": false
+}

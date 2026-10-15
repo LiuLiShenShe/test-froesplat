@@ -1,0 +1,25 @@
+--- main/arguments/__init__.py
++++ branch/arguments/__init__.py
+@@ -139,6 +139,22 @@
+         self.pruning_max_remove_ratio = 0.05
+         self.pruning_mask_score_weight = 1.0
+         self.save_pruning_report = False
++        self.capacity_control_mode = "none"
++        self.capacity_floor_ratio = 0.4
++        self.capacity_floor_reference = "max_seen"
++        self.capacity_floor_count = 0
++        self.capacity_floor_start_iter = 0
++        self.capacity_floor_end_iter = 0
++        self.m2m3_score_mode = "topology"
++        self.m2m3_region_mode = "foreground"
++        self.m2m3_mask_weight = 3.0
++        self.m2m3_opacity_weight = 1.0
++        self.m2m3_brightness_weight = 1.0
++        self.m2m3_scale_weight = 0.5
++        self.m2m3_view_weight = 0.5
++        self.m2m3_max_remove_ratio = 0.03
++        self.save_capacity_report = False
++        self.capacity_report_interval = 1_000
+         super().__init__(parser, "Optimization Parameters")
+
+ def get_combined_args(parser : ArgumentParser):
