@@ -1,0 +1,75 @@
+{
+  "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "acceptance_status": "PASS",
+  "end_time": "2026-10-15T20:02:52.783597+08:00",
+  "original_failed_log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/FINALIZE_recompute_metrics.txt",
+  "original_failed_log_sha256": "ff0b45399b59fe11341e938fa673d2c969e6f7843b1714d82642b701fb3e4ec6",
+  "original_failed_script": "recompute_metrics.py",
+  "original_failure_preserved": true,
+  "original_finalization_progress_sha256": "629dfe70ac2db5a4afe2f5afb25db25558be578cc1ae70d1bc00cc7ba4bb07f2",
+  "recovery_scope": "float-metric recomputation, figures, acceptance and final reports only; no training or rendering",
+  "start_time": "2026-10-15T19:38:39.845181+08:00",
+  "status": "PASS",
+  "steps": [
+    {
+      "command_argv": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/scripts/recompute_metrics.py"
+      ],
+      "end_time": "2026-10-15T19:48:12.202354+08:00",
+      "exit_code": 0,
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/RECOVERY_recompute_metrics.txt",
+      "log_sha256": "9c740ca83904464fe1a1b421420afefc8fe38c5268ae930e425c00be409ac39f",
+      "script": "recompute_metrics.py",
+      "script_sha256": "2bace8d6d40f871af1843e5adda51401118ad5c0c5361c15ad35881153137411",
+      "start_time": "2026-10-15T19:38:39.845450+08:00",
+      "status": "PASS",
+      "wall_seconds": 572.356688382104
+    },
+    {
+      "command_argv": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/scripts/make_figures.py"
+      ],
+      "end_time": "2026-10-15T19:50:29.402535+08:00",
+      "exit_code": 0,
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/RECOVERY_make_figures.txt",
+      "log_sha256": "554edbc998d483f800f4ddff1c2ef4bdb37aba190169957d6a6fd777cb4a711a",
+      "script": "make_figures.py",
+      "script_sha256": "278bd0c40f6242352f9ec09739fc54ad3535433fea01f4336f53da6a0f906470",
+      "start_time": "2026-10-15T19:48:12.203554+08:00",
+      "status": "PASS",
+      "wall_seconds": 137.1261741174385
+    },
+    {
+      "command_argv": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/scripts/acceptance.py"
+      ],
+      "end_time": "2026-10-15T20:02:52.413243+08:00",
+      "exit_code": 0,
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/RECOVERY_acceptance.txt",
+      "log_sha256": "136c932797e51185dba2297be74cf1976acba25fbfb5eeaf0d0e5737d42362e6",
+      "script": "acceptance.py",
+      "script_sha256": "afa46feb31b8d547f879a3708b4c4bea8a1b3e365a5b9a40f324ebdd297e5bb2",
+      "start_time": "2026-10-15T19:50:29.403437+08:00",
+      "status": "PASS",
+      "wall_seconds": 742.9838701216504
+    },
+    {
+      "command_argv": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/scripts/write_final_reports.py"
+      ],
+      "end_time": "2026-10-15T20:02:52.782366+08:00",
+      "exit_code": 0,
+      "log_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/RECOVERY_write_final_reports.txt",
+      "log_sha256": "7c0a85f73768c0826213ba95ad463cfa299cf255a860ff3674841e752084a39b",
+      "script": "write_final_reports.py",
+      "script_sha256": "fc2dea57410a8935246b077f7b68ede5038c3ff03cd52a4c90c0b7c2cb16ee7d",
+      "start_time": "2026-10-15T20:02:52.414756+08:00",
+      "status": "PASS",
+      "wall_seconds": 0.33717406541109085
+    }
+  ]
+}

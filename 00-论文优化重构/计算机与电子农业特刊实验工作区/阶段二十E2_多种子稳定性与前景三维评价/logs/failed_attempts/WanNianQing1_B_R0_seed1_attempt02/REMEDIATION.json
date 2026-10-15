@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-10-15T14:03:56.924003+08:00",
+  "frozen_plan_sha256": "bb7467786355c78b3425f10b4207f6527ddb429d8afeb85de502a8e37e586d1d",
+  "kind": "DISCLOSED_PREOPTIMIZATION_INSTRUMENTATION_REMEDIATION",
+  "before_any_new_optimization_or_metrics": true,
+  "reason": "Two stage-observer JSON scalar serialization defects; no optimization started, no training results available.",
+  "preserved_zero_step_failures": [
+    {
+      "runtime_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/reports/WanNianQing1_B_R0_seed1_attempt01_RUNTIME.json",
+      "sha256": "f7ad86b7088387296410d5326215e4a31939097e2309055e2923a7f741f64549",
+      "observed_iteration": 0,
+      "optimizer_steps": 0,
+      "exception": "TypeError('Object of type float32 is not JSON serializable')"
+    },
+    {
+      "runtime_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/reports/WanNianQing1_B_R0_seed1_attempt02_RUNTIME.json",
+      "sha256": "db9e957c43c5982a0fbbc5bab23050f734a7ad72ddb8eb8bb98dfc5e31819e05",
+      "observed_iteration": 0,
+      "optimizer_steps": 0,
+      "exception": "TypeError('Object of type float32 is not JSON serializable')"
+    }
+  ],
+  "action": "Keep failed directories and attempt identifiers. Convert NumPy metadata scalars to Python types; count zero-step stage serialization exits separately from full training attempts.",
+  "max_full_attempts_unchanged": 2,
+  "next_attempt_id": 3,
+  "seed_configuration_gpu_inputs_unchanged": true,
+  "no_favorable_checkpoint_or_seed_selection": true,
+  "deviation": "Original retry trigger named infrastructure/OOM/NaN only. This explicit supplement adds zero-step instrumentation failures before any new optimization; original plan is unmodified."
+}

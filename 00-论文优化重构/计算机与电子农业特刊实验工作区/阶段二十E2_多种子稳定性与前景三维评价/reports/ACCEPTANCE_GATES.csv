@@ -1,0 +1,19 @@
+gate,description,status,evidence
+G1,Original Seed 0 and E0/E1 files unchanged,PASS,FINAL_HASH_RECHECK.csv: all 7914 source-protection rows plus managed/history hashes; HISTORICAL_SEED0_TRAINING_AUDIT; original float scores asserted during inherited evaluation
+G2,"Eight actual additional trainings, with all failures disclosed",PASS,MULTISEED_TRAINING_MANIFEST.csv; zero-step failures and PREOPTIMIZATION_REMEDIATION.json preserved
+G3,Seeds 1/2 change all actual RNG streams,PASS,ACTUAL_TRAINING_SEED_VERIFICATION.json; RNG stage independent-process verification
+G4,"Same-seed B/C initialization, full config, physical GPU comparable",PASS,"Four actual pair checks; complete config invariants; fixed GPU UUID. Historical Seed 0 is source-path equivalent, not retroactive state proof"
+G5,All required models complete 30000 iterations,PASS,Original/native final update count is 29999; recorded unchanged
+G6,Checkpoints and Gaussian PLY reload,PASS,"Eight new VALIDATION.json reports, original eight E1 validations, checkpoint/PLY exact tensors and render replay"
+G7,Identical frozen heldout cameras,PASS,Actual loader/test-camera name sets and per-view manifest match frozen E0 references
+G8,Canonical full raw RGB common reference,PASS,Original and resized tensor SHA per view identical across all groups/seeds
+G9,One unchanged R0 proxy ROI for every group,PASS,Original and resized ROI tensor SHA per view identical; E0 B_R0 mask source
+G10,All proxies labelled non-independent GT,PASS,FOREGROUND_PROXY_METRIC_SPEC.md and per-view label fields
+G11,"Scene/training seed pair is the unit, not heldout views",PASS,Two scenes x three training pairs; no p-values or view-count significance
+G12,No seed/checkpoint/figure cherry-picking,PASS,Unmodified prospective plan; final30000 only; fixed plus explicitly Seed0-ranked exploratory figure selections; disclosed zero-step instrumentation deviation
+G13,No extra A/HongZhang/unrelated training,PASS,TRAINING_ATTEMPT_INVENTORY.csv: every actual runtime belongs to the fixed matrix; exactly eight successful runs; inherited A/HongZhang only re-evaluated
+G14,R1/2DGS/M2M3 production code unchanged,PASS,57 production source hashes and tracked-diff restriction; no math or optimizer edits
+G15,Manual GT and paper unchanged,PASS,All tracked changes restricted to E2 delivery; no new GT files or manuscript edits
+G16,Metrics recompute from actual float renders,PASS,FLOAT_RENDER_METRIC_RECOMPUTATION.csv/json; no screenshot-derived metric
+G17,All negative results and failures retained,PASS,"All predeclared seeds, per-view scores, descriptive flags, two zero-step failures and raw logs retained"
+G18,Concrete next M2M3/mesh execution decision,PASS,REWRITE_TO_IMPLEMENTATION; three prospectively frozen B_R0/Seed0 checkpoint and PLY hashes verified; no next-stage work executed

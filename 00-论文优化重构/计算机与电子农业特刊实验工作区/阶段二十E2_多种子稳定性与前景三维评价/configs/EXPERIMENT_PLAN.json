@@ -1,0 +1,134 @@
+{
+  "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "additional_trainings": 8,
+  "analysis_unit": "scene and independently trained seed-pair; heldout views are correlated",
+  "baseline_commit": "694743e7201e1fd79b4d7cff89ad72a4db8a9e33",
+  "checkpoint_policy": "Only native final iteration 30000; no best-checkpoint selection",
+  "configs": [
+    {
+      "group": "B_R0",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/WanNianQing1_B_R0_seed1_TRAIN_CONFIG.json",
+      "sample": "WanNianQing1",
+      "seed": 1,
+      "sha256": "6b52d028c30753a44472a3d8033a016b976d6ea43b08a342890543352f06d093"
+    },
+    {
+      "group": "C_R1",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/WanNianQing1_C_R1_seed1_TRAIN_CONFIG.json",
+      "sample": "WanNianQing1",
+      "seed": 1,
+      "sha256": "f6cca297af64501cc10e18aec6b8819cf014ba11008665865b28ac3957418ec9"
+    },
+    {
+      "group": "B_R0",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/WanNianQing1_B_R0_seed2_TRAIN_CONFIG.json",
+      "sample": "WanNianQing1",
+      "seed": 2,
+      "sha256": "0aad13ae2e1d34f2ada76258065a62d522d6a55c69064e689a03618da58b4ba4"
+    },
+    {
+      "group": "C_R1",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/WanNianQing1_C_R1_seed2_TRAIN_CONFIG.json",
+      "sample": "WanNianQing1",
+      "seed": 2,
+      "sha256": "f8ae744fb3f26b0c4062928349d2f084cebfcc1b6eebf817bb85c9d63841bac1"
+    },
+    {
+      "group": "B_R0",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/CaoMei2_B_R0_seed1_TRAIN_CONFIG.json",
+      "sample": "CaoMei2",
+      "seed": 1,
+      "sha256": "2e43bb8d9131edc9bade3e79d11982298b8a02ea33e607c7098cdcf4086ddc5b"
+    },
+    {
+      "group": "C_R1",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/CaoMei2_C_R1_seed1_TRAIN_CONFIG.json",
+      "sample": "CaoMei2",
+      "seed": 1,
+      "sha256": "202d5de4388cdb38e87b8e4dc9b27b06afbe93628bc8826e9946c4879dba2c9d"
+    },
+    {
+      "group": "B_R0",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/CaoMei2_B_R0_seed2_TRAIN_CONFIG.json",
+      "sample": "CaoMei2",
+      "seed": 2,
+      "sha256": "ab783f564149ab66664ce0430bbfe346d2792f18239e0e698a32703b9f0cca3f"
+    },
+    {
+      "group": "C_R1",
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/configs/CaoMei2_C_R1_seed2_TRAIN_CONFIG.json",
+      "sample": "CaoMei2",
+      "seed": 2,
+      "sha256": "e90d168e1c3a9d633e177ddc5ce7548793e21f4333b8edbd301d3de741a55155"
+    }
+  ],
+  "decision_rule": "ROBUST only if both full and ROI PSNR effects share direction across 0/1/2 and absolute paired mean exceeds both B and C cross-seed sample SD; otherwise MIXED if endpoint disagreement else INCONCLUSIVE",
+  "directions": "Higher PSNR/SSIM, lower LPIPS/errors/background energy preferred; geometry distributions descriptive only",
+  "figures": "fixed by camera-name order first/middle/last BEFORE new metrics; seed0 ranked best/worst/closest-zero may be additional explicitly exploratory",
+  "foreground_coverage": "mean(alpha>0.5) inside fixed ROI; missing = 1-coverage",
+  "foreground_roi": "E0 B_R0 heldout masks; nearest resize; same for all models; no independent GT",
+  "frozen_at": "2026-10-15T13:47:14.917295+08:00",
+  "gate_after_first_pair": "Both WanNianQing1 seed1 models complete and reload before next six",
+  "geometry": "native-scale finite alpha-supported depth quantiles and rendered-vs-surface-normal cosine proxy, no metric GT",
+  "iterations": 30000,
+  "no_extra_scenes_no_A_no_HongZhang_training": true,
+  "outlier_rule": "Flag a seed only when its absolute distance from other-two mean exceeds 3 times other-two sample SD; descriptive, do not remove",
+  "paired_sd": "sample standard deviation, ddof=1",
+  "retry_policy": {
+    "action": "preserve entire failed attempt; restart from iteration 0 with identical seed/config/GPU",
+    "max_full_attempts": 2,
+    "no_incomplete_resume": true,
+    "no_quality_based_retry": true,
+    "trigger": "documented infrastructure interruption/OOM/NaN only"
+  },
+  "seed0": "inherit unmodified E1 final checkpoints and float renders",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "significance_tests": "none; n=3 is descriptive",
+  "statistical_limit": "same seed is controlled initial RNG, not a guarantee of deterministic custom CUDA training",
+  "training_order": [
+    [
+      "WanNianQing1",
+      "B_R0",
+      1
+    ],
+    [
+      "WanNianQing1",
+      "C_R1",
+      1
+    ],
+    [
+      "WanNianQing1",
+      "B_R0",
+      2
+    ],
+    [
+      "WanNianQing1",
+      "C_R1",
+      2
+    ],
+    [
+      "CaoMei2",
+      "B_R0",
+      1
+    ],
+    [
+      "CaoMei2",
+      "C_R1",
+      1
+    ],
+    [
+      "CaoMei2",
+      "B_R0",
+      2
+    ],
+    [
+      "CaoMei2",
+      "C_R1",
+      2
+    ]
+  ]
+}

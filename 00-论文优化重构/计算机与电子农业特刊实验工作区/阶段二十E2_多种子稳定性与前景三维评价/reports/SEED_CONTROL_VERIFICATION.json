@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "explicit_cuda_reseed_same_state": true,
+    "frozen_complete_configuration_equal": true,
+    "historical_runtime_seed0": true,
+    "legacy_seed0_state_and_draws_equivalent": true,
+    "same_seed_state_and_draws_reproducible": true,
+    "seed1_seed2_all_rng_streams_differ": true
+  },
+  "comparability": "Same RNG-setting logic and unchanged packages/source; historical per-run RNG hashes unavailable. CUDA training is not guaranteed bitwise deterministic.",
+  "legacy_entry": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/scripts/run_phase20e1.py",
+  "legacy_observer": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/scripts/train_observed.py",
+  "legacy_source_commit": "3e909f93",
+  "native_safe_state_sha256": "7823e66a944496e4f06971888a8a4277adde41ecdb557fc3d8717db139a5d59b",
+  "runtime_pair_gate": "Full loaded camera order, points, initialized parameters and before/after optimizer RNG compared in each actual B/C pair before first optimization step.",
+  "seed0_rng_at_historical_run": "NOT_CAPTURED; independently re-executed source path equivalence, not retroactive state measurement",
+  "status": "PASS",
+  "timestamp": "2026-10-15T13:51:42.382121+08:00"
+}

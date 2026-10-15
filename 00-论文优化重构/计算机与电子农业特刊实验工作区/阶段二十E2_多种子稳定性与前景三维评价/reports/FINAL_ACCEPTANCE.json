@@ -1,0 +1,129 @@
+{
+  "additional_trainings_completed": 8,
+  "gates": [
+    {
+      "description": "Original Seed 0 and E0/E1 files unchanged",
+      "evidence": "FINAL_HASH_RECHECK.csv: all 7914 source-protection rows plus managed/history hashes; HISTORICAL_SEED0_TRAINING_AUDIT; original float scores asserted during inherited evaluation",
+      "gate": "G1",
+      "status": "PASS"
+    },
+    {
+      "description": "Eight actual additional trainings, with all failures disclosed",
+      "evidence": "MULTISEED_TRAINING_MANIFEST.csv; zero-step failures and PREOPTIMIZATION_REMEDIATION.json preserved",
+      "gate": "G2",
+      "status": "PASS"
+    },
+    {
+      "description": "Seeds 1/2 change all actual RNG streams",
+      "evidence": "ACTUAL_TRAINING_SEED_VERIFICATION.json; RNG stage independent-process verification",
+      "gate": "G3",
+      "status": "PASS"
+    },
+    {
+      "description": "Same-seed B/C initialization, full config, physical GPU comparable",
+      "evidence": "Four actual pair checks; complete config invariants; fixed GPU UUID. Historical Seed 0 is source-path equivalent, not retroactive state proof",
+      "gate": "G4",
+      "status": "PASS"
+    },
+    {
+      "description": "All required models complete 30000 iterations",
+      "evidence": "Original/native final update count is 29999; recorded unchanged",
+      "gate": "G5",
+      "status": "PASS"
+    },
+    {
+      "description": "Checkpoints and Gaussian PLY reload",
+      "evidence": "Eight new VALIDATION.json reports, original eight E1 validations, checkpoint/PLY exact tensors and render replay",
+      "gate": "G6",
+      "status": "PASS"
+    },
+    {
+      "description": "Identical frozen heldout cameras",
+      "evidence": "Actual loader/test-camera name sets and per-view manifest match frozen E0 references",
+      "gate": "G7",
+      "status": "PASS"
+    },
+    {
+      "description": "Canonical full raw RGB common reference",
+      "evidence": "Original and resized tensor SHA per view identical across all groups/seeds",
+      "gate": "G8",
+      "status": "PASS"
+    },
+    {
+      "description": "One unchanged R0 proxy ROI for every group",
+      "evidence": "Original and resized ROI tensor SHA per view identical; E0 B_R0 mask source",
+      "gate": "G9",
+      "status": "PASS"
+    },
+    {
+      "description": "All proxies labelled non-independent GT",
+      "evidence": "FOREGROUND_PROXY_METRIC_SPEC.md and per-view label fields",
+      "gate": "G10",
+      "status": "PASS"
+    },
+    {
+      "description": "Scene/training seed pair is the unit, not heldout views",
+      "evidence": "Two scenes x three training pairs; no p-values or view-count significance",
+      "gate": "G11",
+      "status": "PASS"
+    },
+    {
+      "description": "No seed/checkpoint/figure cherry-picking",
+      "evidence": "Unmodified prospective plan; final30000 only; fixed plus explicitly Seed0-ranked exploratory figure selections; disclosed zero-step instrumentation deviation",
+      "gate": "G12",
+      "status": "PASS"
+    },
+    {
+      "description": "No extra A/HongZhang/unrelated training",
+      "evidence": "TRAINING_ATTEMPT_INVENTORY.csv: every actual runtime belongs to the fixed matrix; exactly eight successful runs; inherited A/HongZhang only re-evaluated",
+      "gate": "G13",
+      "status": "PASS"
+    },
+    {
+      "description": "R1/2DGS/M2M3 production code unchanged",
+      "evidence": "57 production source hashes and tracked-diff restriction; no math or optimizer edits",
+      "gate": "G14",
+      "status": "PASS"
+    },
+    {
+      "description": "Manual GT and paper unchanged",
+      "evidence": "All tracked changes restricted to E2 delivery; no new GT files or manuscript edits",
+      "gate": "G15",
+      "status": "PASS"
+    },
+    {
+      "description": "Metrics recompute from actual float renders",
+      "evidence": "FLOAT_RENDER_METRIC_RECOMPUTATION.csv/json; no screenshot-derived metric",
+      "gate": "G16",
+      "status": "PASS"
+    },
+    {
+      "description": "All negative results and failures retained",
+      "evidence": "All predeclared seeds, per-view scores, descriptive flags, two zero-step failures and raw logs retained",
+      "gate": "G17",
+      "status": "PASS"
+    },
+    {
+      "description": "Concrete next M2M3/mesh execution decision",
+      "evidence": "REWRITE_TO_IMPLEMENTATION; three prospectively frozen B_R0/Seed0 checkpoint and PLY hashes verified; no next-stage work executed",
+      "gate": "G18",
+      "status": "PASS"
+    }
+  ],
+  "group_seed_rows": 17,
+  "historical_seed0_limit": "Actual historical RNG hash unavailable; source-equivalent path verified; strict uniform-wrapper three-seed claim suspended",
+  "new_iterations": [
+    30000
+  ],
+  "no_next_phase_actions_executed": true,
+  "no_unrelated_tracked_changes": true,
+  "per_view_rows": 368,
+  "preserved_failed_attempts": 2,
+  "status": "PASS",
+  "timestamp": "2026-10-15T20:38:36.778832+08:00",
+  "unique_float_renders": 341,
+  "unique_models": 16,
+  "unit_test_log_sha256": "34e4fb7ac8ed3988658c7a05b5c8968d360c0250147996e9d7aaf8b87a848439",
+  "unit_tests_passed": true,
+  "unrelated_changes": []
+}

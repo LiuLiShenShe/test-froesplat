@@ -1,0 +1,61 @@
+{
+  "no_checkpoint_selection": true,
+  "preserved_artifacts": [
+    {
+      "bytes": 84374,
+      "path": "/data/fj/F2DMAS_phase20e2_data/694743e7_v1/phase20e2_outputs/WanNianQing1/B_R0/seed_1/attempt_01/cameras.json",
+      "sha256": "5eb5f8f16371a8289cc89ca4114beaa9a16325350055d33c3b3a8b6af2652382"
+    },
+    {
+      "bytes": 628226,
+      "path": "/data/fj/F2DMAS_phase20e2_data/694743e7_v1/phase20e2_outputs/WanNianQing1/B_R0/seed_1/attempt_01/input.ply",
+      "sha256": "a86e23a96618f29d179bf7cb782023c0fbd7eab67e8d61ccd5a89954082563d7"
+    },
+    {
+      "bytes": 88,
+      "path": "/data/fj/F2DMAS_phase20e2_data/694743e7_v1/phase20e2_outputs/WanNianQing1/B_R0/seed_1/attempt_01/events.out.tfevents.1792043606.test.1205419.0",
+      "sha256": "b3752df521d75aae90fd1ee94886d2d1c59015806e8fdcfadada7b0188272f78"
+    },
+    {
+      "bytes": 842,
+      "path": "/data/fj/F2DMAS_phase20e2_data/694743e7_v1/phase20e2_outputs/WanNianQing1/B_R0/seed_1/attempt_01/cfg_args",
+      "sha256": "8bdf1f6ad847516e454a3263b0d3bf13656e93d4fc971111573c1c00b6819f83"
+    }
+  ],
+  "process": {
+    "GPU_UUID": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+    "attempt": 1,
+    "command_argv": [
+      "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+      "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/scripts/train_observed.py",
+      "--sample",
+      "WanNianQing1",
+      "--group",
+      "B_R0",
+      "--seed",
+      "1",
+      "--attempt",
+      "1"
+    ],
+    "cwd": "/data/fj/F2DMAS",
+    "end_time": "2026-10-15T13:55:14.604605+08:00",
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "OMP_NUM_THREADS": "4",
+      "OPENBLAS_NUM_THREADS": "4",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit_code": 1,
+    "group": "B_R0",
+    "pid": 1205419,
+    "sample": "WanNianQing1",
+    "sampled_device_peak_MiB": 390.0,
+    "sampling_seconds": 5,
+    "seed": 1,
+    "start_time": "2026-10-15T13:53:18.572933+08:00",
+    "stdout_stderr_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E2_多种子稳定性与前景三维评价/logs/WanNianQing1_B_R0_seed1_attempt01_STDOUT_STDERR.txt",
+    "stdout_stderr_sha256": "e776275e3481ce3689a70143b6b3bbe59c3e22d5c90eebf998f9da4a169fff6a",
+    "wall_seconds": 116.03178537357599
+  },
+  "timestamp": "2026-10-15T13:55:14.784182+08:00"
+}
