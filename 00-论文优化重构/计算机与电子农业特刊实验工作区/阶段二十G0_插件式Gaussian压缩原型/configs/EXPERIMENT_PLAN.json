@@ -1,0 +1,189 @@
+{
+  "created_at": "2026-10-16T04:45:10.089695+00:00",
+  "baseline_commit": "723c02c20e281b150d38144e61c912e5128849b4",
+  "scene": "WanNianQing1",
+  "group": "B_R0",
+  "training_seed": 0,
+  "M2M3": "M0",
+  "source_model": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/B_R0/point_cloud/iteration_30000/point_cloud.ply",
+  "source_model_sha256": "436ec90adae95941f2228789825a3f21c4300a3a605796ea8da387e574c633ef",
+  "source_native_model_dir": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/B_R0",
+  "source_training_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E1_正式2DGS配对训练与重建评价/configs/WanNianQing1_B_R0_TRAIN_CONFIG.json",
+  "source_training_config_sha256": "948b0e21284507eda95e5b3b1ac35eb7659b4b9185f04cc108e48727d4bb90a6",
+  "model": {
+    "sh_degree": 3,
+    "source_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/B_R0",
+    "model_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/phase20e1_outputs/WanNianQing1/B_R0",
+    "images": "images_rgba",
+    "resolution": 2,
+    "white_background": false,
+    "data_device": "cpu",
+    "eval": true,
+    "render_items": [
+      "RGB",
+      "Alpha",
+      "Normal",
+      "Depth",
+      "Edge",
+      "Curvature"
+    ],
+    "view_quality_mode": "none",
+    "raw_gate_mode": "none",
+    "mask_gate_mode": "none",
+    "geo_gate_mode": "none",
+    "raw_gate_keep_ratio": 1.0,
+    "mask_gate_keep_ratio": 1.0,
+    "geo_gate_keep_ratio": 1.0,
+    "raw_gate_list": "",
+    "mask_gate_list": "",
+    "geo_gate_list": "",
+    "mask_mode": "none",
+    "mask_dir": "",
+    "mask_pattern": "mask_{stem}.png",
+    "mask_threshold": 0.5,
+    "init_pcd_mode": "none",
+    "init_pcd_min_observations": 3,
+    "init_pcd_foreground_threshold": 0.5,
+    "init_pcd_dilate_mask_px": 2,
+    "init_pcd_max_cameras": 0,
+    "init_pcd_chunk_size": 200000
+  },
+  "pipeline": {
+    "convert_SHs_python": false,
+    "compute_cov3D_python": false,
+    "depth_ratio": 0.0,
+    "debug": false
+  },
+  "methods": [
+    "random",
+    "opacity"
+  ],
+  "ratios": [
+    "0",
+    "0.2",
+    "0.4",
+    "0.6"
+  ],
+  "random_seed": 20261016,
+  "enabled": true,
+  "recovery": false,
+  "recovery_steps": 0,
+  "capacity_rule": "remove floor(N * Decimal(str(ratio))); stable high-score keep; ties lower source index",
+  "runs": [
+    {
+      "run_id": "random_p00",
+      "method": "random",
+      "prune_ratio": "0"
+    },
+    {
+      "run_id": "random_p20",
+      "method": "random",
+      "prune_ratio": "0.2"
+    },
+    {
+      "run_id": "random_p40",
+      "method": "random",
+      "prune_ratio": "0.4"
+    },
+    {
+      "run_id": "random_p60",
+      "method": "random",
+      "prune_ratio": "0.6"
+    },
+    {
+      "run_id": "opacity_p00",
+      "method": "opacity",
+      "prune_ratio": "0"
+    },
+    {
+      "run_id": "opacity_p20",
+      "method": "opacity",
+      "prune_ratio": "0.2"
+    },
+    {
+      "run_id": "opacity_p40",
+      "method": "opacity",
+      "prune_ratio": "0.4"
+    },
+    {
+      "run_id": "opacity_p60",
+      "method": "opacity",
+      "prune_ratio": "0.6"
+    }
+  ],
+  "heldout_camera_names": [
+    "0000",
+    "0008",
+    "0016",
+    "0024",
+    "0032",
+    "0040",
+    "0048",
+    "0056",
+    "0064",
+    "0072",
+    "0080",
+    "0088",
+    "0096",
+    "0107",
+    "0116",
+    "0124",
+    "0132",
+    "0143",
+    "0154",
+    "0166",
+    "0174",
+    "0182",
+    "0190",
+    "0198",
+    "0212",
+    "0228",
+    "0244"
+  ],
+  "SH_degree": 3,
+  "background": [
+    0,
+    0,
+    0
+  ],
+  "resolution": 2,
+  "depth_ratio": 0.0,
+  "reference_manifest": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/reports/EVALUATION_REFERENCE_MANIFEST.csv",
+  "reference_manifest_sha256": "c4114f194d159fe5a396dbc122ff10843f2a7174fe4589298ee8903b2319b6eb",
+  "ROI_manifest": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E0_三维全视图与输入冻结/MATCHED_2DGS_DATASET_MANIFEST.csv",
+  "ROI_manifest_sha256": "c38cef28f767f72d05bc6bd700420c87c948c41243d958266cb9340532847d66",
+  "ROI_group": "B_R0",
+  "ROI_status": "frozen SAM3 R0 proxy, NOT independent manual GT",
+  "metric_protocol": {
+    "raw": "native PSNR/SSIM; LPIPS VGG v0.1 normalize=True; clamp RGB [0,1]",
+    "ROI": "untouched E2 metric_core foreground_metrics",
+    "edge_diagnostic": "ROI inner boundary, 3-pixel Chebyshev erosion; proxy only",
+    "aggregation": "arithmetic mean across the same 27 held-out views"
+  },
+  "qualitative_camera_names": [
+    "0000",
+    "0107",
+    "0244"
+  ],
+  "benchmark": {
+    "physical_gpu": 1,
+    "uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+    "rounds": 7,
+    "warmup_sweeps": 2,
+    "order_seed": 20261016,
+    "sync": "torch.cuda.synchronize before/after every measured full renderer call",
+    "samples_per_run": 189,
+    "include_pruning_or_loading": false,
+    "render_outputs": "all native outputs, same as quality evaluation",
+    "peak_memory": "isolated benchmark process; shared camera transforms plus current model and render outputs; no LPIPS"
+  },
+  "mesh": {
+    "run_id": "opacity_p40",
+    "protocol_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十E3_M2M3真实消融与Mesh验证/configs/WanNianQing1_MESH.json",
+    "protocol_sha256": "e7f86af93eaad85a485ffbc1b32b7906469b89e25eb387419fb426fbd5093bb3",
+    "SH_degree": 0,
+    "full_training_cameras": true
+  },
+  "large_asset_root": "/data/fj/ForeSplat_Phase20G0_assets/723c02c2_v1",
+  "conference_algorithms": "not substituted by heuristics; blocked methods retain explicit failed attempts"
+}

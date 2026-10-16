@@ -1,0 +1,67 @@
+{
+  "recorded_at": "2026-10-16T04:49:20.205025+00:00",
+  "repositories": [
+    {
+      "name": "gaussian-splatting-pup",
+      "url": "https://github.com/j-alex-hanson/gaussian-splatting-pup",
+      "commit": "e971ea4802908c69eab7e8601bb1eddd2e443754",
+      "checkout_path": "/data/fj/ForeSplat_Phase20G0_assets/upstream/gaussian-splatting-pup",
+      "worktree_clean": true,
+      "commit_date": "2025-11-22T10:05:01-05:00",
+      "license": "Gaussian-Splatting License (Inria/MPII), non-commercial research and evaluation; not an MIT license",
+      "license_sha256": "c5ba70a2194af2aefe85dfe3da68608dcb3abd21a3aa53b55aa297c2f0b60eb3",
+      "license_path": "/data/fj/ForeSplat_Phase20G0_assets/upstream/gaussian-splatting-pup/LICENSE.md",
+      "environment_yaml": "name: gaussian_splatting_pup\nchannels:\n  - pytorch\n  - conda-forge\n  - defaults\ndependencies:\n  - cudatoolkit=11.8\n  - plyfile\n  - python=3.8\n  - pip\n  - pytorch=2.4.1\n  - torchvision=0.19.1\n  - tqdm\n  - pip:\n    - submodules/compress-diff-gaussian-rasterization\n    - submodules/diff-gaussian-rasterization\n    - submodules/simple-knn\n    - submodules/rasterization_and_pup_fisher\n",
+      "environment_sha256": "2bfe6d20b4569b62772543485eb9cd97ca850cefd7270f0e74452e2d14d74b14",
+      "submodules": [
+        {
+          "path": "SIBR_viewers",
+          "pinned_gitlink": "4ae964a267cd7a844d9766563cf9d0b500131a22",
+          "checkout": "NOT_INITIALIZED"
+        },
+        {
+          "path": "submodules/compress-diff-gaussian-rasterization",
+          "pinned_gitlink": "79b24db6fe801a5ad3f23a440780d11884d5bc00",
+          "checkout": "79b24db6fe801a5ad3f23a440780d11884d5bc00"
+        },
+        {
+          "path": "submodules/diff-gaussian-rasterization",
+          "pinned_gitlink": "59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d",
+          "checkout": "NOT_INITIALIZED"
+        },
+        {
+          "path": "submodules/rasterization_and_pup_fisher",
+          "pinned_gitlink": "eaef2faba21f076867c1db84c3f998e5f673762f",
+          "checkout": "eaef2faba21f076867c1db84c3f998e5f673762f"
+        },
+        {
+          "path": "submodules/simple-knn",
+          "pinned_gitlink": "44f764299fa305faf6ec5ebd99939e0508331503",
+          "checkout": "NOT_INITIALIZED"
+        }
+      ],
+      "executed_or_built_upstream_CUDA": false
+    },
+    {
+      "name": "LightGaussian",
+      "url": "https://github.com/VITA-Group/LightGaussian",
+      "commit": "6676b983e77baadd909effc56a6aaadafa964dcc",
+      "checkout_path": "/data/fj/ForeSplat_Phase20G0_assets/upstream/LightGaussian",
+      "worktree_clean": true,
+      "commit_date": "2024-12-29T19:26:09-06:00",
+      "license": "Gaussian-Splatting License (Inria/MPII), non-commercial research and evaluation; not an MIT license",
+      "license_sha256": "cd5c95b3cfff3acc1bd412420c770f88809331c3db6872df11a970147aa8e81f",
+      "license_path": "/data/fj/ForeSplat_Phase20G0_assets/upstream/LightGaussian/LICENSE.md",
+      "environment_yaml": "name: lightgaussian\nchannels:\n  - pytorch\n  - conda-forge\n  - defaults\ndependencies:\n  - cudatoolkit=11.6\n  - plyfile=0.8.1\n  - python=3.9\n  - pip=22.3.1\n  - pytorch=1.12.1\n  - torchaudio=0.12.1\n  - torchvision=0.13.1\n  - setuptools=69.5.1\n  - tqdm\n  - icecream\n  - pip:\n    - submodules/compress-diff-gaussian-rasterization\n    - submodules/simple-knn\n",
+      "environment_sha256": "b1b74c2e4b8886ac30f581b59e0fc8965e3cef28b3169f8f4efdd59275d6fdf5",
+      "submodules": [
+        {
+          "path": "submodules/compress-diff-gaussian-rasterization",
+          "pinned_gitlink": "240618bbc5fb21c270a0c5babb292615011a2f15",
+          "checkout": "240618bbc5fb21c270a0c5babb292615011a2f15"
+        }
+      ],
+      "executed_or_built_upstream_CUDA": false
+    }
+  ]
+}

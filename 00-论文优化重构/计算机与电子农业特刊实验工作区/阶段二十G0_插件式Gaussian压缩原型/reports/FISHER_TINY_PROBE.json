@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "started_at": "2026-10-16T04:51:40.286548+00:00",
+  "is_PUP_2DGS_ADAPTED": false,
+  "purpose": "small exact per-output Jacobian correctness oracle, no scene-scale scoring or pruning",
+  "GPU_uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "parameters": [
+    "x",
+    "y",
+    "z",
+    "log_scale_0",
+    "log_scale_1"
+  ],
+  "rotation_scored": false,
+  "native_forward_signature": "(self, means3D, means2D, opacities, shs=None, colors_precomp=None, scales=None, rotations=None, cov3D_precomp=None)",
+  "native_settings_fields": [
+    "image_height",
+    "image_width",
+    "tanfovx",
+    "tanfovy",
+    "bg",
+    "scale_modifier",
+    "viewmatrix",
+    "projmatrix",
+    "sh_degree",
+    "campos",
+    "prefiltered",
+    "debug"
+  ],
+  "unsupported_upstream_keywords": [
+    {
+      "keyword": "fishers",
+      "error": "got an unexpected keyword argument 'fishers'"
+    },
+    {
+      "keyword": "f_count",
+      "error": "got an unexpected keyword argument 'f_count'"
+    }
+  ],
+  "completed_at": "2026-10-16T04:51:47.138953+00:00",
+  "width": 16,
+  "height": 16,
+  "Gaussians": 3,
+  "RGB_observations": 768,
+  "backward_calls": 768,
+  "oracle_seconds": 0.9403897542506456,
+  "wall_seconds": 6.8523881351575255,
+  "fisher_shape": [
+    3,
+    5,
+    5
+  ],
+  "fisher_eigenvalues": [
+    [
+      2.4615520239150127e-14,
+      1.132010376649561,
+      3.384526731655326,
+      19.950459032487142,
+      34.510536090137606
+    ],
+    [
+      7.513454795634839e-15,
+      0.6096617746827491,
+      1.6015786705629365,
+      9.42897428462367,
+      15.491473101778077
+    ],
+    [
+      5.1190956148298205e-15,
+      0.11976336505079678,
+      0.22985503421282566,
+      4.0519664582560075,
+      4.983011199263147
+    ]
+  ],
+  "square_after_sum_relative_error": 8.786549408430089,
+  "finite_difference_checks": [
+    {
+      "gaussian": 0,
+      "parameter": "x",
+      "max_error_over_max_analytic_on_nontrivial_entries": 6.32521726619308e-05,
+      "full_max_abs_error": 8.636713027954102e-05
+    },
+    {
+      "gaussian": 0,
+      "parameter": "y",
+      "max_error_over_max_analytic_on_nontrivial_entries": 7.937671596570788e-05,
+      "full_max_abs_error": 0.0001372694969177246
+    },
+    {
+      "gaussian": 0,
+      "parameter": "z",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.0002963589792447071,
+      "full_max_abs_error": 8.732825517654419e-05
+    },
+    {
+      "gaussian": 0,
+      "parameter": "log_scale_0",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.0002429267764219337,
+      "full_max_abs_error": 9.95732843875885e-05
+    },
+    {
+      "gaussian": 0,
+      "parameter": "log_scale_1",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.000131776679364433,
+      "full_max_abs_error": 0.00010679429396986961
+    },
+    {
+      "gaussian": 1,
+      "parameter": "x",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00010483434575556714,
+      "full_max_abs_error": 0.00014078617095947266
+    },
+    {
+      "gaussian": 1,
+      "parameter": "y",
+      "max_error_over_max_analytic_on_nontrivial_entries": 5.280252995473254e-05,
+      "full_max_abs_error": 5.2928924560546875e-05
+    },
+    {
+      "gaussian": 1,
+      "parameter": "z",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.0005156776773021362,
+      "full_max_abs_error": 0.00013141334056854248
+    },
+    {
+      "gaussian": 1,
+      "parameter": "log_scale_0",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00016246419995033244,
+      "full_max_abs_error": 4.8898160457611084e-05
+    },
+    {
+      "gaussian": 1,
+      "parameter": "log_scale_1",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00016509863454598026,
+      "full_max_abs_error": 6.440095603466034e-05
+    },
+    {
+      "gaussian": 2,
+      "parameter": "x",
+      "max_error_over_max_analytic_on_nontrivial_entries": 6.310316596374154e-05,
+      "full_max_abs_error": 4.8279762268066406e-05
+    },
+    {
+      "gaussian": 2,
+      "parameter": "y",
+      "max_error_over_max_analytic_on_nontrivial_entries": 3.8066871646446926e-05,
+      "full_max_abs_error": 4.12575900554657e-05
+    },
+    {
+      "gaussian": 2,
+      "parameter": "z",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00024101165555046036,
+      "full_max_abs_error": 4.623830318450928e-05
+    },
+    {
+      "gaussian": 2,
+      "parameter": "log_scale_0",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00013257456632477863,
+      "full_max_abs_error": 4.799244925379753e-05
+    },
+    {
+      "gaussian": 2,
+      "parameter": "log_scale_1",
+      "max_error_over_max_analytic_on_nontrivial_entries": 0.00015664135480254572,
+      "full_max_abs_error": 4.158576484769583e-05
+    }
+  ],
+  "evidence_path": "/data/fj/ForeSplat_Phase20G0_assets/723c02c2_v1/fisher_tiny_probe/oracle.pt",
+  "evidence_sha256": "284298f79a43b2f3088d5a4cc2113841f4fc605fc797c582c70cd51550614361",
+  "scene_scale_status": "PUP_ADAPTATION_BLOCKED: no efficient native per-pixel 5D/15-entry CUDA accumulator or complete scene score",
+  "active_extension_modified": false,
+  "production_training_modified": false
+}

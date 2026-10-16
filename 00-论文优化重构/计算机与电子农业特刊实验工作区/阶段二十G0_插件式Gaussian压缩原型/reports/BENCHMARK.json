@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "started_at": "2026-10-16T05:42:55.916075+00:00",
+  "gpu_uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "protocol": {
+    "physical_gpu": 1,
+    "uuid": "GPU-6836f890-98b2-5891-07ef-675c25199c65",
+    "rounds": 7,
+    "warmup_sweeps": 2,
+    "order_seed": 20261016,
+    "sync": "torch.cuda.synchronize before/after every measured full renderer call",
+    "samples_per_run": 189,
+    "include_pruning_or_loading": false,
+    "render_outputs": "all native outputs, same as quality evaluation",
+    "peak_memory": "isolated benchmark process; shared camera transforms plus current model and render outputs; no LPIPS"
+  },
+  "torch_threads": 4,
+  "completed_at": "2026-10-16T05:51:37.123774+00:00",
+  "frame_samples": 1512,
+  "blocks": 56,
+  "camera_loader_gate": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十G0_插件式Gaussian压缩原型/configs/BENCHMARK_CAMERA_GATE.txt",
+  "loaded_camera_count": 28,
+  "heldout_camera_count": 27,
+  "timings_include": [
+    "native renderer full forward call",
+    "explicit completion synchronization"
+  ],
+  "timings_exclude": [
+    "offline scoring",
+    "PLY loading",
+    "quality metrics",
+    "file IO",
+    "GPU warmup"
+  ],
+  "peak_memory_scope": "shared GPU camera transforms, background, current model, native render intermediates and outputs",
+  "note": "wall time includes CPU dispatch and waiting for all CUDA work; shared machine, no exclusive GPU lock",
+  "GPU_name": "NVIDIA RTX A6000",
+  "torch_version": "2.5.1+cu121"
+}
