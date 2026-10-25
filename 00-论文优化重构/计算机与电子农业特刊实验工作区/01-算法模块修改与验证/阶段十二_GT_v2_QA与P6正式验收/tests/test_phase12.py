@@ -168,7 +168,8 @@ class TestScoreSelectInstanceMatch:
                         semantic_enabled=False, semantic_total=0.0,
                         target_box_score=0.0, vertical_coverage_score=0.0,
                         pot_overlap_penalty=0.0, side_distractor_penalty=0.0,
-                        center_prior_score=0.0, leak_penalty=0.0),
+                        center_prior_score=0.0, leak_penalty=0.0,
+                        ranking_policy="base", primary_score=0.6, tie_break_score=0.0),
             ScoreRecord(image_name="test.jpg", prompt_id="P6", prompt_text="potted plant",
                         total_score=0.8, empty_flag=False,
                         q_edge=0.5, q_area=0.8, q_comp=1.0,
@@ -179,13 +180,15 @@ class TestScoreSelectInstanceMatch:
                         semantic_enabled=False, semantic_total=0.0,
                         target_box_score=0.0, vertical_coverage_score=0.0,
                         pot_overlap_penalty=0.0, side_distractor_penalty=0.0,
-                        center_prior_score=0.0, leak_penalty=0.0),
+                        center_prior_score=0.0, leak_penalty=0.0,
+                        ranking_policy="base", primary_score=0.8, tie_break_score=0.0),
         ]
 
         args = types.SimpleNamespace(
             use_prompt_ensemble=True,
             prompt_selection_mode="score_select",
             default_prompt_id="P6",
+            ranking_policy="base",
         )
 
         import cv2

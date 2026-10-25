@@ -50,6 +50,47 @@ def fft_blur_score(image_gray: np.ndarray) -> float:
     return float(high_energy_ratio)
 
 
+def radial_high_pass_weight(
+    shape: tuple[int, int],
+    cutoff_ratio: float = 0.10,
+    transition_ratio: float = 0.10,
+) -> np.ndarray:
+    """Radial high-pass weighting W_H in [0,1] (manuscript Eq. 1).
+
+    Weights are 0 near the spectral centre and ramp linearly to 1 beyond
+    `cutoff_ratio + transition_ratio` of the normalised radius.
+    """
+    h, w = shape
+    cy, cx = h // 2, w // 2
+    radius = max(min(h, w) * 0.5, 1e-6)
+    Y, X = np.ogrid[:h, :w]
+    normalized = np.sqrt((X - cx) ** 2 + (Y - cy) ** 2) / radius
+    if transition_ratio <= 0:
+        return (normalized >= cutoff_ratio).astype(np.float32)
+    weight = (normalized - cutoff_ratio) / max(transition_ratio, 1e-6)
+    return np.clip(weight, 0.0, 1.0).astype(np.float32)
+
+
+def fft_blur_score_paper(
+    image_gray: np.ndarray,
+    cutoff_ratio: float = 0.10,
+    transition_ratio: float = 0.10,
+) -> float:
+    """Manuscript Eq. (1): normalised high-frequency saliency.
+
+        Q_FFT(I) = || W_H .* log(1+|F(I)|) ||_1 / (|| log(1+|F(I)|) ||_1 + eps)
+
+    A larger value means richer high-frequency detail (less blur).
+    """
+    h, w = image_gray.shape
+    spectrum = np.fft.fftshift(np.fft.fft2(image_gray.astype(np.float64)))
+    log_magnitude = np.log1p(np.abs(spectrum))
+    weight = radial_high_pass_weight((h, w), cutoff_ratio, transition_ratio)
+    numerator = float(np.sum(weight * log_magnitude))
+    denominator = float(np.sum(log_magnitude)) + 1e-12
+    return numerator / denominator
+
+
 def laplacian_variance(image_gray: np.ndarray) -> float:
     """
     Laplacian 方差。值越小越模糊。
@@ -67,13 +108,18 @@ def imread_unicode(image_path: str) -> np.ndarray:
     return img
 
 
-def compute_sharpness(image_path: str) -> dict:
+def compute_sharpness(image_path: str, fft_formula: str = "legacy") -> dict:
     """
     计算一张图片的清晰度分数（两种指标）。
+
+    fft_formula:
+        "legacy" — 旧平方能量比实现（历史实验口径）；
+        "paper"  — 原稿式(1) 的 log+L1 归一化高频显著性；
+        "both"   — 同时计算（推荐用于口径对照）。
     """
     img = imread_unicode(image_path)
     if img is None:
-        return {"fft": 0.0, "laplacian": 0.0, "combined": 0.0}
+        return {"fft": 0.0, "fft_paper": 0.0, "laplacian": 0.0}
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -84,11 +130,13 @@ def compute_sharpness(image_path: str) -> dict:
         scale = max_dim / max(h, w)
         gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
 
-    fft_score = fft_blur_score(gray)
+    legacy = fft_blur_score(gray)
+    paper = fft_blur_score_paper(gray) if fft_formula in ("paper", "both") else 0.0
     lap_score = laplacian_variance(gray)
 
     return {
-        "fft": fft_score,
+        "fft": legacy,
+        "fft_paper": paper,
         "laplacian": lap_score,
     }
 
@@ -101,6 +149,7 @@ def smart_filter(
     scores: list,
     blur_threshold_percentile: float = 25.0,
     max_consecutive_drop: int = 2,
+    fft_formula: str = "legacy",
 ) -> list:
     """
     智能过滤算法。
@@ -109,6 +158,7 @@ def smart_filter(
         scores: list of dict, 每帧的 {"index": int, "file": str, "fft": float, "laplacian": float}
         blur_threshold_percentile: 模糊阈值百分位（低于此百分位的认为是模糊）
         max_consecutive_drop: 最大连续删除帧数（保证 COLMAP 重叠）
+        fft_formula: "legacy"（历史口径）/ "paper"（原稿式(1)）/ "both"（两者均值）
 
     返回：
         keep_indices: 保留帧的索引列表
@@ -127,18 +177,26 @@ def smart_filter(
         return []
 
     # 归一化两个指标到 [0, 1] 再加权
-    fft_vals = np.array([s["fft"] for s in scores])
     lap_vals = np.array([s["laplacian"] for s in scores])
-
-    # Min-max 归一化
-    fft_min, fft_max = fft_vals.min(), fft_vals.max()
     lap_min, lap_max = lap_vals.min(), lap_vals.max()
-
-    fft_norm = (fft_vals - fft_min) / (fft_max - fft_min + 1e-8)
     lap_norm = (lap_vals - lap_min) / (lap_max - lap_min + 1e-8)
 
-    # 综合分：50% FFT + 50% Laplacian
-    combined = 0.5 * fft_norm + 0.5 * lap_norm
+    if fft_formula == "paper":
+        # Manuscript Eq.(1): use the normalised high-frequency saliency directly.
+        # Its first quartile is the sample-adaptive threshold (25th percentile).
+        fft_vals = np.array([s.get("fft_paper", 0.0) for s in scores])
+        combined = fft_vals
+    elif fft_formula == "both":
+        fft_vals = np.array([s.get("fft_paper", 0.0) for s in scores])
+        fft_min, fft_max = fft_vals.min(), fft_vals.max()
+        paper_norm = (fft_vals - fft_min) / (fft_max - fft_min + 1e-8)
+        combined = 0.5 * paper_norm + 0.5 * lap_norm
+    else:
+        fft_vals = np.array([s["fft"] for s in scores])
+        fft_min, fft_max = fft_vals.min(), fft_vals.max()
+        fft_norm = (fft_vals - fft_min) / (fft_max - fft_min + 1e-8)
+        # 综合分：50% FFT + 50% Laplacian
+        combined = 0.5 * fft_norm + 0.5 * lap_norm
 
     # 阈值：取百分位
     threshold = np.percentile(combined, blur_threshold_percentile)
@@ -195,6 +253,7 @@ def process_folder(
     blur_percentile: float = 25.0,
     max_consecutive_drop: int = 2,
     copy_mode: str = "copy",
+    fft_formula: str = "legacy",
 ):
     """
     处理单个文件夹：检测模糊 → 智能过滤 → 输出。
@@ -219,7 +278,7 @@ def process_folder(
     # Step 1: 计算所有图片的清晰度分数
     scores = []
     for idx, img_file in enumerate(image_files):
-        s = compute_sharpness(str(img_file))
+        s = compute_sharpness(str(img_file), fft_formula=fft_formula)
         s["index"] = idx
         s["file"] = img_file.name
         scores.append(s)
@@ -231,6 +290,7 @@ def process_folder(
         scores,
         blur_threshold_percentile=blur_percentile,
         max_consecutive_drop=max_consecutive_drop,
+        fft_formula=fft_formula,
     )
 
     removed = total - len(keep_indices)
@@ -266,11 +326,13 @@ def process_folder(
         "forced_kept": blurry_count - removed,
         "blur_percentile": blur_percentile,
         "max_consecutive_drop": max_consecutive_drop,
+        "fft_formula": fft_formula,
         "threshold": float(threshold),
         "per_frame": [
             {
                 "file": scores[i]["file"],
                 "fft": round(scores[i]["fft"], 6),
+                "fft_paper": round(float(scores[i].get("fft_paper", 0.0)), 6),
                 "laplacian": round(scores[i]["laplacian"], 4),
                 "combined_norm": round(float(combined_scores[i]), 6),
                 "is_blurry": bool(is_blurry[i]),
@@ -312,6 +374,11 @@ def main():
         "--mode", choices=["copy", "move", "symlink"], default="copy",
         help="输出模式：copy(复制)、move(移动)、symlink(软链接)。默认 copy"
     )
+    parser.add_argument(
+        "--fft_formula", choices=["legacy", "paper", "both"], default="legacy",
+        help="FFT 清晰度公式：legacy=历史平方能量比（默认，兼容历史实验）；"
+             "paper=原稿式(1) log+L1 归一化高频显著性；both=两者均值。"
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_dir)
@@ -328,7 +395,8 @@ def main():
         print(f"处理: {input_path.name}")
         process_folder(
             str(input_path), str(out_dir),
-            args.blur_percentile, args.max_consecutive_drop, args.mode
+            args.blur_percentile, args.max_consecutive_drop, args.mode,
+            fft_formula=args.fft_formula,
         )
     else:
         # 批量模式：遍历子文件夹
@@ -345,7 +413,8 @@ def main():
             print(f"处理: {subdir.name}")
             result = process_folder(
                 str(subdir), str(out_dir),
-                args.blur_percentile, args.max_consecutive_drop, args.mode
+                args.blur_percentile, args.max_consecutive_drop, args.mode,
+                fft_formula=args.fft_formula,
             )
             if result:
                 summary.append({

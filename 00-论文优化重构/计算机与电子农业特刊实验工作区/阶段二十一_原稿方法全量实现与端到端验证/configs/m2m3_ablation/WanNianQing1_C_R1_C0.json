@@ -1,0 +1,45 @@
+{
+  "job_id": "WanNianQing1_C_R1_C0",
+  "stages": [
+    "train",
+    "eval"
+  ],
+  "train": {
+    "source_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1",
+    "model_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/model",
+    "iterations": 30000,
+    "args": [
+      "--resolution",
+      "2",
+      "--eval",
+      "--port",
+      "6100",
+      "--mask_dir",
+      "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1/masks",
+      "--test_iterations",
+      "30000",
+      "--save_iterations",
+      "30000",
+      "--images",
+      "images_rgba"
+    ]
+  },
+  "eval": {
+    "model_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/model",
+    "source_path": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1",
+    "iteration": 30000,
+    "mask_dir": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1/masks",
+    "output_json": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/eval/foreground_test.json",
+    "args": [
+      "--split",
+      "test",
+      "--boundary_ignore",
+      "2",
+      "--with_lpips",
+      "--quiet"
+    ]
+  },
+  "variant": "C0",
+  "variant_label": "full-scene 2DGS control (no foreground-object components)",
+  "seed": 0
+}

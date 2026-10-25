@@ -1,0 +1,62 @@
+{"command": ["/usr/bin/python3", "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py", "--input_dir", "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/S21_KongQueZhuYu_E2_E3/selected_frames", "--output_dir", "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/sg_mps_ablation/S2_r1_heuristic_gate", "--sam3_repo", "/data/fj/F2DMAS/第三方源码/SAM3-latest", "--sam3_checkpoint", "/data/fj/F2DMAS/sam3/sam3.pt", "--device", "cpu", "--candidate_mode", "per_instance", "--prompt_list", "P1,P2,P3,P4,P5", "--default_prompt_id", "P2", "--use_prompt_ensemble", "--prompt_selection_mode", "score_select", "--score_weights", "area=1,comp=1,edge=1,temp=1,contrast=1", "--candidate_source_dir", "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择", "--reuse_existing_candidates", "--force", "--ranking_policy", "r1", "--use_semantic_gate", "--semantic_gate_mode", "heuristic"]}
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P1/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P1_绿色植物/mask_0000.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P2/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P2_整株去花盆/mask_0000.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P3/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P3_叶和茎/mask_0000.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P4/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P4_作物幼苗/mask_0000.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P5/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P5_去背景植物体/mask_0000.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P1/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P1_绿色植物/mask_0025.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P2/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P2_整株去花盆/mask_0025.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P3/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P3_叶和茎/mask_0025.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P4/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P4_作物幼苗/mask_0025.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P5/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P5_去背景植物体/mask_0025.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P1/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P1_绿色植物/mask_0050.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P2/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P2_整株去花盆/mask_0050.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P3/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P3_叶和茎/mask_0050.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P4/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P4_作物幼苗/mask_0050.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P5/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P5_去背景植物体/mask_0050.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P1/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P1_绿色植物/mask_0075.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P2/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P2_整株去花盆/mask_0075.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P3/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P3_叶和茎/mask_0075.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P4/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P4_作物幼苗/mask_0075.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P5/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P5_去背景植物体/mask_0075.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P1/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P1_绿色植物/mask_0100.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P2/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P2_整株去花盆/mask_0100.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P3/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P3_叶和茎/mask_0100.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P4/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P4_作物幼苗/mask_0100.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py:1220: RuntimeWarning: METADATA_UNVERIFIED: P5/0 at /data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择/候选掩膜/P5_去背景植物体/mask_0100.png; score-equivalent replay is not certified
+  entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
+[1/5] 0000.jpg selected=P2 score=1.0212 time=16.11s
+[2/5] 0025.jpg selected=P2 score=1.2316 time=15.70s
+[3/5] 0050.jpg selected=P2 score=1.0199 time=14.39s
+[4/5] 0075.jpg selected=P2 score=1.0507 time=15.67s
+[5/5] 0100.jpg selected=P2 score=1.1708 time=35.26s
+[1/5] 0000.jpg selected=A1s score=1.0212 area=0.2248 a5c=0 time=23.76s
+[2/5] 0025.jpg selected=A1s score=1.2316 area=0.3660 a5c=0 time=25.50s
+[3/5] 0050.jpg selected=A1s score=1.0199 area=0.2282 a5c=0 time=18.66s
+[4/5] 0075.jpg selected=A1s score=1.0507 area=0.2551 a5c=0 time=16.28s
+[5/5] 0100.jpg selected=A1s score=1.1708 area=0.2883 a5c=0 time=15.59s
+Done. Output saved to /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/sg_mps_ablation/S2_r1_heuristic_gate

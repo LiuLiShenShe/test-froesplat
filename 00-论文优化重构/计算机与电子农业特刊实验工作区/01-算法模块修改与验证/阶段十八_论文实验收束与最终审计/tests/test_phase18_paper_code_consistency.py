@@ -72,9 +72,13 @@ def test_ranking_policy_default_is_r1():
     src = load_s20_text()
     # ScoreRecord dataclass default must be r1
     assert 'ranking_policy: str = "r1"' in src, "ScoreRecord.ranking_policy default not r1"
-    # getattr fallbacks must default to r1 (3 call sites)
-    n = src.count('getattr(args, "ranking_policy", "r1")')
-    assert n == 3, f"Expected 3 getattr fallbacks of 'r1', found {n}"
+    # Every getattr fallback for the policy must default to r1 (Phase 21 added
+    # the weighted_fusion / variant-selection routing sites, so the count grows;
+    # what must hold is that NO fallback uses a different default).
+    n_total = src.count('getattr(args, "ranking_policy"')
+    n_r1 = src.count('getattr(args, "ranking_policy", "r1")')
+    assert n_total == n_r1, f"{n_total - n_r1} ranking_policy fallbacks do not default to r1"
+    assert n_total >= 3, f"Expected >= 3 ranking_policy fallbacks, found {n_total}"
 
 
 # ---------------------------------------------------------------------------

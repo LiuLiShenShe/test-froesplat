@@ -140,3 +140,98 @@ def ramp_weight(iteration: int, start_iter: int, warmup_iters: int) -> float:
     if warmup_iters <= 0:
         return 1.0
     return min(1.0, float(iteration - start_iter + 1) / float(warmup_iters))
+
+
+# ── Phase 21: mask identity / provenance closure ─────────────────────────────
+
+def file_sha256(path: Path) -> str:
+    import hashlib
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def write_mask_provenance(
+    cameras,
+    mask_dir: str,
+    mask_pattern: str,
+    mask_threshold: float,
+    output_path: str,
+    source_label: str = "",
+    mask_mode: str = "",
+) -> dict:
+    """Record exactly which mask file backs each training camera.
+
+    The manifest binds camera -> mask path -> file SHA256 -> tensor foreground
+    fraction.  It is the closure required so that a run cannot silently train on
+    a different mask version than the one produced by RAP-FSAM3.
+    """
+    import json
+    from pathlib import Path
+
+    entries = []
+    for cam in cameras:
+        tensor = getattr(cam, "gt_alpha_mask", None)
+        if tensor is None:
+            continue
+        try:
+            mask_path = resolve_mask_path(mask_dir, cam.image_name, mask_pattern)
+        except FileNotFoundError as error:
+            entries.append({
+                "image": cam.image_name,
+                "mask_path": None,
+                "sha256": None,
+                "status": "MISSING",
+                "error": str(error),
+            })
+            continue
+        entries.append({
+            "image": cam.image_name,
+            "mask_path": str(mask_path),
+            "sha256": file_sha256(mask_path),
+            "height": int(tensor.shape[-2]),
+            "width": int(tensor.shape[-1]),
+            "foreground_fraction": float(tensor.float().mean().item()),
+            "threshold": float(mask_threshold),
+            "status": "OK",
+        })
+    manifest = {
+        "schema_version": 1,
+        "source_label": source_label,
+        "mask_mode": mask_mode,
+        "mask_dir": str(Path(mask_dir)),
+        "mask_pattern": mask_pattern,
+        "mask_threshold": float(mask_threshold),
+        "camera_count": len(entries),
+        "missing_count": sum(1 for entry in entries if entry["status"] != "OK"),
+        "entries": entries,
+    }
+    if output_path:
+        destination = Path(output_path)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    return manifest
+
+
+def verify_mask_provenance(manifest: dict, expected: dict) -> None:
+    """Raise if the actual mask hashes differ from the expected manifest.
+
+    `expected` maps image name -> sha256 (or a full provenance manifest dict).
+    """
+    if isinstance(expected, dict) and "entries" in expected:
+        expected = {entry["image"]: entry.get("sha256") for entry in expected["entries"]}
+    actual = {entry["image"]: entry.get("sha256") for entry in manifest.get("entries", [])}
+    mismatches = []
+    for image, expected_hash in expected.items():
+        if expected_hash is None:
+            continue
+        if actual.get(image) != expected_hash:
+            mismatches.append(f"{image}: expected {expected_hash}, got {actual.get(image)}")
+    if mismatches:
+        raise ValueError(
+            "Mask provenance mismatch; refusing to train on a different mask version:\n  "
+            + "\n  ".join(mismatches[:10])
+            + (f"\n  ... and {len(mismatches) - 10} more" if len(mismatches) > 10 else "")
+        )

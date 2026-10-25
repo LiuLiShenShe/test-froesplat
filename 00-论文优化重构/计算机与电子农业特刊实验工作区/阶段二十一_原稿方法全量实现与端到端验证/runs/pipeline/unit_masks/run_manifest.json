@@ -1,0 +1,45 @@
+{
+  "phase": "21",
+  "job_id": "unit_masks",
+  "job_config": "/tmp/pytest-of-test/pytest-254/test_t4_mask_fingerprint0/unit_masks.json",
+  "job_config_sha256": "4e0edfd06155c9dc9ad03333d617f5751552596392ecf4fa52647c279c5fefe1",
+  "git": {
+    "commit": "d5db8371291fc293506ccda874af5cd2dccd0d51",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "",
+    "PYTHONPATH": ""
+  },
+  "stages": [
+    {
+      "stage": "train",
+      "status": "DRY_RUN",
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/train.py",
+        "-s",
+        "/src",
+        "-m",
+        "/tmp/pytest-of-test/pytest-254/test_t4_mask_fingerprint0/model",
+        "--iterations",
+        "30000",
+        "--mask_dir",
+        "/tmp/pytest-of-test/pytest-254/test_t4_mask_fingerprint0/masks"
+      ]
+    }
+  ],
+  "started": "2026-10-24T19:45:43+0800",
+  "status": "DRY_RUN",
+  "consumed_masks": {
+    "count": 2,
+    "dir": "/tmp/pytest-of-test/pytest-254/test_t4_mask_fingerprint0/masks",
+    "combined_sha256": "3d32764f365027dc28291641833635ce0e06fc3baecb0e2c9243f2c0efb99e44",
+    "first": "mask_a.png",
+    "last": "mask_b.png"
+  },
+  "finished": "2026-10-24T19:45:43+0800"
+}

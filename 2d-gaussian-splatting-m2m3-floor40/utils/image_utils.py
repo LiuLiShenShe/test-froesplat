@@ -10,7 +10,6 @@
 #
 
 import torch
-import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
 def mse(img1, img2):
@@ -32,6 +31,9 @@ def gradient_map(image):
     return magnitude
 
 def colormap(map, cmap="turbo"):
+    # matplotlib is imported lazily: train.py only needs `psnr` from this module,
+    # and importing matplotlib pulls in hundreds of small files from disk.
+    import matplotlib.pyplot as plt
     colors = torch.tensor(plt.cm.get_cmap(cmap).colors).to(map.device)
     map = (map - map.min()) / (map.max() - map.min())
     map = (map * 255).round().long().squeeze()

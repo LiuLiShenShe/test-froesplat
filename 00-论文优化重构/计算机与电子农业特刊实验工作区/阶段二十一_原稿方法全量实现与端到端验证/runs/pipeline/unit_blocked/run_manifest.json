@@ -1,0 +1,50 @@
+{
+  "phase": "21",
+  "job_id": "unit_blocked",
+  "job_config": "/tmp/tmp_ffhcqbf/unit_blocked.json",
+  "job_config_sha256": "24260e0474adac3d6149391eeb5758f946da26d02558a1841ae8c8cf78e23410",
+  "git": {
+    "commit": "d5db8371291fc293506ccda874af5cd2dccd0d51",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "",
+    "PYTHONPATH": ""
+  },
+  "stages": [
+    {
+      "stage": "rap",
+      "status": "DRY_RUN",
+      "command": [
+        "/usr/bin/python3",
+        "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py",
+        "--input_dir",
+        "/in",
+        "--output_dir",
+        "/out",
+        "--force"
+      ]
+    },
+    {
+      "stage": "train",
+      "status": "BLOCKED",
+      "error": "missing job field: 'source_path'"
+    },
+    {
+      "stage": "eval",
+      "status": "BLOCKED",
+      "blocked_by": "train"
+    }
+  ],
+  "started": "2026-10-24T19:45:35+0800",
+  "status": "DRY_RUN",
+  "consumed_masks": {
+    "count": 0,
+    "missing_dir": true,
+    "combined_sha256": ""
+  },
+  "finished": "2026-10-24T19:45:41+0800"
+}

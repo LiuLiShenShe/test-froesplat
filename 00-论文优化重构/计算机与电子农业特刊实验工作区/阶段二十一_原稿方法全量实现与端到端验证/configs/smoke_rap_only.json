@@ -1,0 +1,12 @@
+{
+  "job_id": "smoke_rap_replay_kqz",
+  "stages": ["rap"],
+  "rap": {
+    "input_dir": "/data/fj/F2DMAS/00-论文优化重构/数据管理/05-评测结果/S21_KongQueZhuYu_E2_E3/selected_frames",
+    "output_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/pipeline/smoke_rap_replay_kqz/rap",
+    "args": ["--candidate_mode", "per_instance", "--prompt_list", "P1,P2,P3,P4,P5",
+             "--use_prompt_ensemble", "--prompt_selection_mode", "score_select",
+             "--ranking_policy", "r1", "--reuse_existing_candidates",
+             "--candidate_source_dir", "/data/fj/F2DMAS/00-论文优化重构/数据管理/03-分割Mask/05-RAP-FSAM3掩膜/E2E3_KongQueZhuYu_GT5_A1_多提示词选择"]
+  }
+}

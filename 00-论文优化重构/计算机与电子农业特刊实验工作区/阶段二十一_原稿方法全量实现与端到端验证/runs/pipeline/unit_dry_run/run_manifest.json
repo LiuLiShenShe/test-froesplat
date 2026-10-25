@@ -1,0 +1,90 @@
+{
+  "phase": "21",
+  "job_id": "unit_dry_run",
+  "job_config": "/tmp/tmpma7o3gup/unit_dry_run.json",
+  "job_config_sha256": "26eedd77c0e6081fe4518b69b6f2fcffea7eb81fdd109fbfa3aa382e60e31f9f",
+  "git": {
+    "commit": "d5db8371291fc293506ccda874af5cd2dccd0d51",
+    "branch": "main",
+    "dirty": true
+  },
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": "",
+    "PYTHONPATH": ""
+  },
+  "stages": [
+    {
+      "stage": "fft",
+      "status": "DRY_RUN",
+      "command": [
+        "/usr/bin/python3",
+        "/data/fj/F2DMAS/02-FFT/blur_filter.py",
+        "--input_dir",
+        "/in",
+        "--output_dir",
+        "/out",
+        "--fft_formula",
+        "paper"
+      ]
+    },
+    {
+      "stage": "rap",
+      "status": "DRY_RUN",
+      "command": [
+        "/usr/bin/python3",
+        "/data/fj/F2DMAS/00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/脚本/生成RAP-FSAM3掩膜.py",
+        "--input_dir",
+        "/in",
+        "--output_dir",
+        "/out",
+        "--force",
+        "--prompt_list",
+        "P1,P2"
+      ]
+    },
+    {
+      "stage": "train",
+      "status": "DRY_RUN",
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/train.py",
+        "-s",
+        "/src",
+        "-m",
+        "/model",
+        "--iterations",
+        "123",
+        "--mask_dir",
+        "/masks"
+      ]
+    },
+    {
+      "stage": "eval",
+      "status": "DRY_RUN",
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/scripts/evaluate_foreground.py",
+        "-m",
+        "/model",
+        "-s",
+        "/src",
+        "--iteration",
+        "-1",
+        "--mask_dir",
+        "/masks",
+        "--output_json",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/pipeline/unit_dry_run/eval/foreground.json"
+      ]
+    }
+  ],
+  "started": "2026-10-24T19:45:28+0800",
+  "status": "DRY_RUN",
+  "consumed_masks": {
+    "count": 0,
+    "missing_dir": true,
+    "combined_sha256": ""
+  },
+  "finished": "2026-10-24T19:45:34+0800"
+}

@@ -116,6 +116,11 @@ class ScoreRecord:
     primary_score: float = 0.0
     tie_break_score: float = 0.0
     contrast_effective: float = 0.0
+    # ── Phase 21 §SG-MPS: manuscript gated-softmax descriptors ──
+    gate_confidence: float = 0.0
+    gate_softmax: float = 0.0
+    phi_descriptor: str = ""
+    psi_descriptor: str = ""
 
 
 @dataclass
@@ -691,6 +696,29 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--use_semantic_gate", action="store_true")
     parser.add_argument(
+        "--semantic_gate_mode",
+        choices=["heuristic", "gated_softmax"],
+        default="heuristic",
+        help="Phase 21 §SG-MPS: heuristic=legacy additive semantics gate; "
+             "gated_softmax=manuscript sigmoid compatibility c_i^(k) + temperature "
+             "softmax a_i^(k); prompt chosen by argmax_k c_i^(k).",
+    )
+    parser.add_argument(
+        "--semantic_phi_weights", default="0.5,0.3,0.15,0.15,0.0,0.1",
+        help="Phase 21: w_phi for [q_plant,q_area,q_comp,q_edge,q_contrast,q_temp].",
+    )
+    parser.add_argument(
+        "--semantic_psi_weights", default="0.3,0.3,0.3,0.2",
+        help="Phase 21: w_psi for [q_table,q_bg,q_neighbour,q_outlier].",
+    )
+    parser.add_argument("--semantic_gate_bias", type=float, default=0.5,
+                        help="Phase 21: bias b in c=sigmoid(w_phi^T phi - w_psi^T psi - b).")
+    parser.add_argument("--semantic_gate_temperature", type=float, default=0.25,
+                        help="Phase 21: tau_s in a=softmax(c/tau_s).")
+    parser.add_argument("--semantic_gate_use_contrast", action="store_true",
+                        help="Phase 21: include q_contrast in the gate descriptor. Off by default "
+                             "to avoid double-counting the term that CDR/R1 removes from primary ranking.")
+    parser.add_argument(
         "--semantic_gate_backend",
         choices=["heuristic"],
         default="heuristic",
@@ -769,9 +797,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--use_corrective_geometry", action="store_true")
     parser.add_argument(
         "--corrective_geometry_backend",
-        choices=["colmap_tracks", "mask_shape"],
+        choices=["colmap_tracks", "colmap_tracks_gaussian", "mask_shape"],
         default="colmap_tracks",
     )
+    # ── GCFC (manuscript §2.3.5): Gaussian support field H_i, support ratio G_i ──
+    parser.add_argument("--geometry_gaussian_sigma", type=float, default=3.0)
+    parser.add_argument("--geometry_support_threshold", type=float, default=0.15)
+    parser.add_argument("--geometry_boundary_band_px", type=int, default=12)
+    parser.add_argument("--geometry_min_support_ratio", type=float, default=0.35)
     parser.add_argument("--geometry_positive_min_points", type=int, default=12)
     parser.add_argument("--geometry_negative_min_area_ratio", type=float, default=0.012)
     parser.add_argument("--geometry_correct_max_delta_ratio", type=float, default=0.08)
@@ -1435,10 +1468,16 @@ def build_semantic_gate_context(
     for item in candidates:
         union |= item.mask
     green = largest_green_component_mask(image, args)
+    # §SG-MPS gated mode needs an *independent* semantic reference: if phi/psi
+    # were measured against the candidates' own union the gate would be
+    # self-referential and c_i^(k) would be nearly constant across prompts.
+    # `heuristic` keeps the historical (candidate-relative) construction so the
+    # archived A1/A1s runs replay bitwise.
+    gated_reference = getattr(args, "semantic_gate_mode", "heuristic") == "gated_softmax"
     if target_box:
         target_mask = box_to_mask(target_box, shape)
     else:
-        target_mask = union | green
+        target_mask = (green if gated_reference else (union | green))
         if target_mask.any():
             target_mask = keep_largest_component(target_mask)
             target_mask = binary_closing(target_mask, structure=kernel(11), iterations=1)
@@ -1454,7 +1493,15 @@ def build_semantic_gate_context(
     rgb = np.array(image.convert("RGB"), dtype=np.float32)
     exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
     low_green = exg <= args.semantic_green_exg_threshold
-    pot_mask = union & lower & low_green
+    if gated_reference:
+        pot_mask = lower & low_green
+        if target_box is not None:
+            tx0, tx1 = target_box[0], target_box[2]
+            margin = max(1, w // 20)
+            pot_mask[:, : max(0, tx0 - margin)] = False
+            pot_mask[:, min(w, tx1 + margin) :] = False
+    else:
+        pot_mask = union & lower & low_green
     if pot_box is not None:
         pot_mask |= box_to_mask(pot_box, shape)
     if pot_mask.any():
@@ -1468,7 +1515,8 @@ def build_semantic_gate_context(
     if target_box is not None:
         tx0, ty0, tx1, ty1 = target_box
         side_mask[:, max(0, tx0 - band // 2) : min(w, tx1 + band // 2)] = False
-    side_mask &= union
+    if not gated_reference:
+        side_mask &= union
     for box in side_boxes:
         side_mask |= box_to_mask(box, shape)
     if not side_boxes and side_mask.any():
@@ -1490,7 +1538,20 @@ def build_semantic_gate_context(
     )
 
 
-def semantic_gate_scores(mask: np.ndarray, context: SemanticGateContext, args: argparse.Namespace) -> dict[str, float]:
+def parse_weight_vector(raw: str, expected: int, name: str) -> list[float]:
+    values = [float(value) for value in str(raw).replace(";", ",").split(",") if str(value).strip() != ""]
+    if len(values) != expected:
+        raise ValueError(f"--{name} requires {expected} comma-separated values, got {len(values)}")
+    return values
+
+
+def semantic_gate_scores(
+    mask: np.ndarray,
+    context: SemanticGateContext,
+    args: argparse.Namespace,
+    image: Image.Image | None = None,
+    temporal_iou: float = 0.5,
+) -> dict[str, float]:
     area = float(mask.sum())
     if area <= 0:
         return {
@@ -1500,6 +1561,10 @@ def semantic_gate_scores(mask: np.ndarray, context: SemanticGateContext, args: a
             "pot_overlap_penalty": 1.0,
             "side_distractor_penalty": 1.0,
             "center_prior_score": 0.0,
+            "gate_confidence": 0.0,
+            "q_plant": 0.0, "q_area": 0.0, "q_comp": 0.0, "q_edge": 0.0,
+            "q_contrast": 0.0, "q_temp": 0.0,
+            "q_table": 1.0, "q_bg": 1.0, "q_neighbour": 1.0, "q_outlier": 1.0,
         }
     target_inter = float(np.logical_and(mask, context.target_mask).sum())
     target_denom = max(float(context.target_mask.sum()), 1.0)
@@ -1524,13 +1589,59 @@ def semantic_gate_scores(mask: np.ndarray, context: SemanticGateContext, args: a
     cy = float(ys.mean()) / max(mask.shape[0] - 1, 1)
     center_prior_score = max(0.0, 1.0 - (abs(cx - 0.5) / 0.5) * 0.65 - max(0.0, cy - 0.72) / 0.28)
 
-    semantic_total = (
-        args.target_box_weight * target_box_score
-        + args.vertical_coverage_weight * vertical_coverage_score
-        + args.center_prior_weight * center_prior_score
-        - args.pot_overlap_weight * pot_overlap_penalty
-        - args.side_distractor_weight * side_distractor_penalty
+    # ── Phase 21 §SG-MPS descriptors (manuscript Eq. phi/psi) ──
+    total_pixels = mask.size
+    area_ratio = float(area / total_pixels) if total_pixels else 0.0
+    min_area = max(1, int(total_pixels * args.component_min_area_ratio))
+    comp_count = component_count(mask, min_area)
+    q_area = area_quality(area_ratio, args)
+    q_comp = 1.0 / (1.0 + max(comp_count - 1, 0))
+    q_edge = edge_quality(mask, args)
+    q_contrast = (
+        min(1.0, foreground_background_contrast(image, mask) / 0.25)
+        if image is not None else 0.5
     )
+    q_temp = float(temporal_iou)
+    green_fraction = 0.0
+    if image is not None:
+        rgb = np.array(image.convert("RGB"), dtype=np.float32)
+        exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
+        green = exg > args.semantic_green_exg_threshold
+        green_fraction = safe_ratio(float(np.logical_and(mask, green).sum()), area)
+    q_plant = 0.5 * target_box_score + 0.5 * green_fraction
+
+    h, w = mask.shape
+    lower_band = np.zeros_like(mask, dtype=bool)
+    lower_band[int(h * args.semantic_pot_lower_start_ratio):, :] = True
+    # Table = lower/outer scene support that is neither the target nor its pot.
+    table_region = lower_band & ~context.pot_mask & ~context.target_mask
+    q_table = safe_ratio(float(np.logical_and(mask, table_region).sum()), area)
+    q_bg = safe_ratio(float(np.logical_and(mask, ~context.target_mask).sum()), area)
+    q_neighbour = side_distractor_penalty
+    q_outlier = float(max(0.0, 1.0 - q_comp))
+
+    phi = [q_plant, q_area, q_comp, q_edge, q_contrast, q_temp]
+    psi = [q_table, q_bg, q_neighbour, q_outlier]
+    w_phi = parse_weight_vector(getattr(args, "semantic_phi_weights", "0.5,0.3,0.15,0.15,0.0,0.1"), 6, "semantic_phi_weights")
+    w_psi = parse_weight_vector(getattr(args, "semantic_psi_weights", "0.3,0.3,0.3,0.2"), 4, "semantic_psi_weights")
+    if not getattr(args, "semantic_gate_use_contrast", False):
+        w_phi[4] = 0.0
+    gate_bias = float(getattr(args, "semantic_gate_bias", 0.5))
+    logit = sum(w * v for w, v in zip(w_phi, phi)) - sum(w * v for w, v in zip(w_psi, psi)) - gate_bias
+    gate_confidence = float(1.0 / (1.0 + math.exp(-max(min(logit, 60.0), -60.0))))
+
+    if getattr(args, "semantic_gate_mode", "heuristic") == "gated_softmax":
+        # The gated softmax is applied at selection time (needs the whole frame's
+        # candidate set); the per-candidate additive term is therefore zero.
+        semantic_total = 0.0
+    else:
+        semantic_total = (
+            args.target_box_weight * target_box_score
+            + args.vertical_coverage_weight * vertical_coverage_score
+            + args.center_prior_weight * center_prior_score
+            - args.pot_overlap_weight * pot_overlap_penalty
+            - args.side_distractor_weight * side_distractor_penalty
+        )
     return {
         "semantic_total": float(semantic_total),
         "target_box_score": float(target_box_score),
@@ -1538,7 +1649,68 @@ def semantic_gate_scores(mask: np.ndarray, context: SemanticGateContext, args: a
         "pot_overlap_penalty": float(pot_overlap_penalty),
         "side_distractor_penalty": float(side_distractor_penalty),
         "center_prior_score": float(center_prior_score),
+        "gate_confidence": gate_confidence,
+        "q_plant": float(q_plant), "q_area": float(q_area), "q_comp": float(q_comp),
+        "q_edge": float(q_edge), "q_contrast": float(q_contrast), "q_temp": float(q_temp),
+        "q_table": float(q_table), "q_bg": float(q_bg),
+        "q_neighbour": float(q_neighbour), "q_outlier": float(q_outlier),
     }
+
+
+def apply_semantic_gate_softmax(score_records: list[ScoreRecord], args: argparse.Namespace) -> None:
+    """Phase 21 §SG-MPS: temperature-controlled softmax over frame candidates.
+
+    Implements a_i^(k) = exp(c_i^(k)/tau_s) / sum_l exp(c_i^(l)/tau_s) and stores
+    it on each record (`gate_softmax`) for prompt-robustness reporting and for
+    `weighted_fusion` weights.  The manuscript selects the prompt by
+    k* = argmax_k a_i^(k), and because softmax is strictly monotone in c this is
+    exactly argmax_k c_i^(k) -- so selection is done on `gate_confidence`
+    (see `semantic_gate_prompt`), NOT by adding an arbitrary score bonus.
+
+    Under `semantic_gate_mode=heuristic` this function is a no-op, preserving
+    bitwise replay of the historical pipeline.
+    """
+    if not getattr(args, "use_semantic_gate", False):
+        return
+    if getattr(args, "semantic_gate_mode", "heuristic") != "gated_softmax":
+        return
+    usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
+    if not usable:
+        return
+    tau = max(float(getattr(args, "semantic_gate_temperature", 0.25)), 1e-6)
+    confidences = [float(getattr(rec, "gate_confidence", 0.0)) for rec in usable]
+    peak = max(confidences)
+    exps = [math.exp((value - peak) / tau) for value in confidences]
+    normalizer = sum(exps)
+    if normalizer <= 0.0:
+        normalizer = 1.0
+    for rec, value in zip(usable, exps):
+        rec.gate_softmax = float(value / normalizer)
+
+
+def semantic_gate_prompt(score_records: list[ScoreRecord], args: argparse.Namespace) -> str | None:
+    """k* = argmax_k c_i^(k): the prompt SG-MPS selects for this frame.
+
+    Returns None when the gate is off or in legacy `heuristic` mode, in which
+    case prompt/instance selection stays with the ranking policy.
+    """
+    if not getattr(args, "use_semantic_gate", False):
+        return None
+    if getattr(args, "semantic_gate_mode", "heuristic") != "gated_softmax":
+        return None
+    usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
+    if not usable:
+        return None
+    # c_i^(k) is per prompt; a prompt may contribute several instances, so use
+    # the strongest instance of each prompt (max over instances, as in the
+    # manuscript where each prompt returns one foreground region).
+    best_by_prompt: dict[str, float] = {}
+    for rec in usable:
+        value = float(getattr(rec, "gate_confidence", 0.0))
+        best_by_prompt[rec.prompt_id] = max(best_by_prompt.get(rec.prompt_id, -1.0), value)
+    if not best_by_prompt:
+        return None
+    return max(best_by_prompt.items(), key=lambda item: item[1])[0]
 
 
 def save_semantic_gate_debug(
@@ -1651,9 +1823,13 @@ def score_candidate(
         "pot_overlap_penalty": 0.0,
         "side_distractor_penalty": 0.0,
         "center_prior_score": 0.0,
+        "gate_confidence": 0.0,
+        "q_plant": 0.0, "q_area": 0.0, "q_comp": 0.0, "q_edge": 0.0,
+        "q_contrast": 0.0, "q_temp": 0.0,
+        "q_table": 0.0, "q_bg": 0.0, "q_neighbour": 0.0, "q_outlier": 0.0,
     }
     if args.use_semantic_gate and semantic_context is not None:
-        semantic = semantic_gate_scores(mask, semantic_context, args)
+        semantic = semantic_gate_scores(mask, semantic_context, args, image=image, temporal_iou=q_temp)
     total = base_total + semantic["semantic_total"] - risk_penalty
     # ── Phase 17C §17: counterfactual ranking policy (pure function, no tuning) ──
     policy = getattr(args, "ranking_policy", "r1")
@@ -1701,6 +1877,21 @@ def score_candidate(
         primary_score=float(primary_score),
         tie_break_score=float(tie_break_score),
         contrast_effective=float(contrast_effective),
+        gate_confidence=float(semantic.get("gate_confidence", 0.0)),
+        gate_softmax=0.0,
+        phi_descriptor=",".join(
+            f"{value:.6f}" for value in (
+                semantic.get("q_plant", 0.0), semantic.get("q_area", 0.0),
+                semantic.get("q_comp", 0.0), semantic.get("q_edge", 0.0),
+                semantic.get("q_contrast", 0.0), semantic.get("q_temp", 0.0),
+            )
+        ),
+        psi_descriptor=",".join(
+            f"{value:.6f}" for value in (
+                semantic.get("q_table", 0.0), semantic.get("q_bg", 0.0),
+                semantic.get("q_neighbour", 0.0), semantic.get("q_outlier", 0.0),
+            )
+        ),
     )
 
 
@@ -1711,13 +1902,26 @@ def select_mask(
     prompt_texts: dict[str, str],
     args: argparse.Namespace,
 ) -> tuple[np.ndarray, str, float]:
+    # Phase 21 §SG-MPS: apply the temperature softmax safety bonus to the
+    # policy primary score BEFORE any branch selects. No-op unless
+    # semantic_gate_mode=gated_softmax, so historical replay is unchanged.
+    apply_semantic_gate_softmax(score_records, args)
     if args.use_prompt_ensemble and args.prompt_selection_mode == "score_select":
         # 阶段十二 §三.1：score_select 按 (prompt_id, instance_id) 选最佳实例，不只按 prompt_id
+        # Phase 21: prompt selection is done first by SG-MPS when the gated mode is
+        # active (k* = argmax_k c_i^(k), manuscript §2.3.3); the ranking policy then
+        # picks the best instance *within* that prompt, so R1 is never bypassed.
+        # Under `base` primary == total, so historical replay remains bitwise identical.
         non_empty = {item.prompt_id for item in candidates if item.mask.any()}
         selectable = [row for row in score_records if row.prompt_id in non_empty]
         if not selectable:
             selectable = score_records
-        best = max(selectable, key=lambda row: row.total_score)
+        gated_prompt = semantic_gate_prompt(score_records, args)
+        if gated_prompt is not None:
+            gated_rows = [row for row in selectable if row.prompt_id == gated_prompt]
+            if gated_rows:
+                selectable = gated_rows
+        best = select_best_policy(selectable, getattr(args, "ranking_policy", "r1"))
         # 找到与 best 匹配的候选（同 prompt_id + instance_id）
         best_cand = next(
             (item for item in candidates
@@ -1726,18 +1930,28 @@ def select_mask(
         )
         if best_cand is None:
             raise ValueError(f"No candidate found for {best.prompt_id}#{best.instance_id}")
-        return best_cand.mask.copy(), best.prompt_id, best.total_score, False
+        best_score = float(getattr(best, "primary_score", best.total_score))
+        return best_cand.mask.copy(), best.prompt_id, best_score, False
     if args.use_prompt_ensemble and args.prompt_selection_mode == "weighted_fusion":
-        score_by_prompt = {row.prompt_id: max(row.total_score, 0.0) for row in score_records}
-        score_sum = sum(score_by_prompt.values())
-        if score_sum <= 0:
-            weights = {pid: 1.0 / len(candidates) for pid in score_by_prompt}
+        # Phase 21: fusion weights use the ranking-policy primary score (R1-aware).
+        # A per-prompt max keeps each prompt's strongest instance; softmax makes the
+        # weights shift-invariant and safe when primary scores are negative.
+        primary_by_prompt: dict[str, float] = {}
+        for row in score_records:
+            value = float(getattr(row, "primary_score", row.total_score))
+            primary_by_prompt[row.prompt_id] = max(primary_by_prompt.get(row.prompt_id, -float("inf")), value)
+        if primary_by_prompt:
+            temperature = max(float(getattr(args, "fusion_temperature", 1.0)), 1e-6)
+            peak = max(primary_by_prompt.values())
+            exp_scores = {pid: math.exp((value - peak) / temperature) for pid, value in primary_by_prompt.items()}
+            exp_sum = sum(exp_scores.values())
+            weights = {pid: value / exp_sum for pid, value in exp_scores.items()}
         else:
-            weights = {pid: score / score_sum for pid, score in score_by_prompt.items()}
+            weights = {}
         fused = np.zeros_like(candidates[0].mask, dtype=np.float32)
         for item in candidates:
             fused += weights.get(item.prompt_id, 0.0) * item.mask.astype(np.float32)
-        return fused >= args.fusion_threshold, "weighted_fusion", float(max(score_by_prompt.values(), default=0.0)), False
+        return fused >= args.fusion_threshold, "weighted_fusion", float(max(primary_by_prompt.values(), default=0.0)), False
 
     prompt_id = args.default_prompt_id
     if prompt_id not in prompt_texts:
@@ -2399,6 +2613,50 @@ def points_to_support_mask(points: np.ndarray, shape: tuple[int, int], dilation_
     return binary_dilation(support, structure=kernel(max(3, dilation_size)), iterations=1)
 
 
+def points_to_support_field(
+    points: np.ndarray,
+    shape: tuple[int, int],
+    sigma: float,
+    weights: np.ndarray | None = None,
+) -> np.ndarray:
+    """GCFC Gaussian support field (manuscript §2.3.5, Eq. "H_i").
+
+        H_i(p) = sum_j omega_ij * kappa_sigma(p - pi_i(X_j))
+
+    ``kappa_sigma`` is an isotropic Gaussian.  The field is normalised by its
+    maximum so that it lives in [0, 1]; ``G_i = <H_i, M_i> / (||H_i||_1 + eps)``
+    computed on the normalised field is then a support ratio in [0, 1].
+    """
+    field = np.zeros(shape, dtype=np.float32)
+    if points.size == 0 or sigma <= 0:
+        return field
+    xs = np.rint(points[:, 0]).astype(int)
+    ys = np.rint(points[:, 1]).astype(int)
+    in_bounds = (xs >= 0) & (ys >= 0) & (xs < shape[1]) & (ys < shape[0])
+    if not np.any(in_bounds):
+        return field
+    xs = xs[in_bounds]
+    ys = ys[in_bounds]
+    if weights is None:
+        np.add.at(field, (ys, xs), 1.0)
+    else:
+        np.add.at(field, (ys, xs), weights[in_bounds].astype(np.float32))
+    field = ndimage.gaussian_filter(field, sigma=float(sigma), mode="constant", cval=0.0)
+    peak = float(field.max())
+    if peak > 0:
+        field /= peak
+    return field
+
+
+def boundary_band(mask: np.ndarray, radius: int) -> np.ndarray:
+    """B_i = Dilate(M_i, r) \\ Erode(M_i, r), the GCFC positive-correction band."""
+    base = mask.astype(bool)
+    if radius <= 0:
+        return np.zeros_like(base, dtype=bool)
+    structure = kernel(2 * radius + 1)
+    return binary_dilation(base, structure=structure) & ~ndimage.binary_erosion(base, structure=structure)
+
+
 def bbox_from_mask_pixels(mask: np.ndarray) -> tuple[int, int, int, int] | None:
     return mask_bbox(mask, padding_ratio=0.02)
 
@@ -2418,6 +2676,8 @@ def apply_corrective_geometry(
     side_band[:, :side_width] = True
     side_band[:, w - side_width :] = True
     suspicious_region = lower_band | side_band
+    support_ratio: float | None = None
+    support_gate_failed = False
     if not args.use_corrective_geometry:
         return base, {
             "图像": image_name,
@@ -2462,7 +2722,23 @@ def apply_corrective_geometry(
             inside = int(base[ys[in_bounds], xs[in_bounds]].sum()) if np.any(in_bounds) else 0
         else:
             inside = 0
-        positive = support & ~base
+        support_ratio = None
+        if args.corrective_geometry_backend == "colmap_tracks_gaussian":
+            # ── GCFC manuscript §2.3.5 ──
+            # H_i(p) = Σ ω_ij κ_σ(p − π_i(X_j));  G_i = <H_i, M_i> / (||H_i||_1 + ε)
+            support_field = points_to_support_field(
+                observation.points, base.shape, args.geometry_gaussian_sigma)
+            field_total = float(support_field.sum())
+            support_ratio = safe_ratio(float((support_field * base.astype(np.float32)).sum()), field_total)
+            support = support_field >= float(args.geometry_support_threshold)
+            positive = support & ~base & boundary_band(base, int(args.geometry_boundary_band_px))
+            if support_ratio < float(args.geometry_min_support_ratio):
+                positive = np.zeros_like(base, dtype=bool)
+                support_gate_failed = True
+            else:
+                support_gate_failed = False
+        else:
+            positive = support & ~base
         if int(positive.sum()) < args.geometry_positive_min_points:
             positive = np.zeros_like(base, dtype=bool)
         unsupported = base & ~broad_support & suspicious_region
@@ -2470,6 +2746,11 @@ def apply_corrective_geometry(
             unsupported = np.zeros_like(base, dtype=bool)
         unsupported = remove_small_components(unsupported, int(base.size * args.geometry_negative_min_area_ratio))
         colmap_image = observation.image_name
+
+    if args.corrective_geometry_backend == "colmap_tracks_gaussian":
+        # GCFC manuscript §2.3.5: negative deletion stays OFF (only positive
+        # expansion inside B_i is allowed), so the unsupported region is discarded.
+        unsupported = np.zeros_like(base, dtype=bool)
 
     corrected = (base | positive) & ~unsupported
     if args.fill_holes:
@@ -2492,6 +2773,10 @@ def apply_corrective_geometry(
         reason = "iou_guard"
         accepted = False
 
+    elif args.corrective_geometry_backend == "colmap_tracks_gaussian" and support_gate_failed:
+        reason = "support_gate"
+        accepted = False
+
     final = corrected.astype(bool) if accepted else base
     pos_box = bbox_from_mask_pixels(positive)
     neg_box = bbox_from_mask_pixels(unsupported)
@@ -2503,6 +2788,7 @@ def apply_corrective_geometry(
         "原因": reason,
         "注册点数": registered,
         "掩膜内点数": inside,
+        "支撑场比例G": -1.0 if support_ratio is None else float(support_ratio),
         "正修正点支撑像素": int(positive.sum()),
         "负修正删除像素": int(unsupported.sum()),
         "几何修正像素": int(delta.sum()),
@@ -2667,6 +2953,11 @@ def score_to_dict(row: ScoreRecord) -> dict[str, Any]:
         "主评分": getattr(row, "primary_score", 0.0),
         "对比度调制": getattr(row, "contrast_effective", 0.0),
         "平局决胜分": getattr(row, "tie_break_score", 0.0),
+        # Phase 21 §SG-MPS diagnostics: c_i^(k) and a_i^(k)
+        "门控置信度": getattr(row, "gate_confidence", 0.0),
+        "门控softmax": getattr(row, "gate_softmax", 0.0),
+        "phi描述子": getattr(row, "phi_descriptor", ""),
+        "psi描述子": getattr(row, "psi_descriptor", ""),
     }
 
 
@@ -2893,6 +3184,9 @@ def main() -> int:
             )
             for item in candidates
         ]
+        # §SG-MPS a_i^(k) is computed before the score rows are written so the
+        # prompt-robustness CSV records the same distribution the selector used.
+        apply_semantic_gate_softmax(score_records, args)
         # ── 按策略主评分降序排名，回填 rank（逐实例）；base 策略下等价于历史 total_score 排序 ──
         ranked_indices = sorted(
             range(len(score_records)),
@@ -2961,7 +3255,15 @@ def main() -> int:
             save_mask(selected_mask, dirs["selected"] / f"mask_{image_path.stem}.png")
 
         elapsed = time.time() - t0
-        print(f"[{idx}/{len(images)}] {image_path.name} selected={selected_prompt} score={selected_score:.4f} time={elapsed:.2f}s")
+        gate_note = ""
+        if args.use_semantic_gate and semantic_context is not None:
+            gate_note = (
+                f" gate={getattr(args, 'semantic_gate_mode', 'heuristic')}"
+                f" argmax_prompt={semantic_gate_prompt(score_records, args) or '-'}"
+                f" a_max={max((float(getattr(r, 'gate_softmax', 0.0)) for r in score_records), default=0.0):.3f}"
+            )
+        print(f"[{idx}/{len(images)}] {image_path.name} selected={selected_prompt} "
+              f"score={selected_score:.4f}{gate_note} time={elapsed:.2f}s")
 
         candidates_by_stem[image_path.stem] = candidates
         contexts_by_stem[image_path.stem] = semantic_context
@@ -3211,12 +3513,16 @@ def main() -> int:
                 leak_ratio = float((m & ~band & ~geo).sum()) / max(int(m.sum()), 1)
                 penalty = args.consensus_variant_leak_weight * leak_ratio
                 rec.total_score = rec.total_score - penalty
+                # Phase 21: the leak penalty is a genuine ranking risk, so it must
+                # also move the policy primary score; otherwise R1-aware variant
+                # selection would ignore the consensus evidence.
+                rec.primary_score = float(getattr(rec, "primary_score", rec.total_score + penalty)) - penalty
                 rec.leak_penalty = penalty  # type: ignore[attr-defined]
-        best_record = max(variant_records, key=lambda r: r.total_score)
+        best_record = select_best_policy(variant_records, getattr(args, "ranking_policy", "r1"))
         best_variant = variants[variant_records.index(best_record)]
         selected_mask = best_variant.mask if best_variant.mask.any() else selected_by_stem[stem]
         selected_prompt = best_variant.prompt_id
-        selected_score = best_record.total_score
+        selected_score = float(getattr(best_record, "primary_score", best_record.total_score))
         if selected_prompt == "A7记忆":
             memory_info["selected_total"] = int(memory_info.get("selected_total", 0)) + 1
         if args.save_intermediate_masks:

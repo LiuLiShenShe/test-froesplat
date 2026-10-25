@@ -1,0 +1,92 @@
+{
+  "phase": "21",
+  "job_id": "WanNianQing1_C_R1_C0",
+  "job_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/configs/m2m3_ablation/WanNianQing1_C_R1_C0.json",
+  "job_config_sha256": "c7d9ecec0b81162ded6ab4c41c185bc0d07c7be6a67da215f3532a5f26ae5e1d",
+  "git": {
+    "commit": "d5db8371291fc293506ccda874af5cd2dccd0d51",
+    "branch": "main",
+    "dirty": true,
+    "status_source": "live"
+  },
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "OMP_NUM_THREADS": "",
+    "PYTHONPATH": ""
+  },
+  "stages": [
+    {
+      "stage": "train",
+      "status": "OK",
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+        "-u",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/train.py",
+        "-s",
+        "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1",
+        "-m",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/model",
+        "--iterations",
+        "30000",
+        "--resolution",
+        "2",
+        "--eval",
+        "--port",
+        "6100",
+        "--mask_dir",
+        "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1/masks",
+        "--test_iterations",
+        "30000",
+        "--save_iterations",
+        "30000",
+        "--images",
+        "images_rgba"
+      ],
+      "log": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/logs/pipeline/WanNianQing1_C_R1_C0/train.log",
+      "wall_sec": 1693.9087247260031,
+      "returncode": 0,
+      "mask_provenance": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/model/mask_provenance.json"
+    },
+    {
+      "stage": "eval",
+      "status": "OK",
+      "command": [
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python",
+        "-u",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/scripts/evaluate_foreground.py",
+        "-m",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/model",
+        "-s",
+        "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1",
+        "--iteration",
+        "30000",
+        "--mask_dir",
+        "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1/masks",
+        "--output_json",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/eval/foreground_test.json",
+        "--split",
+        "test",
+        "--boundary_ignore",
+        "2",
+        "--with_lpips",
+        "--quiet"
+      ],
+      "log": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/logs/pipeline/WanNianQing1_C_R1_C0/eval.log",
+      "wall_sec": 100.62961147498572,
+      "returncode": 0,
+      "metrics": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/阶段二十一_原稿方法全量实现与端到端验证/runs/m2m3_ablation/WanNianQing1_C_R1_C0/eval/foreground_test.json",
+      "metrics_sha256": "b5d440cc1274d54c7b660e936e19c16468fa377080b874c0b292b539a5c2f630"
+    }
+  ],
+  "started": "2026-10-25T05:28:34+0800",
+  "status": "OK",
+  "consumed_masks": {
+    "count": 213,
+    "dir": "/data/fj/F2DMAS_phase20e0_data/f53bf8f3_v1/WanNianQing1/C_R1/masks",
+    "combined_sha256": "61be8b848d93273fd95e0929b12ae9933a826394c38c699104faeefb713274c9",
+    "first": "mask_0000.png",
+    "last": "mask_0249.png"
+  },
+  "finished": "2026-10-25T05:58:29+0800"
+}

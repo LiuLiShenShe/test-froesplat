@@ -69,6 +69,9 @@ class ModelParams(ParamGroup):
         self.mask_dir = ""
         self.mask_pattern = "mask_{stem}.png"
         self.mask_threshold = 0.5
+        self.mask_provenance_path = ""
+        self.mask_provenance_expected = ""
+        self.mask_provenance_required = False
         self.init_pcd_mode = "none"
         self.init_pcd_min_observations = 3
         self.init_pcd_foreground_threshold = 0.5
@@ -126,6 +129,13 @@ class OptimizationParams(ParamGroup):
         self.mask_loss_warmup_iters = 0
         self.view_weight_mode = "none"
         self.view_weight_list = ""
+        self.view_weight_source = "csv"     # csv | computed
+        self.view_weight_q_min = 0.6
+        self.view_weight_q_max = 1.0
+        self.view_weight_coverage_weight = 0.5
+        self.view_weight_boundary_weight = 0.3
+        self.view_weight_contrast_weight = 0.2
+        self.view_weight_normalize = False
         self.view_weight_min = 0.5
         self.view_weight_max = 1.0
         self.view_weight_default = 1.0
@@ -155,6 +165,43 @@ class OptimizationParams(ParamGroup):
         self.m2m3_max_remove_ratio = 0.03
         self.save_capacity_report = False
         self.capacity_report_interval = 1_000
+        # ── Phase 21: full M2M3-GO bidirectional micro-matching ──
+        self.m2m3_go_mode = "off"          # off | prune | full
+        self.m2m3_go_start_iter = 6000
+        self.m2m3_go_interval = 1000
+        self.m2m3_go_stop_iter = 24000
+        self.m2m3_go_max_views = 8
+        self.m2m3_go_boundary_sigma = 6.0
+        self.m2m3_go_deficit_threshold = 0.5
+        self.m2m3_go_densify_budget = 512
+        # "primitive" enforces the manuscript's Densify(g_j) = 1[S_m2g>tau_m] *
+        # 1[S_g2m>tau_h or R>tau_r] on existing primitives; "pixel" instead
+        # back-projects under-covered foreground pixels.
+        self.m2m3_go_densify_source = "primitive"
+        self.m2m3_go_densify_jitter = 0.5
+        self.m2m3_go_densify_scale = 0.0   # 0 -> scene_extent * 0.002
+        self.m2m3_go_tau_p = 0.15
+        # U is a sigmoid over a linear score, so its absolute scale is
+        # scene/view-count dependent; "quantile" calibrates tau_p to a lower
+        # quantile of the current round's utility distribution instead of
+        # relying on one fixed value (the resolved tau_p is logged each round).
+        self.m2m3_go_tau_mode = "fixed"    # fixed | quantile
+        self.m2m3_go_tau_quantile = 0.01
+        self.m2m3_go_tau_m = 0.65
+        self.m2m3_go_tau_h = 0.35
+        self.m2m3_go_tau_r = 0.12
+        self.m2m3_go_w1 = 1.0
+        self.m2m3_go_w2 = 0.5
+        self.m2m3_go_w3 = 0.5
+        self.m2m3_go_w4 = 0.5
+        self.m2m3_go_w5 = 0.25
+        self.m2m3_go_w6 = 0.5
+        self.m2m3_go_bias = 0.0
+        self.m2m3_go_local_floor_ratio = 0.40
+        self.m2m3_go_local_blocks = 6
+        self.m2m3_go_max_remove_ratio = 0.03
+        self.m2m3_go_save_report = False
+        self.m2m3_go_report_interval = 1000
         super().__init__(parser, "Optimization Parameters")
 
 def get_combined_args(parser : ArgumentParser):

@@ -73,6 +73,10 @@ def _make_candidate(prompt_id, instance_id, mask, sam_score=0.8):
 
 
 def _make_score_record(prompt_id, instance_id, total_score, empty_flag=False):
+    # These fixtures exercise the score_select branch mechanics, so they pin the
+    # legacy `base` policy where primary == total.  Under r1 (production default)
+    # selection uses primary_score, which requires a real q_contrast/denom pair;
+    # Phase 21 covers the policy itself in test_phase21_sgmps_r1.py.
     return ScoreRecord(
         image_name="test.jpg",
         prompt_id=prompt_id,
@@ -89,6 +93,7 @@ def _make_score_record(prompt_id, instance_id, total_score, empty_flag=False):
         target_box_score=0.0, vertical_coverage_score=0.0,
         pot_overlap_penalty=0.0, side_distractor_penalty=0.0,
         center_prior_score=0.0, leak_penalty=0.0,
+        ranking_policy="base", primary_score=total_score,
     )
 
 
