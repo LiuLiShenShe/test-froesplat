@@ -1,0 +1,22 @@
+# Dependency definition for the YOLOv8-based plant segmentation baseline.
+#
+# Managed with uv (conda is not used):
+#
+#   uv sync
+#
+# Model weights are downloaded by ultralytics at first use and are not
+# redistributed in this repository.
+
+[project]
+name = "foresplat-yolov8-seg"
+version = "0.0.0"
+description = "YOLOv8 segmentation baseline for plant instance masks"
+requires-python = ">=3.10"
+dependencies = [
+    "ultralytics>=8.2.0",
+    "numpy>=1.24",
+    "opencv-python>=4.8,<5",
+]
+
+[tool.uv]
+package = false

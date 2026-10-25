@@ -1,0 +1,25 @@
+# Dependency definition for the ForeSplat release bundle.
+#
+# Replaces the former conda `environment.yml` (conda is no longer used).
+# Managed with uv:
+#
+#   uv python install 3.10
+#   uv sync
+#
+# The inspection scripts only need common Python packages. Full ForeSplat
+# training additionally requires external COLMAP, SAM/VFM and the 2DGS/3DGS
+# training trees (see ../2d-gaussian-splatting-m2m3-floor40/pyproject.toml).
+
+[project]
+name = "foresplat-real-release"
+version = "0.0.0"
+description = "ForeSplat release bundle: configs, examples and inspection scripts"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "numpy>=1.24",
+    "pillow>=10.0",
+    "pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false

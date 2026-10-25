@@ -62,18 +62,15 @@ ForeSplat/
 
 The experiments in the paper were run using two NVIDIA RTX A6000 GPUs with 48 GB memory each and 128 GB system memory. Neural rendering methods were trained for 30,000 iterations under a matched computing environment.
 
-Install dependencies with:
+Install dependencies with [uv](https://docs.astral.sh/uv/) (conda is no longer used):
 
 ```bash
-conda env create -f environment.yml
-conda activate foresplat
+uv python install 3.10
+uv sync
 ```
 
-or:
-
-```bash
-pip install -r requirements.txt
-```
+`uv sync` creates `.venv/` from `pyproject.toml` and `uv.lock`; run scripts with
+`uv run python <script>.py` or after `source .venv/bin/activate`.
 
 External dependencies such as COLMAP, 2DGS/3DGS implementations and SAM-series models should be installed according to their official instructions. This repository does not redistribute third-party model weights.
 

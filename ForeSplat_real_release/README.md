@@ -93,16 +93,15 @@ This folder contains real source data behind manuscript-level tables/figures:
 
 ## Environment
 
-```bash
-conda env create -f environment.yml
-conda activate foresplat
-```
-
-or:
+Dependencies are managed with [uv](https://docs.astral.sh/uv/) (conda is no longer used):
 
 ```bash
-pip install -r requirements.txt
+uv python install 3.10
+uv sync
 ```
+
+`uv sync` creates `.venv/` in this directory from `pyproject.toml` and `uv.lock`.
+Run scripts with `uv run python scripts/inspect_real_subset.py ...` or after `source .venv/bin/activate`.
 
 The inspection scripts only need common Python packages. Full ForeSplat training additionally requires external COLMAP, SAM/VFM and 2DGS/3DGS installations.
 

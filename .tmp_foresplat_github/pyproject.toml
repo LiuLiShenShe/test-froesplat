@@ -1,0 +1,26 @@
+# Dependency definition for the public ForeSplat repository copy.
+#
+# Replaces the former conda `environment.yml` (conda is no longer used).
+# Managed with uv:
+#
+#   uv python install 3.10
+#   uv sync
+#
+# External dependencies such as COLMAP, 2DGS/3DGS implementations and
+# SAM-series models are installed according to their official instructions;
+# this repository does not redistribute third-party model weights.
+
+[project]
+name = "foresplat"
+version = "0.0.0"
+description = "ForeSplat: target-aware foreground prior selection and compact 2D Gaussian splatting for potted plants"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "numpy>=1.24",
+    "pillow>=10.0",
+    "pyyaml>=6.0",
+    "opencv-python>=4.8",
+]
+
+[tool.uv]
+package = false

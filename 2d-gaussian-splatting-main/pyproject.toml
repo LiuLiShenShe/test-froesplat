@@ -1,0 +1,52 @@
+# Dependency definition for the baseline ForeSplat 2DGS training tree.
+#
+# This file replaces the former conda `environment.yml` (conda is no longer used
+# in this project). Everything is managed with uv:
+#
+#   uv python install 3.8
+#   uv sync
+#   uv pip install --no-build-isolation ./submodules/diff-surfel-rasterization ./submodules/simple-knn
+#
+# The last line compiles the two CUDA extensions. They are installed after
+# `uv sync` because their `setup.py` imports the already-installed torch and
+# CUDA toolkit; installing them from `[project].dependencies` would build them
+# in an isolated environment without torch.
+#
+# The former conda dependency `ffmpeg=4.2.2` is a system binary and cannot be
+# installed by uv; see UV_MIGRATION.md at the repository root.
+
+[project]
+name = "foresplat-2dgs-main"
+version = "0.0.0"
+description = "2D Gaussian Splatting with mask-supported Gaussian pruning (ForeSplat baseline tree)"
+requires-python = ">=3.8,<3.9"
+dependencies = [
+    "torch==2.0.0",
+    "torchvision==0.15.0",
+    "torchaudio==2.0.0",
+    "typing-extensions==4.9.0",
+    "numpy>=1.24,<2",
+    "pillow==10.2.0",
+    "open3d==0.18.0",
+    "mediapy==1.1.2",
+    "lpips==0.1.4",
+    "scikit-image==0.21.0",
+    "tqdm==4.66.2",
+    "trimesh==4.3.2",
+    "plyfile",
+    "opencv-python>=4.8,<5",
+]
+
+[tool.uv]
+# The repository is a training script tree, not an installable Python package.
+package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118" }
+torchvision = { index = "pytorch-cu118" }
+torchaudio = { index = "pytorch-cu118" }
+
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
