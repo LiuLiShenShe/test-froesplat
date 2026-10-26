@@ -1,0 +1,25 @@
+feature,section,entry,level,status,evidence
+FFT 帧质量过滤 Q_FFT,§2.3.1 Eq.(1),02-FFT/blur_filter.py:fft_blur_score_paper,L1-L6,VERIFIED,阶段二十一_…/metrics/fft_formula_kqz.csv（210 帧，33 帧判定不同）
+FFT 径向高通权重 W_H,§2.3.1,02-FFT/blur_filter.py:radial_high_pass_weight,L1-L3,IMPLEMENTED,"cutoff_ratio=0.10, transition_ratio=0.10"
+逐序列第一四分位阈值过滤,§2.3.1,02-FFT/blur_filter.py:--blur_percentile 25,L1-L4,RUNNABLE,filter_log.json
+多提示词逐实例候选生成 (K=5),§2.3.2,生成RAP-FSAM3掩膜.py:infer_candidates,L1-L5,VERIFIED,runs/R6_RAP_FULL_real/候选掩膜/raw_instance_P{1..5}/（23/7/5/5/13）
+SG-MPS 前景描述符 φ,§2.3.3,生成RAP-FSAM3掩膜.py:semantic_gate_scores,L1-L3,IMPLEMENTED,逐帧报告.csv:sg_mps_gate_confidence
+SG-MPS 干扰描述符 ψ,§2.3.3,生成RAP-FSAM3掩膜.py:semantic_gate_scores,L1-L3,IMPLEMENTED,同上
+SG-MPS 门控置信度 c=σ(wφ·φ−wψ·ψ−b),§2.3.3 Eq.(2),生成RAP-FSAM3掩膜.py:semantic_gate_scores:gate_confidence,L1-L3,IMPLEMENTED,"wφ=0.5,0.3,0.15,0.15,0,0.1; wψ=0.3,0.3,0.3,0.2; b=0.5"
+SG-MPS 提示词级 softmax a_i^(k),§2.3.3 Eq.(3),生成RAP-FSAM3掩膜.py:apply_semantic_gate_softmax,L1-L5,VERIFIED,逐帧报告.csv:sg_mps_softmax 逐帧 Σ=1；tests/test_rap_recovery_contracts.py
+SG-MPS 提示词选择 k*=argmax a_i^(k),§2.3.3 Eq.(4),生成RAP-FSAM3掩膜.py:semantic_gate_prompt,L1-L5,PARTIALLY_VERIFIED,能真实切换提示词（KQZ 0075: P2→P1），但 dev 集上 16/16 帧 oracle 都选 P2 而门控只选对 2/16，见 05 报告 §3-§4
+SG-MPS 承诺裕度 (safety veto),§2.3.3 语义（新增参数）,生成RAP-FSAM3掩膜.py:--semantic_gate_margin,L1-L5,PARTIALLY_VERIFIED,dev 集 margin=0.05 时 R3→R3g F1 0.7504→0.9435，仍低于无门控 0.9763（05 报告 §5）
+CDR/R1 实例级重排 S−q_contrast/5.5,§2.3.3 末段 / 17C,scripts/ranking_policy.py:r1,L1-L5,PARTIALLY_VERIFIED,dev 集 16 帧选择与 base 完全一致 → 该子集上无增量
+SB-FBPR 正提示 TopK 距离变换,§2.3.4 Eq.(5),生成RAP-FSAM3掩膜.py:sample_points(positive=True),L1-L5,VERIFIED,tests: test_positive_points_are_distance_topk；SB-FBPR提示证据.csv
+SB-FBPR 负候选区 ring∪table∪bg∪neighbour,§2.3.4 Eq.(6),生成RAP-FSAM3掩膜.py:manuscript_negative_regions,L1-L5,VERIFIED,tests: test_negative_regions_are_outside_mask
+SB-FBPR 负提示 NMS,§2.3.4 Eq.(7),生成RAP-FSAM3掩膜.py:sample_negative_prompts,L1-L5,VERIFIED,每帧 8 负点、跨 ≥2 子区、均落在掩膜外
+SB-FBPR 点提示注入 SAM3,§2.3.4 末段,sam3_prompt_adapter.py:append_point_prompts + Prompt.append_points,L1-L5,VERIFIED,"SB-FBPR提示证据.csv: points_sent=5/8, boxes=0；tests: prompt form"
+残余/细结构修复,§2.3.4 工程实现,生成RAP-FSAM3掩膜.py:repair_residual_mask,L1-L4,RUNNABLE,残差修复掩膜/、逐帧报告.csv:residual_restored_px（210 帧全部执行，4–101 px/帧，均值 17.0；dev 子集上对最终掩膜零改变）
+GCFC 投影支撑场 H_i,§2.3.5 Eq.(8),生成RAP-FSAM3掩膜.py:points_to_support_field,L1-L5,VERIFIED,几何修正提示图/GCFC_support_field_*.png；阶段21 tests
+GCFC 几何一致性 G_i,§2.3.5 Eq.(9),生成RAP-FSAM3掩膜.py:apply_corrective_geometry,L1-L5,VERIFIED,G=0.9677–0.9918（5 帧真实 COLMAP）
+GCFC 边界带内正向补洞,§2.3.5 Eq.(10),生成RAP-FSAM3掩膜.py:boundary_band + apply_corrective_geometry,L1-L5,VERIFIED,GCFC_added_pixels_*.png；5 帧 run 新增 151/227/456/0/223 px；210 帧 run 205/210 接受，均值 3049 px/帧
+GCFC 真实 COLMAP 观测加载,§2.3.5,生成RAP-FSAM3掩膜.py:load_colmap_observations (两端 backend),L1-L5,VERIFIED,gcfc_has_real_observation=1：5 帧 run 5/5、210 帧 run 210/210；--strict_colmap_observations
+Foreground-Object 2DGS 训练,§2.4,2d-gaussian-splatting-m2m3-floor40/train.py,L1-L5,VERIFIED,2×2 四档全部 COMPLETE（2132–2201 s）；PSNR_fg 见 metrics/downstream_2x2.csv；掩膜 provenance 183/183 一致
+M2M3-GO 双向微匹配,§2.7,2d-gaussian-splatting-m2m3-floor40/train.py:run_m2m3_go_update,L1-L5,RUNNABLE,2×2 两档真实执行（19 次更新，剪枝 107 955/115 825）；ΔPSNR_fg +0.011 dB（C_R1）/ −0.125 dB（RAP）
+TSDF mesh 提取,§2.8,2d-gaussian-splatting-m2m3-floor40/render.py,L1-L5,VERIFIED,runs/mesh/<tag>/mesh_post.ply ×4（标准 TSDF，74–106 s/档）；metrics/mesh_phenotype.csv
+表型几何测量（探索性，COLMAP 单位）,§2.8,scripts/run_mesh_phenotype.py:measure,L1-L5,PARTIALLY_VERIFIED,高 3.541–3.561 u、冠幅 3.122–3.142 u（四档差异 ≤0.5%）；无真实尺度→物理表型全部 PHYSICAL_SCALE_NOT_AVAILABLE

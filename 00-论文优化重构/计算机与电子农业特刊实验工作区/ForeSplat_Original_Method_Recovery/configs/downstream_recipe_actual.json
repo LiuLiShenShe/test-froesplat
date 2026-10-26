@@ -1,0 +1,18 @@
+{
+  "scene": "KongQueZhuYu",
+  "tag": "C_R1_baseline",
+  "mask_run_dir": "00-论文优化重构/数据管理/03-分割Mask/04-fsam3_masks/KongQueZhuYu",
+  "model_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline",
+  "iterations": 30000,
+  "resolution": 2,
+  "m2m3_go": false,
+  "git_commit": "67f79ee6ffabefe1dbbcfa8d907ea9ac91c26791",
+  "mask_manifest_sha256": "318a454f5e8f5cdcfd83c8ddc8acb1049a5ce562f2032374b936221facc7d164",
+  "train_returncode": 0,
+  "train_wall_sec": 2201.3,
+  "eval_returncode": 0,
+  "train_cmd": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python train.py --source_path /data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu --model_path /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline --eval --resolution 2 --view_quality_mode none --raw_gate_mode none --mask_gate_mode none --geo_gate_mode none --mask_mode alpha --mask_dir /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline/prepared_masks --mask_pattern mask_{stem}.png --mask_threshold 0.5 --mask_provenance_required --init_pcd_mode foreground_track --init_pcd_min_observations 3 --init_pcd_foreground_threshold 0.9 --init_pcd_dilate_mask_px 0 --use_foreground_rgb_loss --lambda_fg_rgb 1.0 --foreground_bg_rgb_weight 0.0 --foreground_rgb_crop_padding 12 --use_mask_loss --use_bg_opacity_loss --lambda_mask 0.08 --lambda_bg 0.02 --mask_loss_type l1_dice --mask_ignore_boundary_px 2 --mask_loss_start_iter 500 --mask_loss_warmup_iters 1500 --pruning_mode mask --pruning_start_iter 18000 --pruning_interval 3000 --pruning_opacity_threshold 0.005 --pruning_brightness_threshold 0.01 --pruning_mask_threshold 0.45 --pruning_mask_max_views 12 --pruning_max_remove_ratio 0.03 --pruning_mask_score_weight 3.0 --save_pruning_report --ip 127.0.0.1 --port 6030 --iterations 30000 --test_iterations -1 --save_iterations 30000",
+  "eval_cmd": "/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python /data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/scripts/evaluate_foreground.py -m /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline -s /data/fj/F2DMAS/00-论文优化重构/数据管理/02-位姿COLMAP/03-final_locked/KongQueZhuYu --images images --resolution 2 --eval --iteration 30000 --mask_dir /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline/prepared_masks --split test --boundary_ignore 2 --with_lpips --output_json /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline/eval/foreground_test.json",
+  "status": "COMPLETE",
+  "_snapshot_of": "00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/downstream/KongQueZhuYu_C_R1_baseline/run_record.json"
+}

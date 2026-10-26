@@ -28,6 +28,7 @@ from scipy.ndimage import binary_closing, binary_dilation, binary_fill_holes, bi
 from skimage.metrics import structural_similarity
 from ranking_policy import primary_and_tiebreak, select_best_policy, POLICY_NAMES
 from candidate_metadata import file_sha256, load_cache_metadata, metadata_for_mask
+from sam3_prompt_adapter import append_point_prompts
 
 
 ROOT = Path("/data/fj/F2DMAS")
@@ -718,6 +719,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--semantic_gate_use_contrast", action="store_true",
                         help="Phase 21: include q_contrast in the gate descriptor. Off by default "
                              "to avoid double-counting the term that CDR/R1 removes from primary ranking.")
+    parser.add_argument("--semantic_gate_margin", type=float, default=0.0,
+                        help="Phase 21: minimum c_i^(k*) - c_i^(k_runner-up) required for the gate "
+                             "to commit. Below it the gate defers to the ranking policy (the "
+                             "manuscript's 'safety mechanism' reading). 0.0 = pure argmax.")
     parser.add_argument(
         "--semantic_gate_backend",
         choices=["heuristic"],
@@ -761,6 +766,27 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--spnp_min_refined_iou", type=float, default=0.65,
                         help="阶段十一 §7.3：接受 SPNP 细化结果的 IoU 阈值（由原 0.10 提高，"
                              "范围 0.60–0.75 可配）。避免低 IoU 接受错误 mask 强化。")
+    # ── SB-FBPR (manuscript §2.3.4): real point prompts, not only boxes ──
+    parser.add_argument(
+        "--spnp_prompt_form",
+        choices=["boxes", "points", "boxes+points"],
+        default="boxes",
+        help="SB-FBPR 送入 SAM3 的几何提示形式。boxes=历史路径（正负框）；"
+             "points=原稿 §2.3.4 的距离变换正点 + NMS 负点；"
+             "boxes+points=两者合并。默认 boxes 以保持历史回放逐字节一致。",
+    )
+    parser.add_argument(
+        "--spnp_negative_region_mode",
+        choices=["ring", "manuscript"],
+        default="ring",
+        help="负提示候选区域。ring=历史外环；manuscript=R^- = 外环 ∪ I_table ∪ I_bg ∪ I_neighbour。",
+    )
+    parser.add_argument("--spnp_negative_nms_radius", type=int, default=0,
+                        help="负点 NMS 抑制半径（像素）。0 = 历史 4%% 图像短边间距。")
+    parser.add_argument("--spnp_table_band_start_ratio", type=float, default=0.58,
+                        help="R^- 中 I_table 的纵向起点比例。")
+    parser.add_argument("--spnp_side_band_ratio", type=float, default=0.18,
+                        help="R^- 中 I_neighbour 的左右带宽度比例。")
 
     parser.add_argument("--use_residual_repair", action="store_true")
     parser.add_argument("--opening_kernel", type=int, default=3)
@@ -799,6 +825,12 @@ def parse_args() -> argparse.Namespace:
         "--corrective_geometry_backend",
         choices=["colmap_tracks", "colmap_tracks_gaussian", "mask_shape"],
         default="colmap_tracks",
+    )
+    parser.add_argument(
+        "--strict_colmap_observations",
+        action="store_true",
+        help="GCFC 严格模式：任一帧缺少真实 COLMAP 观测时直接报错，"
+             "而不是静默返回原掩膜（缺失不能冒充 GCFC 已执行）。",
     )
     # ── GCFC (manuscript §2.3.5): Gaussian support field H_i, support ratio G_i ──
     parser.add_argument("--geometry_gaussian_sigma", type=float, default=3.0)
@@ -842,6 +874,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save_rgba", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--save_overlay", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--log_json", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--gt_mask_dir",
+        type=Path,
+        default=None,
+        help="可选：人工 GT 掩膜目录（mask_<stem>.png）。提供时逐帧报告会写入 "
+             "F1 / Boundary-F1 / HD95；缺失的帧留空，不伪造指标。",
+    )
     return parser.parse_args()
 
 
@@ -1658,17 +1697,17 @@ def semantic_gate_scores(
 
 
 def apply_semantic_gate_softmax(score_records: list[ScoreRecord], args: argparse.Namespace) -> None:
-    """Phase 21 §SG-MPS: temperature-controlled softmax over frame candidates.
+    """Phase 21 §SG-MPS: temperature-controlled softmax over PROMPTS.
 
-    Implements a_i^(k) = exp(c_i^(k)/tau_s) / sum_l exp(c_i^(l)/tau_s) and stores
-    it on each record (`gate_softmax`) for prompt-robustness reporting and for
-    `weighted_fusion` weights.  The manuscript selects the prompt by
-    k* = argmax_k a_i^(k), and because softmax is strictly monotone in c this is
-    exactly argmax_k c_i^(k) -- so selection is done on `gate_confidence`
-    (see `semantic_gate_prompt`), NOT by adding an arbitrary score bonus.
+    Implements a_i^(k) = exp(c_i^(k)/tau_s) / sum_l exp(c_i^(l)/tau_s) exactly as
+    written in the manuscript: the normalisation runs over the K prompt indices,
+    not over instances.  When a prompt returns several instances, its
+    representative compatibility is max_k c_i^(k) (the strongest instance), and
+    that prompt-level probability is written back to every instance of the
+    prompt so downstream reporting sees one weight per prompt.
 
-    Under `semantic_gate_mode=heuristic` this function is a no-op, preserving
-    bitwise replay of the historical pipeline.
+    Selection is still done by k* = argmax_k a_i^(k) (equal to argmax_k c_i^(k)
+    because softmax is strictly monotone); see `semantic_gate_prompt`.
     """
     if not getattr(args, "use_semantic_gate", False):
         return
@@ -1677,15 +1716,22 @@ def apply_semantic_gate_softmax(score_records: list[ScoreRecord], args: argparse
     usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
     if not usable:
         return
+    best_by_prompt: dict[str, float] = {}
+    for rec in usable:
+        value = float(getattr(rec, "gate_confidence", 0.0))
+        best_by_prompt[rec.prompt_id] = max(best_by_prompt.get(rec.prompt_id, -1.0), value)
+    if not best_by_prompt:
+        return
     tau = max(float(getattr(args, "semantic_gate_temperature", 0.25)), 1e-6)
-    confidences = [float(getattr(rec, "gate_confidence", 0.0)) for rec in usable]
-    peak = max(confidences)
-    exps = [math.exp((value - peak) / tau) for value in confidences]
-    normalizer = sum(exps)
+    prompt_ids = sorted(best_by_prompt)
+    peak = max(best_by_prompt.values())
+    exps = {pid: math.exp((best_by_prompt[pid] - peak) / tau) for pid in prompt_ids}
+    normalizer = sum(exps.values())
     if normalizer <= 0.0:
         normalizer = 1.0
-    for rec, value in zip(usable, exps):
-        rec.gate_softmax = float(value / normalizer)
+    prompt_prob = {pid: exps[pid] / normalizer for pid in prompt_ids}
+    for rec in usable:
+        rec.gate_softmax = float(prompt_prob.get(rec.prompt_id, 0.0))
 
 
 def semantic_gate_prompt(score_records: list[ScoreRecord], args: argparse.Namespace) -> str | None:
@@ -1693,6 +1739,12 @@ def semantic_gate_prompt(score_records: list[ScoreRecord], args: argparse.Namesp
 
     Returns None when the gate is off or in legacy `heuristic` mode, in which
     case prompt/instance selection stays with the ranking policy.
+
+    `--semantic_gate_margin` implements the manuscript's "safety mechanism"
+    reading of §2.3.3: when the top-2 gate confidences are separated by less
+    than `margin`, the gate declares no preference (returns None) and leaves the
+    prompt to the geometry ranking instead of breaking a near-tie on noise.
+    Default 0.0 reproduces the pure argmax exactly.
     """
     if not getattr(args, "use_semantic_gate", False):
         return None
@@ -1710,7 +1762,11 @@ def semantic_gate_prompt(score_records: list[ScoreRecord], args: argparse.Namesp
         best_by_prompt[rec.prompt_id] = max(best_by_prompt.get(rec.prompt_id, -1.0), value)
     if not best_by_prompt:
         return None
-    return max(best_by_prompt.items(), key=lambda item: item[1])[0]
+    ranked = sorted(best_by_prompt.items(), key=lambda item: item[1], reverse=True)
+    margin = float(getattr(args, "semantic_gate_margin", 0.0) or 0.0)
+    if margin > 0.0 and len(ranked) > 1 and (ranked[0][1] - ranked[1][1]) < margin:
+        return None
+    return ranked[0][0]
 
 
 def save_semantic_gate_debug(
@@ -1901,7 +1957,10 @@ def select_mask(
     score_records: list[ScoreRecord],
     prompt_texts: dict[str, str],
     args: argparse.Namespace,
+    selection_meta: dict[str, Any] | None = None,
 ) -> tuple[np.ndarray, str, float]:
+    if selection_meta is not None:
+        selection_meta.clear()
     # Phase 21 §SG-MPS: apply the temperature softmax safety bonus to the
     # policy primary score BEFORE any branch selects. No-op unless
     # semantic_gate_mode=gated_softmax, so historical replay is unchanged.
@@ -1917,11 +1976,31 @@ def select_mask(
         if not selectable:
             selectable = score_records
         gated_prompt = semantic_gate_prompt(score_records, args)
+        if selection_meta is not None:
+            selection_meta["sg_mps_prompt"] = gated_prompt or ""
+            selection_meta["sg_mps_softmax"] = {
+                rec.prompt_id: float(getattr(rec, "gate_softmax", 0.0))
+                for rec in score_records
+                if not bool(getattr(rec, "empty_flag", False))
+            }
+            prompt_order = sorted({rec.prompt_id for rec in score_records})
+            selection_meta["sg_mps_candidates"] = {
+                pid: max(
+                    (float(getattr(rec, "gate_confidence", 0.0)) for rec in score_records
+                     if rec.prompt_id == pid and not bool(getattr(rec, "empty_flag", False))),
+                    default=-1.0,
+                )
+                for pid in prompt_order
+            }
         if gated_prompt is not None:
             gated_rows = [row for row in selectable if row.prompt_id == gated_prompt]
             if gated_rows:
                 selectable = gated_rows
         best = select_best_policy(selectable, getattr(args, "ranking_policy", "r1"))
+        if selection_meta is not None:
+            selection_meta["ranking_shortlist_prompt"] = gated_prompt or "(all)"
+            selection_meta["selected_by_ranking_prompt"] = best.prompt_id
+            selection_meta["ranking_policy"] = str(getattr(args, "ranking_policy", "r1"))
         # 找到与 best 匹配的候选（同 prompt_id + instance_id）
         best_cand = next(
             (item for item in candidates
@@ -1930,6 +2009,10 @@ def select_mask(
         )
         if best_cand is None:
             raise ValueError(f"No candidate found for {best.prompt_id}#{best.instance_id}")
+        if selection_meta is not None:
+            selection_meta["selected_prompt"] = best_cand.prompt_id
+            selection_meta["selected_instance"] = int(best_cand.instance_id)
+            selection_meta["selection_path"] = "sg_mps_then_ranking"
         best_score = float(getattr(best, "primary_score", best.total_score))
         return best_cand.mask.copy(), best.prompt_id, best_score, False
     if args.use_prompt_ensemble and args.prompt_selection_mode == "weighted_fusion":
@@ -1978,10 +2061,18 @@ def select_mask(
         sorted_recs = sorted(score_records, key=lambda r: r.total_score, reverse=True)
         needs_reprompt = len(sorted_recs) >= 2 and (sorted_recs[0].total_score - sorted_recs[1].total_score) < args.reprompt_score_gap
         best_score = float(getattr(best_rec, "primary_score", best_rec.total_score))
+        if selection_meta is not None:
+            selection_meta["selected_prompt"] = str(prompt_id)
+            selection_meta["selected_instance"] = int(best_item.instance_id)
+            selection_meta["selection_path"] = "ranking_only"
         return best_item.mask.copy(), f"{prompt_id}#{best_item.instance_id}", best_score, bool(needs_reprompt)
     row = next((r for r in score_records if r.prompt_id == prompt_id), None)
     # 单一候选：空掩膜或低分 → 触发重提示
     needs_reprompt = (row is None) or (row.total_score < args.reprompt_min_score) or bool(getattr(row, "empty_flag", False))
+    if selection_meta is not None:
+        selection_meta["selected_prompt"] = str(prompt_id)
+        selection_meta["selected_instance"] = int(getattr(default_cands[0], "instance_id", 0))
+        selection_meta["selection_path"] = "default_prompt"
     return default_cands[0].mask.copy(), prompt_id, float(row.total_score if row else 0.0), bool(needs_reprompt)
 
 
@@ -2102,9 +2193,14 @@ def sample_points(mask: np.ndarray, count: int, positive: bool, ring_radius: int
     return [(int(xs[i]), int(ys[i])) for i in indices]
 
 
-def sample_points_from_region(region: np.ndarray, count: int) -> list[tuple[int, int]]:
-    """Evidence-guided negative clicks: sample well inside the given region
-    (far from its boundary via the distance transform), spread apart."""
+def sample_points_from_region(region: np.ndarray, count: int, nms_radius: int = 0) -> list[tuple[int, int]]:
+    """Negative-click sampling by greedy NMS inside a candidate region.
+
+    Manuscript §2.3.4 defines ``P_i^- = NMS_{p in R_i^-}(zeta_i(p), K_-, r_nms)``.
+    ``zeta`` is taken as the distance transform of the interference region (a
+    deeper pixel is a more confident interference pixel); suppression radius is
+    ``nms_radius`` when given, otherwise the historical 4%-of-image spacing.
+    """
     if count <= 0 or not region.any():
         return []
     dist = ndimage.distance_transform_edt(region)
@@ -2114,7 +2210,7 @@ def sample_points_from_region(region: np.ndarray, count: int) -> list[tuple[int,
     order = np.argsort(dist[ys, xs])[::-1]
     chosen: list[tuple[int, int]] = []
     blocked = np.zeros(region.shape, dtype=bool)
-    min_sep = max(4, int(min(region.shape) * 0.04))
+    min_sep = int(nms_radius) if nms_radius > 0 else max(4, int(min(region.shape) * 0.04))
     yy, xx = np.ogrid[: region.shape[0], : region.shape[1]]
     for idx in order:
         y, x = int(ys[idx]), int(xs[idx])
@@ -2125,6 +2221,303 @@ def sample_points_from_region(region: np.ndarray, count: int) -> list[tuple[int,
         if len(chosen) >= count:
             break
     return chosen
+
+
+def manuscript_negative_regions(
+    mask: np.ndarray,
+    image: Image.Image,
+    args: argparse.Namespace,
+) -> dict[str, np.ndarray]:
+    """The four R_i^- sub-regions of manuscript §2.3.4, kept separately.
+
+        R^- = (Dilate(M*, r) \\ M*) ∪ I_table ∪ I_bg ∪ I_neighbour
+
+    Keeping them separate lets the sampler spread K_- clicks over the ring, the
+    table band, the distant background and the neighbour band instead of
+    collapsing every click onto whichever sub-region happens to be largest.
+    The visible container is excluded: the ``~mask`` intersection drops a pot
+    that the selected instance already covers, and ``I_table`` requires
+    low-green evidence so a pot the prompt missed is not turned into a negative.
+    """
+    h, w = mask.shape
+    ring = binary_dilation(mask, structure=kernel(max(3, int(args.spnp_ring_radius) * 2 + 1))) & ~mask
+    rgb = np.array(image.convert("RGB"), dtype=np.float32)
+    exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
+    low_green = exg <= float(args.semantic_green_exg_threshold)
+    yy = np.arange(h)[:, None]
+    table = (yy >= int(h * float(args.spnp_table_band_start_ratio))) & low_green
+    xs_m = np.where(mask.any(axis=0))[0]
+    ys_m = np.where(mask.any(axis=1))[0]
+    if len(xs_m) and len(ys_m):
+        x0, x1 = int(xs_m.min()), int(xs_m.max())
+        y0, y1 = int(ys_m.min()), int(ys_m.max())
+        margin_x = max(1, int((x1 - x0 + 1) * 0.10))
+        margin_y = max(1, int((y1 - y0 + 1) * 0.10))
+        bg = ~box_to_mask((x0 - margin_x, y0 - margin_y, x1 + margin_x, y1 + margin_y), mask.shape)
+    else:
+        bg = np.ones_like(mask, dtype=bool)
+    band = max(1, int(w * float(args.spnp_side_band_ratio)))
+    neighbour = np.zeros_like(mask, dtype=bool)
+    neighbour[:, :band] = True
+    neighbour[:, w - band :] = True
+    return {
+        "ring": ring & ~mask,
+        "table": table & ~mask,
+        "bg": bg & ~mask,
+        "neighbour": neighbour & ~mask,
+    }
+
+
+def manuscript_negative_region(
+    mask: np.ndarray,
+    image: Image.Image,
+    args: argparse.Namespace,
+) -> np.ndarray:
+    """Union of the four R_i^- sub-regions (manuscript §2.3.4)."""
+    regions = manuscript_negative_regions(mask, image, args)
+    out = np.zeros_like(mask, dtype=bool)
+    for region in regions.values():
+        out |= region
+    return out & ~mask
+
+
+def sample_negative_prompts(
+    sub_regions: dict[str, np.ndarray],
+    count: int,
+    nms_radius: int,
+    image_shape: tuple[int, int],
+) -> list[tuple[int, int]]:
+    """Distribute K_- negative clicks over R_i^- sub-regions, then NMS-merge.
+
+    Guarantees at least one click from every non-empty sub-region (so the
+    refinement actually sees the ring, the table/soil strip, the distant
+    background and the neighbouring-plant band), then fills the remainder by
+    descending region depth.  Clicks are kept away from the image border so a
+    prompt point never lands exactly on a pixel edge.
+    """
+    if count <= 0:
+        return []
+    h, w = image_shape
+    border = max(4, int(min(h, w) * 0.01))
+    valid = np.zeros((h, w), dtype=bool)
+    valid[border : h - border, border : w - border] = True
+    order = list(sub_regions.keys())
+    non_empty = [name for name in order if sub_regions[name].any()]
+    if not non_empty:
+        return []
+    chosen: list[tuple[int, int]] = []
+    blocked = np.zeros((h, w), dtype=bool)
+    min_sep = int(nms_radius) if nms_radius > 0 else max(6, int(min(h, w) * 0.05))
+    yy, xx = np.ogrid[:h, :w]
+
+    def take(region: np.ndarray, quota: int) -> int:
+        if quota <= 0:
+            return 0
+        region = region & valid & ~blocked
+        if not region.any():
+            return 0
+        dist = ndimage.distance_transform_edt(region)
+        ys, xs = np.where(dist > 0)
+        if len(xs) == 0:
+            return 0
+        picked = 0
+        for idx in np.argsort(dist[ys, xs])[::-1]:
+            y, x = int(ys[idx]), int(xs[idx])
+            if blocked[y, x]:
+                continue
+            chosen.append((x, y))
+            np.logical_or(blocked, (yy - y) ** 2 + (xx - x) ** 2 <= min_sep**2, out=blocked)
+            picked += 1
+            if picked >= quota or len(chosen) >= count:
+                break
+        return picked
+
+    non_empty = [name for name in order if name in sub_regions and sub_regions[name].any()]
+    # One guaranteed click per non-empty sub-region, then fill the rest.
+    for name in non_empty:
+        if len(chosen) >= count:
+            break
+        take(sub_regions[name], 1)
+    remaining = count - len(chosen)
+    while remaining > 0 and len(chosen) < count:
+        before = len(chosen)
+        per_region = max(1, remaining // max(len(non_empty), 1))
+        for name in non_empty:
+            remaining = count - len(chosen)
+            if remaining <= 0:
+                break
+            take(sub_regions[name], min(per_region, remaining))
+        if len(chosen) == before:
+            break
+    return chosen[:count]
+
+
+def build_sb_fbpr_prompts(
+    mask: np.ndarray,
+    image: Image.Image,
+    evidence: dict[str, np.ndarray] | None,
+    args: argparse.Namespace,
+) -> dict[str, Any]:
+    """SB-FBPR prompt construction (manuscript §2.3.4).
+
+    Positive : TopK distance-transform interior points of the main foreground
+               instance (track-backed core when evidence is available).
+    Negative : NMS-sampled points from R_i^- ∪ consensus-cut / pot-strip
+               evidence regions.
+    Returns pixel (x, y) coordinates, ready for both point and box prompts.
+    """
+    positive_region = mask
+    if evidence is not None and evidence.get("positive_core") is not None and evidence["positive_core"].any():
+        positive_region = evidence["positive_core"]
+    pos = sample_points(positive_region, args.spnp_positive_points, True, args.spnp_ring_radius)
+
+    sub_regions: dict[str, np.ndarray] = {}
+    if evidence is not None:
+        sub_regions["consensus_cut"] = evidence["negative_region"]
+        if evidence["below_strip"].any():
+            sub_regions["pot_strip"] = evidence["below_strip"]
+    if args.spnp_negative_region_mode == "manuscript":
+        sub_regions.update(manuscript_negative_regions(mask, image, args))
+    elif evidence is None:
+        # Historical ring path: keep the exact legacy sampling so that
+        # box-only replay remains byte-identical.
+        sub_regions["ring"] = (
+            binary_dilation(mask, structure=kernel(max(3, args.spnp_ring_radius * 2 + 1))) & ~mask
+        )
+
+    if evidence is not None and args.spnp_negative_region_mode != "manuscript":
+        # Historical evidence-guided path: consensus-cut region, plus the pot
+        # strip when it exists.  Kept verbatim for A6/A7 replay.
+        neg = sample_points_from_region(evidence["negative_region"], args.spnp_negative_points)
+        if evidence["below_strip"].any() and neg:
+            neg = sample_points_from_region(evidence["below_strip"], 2) + neg
+    elif args.spnp_negative_region_mode == "manuscript" or evidence is not None:
+        neg = sample_negative_prompts(
+            sub_regions, args.spnp_negative_points, args.spnp_negative_nms_radius, mask.shape
+        )
+    else:
+        neg = sample_points(mask, args.spnp_negative_points, False, args.spnp_ring_radius)
+    # De-duplicate while keeping the order stable.
+    seen: set[tuple[int, int]] = set()
+    neg_unique = []
+    for point in neg:
+        if point in seen:
+            continue
+        seen.add(point)
+        neg_unique.append(point)
+    # Union of the sampled-from regions, used for the evidence/debug overlay.
+    negative_region = np.zeros_like(mask, dtype=bool)
+    for region in sub_regions.values():
+        negative_region |= region
+    return {"positive": pos, "negative": neg_unique, "negative_region": negative_region}
+
+
+def sam3_box_refinement(
+    image: Image.Image,
+    mask: np.ndarray,
+    prompt_text: str,
+    positive_points: list[tuple[int, int]],
+    negative_points: list[tuple[int, int]],
+    processor: Any,
+    torch_module: Any,
+    args: argparse.Namespace,
+    evidence: dict[str, np.ndarray] | None = None,
+) -> tuple[np.ndarray, dict[str, Any]]:
+    if processor is None or torch_module is None:
+        raise RuntimeError("--spnp_backend sam3_if_supported requires a loaded SAM3 processor")
+
+    h, w = mask.shape
+    prompt_form = str(getattr(args, "spnp_prompt_form", "boxes"))
+
+    # Evidence-guided mode: positive box hugs the track-backed core (NOT the
+    # full mask bbox, whose rectangle covers the pot), negative boxes sit on
+    # consensus-cut pixels and the below-mask pot strip.
+    if evidence is not None:
+        core = evidence["positive_core"]
+        positive_box = (
+            mask_to_positive_box(core, args.spnp_positive_box_padding)
+            if core is not None and core.any()
+            else mask_to_positive_box(mask, args.spnp_positive_box_padding)
+        )
+        negative_boxes = [
+            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
+            for point in negative_points[: args.spnp_negative_points + 2]
+        ]
+    else:
+        positive_box = mask_to_positive_box(mask, args.spnp_positive_box_padding)
+        negative_boxes = [
+            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
+            for point in negative_points[: args.spnp_negative_points]
+        ]
+    if args.spnp_use_lower_negative:
+        lower_box = lower_negative_box(mask, args.spnp_lower_band_ratio)
+        if lower_box is not None:
+            negative_boxes.append(lower_box)
+
+    # Normalized point prompts for the VFM (manuscript §2.3.4).
+    pos_norm = [(float(x) / max(w - 1, 1), float(y) / max(h - 1, 1)) for x, y in positive_points]
+    neg_norm = [(float(x) / max(w - 1, 1), float(y) / max(h - 1, 1)) for x, y in negative_points]
+
+    send_boxes = prompt_form in ("boxes", "boxes+points")
+    send_points = prompt_form in ("points", "boxes+points")
+
+    with sam3_autocast(torch_module, args):
+        state = processor.set_image(image)
+        processor.reset_all_prompts(state)
+        output = processor.set_text_prompt(state=state, prompt=prompt_text)
+        if send_boxes:
+            for box in negative_boxes:
+                output = processor.add_geometric_prompt(box, False, state)
+            if positive_box is not None:
+                output = processor.add_geometric_prompt(positive_box, True, state)
+        if send_points:
+            appended = append_point_prompts(state, pos_norm, neg_norm, args.device)
+            if appended["positive"] or appended["negative"]:
+                output = processor._forward_grounding(state)
+            else:
+                appended = {"positive": 0, "negative": 0}
+
+    raw = combine_sam_masks(output.get("masks", None), (image.height, image.width))
+    base_info = {
+        "backend": "sam3_if_supported",
+        "prompt_form": prompt_form,
+        "positive_boxes": int(positive_box is not None) if send_boxes else 0,
+        "negative_boxes": len(negative_boxes) if send_boxes else 0,
+        "positive_points_sent": int(appended["positive"]) if send_points else 0,
+        "negative_points_sent": int(appended["negative"]) if send_points else 0,
+        "positive_points_xy": ";".join(f"{x},{y}" for x, y in positive_points),
+        "negative_points_xy": ";".join(f"{x},{y}" for x, y in negative_points),
+        "point_coords_normalized": ";".join(
+            f"+{x:.6f},{y:.6f}" for x, y in pos_norm
+        ) + (";" if pos_norm and neg_norm else "") + ";".join(
+            f"-{x:.6f},{y:.6f}" for x, y in neg_norm
+        ),
+        # Unambiguous mirror of the line above: leading '+'/'-' in
+        # `point_coords_normalized` is only a POSITIVE/NEGATIVE label marker,
+        # not a coordinate sign.  These two columns carry the raw [0,1]
+        # coordinates plus the integer prompt label actually sent to SAM3.
+        "point_coords_unsigned": ";".join(
+            f"{x:.6f},{y:.6f}" for x, y in list(pos_norm) + list(neg_norm)
+        ),
+        "point_labels": ";".join(
+            ["1"] * len(pos_norm) + ["0"] * len(neg_norm)
+        ),
+    }
+    if not raw.any():
+        base_info.update({"accepted": 0, "reason": "empty_refined_mask"})
+        return mask, base_info
+
+    refined = basic_cleanup(raw, args)
+    refined_iou = mask_iou(mask, refined)
+    if refined_iou < args.spnp_min_refined_iou:
+        base_info.update(
+            {"accepted": 0, "reason": "low_iou_guard", "refined_iou": refined_iou}
+        )
+        return mask, base_info
+
+    base_info.update({"accepted": 1, "reason": "ok", "refined_iou": refined_iou})
+    return refined.astype(bool), base_info
+
 
 
 def build_spnp_evidence(
@@ -2219,91 +2612,6 @@ def lower_negative_box(mask: np.ndarray, lower_band_ratio: float) -> list[float]
     return normalized_box_from_xyxy(x0, lower_start, x1, y_max, mask.shape)
 
 
-def sam3_box_refinement(
-    image: Image.Image,
-    mask: np.ndarray,
-    prompt_text: str,
-    negative_points: list[tuple[int, int]],
-    processor: Any,
-    torch_module: Any,
-    args: argparse.Namespace,
-    evidence: dict[str, np.ndarray] | None = None,
-) -> tuple[np.ndarray, dict[str, Any]]:
-    if processor is None or torch_module is None:
-        raise RuntimeError("--spnp_backend sam3_if_supported requires a loaded SAM3 processor")
-
-    # Evidence-guided mode: positive box hugs the track-backed core (NOT the
-    # full mask bbox, whose rectangle covers the pot), negative boxes sit on
-    # consensus-cut pixels and the below-mask pot strip.
-    if evidence is not None:
-        core = evidence["positive_core"]
-        positive_box = (
-            mask_to_positive_box(core, args.spnp_positive_box_padding)
-            if core is not None and core.any()
-            else mask_to_positive_box(mask, args.spnp_positive_box_padding)
-        )
-        neg_region = evidence["negative_region"]
-        neg_points: list[tuple[int, int]] = sample_points_from_region(neg_region, args.spnp_negative_points)
-        if evidence["below_strip"].any() and neg_points:
-            # Guarantee at least two clicks on the pot strip when it exists.
-            pot_points = sample_points_from_region(evidence["below_strip"], 2)
-            neg_points = pot_points + neg_points
-        negative_boxes = [
-            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
-            for point in neg_points[: max(args.spnp_negative_points, 0) + 2]
-        ]
-    else:
-        positive_box = mask_to_positive_box(mask, args.spnp_positive_box_padding)
-        negative_boxes = [
-            point_to_negative_box(point, mask.shape, args.spnp_negative_box_radius)
-            for point in negative_points[: args.spnp_negative_points]
-        ]
-    if args.spnp_use_lower_negative:
-        lower_box = lower_negative_box(mask, args.spnp_lower_band_ratio)
-        if lower_box is not None:
-            negative_boxes.append(lower_box)
-
-    with sam3_autocast(torch_module, args):
-        state = processor.set_image(image)
-        processor.reset_all_prompts(state)
-        output = processor.set_text_prompt(state=state, prompt=prompt_text)
-        if positive_box is not None:
-            output = processor.add_geometric_prompt(positive_box, True, state)
-        for box in negative_boxes:
-            output = processor.add_geometric_prompt(box, False, state)
-
-    raw = combine_sam_masks(output.get("masks", None), (image.height, image.width))
-    if not raw.any():
-        return mask, {
-            "backend": "sam3_if_supported",
-            "positive_boxes": int(positive_box is not None),
-            "negative_boxes": len(negative_boxes),
-            "accepted": 0,
-            "reason": "empty_refined_mask",
-        }
-
-    refined = basic_cleanup(raw, args)
-    refined_iou = mask_iou(mask, refined)
-    if refined_iou < args.spnp_min_refined_iou:
-        return mask, {
-            "backend": "sam3_if_supported",
-            "positive_boxes": int(positive_box is not None),
-            "negative_boxes": len(negative_boxes),
-            "accepted": 0,
-            "reason": "low_iou_guard",
-            "refined_iou": refined_iou,
-        }
-
-    return refined.astype(bool), {
-        "backend": "sam3_if_supported",
-        "positive_boxes": int(positive_box is not None),
-        "negative_boxes": len(negative_boxes),
-        "accepted": 1,
-        "reason": "ok",
-        "refined_iou": refined_iou,
-    }
-
-
 def apply_spnp_refinement(
     image: Image.Image,
     mask: np.ndarray,
@@ -2315,22 +2623,20 @@ def apply_spnp_refinement(
     evidence: dict[str, np.ndarray] | None = None,
 ) -> tuple[np.ndarray, list[dict[str, Any]], dict[str, Any]]:
     points: list[dict[str, Any]] = []
+    prompts = build_sb_fbpr_prompts(mask, image, evidence, args)
+    pos = prompts["positive"]
+    neg = prompts["negative"]
     if evidence is not None:
         # Log evidence-guided clicks instead of blind ring samples.
-        core = evidence["positive_core"]
-        pos = sample_points_from_region(core, args.spnp_positive_points) if core is not None and core.any() else []
-        neg = sample_points_from_region(evidence["negative_region"], args.spnp_negative_points)
         for x, y in pos:
             points.append({"image": image_name, "label": 1, "x": x, "y": y, "source": "track_core"})
         for x, y in neg:
             points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "consensus_cut_or_pot"})
     else:
-        pos = sample_points(mask, args.spnp_positive_points, True, args.spnp_ring_radius)
-        neg = sample_points(mask, args.spnp_negative_points, False, args.spnp_ring_radius)
         for x, y in pos:
             points.append({"image": image_name, "label": 1, "x": x, "y": y, "source": "distance_transform"})
         for x, y in neg:
-            points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "outer_ring"})
+            points.append({"image": image_name, "label": 0, "x": x, "y": y, "source": "manuscript_R_minus"})
 
     if not args.use_spnp_refinement:
         return mask, points, {"backend": "disabled", "accepted": 0, "reason": "module_off"}
@@ -2339,6 +2645,7 @@ def apply_spnp_refinement(
             image=image,
             mask=mask,
             prompt_text=prompt_text,
+            positive_points=pos,
             negative_points=neg,
             processor=processor,
             torch_module=torch_module,
@@ -2661,11 +2968,39 @@ def bbox_from_mask_pixels(mask: np.ndarray) -> tuple[int, int, int, int] | None:
     return mask_bbox(mask, padding_ratio=0.02)
 
 
+def save_gcfc_debug_artifacts(
+    debug_dir: Path,
+    stem: str,
+    before: np.ndarray,
+    after: np.ndarray,
+    support_field: np.ndarray | None,
+    boundary: np.ndarray,
+    positive: np.ndarray,
+) -> None:
+    """Persist the five GCFC evidence images required by the audit.
+
+    GCFC_before / GCFC_support_field / GCFC_boundary_band / GCFC_added_pixels /
+    GCFC_after.  The support field is the normalised H_i in [0, 255]; a field
+    of all zeros means no real COLMAP observation reached the module.
+    """
+    debug_dir.mkdir(parents=True, exist_ok=True)
+    save_mask(before, debug_dir / f"GCFC_before_{stem}.png")
+    save_mask(after, debug_dir / f"GCFC_after_{stem}.png")
+    save_mask(boundary, debug_dir / f"GCFC_boundary_band_{stem}.png")
+    save_mask(positive, debug_dir / f"GCFC_added_pixels_{stem}.png")
+    if support_field is None:
+        field_img = np.zeros_like(before, dtype=np.uint8)
+    else:
+        field_img = np.clip(support_field * 255.0, 0, 255).astype(np.uint8)
+    Image.fromarray(field_img).save(debug_dir / f"GCFC_support_field_{stem}.png")
+
+
 def apply_corrective_geometry(
     mask: np.ndarray,
     image_name: str,
     observation: ColmapObservation | None,
     args: argparse.Namespace,
+    debug_dir: Path | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     base = mask.astype(bool)
     h, w = base.shape
@@ -2676,6 +3011,8 @@ def apply_corrective_geometry(
     side_band[:, :side_width] = True
     side_band[:, w - side_width :] = True
     suspicious_region = lower_band | side_band
+    support_field: np.ndarray | None = None
+    boundary: np.ndarray = np.zeros_like(base, dtype=bool)
     support_ratio: float | None = None
     support_gate_failed = False
     if not args.use_corrective_geometry:
@@ -2731,7 +3068,8 @@ def apply_corrective_geometry(
             field_total = float(support_field.sum())
             support_ratio = safe_ratio(float((support_field * base.astype(np.float32)).sum()), field_total)
             support = support_field >= float(args.geometry_support_threshold)
-            positive = support & ~base & boundary_band(base, int(args.geometry_boundary_band_px))
+            boundary = boundary_band(base, int(args.geometry_boundary_band_px))
+            positive = support & ~base & boundary
             if support_ratio < float(args.geometry_min_support_ratio):
                 positive = np.zeros_like(base, dtype=bool)
                 support_gate_failed = True
@@ -2763,7 +3101,13 @@ def apply_corrective_geometry(
     corrected_iou = mask_iou(base, corrected)
     accepted = bool(delta.any())
     reason = "ok"
-    if not delta.any():
+    if args.corrective_geometry_backend == "colmap_tracks_gaussian" and support_gate_failed:
+        # Support gate is evaluated FIRST: when G_i < tau_G the positive set is
+        # emptied, so the mask cannot change and the generic "no delta" reason
+        # would mask the real cause.
+        reason = "support_gate"
+        accepted = False
+    elif not delta.any():
         reason = "no_corrective_delta"
         accepted = False
     elif delta_ratio > args.geometry_correct_max_delta_ratio:
@@ -2773,13 +3117,19 @@ def apply_corrective_geometry(
         reason = "iou_guard"
         accepted = False
 
-    elif args.corrective_geometry_backend == "colmap_tracks_gaussian" and support_gate_failed:
-        reason = "support_gate"
-        accepted = False
-
     final = corrected.astype(bool) if accepted else base
     pos_box = bbox_from_mask_pixels(positive)
     neg_box = bbox_from_mask_pixels(unsupported)
+    if debug_dir is not None and args.use_corrective_geometry:
+        save_gcfc_debug_artifacts(
+            debug_dir,
+            Path(image_name).stem,
+            before=base,
+            after=final,
+            support_field=support_field,
+            boundary=boundary,
+            positive=positive,
+        )
     return final, {
         "图像": image_name,
         "COLMAP图像": colmap_image,
@@ -2891,6 +3241,65 @@ def compute_geometry_feedback(
             }
         )
     return rows
+
+
+def boundary_f1(pred: np.ndarray, gt: np.ndarray, tolerance: int = 2) -> float:
+    """Boundary F1 with a pixel tolerance band (never silently 1.0 on empties)."""
+    pred = pred.astype(bool)
+    gt = gt.astype(bool)
+    if not pred.any() and not gt.any():
+        return 1.0
+    if not pred.any() or not gt.any():
+        return 0.0
+    inner = np.ones((3, 3), dtype=bool)
+    band = np.ones((2 * tolerance + 1, 2 * tolerance + 1), dtype=bool)
+    pred_edge = pred & ~ndimage.binary_erosion(pred, structure=inner)
+    gt_edge = gt & ~ndimage.binary_erosion(gt, structure=inner)
+    pred_tol = ndimage.binary_dilation(pred_edge, structure=band)
+    gt_tol = ndimage.binary_dilation(gt_edge, structure=band)
+    tp = int(np.logical_and(pred_edge, gt_tol).sum())
+    fp = int(np.logical_and(pred_edge, ~gt_tol).sum())
+    fn = int(np.logical_and(gt_edge, ~pred_tol).sum())
+    if tp == 0:
+        return 0.0
+    precision = tp / max(tp + fp, 1)
+    recall = tp / max(tp + fn, 1)
+    return float(2.0 * precision * recall / max(precision + recall, 1e-9))
+
+
+def hd95(pred: np.ndarray, gt: np.ndarray) -> float:
+    """Symmetric 95th-percentile Hausdorff distance between mask surfaces (px)."""
+    pred = pred.astype(bool)
+    gt = gt.astype(bool)
+    if not pred.any() or not gt.any():
+        return float("nan")
+    inner = np.ones((3, 3), dtype=bool)
+    pred_edge = pred & ~ndimage.binary_erosion(pred, structure=inner)
+    gt_edge = gt & ~ndimage.binary_erosion(gt, structure=inner)
+    if not pred_edge.any():
+        pred_edge = pred
+    if not gt_edge.any():
+        gt_edge = gt
+    dt_gt = ndimage.distance_transform_edt(~gt_edge)
+    dt_pred = ndimage.distance_transform_edt(~pred_edge)
+    d_p2g = dt_gt[pred_edge]
+    d_g2p = dt_pred[gt_edge]
+    return float(max(np.percentile(d_p2g, 95), np.percentile(d_g2p, 95)))
+
+
+def segmentation_metrics(pred: np.ndarray, gt: np.ndarray) -> dict[str, float]:
+    pred = pred.astype(bool)
+    gt = gt.astype(bool)
+    inter = float(np.logical_and(pred, gt).sum())
+    union = float(np.logical_or(pred, gt).sum())
+    f1 = (2.0 * inter / float(pred.sum() + gt.sum())) if (pred.sum() + gt.sum()) else 1.0
+    iou = inter / union if union else 1.0
+    return {
+        "f1": float(f1),
+        "iou": float(iou),
+        "boundary_f1": boundary_f1(pred, gt),
+        "hd95": hd95(pred, gt),
+    }
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | None = None) -> None:
@@ -3106,11 +3515,36 @@ def main() -> int:
         {"iou": 0.35, "area": 0.25, "ssim": 0.25, "edge": 0.15},
     )
     semantic_overrides = load_semantic_box_overrides(args.semantic_box_json)
-    colmap_observations = (
-        load_colmap_observations({p.stem for p in images}, args)
-        if args.use_corrective_geometry and args.corrective_geometry_backend == "colmap_tracks"
-        else {}
-    )
+    # ── GCFC (manuscript §2.3.5) observation loading ──
+    # Both COLMAP track backends (`colmap_tracks` and `colmap_tracks_gaussian`)
+    # need the real sparse observations.  Historically only `colmap_tracks` was
+    # loaded, so enabling the Gaussian backend silently produced
+    # `missing_colmap_observation` for every frame (defect P0-A).
+    colmap_observations: dict[str, ColmapObservation] = {}
+    if args.use_corrective_geometry and args.corrective_geometry_backend in (
+        "colmap_tracks",
+        "colmap_tracks_gaussian",
+    ):
+        if args.colmap_dir is None:
+            raise ValueError(
+                f"--corrective_geometry_backend {args.corrective_geometry_backend} "
+                "requires --colmap_dir; refusing to silently fall back to a "
+                "no-observation run."
+            )
+        colmap_observations = load_colmap_observations({p.stem for p in images}, args)
+        expected = {p.stem for p in images}
+        missing = sorted(expected - set(colmap_observations.keys()))
+        if missing and args.strict_colmap_observations:
+            raise RuntimeError(
+                f"GCFC strict mode: {len(missing)}/{len(expected)} frames lack COLMAP "
+                f"observations (first: {missing[:5]}). Provide a COLMAP sparse model "
+                "whose image names match the mask stems, or run with GCFC disabled."
+            )
+        if missing:
+            print(
+                "[GCFC] WARNING: no COLMAP observation for "
+                f"{len(missing)}/{len(expected)} frames; e.g. {missing[:5]}"
+            )
 
     all_score_rows: list[dict[str, Any]] = []
     semantic_gate_rows: list[dict[str, Any]] = []
@@ -3118,6 +3552,8 @@ def main() -> int:
     point_rows: list[dict[str, Any]] = []
     reprompt_rows: list[dict[str, Any]] = []
     corrective_rows: list[dict[str, Any]] = []
+    frame_report_rows: list[dict[str, Any]] = []
+    sb_fbpr_prompt_rows: list[dict[str, Any]] = []
     final_masks: dict[str, np.ndarray] = {}
     prev_prompt_masks: dict[str, np.ndarray] = {}
     prev_final_mask: np.ndarray | None = None
@@ -3137,6 +3573,8 @@ def main() -> int:
     selected_by_stem: dict[str, np.ndarray] = {}
     scores_by_stem: dict[str, float] = {}
     prompts_by_stem: dict[str, str] = {}
+    gate_prompt_by_stem: dict[str, str] = {}
+    selection_meta_by_stem: dict[str, dict[str, Any]] = {}
     reprompt_stems: set[str] = set()
 
     for idx, image_path in enumerate(images, start=1):
@@ -3236,7 +3674,8 @@ def main() -> int:
                                                "image_sha256": image_hash, "candidates": metadata_entries},
                                               ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         selected_mask, selected_prompt, selected_score, needs_reprompt = select_mask(
-            image_path, candidates, score_records, prompt_texts, args
+            image_path, candidates, score_records, prompt_texts, args,
+            selection_meta=selection_meta_by_stem.setdefault(image_path.stem, {}),
         )
         # 阶段十二 §三.4：空掩膜检测 — 记录所有候选为空的帧
         _any_nonzero = any(item.mask.any() for item in candidates)
@@ -3257,9 +3696,12 @@ def main() -> int:
         elapsed = time.time() - t0
         gate_note = ""
         if args.use_semantic_gate and semantic_context is not None:
+            gate_prompt = semantic_gate_prompt(score_records, args) or ""
+            if gate_prompt:
+                gate_prompt_by_stem[image_path.stem] = gate_prompt
             gate_note = (
                 f" gate={getattr(args, 'semantic_gate_mode', 'heuristic')}"
-                f" argmax_prompt={semantic_gate_prompt(score_records, args) or '-'}"
+                f" argmax_prompt={gate_prompt or '-'}"
                 f" a_max={max((float(getattr(r, 'gate_softmax', 0.0)) for r in score_records), default=0.0):.3f}"
             )
         print(f"[{idx}/{len(images)}] {image_path.name} selected={selected_prompt} "
@@ -3283,7 +3725,7 @@ def main() -> int:
         try:
             consensus_observations = (
                 colmap_observations
-                if args.use_corrective_geometry and args.corrective_geometry_backend == "colmap_tracks"
+                if colmap_observations
                 else load_colmap_observations({p.stem for p in images}, args)
             )
             gray_by_stem: dict[str, np.ndarray] = {}
@@ -3551,6 +3993,22 @@ def main() -> int:
             evidence=spnp_evidence,
         )
         point_rows.extend(points)
+        sb_fbpr_prompt_rows.append({
+            "frame": stem,
+            "image": image_path.name,
+            "image_sha256": file_sha256(image_path),
+            "prompt_form": str(getattr(args, "spnp_prompt_form", "boxes")),
+            "negative_region_mode": str(getattr(args, "spnp_negative_region_mode", "ring")),
+            "positive_points": len([p for p in points if int(p["label"]) == 1]),
+            "negative_points": len([p for p in points if int(p["label"]) == 0]),
+            "points_sent_positive": spnp_info.get("positive_points_sent", ""),
+            "points_sent_negative": spnp_info.get("negative_points_sent", ""),
+            "boxes_positive": spnp_info.get("positive_boxes", ""),
+            "boxes_negative": spnp_info.get("negative_boxes", ""),
+            "point_coords_normalized": spnp_info.get("point_coords_normalized", ""),
+            "point_coords_unsigned": spnp_info.get("point_coords_unsigned", ""),
+            "point_labels": spnp_info.get("point_labels", ""),
+        })
         if args.save_intermediate_masks:
             save_mask(spnp_mask, dirs["spnp"] / f"mask_{image_path.stem}.png")
 
@@ -3564,6 +4022,7 @@ def main() -> int:
             image_path.name,
             colmap_observations.get(image_path.stem),
             args,
+            debug_dir=(dirs["geometry_debug"] if args.use_corrective_geometry else None),
         )
         if args.use_corrective_geometry:
             corrective_rows.append(corrective_info)
@@ -3579,6 +4038,80 @@ def main() -> int:
             )
 
         save_mask(final_mask, dirs["final"] / f"mask_{image_path.stem}.png")
+        # ── Per-frame full-chain evidence row (audit deliverable) ──
+        has_observation = image_path.stem in colmap_observations
+        meta = selection_meta_by_stem.get(stem, {})
+        sel_prompt = str(meta.get("selected_prompt") or prompts_by_stem.get(stem, ""))
+        sel_instance = str(meta.get("selected_instance", ""))
+        frame_metrics: dict[str, Any] = {"f1": "", "iou": "", "boundary_f1": "", "hd95": ""}
+        gt_path = (args.gt_mask_dir / f"mask_{image_path.stem}.png") if args.gt_mask_dir else None
+        if gt_path is not None and gt_path.exists():
+            gt_mask = load_mask(gt_path)
+            if gt_mask.shape == final_mask.shape:
+                frame_metrics = segmentation_metrics(final_mask, gt_mask)
+        failure_reason = ""
+        if not has_observation and args.use_corrective_geometry and args.corrective_geometry_backend != "mask_shape":
+            failure_reason = "gcfc_missing_colmap_observation"
+        elif not str(corrective_info.get("原因", "")) in ("ok", "module_off"):
+            failure_reason = f"gcfc_{corrective_info.get('原因')}"
+        elif not str(spnp_info.get("reason", "")) in ("ok", "module_off"):
+            failure_reason = f"sb_fbpr_{spnp_info.get('reason')}"
+        frame_report_rows.append({
+            "frame_id": stem,
+            "input_image_sha256": file_sha256(image_path),
+            "sam3_inference_ran": int(not args.reuse_existing_candidates),
+            "sam3_candidates": len(candidates_by_stem.get(stem, [])),
+            "sam3_prompts": len(prompt_ids),
+            "selected_prompt": sel_prompt,
+            "selected_instance": sel_instance,
+            "selection_path": meta.get("selection_path", ""),
+            "variant_selected": selected_prompt,
+            "sg_mps_executed": int(
+                args.use_semantic_gate
+                and args.prompt_selection_mode == "score_select"
+                and getattr(args, "semantic_gate_mode", "heuristic") == "gated_softmax"
+            ),
+            "sg_mps_mode": getattr(args, "semantic_gate_mode", ""),
+            "sg_mps_prompt": gate_prompt_by_stem.get(stem, ""),
+            "sg_mps_softmax": json.dumps(meta.get("sg_mps_softmax", {}), ensure_ascii=False),
+            "sg_mps_gate_confidence": json.dumps(meta.get("sg_mps_candidates", {}), ensure_ascii=False),
+            # CDR/R1 is a ranking-policy fact and applies to whatever candidate
+            # set exists — including the instances of a SINGLE prompt.  It must
+            # not be reported as "not executed" merely because the run is not a
+            # multi-prompt ensemble; `cdr_scope` records the candidate-set scope.
+            "cdr_executed": int(getattr(args, "ranking_policy", "r1") in ("r1", "r2", "r3")),
+            "cdr_scope": (
+                "multi_prompt"
+                if (args.use_prompt_ensemble and args.prompt_selection_mode == "score_select")
+                else "single_prompt"
+            ),
+            "cdr_policy": getattr(args, "ranking_policy", ""),
+            "sb_fbpr_executed": int(bool(args.use_spnp_refinement)),
+            "sb_fbpr_prompt_form": str(getattr(args, "spnp_prompt_form", "boxes")),
+            "sb_fbpr_accepted": spnp_info.get("accepted", ""),
+            "sb_fbpr_reason": spnp_info.get("reason", ""),
+            "sb_fbpr_pos_points_sent": spnp_info.get("positive_points_sent", 0),
+            "sb_fbpr_neg_points_sent": spnp_info.get("negative_points_sent", 0),
+            "residual_repair_executed": int(
+                bool(args.use_residual_repair) and args.thin_repair_mode != "none"
+            ),
+            "residual_repair_mode": args.thin_repair_mode,
+            "residual_restored_px": int(restored.sum()),
+            "gcfc_executed": int(bool(args.use_corrective_geometry)),
+            "gcfc_backend": args.corrective_geometry_backend if args.use_corrective_geometry else "",
+            "gcfc_has_real_observation": int(bool(has_observation)),
+            "gcfc_registered_points": corrective_info.get("注册点数", ""),
+            "gcfc_support_G": corrective_info.get("支撑场比例G", ""),
+            "gcfc_added_px": corrective_info.get("正修正点支撑像素", ""),
+            "gcfc_accepted": corrective_info.get("接受", ""),
+            "gcfc_reason": corrective_info.get("原因", ""),
+            "final_mask_sha256": file_sha256(dirs["final"] / f"mask_{image_path.stem}.png"),
+            "f1_if_gt_available": frame_metrics["f1"],
+            "iou_if_gt_available": frame_metrics["iou"],
+            "boundary_f1_if_gt_available": frame_metrics["boundary_f1"],
+            "hd95_if_gt_available": frame_metrics["hd95"],
+            "failure_reason": failure_reason,
+        })
         if args.save_foreground_rgb:
             save_foreground_and_rgba(
                 image,
@@ -3704,6 +4237,19 @@ def main() -> int:
             encoding="utf-8",
         )
     write_csv(args.output_dir / "正负提示点.csv", point_rows, ["image", "label", "x", "y", "source"])
+    if sb_fbpr_prompt_rows:
+        write_csv(
+            args.output_dir / "SB-FBPR提示证据.csv",
+            sb_fbpr_prompt_rows,
+            [
+                "frame", "image", "image_sha256", "prompt_form", "negative_region_mode",
+                "positive_points", "negative_points", "points_sent_positive",
+                "points_sent_negative", "boxes_positive", "boxes_negative",
+                "point_coords_normalized", "point_coords_unsigned", "point_labels",
+            ],
+        )
+    if frame_report_rows:
+        write_csv(args.output_dir / "逐帧报告.csv", frame_report_rows)
     write_csv(args.output_dir / "重提示帧标记.csv", reprompt_rows)
     if corrective_rows:
         write_csv(args.output_dir / "几何修正提示.csv", corrective_rows)
