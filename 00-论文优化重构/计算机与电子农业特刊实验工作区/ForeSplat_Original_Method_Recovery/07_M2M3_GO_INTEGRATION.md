@@ -1,7 +1,11 @@
 # 07 — M2M3-GO 接入与回归
 
-生成时间：2026-10-25
-状态：**已完成。** 参数核对、2×2 回归（四档 COMPLETE）、TSDF 网格提取均已执行；结论部分为负（见 §3.1、§6）。
+生成时间：2026-10-25（2026-10-26 增补 v3 重跑与 §2.5/§2.6 说明）
+状态：**参数核对、2×2 回归（四档 COMPLETE）、TSDF 网格提取均已执行；结论部分为负（见 §3.1、§6）。Round-3 修正后的 210 掩膜重跑进行中，下游需重训（见 06 §9）。**
+
+> **§2.5 视图质量软加权（本轮确认进入 loss）**：`train.py` 的 `compute_view_quality_weights()` 由掩膜覆盖率/边界锐度/前景-背景 RGB 对比度算 $q_i\in[0.6,1.0]$，经 `build_view_weights(..., normalize=True)` 后**真的乘到损失上**：`loss = loss * view_weight`、`Ll1 = Ll1 * view_weight`（`train.py:1189-1190`），`all_losses` 模式下 `mask_loss/bg_loss` 同乘（`:1209-1210`）。`run_downstream_2dgs.py --view-weight-mode {none,rgb_only,all_losses}` 暴露 on/off 开关，`run_record.json` 的 `view_weight_evidence` 从训练 stdout 回读 "computed/normalised soft view weights" 三行作为可核查证据。**§2.5 的 on/off 消融尚未执行**（依赖 v3 掩膜），不得声称"§2.5 有增益"。
+
+> **§2.6 多 cue 剪枝（`P_keep=σ(w_g^T z_j−b_g)`）**：`--pruning_survival_mode multi_cue --pruning_cue_weights 3.0,1.0,0.25,1.0,0.5`（mask/opacity/views/brightness/topology），已写入 `run_downstream_2dgs.py` 的训练命令。5 个 cue 的方向性单测见 `tests/test_recovery_round2_contracts.py`（各 cue 单独把 P_keep 推向其应有方向、mask 阈值 0.45 原样使用）。
 
 ---
 

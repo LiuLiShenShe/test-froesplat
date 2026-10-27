@@ -38,7 +38,13 @@ DEFAULT_COLMAP_LOADER = ROOT / "2d-gaussian-splatting-main" / "scene" / "colmap_
 
 BUILTIN_PROMPTS = {
     "P1": "green plant",
-    "P2": "entire plant excluding pot",
+    # Manuscript §2.3.2: the plant-instance prompt is "entire potted plant", and
+    # it is explicitly a *potted-plant* foreground prompt rather than a
+    # plant-body-only prompt ("the VFM often treats the plant and its visible
+    # supporting container as one coherent foreground instance").  The previous
+    # text "entire plant excluding pot" contradicted the target contract and
+    # biased the whole candidate pool towards plant-body-only masks.
+    "P2": "entire potted plant",
     "P3": "leaves and stems",
     "P4": "crop seedling",
     "P5": "plant body without background",
@@ -50,7 +56,7 @@ BUILTIN_PROMPTS = {
 
 PROMPT_DIR_NAMES = {
     "P1": "P1_绿色植物",
-    "P2": "P2_整株去花盆",
+    "P2": "P2_带盆整株",
     "P3": "P3_叶和茎",
     "P4": "P4_作物幼苗",
     "P5": "P5_去背景植物体",
@@ -58,6 +64,18 @@ PROMPT_DIR_NAMES = {
     "POT": "POT_花盆托盘",
     "CUBE": "CUBE_蓝色标定块",
 }
+
+# Legacy on-disk directory names.  Candidate caches produced before the P2 prompt
+# contract fix live under these names; `prompt_dir_name()` transparently falls
+# back to them so `--reuse_existing_candidates` keeps working on old pools while
+# new runs write the corrected name.
+LEGACY_PROMPT_DIR_NAMES = {
+    "P2": "P2_整株去花盆",
+}
+
+# The manuscript's K=5 candidate set (§2.3.2).  P6/POT/CUBE are diagnostic
+# prompts and must not silently enter the production candidate set.
+PAPER_PROMPT_IDS = ("P1", "P2", "P3", "P4", "P5")
 
 
 @dataclass
@@ -119,6 +137,8 @@ class ScoreRecord:
     contrast_effective: float = 0.0
     # ── Phase 21 §SG-MPS: manuscript gated-softmax descriptors ──
     gate_confidence: float = 0.0
+    q_pot: float = 0.0
+    admissible: bool = True
     gate_softmax: float = 0.0
     phi_descriptor: str = ""
     psi_descriptor: str = ""
@@ -714,6 +734,34 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--semantic_gate_bias", type=float, default=0.5,
                         help="Phase 21: bias b in c=sigmoid(w_phi^T phi - w_psi^T psi - b).")
+    parser.add_argument(
+        "--semantic_pot_weight", type=float, default=0.2,
+        help="Weight of the pot-inclusion evidence q_pot in the SG-MPS foreground "
+             "descriptor. The locked target is the potted-plant instance (§2.3.2), "
+             "and §2.3.3 states the visible pot is not a negative class, so the gate "
+             "needs positive evidence that the container is covered. 0 disables it.",
+    )
+    parser.add_argument(
+        "--candidate_area_admissibility",
+        choices=["off", "gate", "all"],
+        default="off",
+        help="Turn the manuscript's q_area 'reasonable range' into a selection "
+             "constraint. off=diagnostic only (historical behaviour); gate=only "
+             "SG-MPS prompt selection respects it; all=every selection path "
+             "(gate and ranking) restricts to admissible candidates, relaxing "
+             "only when nothing is admissible.",
+    )
+    parser.add_argument(
+        "--semantic_gate_target_mode",
+        choices=["potted_plant", "plant_only"],
+        default="potted_plant",
+        help="Target contract for the SG-MPS descriptors and gated reference. "
+             "potted_plant = the manuscript's locked target (§2.3.2: the visible "
+             "supporting container belongs to the target, so q_bg excludes the pot "
+             "and q_pot is positive evidence). plant_only = the historical "
+             "green-only contract, kept only so the descriptor fix can be ablated "
+             "against the same candidate pool.",
+    )
     parser.add_argument("--semantic_gate_temperature", type=float, default=0.25,
                         help="Phase 21: tau_s in a=softmax(c/tau_s).")
     parser.add_argument("--semantic_gate_use_contrast", action="store_true",
@@ -931,7 +979,47 @@ def parse_prompt_ids(prompt_list: str, prompt_texts: dict[str, str]) -> list[str
 
 
 def prompt_dir_name(prompt_id: str) -> str:
+    """Canonical on-disk directory name for a prompt id (current contract)."""
     return PROMPT_DIR_NAMES.get(prompt_id, prompt_id)
+
+
+def resolve_prompt_dir(root: Path, prompt_id: str) -> Path:
+    """Locate a prompt's candidate directory, tolerating pre-fix legacy names.
+
+    New runs write the canonical name; `--reuse_existing_candidates` against a
+    pool produced before the P2 contract fix still resolves the legacy
+    `P2_整株去花盆` directory, but only when the canonical one is absent.
+    """
+    canonical = root / prompt_dir_name(prompt_id)
+    if canonical.exists():
+        return canonical
+    legacy = LEGACY_PROMPT_DIR_NAMES.get(prompt_id)
+    if legacy:
+        candidate = root / legacy
+        if candidate.exists():
+            return candidate
+    return canonical
+
+
+def validate_prompt_contract(prompt_ids: list[str], prompt_texts: dict[str, str]) -> None:
+    """Reject a candidate set whose prompt semantics contradict the target.
+
+    The locked target contract (manuscript §2.1/§2.3.2) is the *potted-plant*
+    foreground instance: the visible supporting container may be retained, while
+    tables and surrounding backgrounds are excluded.  A plant-instance prompt
+    that explicitly excludes the pot silently redefines the target, so it is a
+    hard error rather than a silent degradation.
+    """
+    for pid in prompt_ids:
+        text = str(prompt_texts.get(pid, "")).lower()
+        if pid == "P2" and ("excluding pot" in text or "without pot" in text):
+            raise ValueError(
+                "--prompt_list enables the plant-instance prompt P2 with text "
+                f"{prompt_texts.get(pid)!r}, which excludes the pot.  The locked "
+                "target contract is the potted-plant foreground instance "
+                "(manuscript §2.3.2), so P2 must describe the whole potted plant."
+            )
+
 
 
 def ensure_dirs(output_dir: Path) -> dict[str, Path]:
@@ -1252,7 +1340,7 @@ def load_existing_candidates(
                 )
             candidates.extend(sorted(prompt_candidates, key=lambda item: item.candidate_order) if metadata else prompt_candidates)
             continue
-        mask_path = source_dir / "候选掩膜" / prompt_dir_name(prompt_id) / f"mask_{image_path.stem}.png"
+        mask_path = resolve_prompt_dir(source_dir / "候选掩膜", prompt_id) / f"mask_{image_path.stem}.png"
         if not mask_path.exists():
             raise FileNotFoundError(f"Existing candidate mask not found: {mask_path}")
         entry, status = metadata_for_mask(metadata, prompt_id, 0, mask_path, candidate_metadata_strict)
@@ -1473,15 +1561,44 @@ def semantic_override_for_image(overrides: dict[str, Any], image_path: Path) -> 
     return {}
 
 
-def largest_green_component_mask(image: Image.Image, args: argparse.Namespace) -> np.ndarray:
+def largest_green_component_mask(
+    image: Image.Image,
+    args: argparse.Namespace,
+    support: np.ndarray | None = None,
+) -> np.ndarray:
+    """Plant-coloured connected component used as the SG-MPS semantic reference.
+
+    When `support` (the frame's candidate union) is given, the green component
+    with the largest overlap with it is returned instead of the largest component
+    overall.  This matters: in the greenhouse scenes the largest green component
+    is the *background* (green tarp / vegetation behind the bench), which covers
+    2-3x the area of the plant and has essentially zero overlap with the
+    foreground candidates.  Picking it made the "semantic reference" the backdrop
+    rather than the plant, so q_plant/q_bg/q_table were measured against the
+    wrong region.
+    """
     rgb = np.array(image.convert("RGB"), dtype=np.float32)
     exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
     green = exg > args.semantic_green_exg_threshold
     green = binary_opening(green, structure=kernel(3), iterations=1)
     green = remove_small_components(green, max(16, int(green.size * 0.0005)))
-    if green.any():
-        green = keep_largest_component(green)
-        green = binary_closing(green, structure=kernel(11), iterations=1)
+    if not green.any():
+        return green.astype(bool)
+    if support is not None and bool(np.asarray(support).any()):
+        labels, count = ndimage.label(green)
+        if count > 0:
+            overlap = ndimage.sum(
+                np.asarray(support, dtype=bool), labels, index=range(1, count + 1))
+            sizes = ndimage.sum(green, labels, index=range(1, count + 1))
+            # Require a real overlap; if the candidates touch no green region at
+            # all (e.g. a non-green plant) fall back to the largest component.
+            best = int(np.argmax(overlap))
+            if float(overlap[best]) >= max(16.0, 0.05 * float(sizes[best])):
+                green = labels == (best + 1)
+                green = binary_closing(green, structure=kernel(11), iterations=1)
+                return green.astype(bool)
+    green = keep_largest_component(green)
+    green = binary_closing(green, structure=kernel(11), iterations=1)
     return green.astype(bool)
 
 
@@ -1506,46 +1623,92 @@ def build_semantic_gate_context(
     union = np.zeros(shape, dtype=bool)
     for item in candidates:
         union |= item.mask
-    green = largest_green_component_mask(image, args)
+    green = largest_green_component_mask(image, args, support=union)
     # §SG-MPS gated mode needs an *independent* semantic reference: if phi/psi
     # were measured against the candidates' own union the gate would be
     # self-referential and c_i^(k) would be nearly constant across prompts.
     # `heuristic` keeps the historical (candidate-relative) construction so the
     # archived A1/A1s runs replay bitwise.
     gated_reference = getattr(args, "semantic_gate_mode", "heuristic") == "gated_softmax"
+    plant_mask = np.zeros(shape, dtype=bool)
     if target_box:
-        target_mask = box_to_mask(target_box, shape)
+        plant_mask = box_to_mask(target_box, shape)
     else:
-        target_mask = (green if gated_reference else (union | green))
-        if target_mask.any():
-            target_mask = keep_largest_component(target_mask)
-            target_mask = binary_closing(target_mask, structure=kernel(11), iterations=1)
-            target_mask = binary_fill_holes(target_mask)
-    if not target_mask.any():
-        target_mask = keep_largest_component(union) if union.any() else union
-    if target_box is None:
-        target_box = mask_bbox(target_mask, padding_ratio=0.08)
+        plant_mask = (green if gated_reference else (union | green))
+        if plant_mask.any():
+            plant_mask = keep_largest_component(plant_mask)
+            plant_mask = binary_closing(plant_mask, structure=kernel(11), iterations=1)
+    if not plant_mask.any():
+        plant_mask = keep_largest_component(union) if union.any() else union
+    # The plant bbox is needed to estimate the container region before the
+    # potted-plant reference is assembled.
+    plant_box = target_box if target_box is not None else mask_bbox(plant_mask, padding_ratio=0.08)
 
     h, w = shape
     yy = np.arange(h)[:, None]
-    lower = yy >= int(h * args.semantic_pot_lower_start_ratio)
     rgb = np.array(image.convert("RGB"), dtype=np.float32)
     exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
     low_green = exg <= args.semantic_green_exg_threshold
     if gated_reference:
+        # The container sits *below* the plant, so it is the low-green region
+        # under the plant's own bounding box.  A fixed image-relative band is
+        # wrong on these scenes: the pot spans y=0.31..0.65 of the frame, so the
+        # old 0.58 cut removed either nothing or the whole pot.  The band is
+        # therefore anchored on the plant's own bottom edge (with the configured
+        # ratio kept as a fallback for frames where the plant box is degenerate).
+        if plant_box is not None:
+            py0, py1 = plant_box[1], plant_box[3]
+            plant_height = max(1, py1 - py0)
+            pot_top = py0 + int(plant_height * max(0.2, min(0.9, args.semantic_pot_lower_start_ratio)))
+            lower = yy >= pot_top
+        else:
+            lower = yy >= int(h * args.semantic_pot_lower_start_ratio)
         pot_mask = lower & low_green
-        if target_box is not None:
-            tx0, tx1 = target_box[0], target_box[2]
+        if plant_box is not None:
+            tx0, tx1 = plant_box[0], plant_box[2]
             margin = max(1, w // 20)
             pot_mask[:, : max(0, tx0 - margin)] = False
             pot_mask[:, min(w, tx1 + margin) :] = False
+        # The container is a single rigid object: keep its largest component so
+        # isolated low-green table patches cannot leak into the target
+        # reference (which would exempt them from the background penalty).
+        if pot_mask.any():
+            pot_mask = keep_largest_component(pot_mask)
     else:
+        lower = yy >= int(h * args.semantic_pot_lower_start_ratio)
         pot_mask = union & lower & low_green
     if pot_box is not None:
         pot_mask |= box_to_mask(pot_box, shape)
     if pot_mask.any():
         pot_mask = binary_closing(pot_mask, structure=kernel(9), iterations=1)
         pot_box = pot_box or mask_bbox(pot_mask, padding_ratio=0.04)
+
+    # Fill the plant's interior gaps only *after* the container is known: the
+    # plant reference is a closed silhouette, but the non-green container sits
+    # inside its bounding region, so hole filling before the pot estimate would
+    # swallow the container into the plant.
+    if gated_reference and not target_box and plant_mask.any():
+        plant_mask = binary_fill_holes(plant_mask)
+        plant_mask = np.logical_and(plant_mask, ~pot_mask)
+
+    # Manuscript §2.1/§2.3.2: the reconstruction target is the *potted-plant
+    # instance* — the visible supporting container belongs to the target when it
+    # is consistently grouped with the plant, while tables/background are
+    # leakage.  The gated semantic reference must therefore be plant ∪ pot;
+    # using the green component alone made every pot-containing candidate look
+    # like background leakage and drove the gate towards green-only prompts.
+    # `--semantic_gate_target_mode plant_only` reproduces that historical
+    # green-only reference, for ablation only.
+    plant_only_reference = (
+        str(getattr(args, "semantic_gate_target_mode", "potted_plant")) == "plant_only"
+    )
+    if gated_reference and target_box is None and not plant_only_reference:
+        target_mask = np.logical_or(plant_mask, pot_mask)
+    else:
+        target_mask = plant_mask
+    if not target_mask.any():
+        target_mask = plant_mask
+    target_box = target_box if target_box is not None else mask_bbox(target_mask, padding_ratio=0.08)
 
     band = max(1, int(w * args.semantic_side_band_ratio))
     side_mask = np.zeros(shape, dtype=bool)
@@ -1602,7 +1765,7 @@ def semantic_gate_scores(
             "center_prior_score": 0.0,
             "gate_confidence": 0.0,
             "q_plant": 0.0, "q_area": 0.0, "q_comp": 0.0, "q_edge": 0.0,
-            "q_contrast": 0.0, "q_temp": 0.0,
+            "q_contrast": 0.0, "q_temp": 0.0, "q_pot": 0.0,
             "q_table": 1.0, "q_bg": 1.0, "q_neighbour": 1.0, "q_outlier": 1.0,
         }
     target_inter = float(np.logical_and(mask, context.target_mask).sum())
@@ -1646,7 +1809,22 @@ def semantic_gate_scores(
         rgb = np.array(image.convert("RGB"), dtype=np.float32)
         exg = 2.0 * rgb[..., 1] - rgb[..., 0] - rgb[..., 2]
         green = exg > args.semantic_green_exg_threshold
-        green_fraction = safe_ratio(float(np.logical_and(mask, green).sum()), area)
+        if str(getattr(args, "semantic_gate_target_mode", "potted_plant")) == "plant_only":
+            green_fraction = safe_ratio(float(np.logical_and(mask, green).sum()), area)
+        else:
+            # §2.3.2 target = the potted-plant instance.  Measuring the plant term
+            # as "share of the candidate that is green" penalised every candidate
+            # that also covered the (non-green) container, which is precisely the
+            # behaviour that pushed the gate off P2.  Under the potted-plant
+            # contract the plant term is instead the *recall* of the independently
+            # estimated plant region: covering the pot cannot lower it, missing
+            # foliage still does.
+            green_ref = largest_green_component_mask(image, args, support=mask)
+            green_denom = float(green_ref.sum())
+            green_fraction = (
+                safe_ratio(float(np.logical_and(mask, green_ref).sum()), green_denom)
+                if green_denom > 0 else 0.0
+            )
     q_plant = 0.5 * target_box_score + 0.5 * green_fraction
 
     h, w = mask.shape
@@ -1655,13 +1833,40 @@ def semantic_gate_scores(
     # Table = lower/outer scene support that is neither the target nor its pot.
     table_region = lower_band & ~context.pot_mask & ~context.target_mask
     q_table = safe_ratio(float(np.logical_and(mask, table_region).sum()), area)
-    q_bg = safe_ratio(float(np.logical_and(mask, ~context.target_mask).sum()), area)
+    # §2.3.3: "The visible pot is not treated as a negative class ... when it is
+    # consistently returned as part of the target potted-plant instance."  The
+    # background term must therefore exclude the pot region; otherwise every
+    # candidate that includes the container is penalised as background leakage,
+    # which is exactly how the gate used to drift towards green-only prompts.
+    # `--semantic_gate_target_mode plant_only` restores the historical plant-only
+    # contract so the descriptor fix can be ablated on its own.
+    if str(getattr(args, "semantic_gate_target_mode", "potted_plant")) == "plant_only":
+        background_region = ~context.target_mask
+    else:
+        background_region = ~(context.target_mask | context.pot_mask)
+    q_bg = safe_ratio(float(np.logical_and(mask, background_region).sum()), area)
     q_neighbour = side_distractor_penalty
     q_outlier = float(max(0.0, 1.0 - q_comp))
+    # Positive pot-inclusion evidence under the potted-plant target contract: the
+    # fraction of the visible container the candidate actually covers.  Zero when
+    # no container region could be estimated for this frame.
+    pot_region_area = float(context.pot_mask.sum())
+    q_pot = (
+        safe_ratio(float(np.logical_and(mask, context.pot_mask).sum()), pot_region_area)
+        if pot_region_area > 0 else 0.0
+    )
 
-    phi = [q_plant, q_area, q_comp, q_edge, q_contrast, q_temp]
+    phi = [q_plant, q_area, q_comp, q_edge, q_contrast, q_temp, q_pot]
     psi = [q_table, q_bg, q_neighbour, q_outlier]
-    w_phi = parse_weight_vector(getattr(args, "semantic_phi_weights", "0.5,0.3,0.15,0.15,0.0,0.1"), 6, "semantic_phi_weights")
+    raw_phi_weights = getattr(args, "semantic_phi_weights", "0.5,0.3,0.15,0.15,0.0,0.1")
+    w_phi = parse_weight_vector(raw_phi_weights, len(phi) - 1, "semantic_phi_weights")
+    # `semantic_phi_weights` keeps its 6-entry manuscript layout for backwards
+    # compatibility; the pot-inclusion evidence has its own weight.  Under the
+    # historical plant-only contract the pot term is disabled (it was not part of
+    # phi at all then), so the ablation changes only the target definition.
+    w_phi.append(0.0 if str(getattr(args, "semantic_gate_target_mode",
+                                     "potted_plant")) == "plant_only"
+                 else float(getattr(args, "semantic_pot_weight", 0.2)))
     w_psi = parse_weight_vector(getattr(args, "semantic_psi_weights", "0.3,0.3,0.3,0.2"), 4, "semantic_psi_weights")
     if not getattr(args, "semantic_gate_use_contrast", False):
         w_phi[4] = 0.0
@@ -1691,9 +1896,29 @@ def semantic_gate_scores(
         "gate_confidence": gate_confidence,
         "q_plant": float(q_plant), "q_area": float(q_area), "q_comp": float(q_comp),
         "q_edge": float(q_edge), "q_contrast": float(q_contrast), "q_temp": float(q_temp),
+        "q_pot": float(q_pot),
         "q_table": float(q_table), "q_bg": float(q_bg),
         "q_neighbour": float(q_neighbour), "q_outlier": float(q_outlier),
     }
+
+
+def gate_usable_records(
+    score_records: list[ScoreRecord], args: argparse.Namespace
+) -> list[ScoreRecord]:
+    """Non-empty records the SG-MPS gate may choose between.
+
+    When area admissibility is enabled for the gate, candidates whose foreground
+    fraction falls outside the manuscript's reasonable range are excluded from
+    prompt selection.  If *no* candidate is admissible the filter is relaxed so
+    the pipeline still produces a mask (and records that it had to).
+    """
+    usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
+    mode = str(getattr(args, "candidate_area_admissibility", "gate"))
+    if mode in ("gate", "all") and usable:
+        admissible = [rec for rec in usable if bool(getattr(rec, "admissible", True))]
+        if admissible:
+            return admissible
+    return usable
 
 
 def apply_semantic_gate_softmax(score_records: list[ScoreRecord], args: argparse.Namespace) -> None:
@@ -1713,7 +1938,7 @@ def apply_semantic_gate_softmax(score_records: list[ScoreRecord], args: argparse
         return
     if getattr(args, "semantic_gate_mode", "heuristic") != "gated_softmax":
         return
-    usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
+    usable = gate_usable_records(score_records, args)
     if not usable:
         return
     best_by_prompt: dict[str, float] = {}
@@ -1750,7 +1975,7 @@ def semantic_gate_prompt(score_records: list[ScoreRecord], args: argparse.Namesp
         return None
     if getattr(args, "semantic_gate_mode", "heuristic") != "gated_softmax":
         return None
-    usable = [rec for rec in score_records if not bool(getattr(rec, "empty_flag", False))]
+    usable = gate_usable_records(score_records, args)
     if not usable:
         return None
     # c_i^(k) is per prompt; a prompt may contribute several instances, so use
@@ -1881,11 +2106,19 @@ def score_candidate(
         "center_prior_score": 0.0,
         "gate_confidence": 0.0,
         "q_plant": 0.0, "q_area": 0.0, "q_comp": 0.0, "q_edge": 0.0,
-        "q_contrast": 0.0, "q_temp": 0.0,
+        "q_contrast": 0.0, "q_temp": 0.0, "q_pot": 0.0,
         "q_table": 0.0, "q_bg": 0.0, "q_neighbour": 0.0, "q_outlier": 0.0,
     }
     if args.use_semantic_gate and semantic_context is not None:
         semantic = semantic_gate_scores(mask, semantic_context, args, image=image, temporal_iou=q_temp)
+    # §2.3.3 q_area is defined as "whether the foreground area lies in a
+    # reasonable range".  `area_quality` only records that as a soft score, so a
+    # 0.85%-of-image fragment could still win the prompt selection and produce a
+    # near-empty final mask (KongQueZhuYu frame 0008).  Admissibility makes the
+    # stated range a *selection* constraint instead of a diagnostic.
+    admissible = bool(
+        args.area_min_ratio <= area_ratio <= args.area_max_ratio
+    )
     total = base_total + semantic["semantic_total"] - risk_penalty
     # ── Phase 17C §17: counterfactual ranking policy (pure function, no tuning) ──
     policy = getattr(args, "ranking_policy", "r1")
@@ -1935,11 +2168,14 @@ def score_candidate(
         contrast_effective=float(contrast_effective),
         gate_confidence=float(semantic.get("gate_confidence", 0.0)),
         gate_softmax=0.0,
+        q_pot=float(semantic.get("q_pot", 0.0)),
+        admissible=admissible,
         phi_descriptor=",".join(
             f"{value:.6f}" for value in (
                 semantic.get("q_plant", 0.0), semantic.get("q_area", 0.0),
                 semantic.get("q_comp", 0.0), semantic.get("q_edge", 0.0),
                 semantic.get("q_contrast", 0.0), semantic.get("q_temp", 0.0),
+                semantic.get("q_pot", 0.0),
             )
         ),
         psi_descriptor=",".join(
@@ -1975,6 +2211,12 @@ def select_mask(
         selectable = [row for row in score_records if row.prompt_id in non_empty]
         if not selectable:
             selectable = score_records
+        if str(getattr(args, "candidate_area_admissibility", "off")) == "all":
+            # Same admissibility rule the gate uses, applied to the ranking
+            # shortlist as well; relaxed when nothing qualifies.
+            admissible_rows = [row for row in selectable if bool(getattr(row, "admissible", True))]
+            if admissible_rows:
+                selectable = admissible_rows
         gated_prompt = semantic_gate_prompt(score_records, args)
         if selection_meta is not None:
             selection_meta["sg_mps_prompt"] = gated_prompt or ""
@@ -3365,6 +3607,7 @@ def score_to_dict(row: ScoreRecord) -> dict[str, Any]:
         # Phase 21 §SG-MPS diagnostics: c_i^(k) and a_i^(k)
         "门控置信度": getattr(row, "gate_confidence", 0.0),
         "门控softmax": getattr(row, "gate_softmax", 0.0),
+        "花盆包含证据": getattr(row, "q_pot", 0.0),
         "phi描述子": getattr(row, "phi_descriptor", ""),
         "psi描述子": getattr(row, "psi_descriptor", ""),
     }
@@ -3477,6 +3720,7 @@ def main() -> int:
     prompt_ids = parse_prompt_ids(args.prompt_list, prompt_texts)
     if args.prompt_selection_mode == "single" and args.default_prompt_id not in prompt_ids:
         prompt_ids = [args.default_prompt_id] + [pid for pid in prompt_ids if pid != args.default_prompt_id]
+    validate_prompt_contract(prompt_ids, prompt_texts)
 
     images = image_files(args.input_dir, args.limit)
     if not images:

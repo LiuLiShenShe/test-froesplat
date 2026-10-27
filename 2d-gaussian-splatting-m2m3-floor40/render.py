@@ -46,6 +46,23 @@ if __name__ == "__main__":
     parser.add_argument("--meshing_mode", default="standard", choices=["standard", "small_trunc", "edge_aware", "post_boundary"])
     parser.add_argument("--edge_truncation_scale", default=0.5, type=float)
     parser.add_argument("--boundary_shrink_ratio", default=0.0, type=float)
+    # ── Manuscript §2.8: visibility-, normal- and mask-aware weighted TSDF ──
+    parser.add_argument("--mesh_weight_mode", default="standard",
+                        choices=["standard", "visibility_normal_mask"],
+                        help="standard = plain Open3D TSDF fusion (uniform per-view "
+                             "weight); visibility_normal_mask = the manuscript's "
+                             "D(x)=sum w_c d_c / sum w_c with "
+                             "w_c = w_vis*w_normal*w_mask.")
+    parser.add_argument("--mesh_normal_sharpness", default=8.0, type=float,
+                        help="§2.8 w_normal exponent.")
+    parser.add_argument("--mesh_mask_weight_min", default=0.0, type=float,
+                        help="§2.8 w_mask outside the foreground prior.")
+    parser.add_argument("--mesh_vis_weight_min", default=0.2, type=float,
+                        help="§2.8 w_vis floor inside the truncation band.")
+    parser.add_argument("--mesh_normal_weight_min", default=0.2, type=float,
+                        help="§2.8 w_normal floor for grazing views.")
+    parser.add_argument("--mesh_weight_diagnostics", default="",
+                        help="Optional JSON path for §2.8 fusion statistics.")
     args = get_combined_args(parser)
     print("Rendering " + args.model_path)
 
@@ -108,6 +125,27 @@ if __name__ == "__main__":
             elif args.meshing_mode == "post_boundary":
                 name = "fuse_post_boundary.ply"
             mesh = gaussExtractor.extract_mesh_bounded(voxel_size=voxel_size, sdf_trunc=sdf_trunc, depth_trunc=depth_trunc)
+            if args.mesh_weight_mode == "visibility_normal_mask":
+                # §2.8 replaces the uniform Open3D fusion with the manuscript's
+                # visibility/normal/mask-weighted estimator.
+                name = "fuse_weighted.ply"
+                fusion_diag = {}
+                mesh = gaussExtractor.extract_mesh_weighted(
+                    voxel_size=voxel_size, sdf_trunc=sdf_trunc,
+                    depth_trunc=depth_trunc,
+                    mask_dir=getattr(dataset, "mask_dir", ""),
+                    mask_pattern=getattr(dataset, "mask_pattern", "mask_{stem}.png"),
+                    normal_sharpness=args.mesh_normal_sharpness,
+                    mask_weight_min=args.mesh_mask_weight_min,
+                    vis_weight_min=args.mesh_vis_weight_min,
+                    normal_weight_min=args.mesh_normal_weight_min,
+                    export_diagnostics=fusion_diag,
+                )
+                if args.mesh_weight_diagnostics:
+                    import json as _json
+                    with open(args.mesh_weight_diagnostics, "w", encoding="utf-8") as fh:
+                        _json.dump(fusion_diag, fh, indent=2, ensure_ascii=False)
+                    print(f"[weighted TSDF] diagnostics -> {args.mesh_weight_diagnostics}")
             if args.meshing_mode == "post_boundary" and args.boundary_shrink_ratio > 0.0:
                 mesh = mesh.filter_smooth_simple(number_of_iterations=1)
         

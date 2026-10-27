@@ -1,7 +1,9 @@
 # 06 — Foreground-Object 2DGS 接入（完整 RAP 掩膜）
 
-生成时间：2026-10-25
-状态：**已完成。** 2×2 四次训练全部 COMPLETE，结果与网格已出（结论为负，见 §6.1、`07` §6）。
+生成时间：2026-10-25（2026-10-26 增补 v3 重跑状态）
+状态：**2×2 四档已完成（修正前 210 掩膜），结论为负；Round-3 修正后的 210 掩膜重跑与下游重训进行中（见 §9）。**
+
+> **§9 重要先行说明（2026-10-26）**：本文 §2/§5/§6 的 2×2 结果来自**修正前**的全场景 RAP 掩膜（`runs/KongQueZhuYu_RAP_FULL_210`，P2 文本为 `entire plant excluding pot`、门控参考为温室背景绿、花盆带切不到花盆、无 $q_{pot}$）。该掩膜在 `05` §10 已被证明与论文目标口径不一致（R6 F1 仅 0.7517）。**Round-3 修正后的 210 掩膜正在后台重跑**（`runs/KongQueZhuYu_RAP_FULL_210_v3`，15:47 启动，~5.8 h），完成后再用其 `最终掩膜/` 重跑下游 2×2 与网格。**在 v3 重跑完成前，本文 §6.1 的指标只能算"修正前掩膜的下游表现"，不得当作方法的最终结论引用。**
 
 ---
 
@@ -184,3 +186,97 @@ $PY $S/scripts/run_downstream_2dgs.py --scene KongQueZhuYu \
 5. 结果（含失败）写入 `08_END_TO_END_VALIDATION.md` —— ✅ `08` §2.3 / §4。
 
 **结论：下游接入已完成；结论为负（`06` §6.1），必须如实写进论文。**
+
+---
+
+## 9. Round-3（v3）掩膜重跑与下游重训（2026-10-26，进行中）
+
+Round-3 把目标口径统一到论文 §2.3.2 的 potted-plant 后，`05` §10 已证明 16 帧 dev 集上 R6 F1 0.7517→0.9774。全场景 210 帧必须用同一份修正代码重跑，旧掩膜不得复用（其 P2 候选来自错误的提示词文本，无法"事后修正"）。
+
+**已启动（后台，~5.8 h）：**
+
+```bash
+CUDA_VISIBLE_DEVICES=1 nohup bash scripts/run_rap_full_210_v3.sh \
+  >/dev/null 2>&1 &
+# 脚本内部等价于：
+python 生成RAP-FSAM3掩膜.py \
+  --input_dir .../03-final_locked/KongQueZhuYu/images \
+  --output_dir runs/KongQueZhuYu_RAP_FULL_210_v3 \
+  --candidate_mode per_instance --prompt_list P1,P2,P3,P4,P5 \
+  --default_prompt_id P2 --use_prompt_ensemble --prompt_selection_mode score_select \
+  --ranking_policy r1 --use_semantic_gate --semantic_gate_mode gated_softmax \
+  --semantic_gate_temperature 0.25 \
+  --semantic_gate_target_mode potted_plant \   # ← Round-3 修正
+  --candidate_area_admissibility gate \        # ← Round-3 修正
+  --use_spnp_refinement --spnp_prompt_form points --spnp_negative_region_mode manuscript \
+  --use_residual_repair --use_corrective_geometry \
+  --corrective_geometry_backend colmap_tracks_gaussian \
+  --colmap_dir .../03-final_locked/KongQueZhuYu --strict_colmap_observations --force
+```
+
+| 项 | 值 |
+|---|---|
+| 输出目录 | `runs/KongQueZhuYu_RAP_FULL_210_v3/`（**不覆盖**旧 `runs/KongQueZhuYu_RAP_FULL_210/`） |
+| 日志 | `logs/KongQueZhuYu_RAP_FULL_210_v3.log` |
+| 启动脚本 | `scripts/run_rap_full_210_v3.sh` |
+| 启动时间 | 2026-10-26 15:47 |
+| 运行中证据 | `runs/KongQueZhuYu_RAP_FULL_210_v3/参数.json` 已含 `semantic_gate_target_mode=potted_plant`、`candidate_area_admissibility=gate`；`候选掩膜/raw_instance_P{1..5}/` 持续增长 |
+| 预计完成 | ~21:30（受 GPU 争用影响） |
+
+**完成后必须执行的下一步（当前尚未执行，不得标记为通过）：**
+
+```bash
+# 1. 校验 210/210 掩膜齐全且提示词分布合理
+PY=/home/test/.venvs/sam3/bin/python; S=<recovery>
+python - <<'EOF'
+import csv, pathlib
+S=pathlib.Path("runs/KongQueZhuYu_RAP_FULL_210_v3")
+masks=list((S/"最终掩膜").glob("mask_*.png")); print("final masks", len(masks))
+rows=list(csv.DictReader(open(S/"逐帧报告.csv")))
+from collections import Counter; print("selected", Counter(r["selected"] for r in rows))
+print("sg_mps", Counter(r.get("sg_mps_prompt","") for r in rows))
+EOF
+
+# 2. 用 v3 掩膜重跑四档下游（串行，避免 OOM；§2.5 视图权重需 on/off 对照）
+$PY $S/scripts/run_downstream_2dgs.py --scene KongQueZhuYu \
+    --mask-run-dir $S/runs/KongQueZhuYu_RAP_FULL_210_v3 \
+    --tag RAP_FULL_v3 --iterations 30000 --resolution 2 --view-weight-mode rgb_only
+$PY $S/scripts/run_downstream_2dgs.py --scene KongQueZhuYu \
+    --mask-run-dir $S/runs/KongQueZhuYu_RAP_FULL_210_v3 \
+    --tag RAP_FULL_v3_M2M3GO --iterations 30000 --resolution 2 --m2m3-go --view-weight-mode rgb_only --port 6050
+# §2.5 消融对照（同一 v3 掩膜，仅视图权重关）
+$PY $S/scripts/run_downstream_2dgs.py --scene KongQueZhuYu \
+    --mask-run-dir $S/runs/KongQueZhuYu_RAP_FULL_210_v3 \
+    --tag RAP_FULL_v3_novw --iterations 30000 --resolution 2 --view-weight-mode none --port 6060
+
+# 3. 网格（标准 + §2.8 加权）
+GS=/data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40/venv/bin/python
+$GS scripts/run_mesh_phenotype.py --tags RAP_FULL_v3,RAP_FULL_v3_M2M3GO
+# §2.8 加权网格对照
+cd /data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40 && $GS render.py \
+    -m <model_dir> --skip_train --skip_test --mesh_weight_mode visibility_normal_mask \
+    --mesh_weight_diagnostics <out>/weighted_diag.json
+```
+
+**状态：⚠️ 210 帧 v3 重跑进行中，下游 2×2 / 网格 / §2.5 消融均未执行。在它们完成之前，本文不声称"v3 掩膜已进入下游 2DGS 训练"。**
+
+### 9.1 首轮 v3 启动的配置缺陷（已发现并修正，2026-10-26）
+
+首轮 `run_rap_full_210_v3.sh` **漏传了两个 flag**，其默认值使两个细化阶段被静默跳过：
+
+| 漏传 flag | 默认值 | 后果 |
+|---|---|---|
+| `--spnp_backend` | `none` | SB-FBPR 全部 `reason=backend_off`，210/210 帧 0 点发送 |
+| `--thin_repair_mode` | `none` | 残差修复 210/210 帧 `executed=0` |
+
+因此 `runs/KongQueZhuYu_RAP_FULL_210_v3/最终掩膜/` 的 210 张掩膜**只包含 SG-MPS + CDR + GCFC**，不是论文的完整 R6 链（缺 SB-FBPR 与残差修复）。它们**不得**作为"完整 RAP"掩膜进入下游。
+
+修正：新增 `scripts/run_rap_full_210_v3full.sh`，补 `--spnp_backend sam3_if_supported` + `--thin_repair_mode adjacent`，并用 `--reuse_existing_candidates --candidate_source_dir runs/KongQueZhuYu_RAP_FULL_210_v3` 复用已生成的候选池（避免再跑 5.8 h 的 SAM3 多提示词推理）。已核验：**复用产出的选择掩膜与首轮 v3 逐字节一致**（7/7 SHA256 相同），即选择阶段忠实复现，v3full 只在其上补 SB-FBPR→残差修复→GCFC。
+
+| 项 | 值 |
+|---|---|
+| 输出目录 | `runs/KongQueZhuYu_RAP_FULL_210_v3full/`（不覆盖 v3） |
+| 日志 | `logs/KongQueZhuYu_RAP_FULL_210_v3full.log` |
+| 启动 | 2026-10-26 22:37，两遍循环（先全帧选择，再全帧细化） |
+| 预计 | 因复用需逐帧从机械盘重读候选掩膜，loop1 ~1.5 min/帧 → 全链 ~6–8 h |
+

@@ -149,6 +149,17 @@ class OptimizationParams(ParamGroup):
         self.pruning_max_remove_ratio = 0.05
         self.pruning_mask_score_weight = 1.0
         self.save_pruning_report = False
+        # ── Manuscript §2.6: mask-guided multi-cue survival score ──
+        # legacy_mask = historical behaviour (mask-consistency candidates only,
+        # additive penalty, top-k budget).  multi_cue = the manuscript's
+        # P_keep = sigmoid(w_g . z - b_g) over the five cues
+        # [M_j, log(O_j), log(1+V_j), B_j, C_j].
+        self.pruning_survival_mode = "multi_cue"
+        self.pruning_cue_weights = "3.0,1.0,0.25,1.0,0.5"
+        self.pruning_keep_bias = 0.0
+        self.pruning_survival_threshold = 0.45
+        self.pruning_topology_grid = 64
+        self.pruning_topology_reference = "mean"
         self.capacity_control_mode = "none"
         self.capacity_floor_ratio = 0.4
         self.capacity_floor_reference = "max_seen"

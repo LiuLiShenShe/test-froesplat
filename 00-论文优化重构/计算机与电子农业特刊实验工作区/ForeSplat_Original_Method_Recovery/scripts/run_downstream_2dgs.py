@@ -77,7 +77,8 @@ def prepare_masks(scene: str, mask_dir: Path, model_dir: Path) -> dict:
 
 
 def train_and_eval(scene: str, model_dir: Path, iterations: int, resolution: int,
-                   with_m2m3_go: bool, port: int, log_dir: Path) -> dict:
+                   with_m2m3_go: bool, port: int, log_dir: Path,
+                   view_weight_mode: str = "rgb_only") -> dict:
     source_path = LOCKED / scene
     prepared = model_dir / "prepared_masks"
     common = [
@@ -99,13 +100,30 @@ def train_and_eval(scene: str, model_dir: Path, iterations: int, resolution: int
         "--lambda_mask", "0.08", "--lambda_bg", "0.02",
         "--mask_loss_type", "l1_dice", "--mask_ignore_boundary_px", "2",
         "--mask_loss_start_iter", "500", "--mask_loss_warmup_iters", "1500",
+        # ── Manuscript §2.6: mask-guided multi-cue pruning (P_keep) ──
         "--pruning_mode", "mask", "--pruning_start_iter", "18000",
         "--pruning_interval", "3000", "--pruning_opacity_threshold", "0.005",
         "--pruning_brightness_threshold", "0.01", "--pruning_mask_threshold", "0.45",
         "--pruning_mask_max_views", "12", "--pruning_max_remove_ratio", "0.03",
         "--pruning_mask_score_weight", "3.0", "--save_pruning_report",
+        "--pruning_survival_mode", "multi_cue",
+        "--pruning_cue_weights", "3.0,1.0,0.25,1.0,0.5",
+        "--pruning_survival_threshold", "0.45",
         "--ip", "127.0.0.1", "--port", str(port),
     ]
+    # ── Manuscript §2.5: view-quality-aware soft loss weighting ──
+    # q_i = q_min + (q_max-q_min) sigmoid((s_i-mu_s)/(sigma_s+eps)) over mask
+    # coverage / boundary sharpness / foreground RGB contrast, applied to the
+    # foreground RGB term only.  `--view_weight_normalize` divides by the mean
+    # weight, which is the minibatch form of the manuscript's sum-to-one q̄_i
+    # (it keeps the mean loss scale unchanged).
+    if view_weight_mode != "none":
+        common += [
+            "--view_weight_mode", view_weight_mode,
+            "--view_weight_source", "computed",
+            "--view_weight_q_min", "0.6", "--view_weight_q_max", "1.0",
+            "--view_weight_normalize",
+        ]
     if with_m2m3_go:
         common += [
             "--m2m3_go_mode", "full",
@@ -147,6 +165,25 @@ def train_and_eval(scene: str, model_dir: Path, iterations: int, resolution: int
             "status": "COMPLETE" if rc_eval == 0 else "EVAL_FAILED"}
 
 
+def extract_view_weight_evidence(log_path: Path) -> dict:
+    """Parse the view-weight lines `train.py` prints, as run-level evidence."""
+    evidence = {"computed": False, "loaded": False, "normalised": False,
+                "computed_line": None, "loaded_line": None, "normalised_line": None}
+    if not log_path.exists():
+        return evidence
+    for line in log_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if "computed" in line and "soft view weights" in line:
+            evidence["computed"] = True
+            evidence["computed_line"] = line.strip()
+        elif "loaded" in line and "soft view weights" in line:
+            evidence["loaded"] = True
+            evidence["loaded_line"] = line.strip()
+        elif "normalised view weights" in line:
+            evidence["normalised"] = True
+            evidence["normalised_line"] = line.strip()
+    return evidence
+
+
 def main() -> int:
     import argparse as _ap
     ap = _ap.ArgumentParser()
@@ -159,6 +196,11 @@ def main() -> int:
     ap.add_argument("--m2m3-go", action="store_true")
     ap.add_argument("--port", type=int, default=6030)
     ap.add_argument("--prepare-only", action="store_true")
+    ap.add_argument("--view-weight-mode", default="rgb_only",
+                    choices=["none", "rgb_only", "all_losses"],
+                    help="Manuscript §2.5 view-quality-aware soft weighting. "
+                         "none disables it (the historical setting); rgb_only "
+                         "applies q_i to the foreground RGB term as written.")
     cli = ap.parse_args()
 
     model_dir = OUT / f"{cli.scene}_{cli.tag}"
@@ -174,18 +216,23 @@ def main() -> int:
         return 0
 
     result = train_and_eval(cli.scene, model_dir, cli.iterations, cli.resolution,
-                            cli.m2m3_go, cli.port, model_dir / "logs")
+                            cli.m2m3_go, cli.port, model_dir / "logs",
+                            view_weight_mode=cli.view_weight_mode)
     run = {
         "scene": cli.scene, "tag": cli.tag,
         "mask_run_dir": str(cli.mask_run_dir),
         "model_dir": str(model_dir),
         "iterations": cli.iterations, "resolution": cli.resolution,
         "m2m3_go": cli.m2m3_go,
+        "view_weight_mode": cli.view_weight_mode,
         "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                      capture_output=True, text=True).stdout.strip(),
         "mask_manifest_sha256": sha256(model_dir / "mask_provenance_expected.json"),
         **result,
     }
+    # §2.5 evidence: the weights the training process actually computed, read back
+    # from its own stdout so a "view weighting was on" claim is checkable.
+    run["view_weight_evidence"] = extract_view_weight_evidence(log_dir / "train.log")
     (model_dir / "run_record.json").write_text(
         json.dumps(run, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({k: v for k, v in run.items() if k not in ("train_cmd", "eval_cmd")},

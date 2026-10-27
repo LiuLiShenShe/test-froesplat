@@ -43,6 +43,7 @@ from utils.m2m3_go import (
     make_deficit_gaussians,
     project_centers,
     remap_surviving_indices,
+    resolve_block_frame,
     resolve_tau_p,
     select_deficit_pixels,
     select_densify_primitives,
@@ -456,10 +457,16 @@ def save_capacity_summary(model_path, summary):
         json.dump(summary, f, indent=2)
 
 
-def mask_consistency_scores(gaussians, cameras, max_views):
+def _mask_consistency_core(gaussians, cameras, max_views):
+    """Hits / visible counts of each Gaussian centre inside the foreground prior.
+
+    Returns (hits, visible, n_sampled) or (None, None, 0) when no camera carries
+    a mask.  This is the shared primitive for the manuscript's M_j (mask
+    projection consistency) and V_j (number of visible views) cues.
+    """
     mask_cameras = [cam for cam in cameras if cam.gt_alpha_mask is not None]
     if not mask_cameras:
-        return None
+        return None, None, 0
     if max_views > 0:
         stride = max(1, len(mask_cameras) // max_views)
         mask_cameras = mask_cameras[::stride][:max_views]
@@ -484,11 +491,170 @@ def mask_consistency_scores(gaussians, cameras, max_views):
         ).reshape(-1)
         visible += in_view.float()
         hits += (sampled > 0.5).float() * in_view.float()
+    return hits, visible, len(mask_cameras)
 
+
+def mask_consistency_scores(gaussians, cameras, max_views):
+    hits, visible, _ = _mask_consistency_core(gaussians, cameras, max_views)
+    if hits is None:
+        return None
     valid = visible > 0
     scores = torch.ones_like(hits)
     scores[valid] = hits[valid] / visible[valid].clamp_min(1.0)
     return scores
+
+
+def mask_consistency_stats(gaussians, cameras, max_views):
+    """(M_j, V_j) for the manuscript §2.6 pruning descriptor."""
+    hits, visible, n_sampled = _mask_consistency_core(gaussians, cameras, max_views)
+    if hits is None:
+        return None, None, 0
+    valid = visible > 0
+    scores = torch.ones_like(hits)
+    scores[valid] = hits[valid] / visible[valid].clamp_min(1.0)
+    return scores, visible, n_sampled
+
+
+def topology_cue(xyz, grid_size=64, reference="mean"):
+    """C_j: local topological support of primitive g_j in [0, 1].
+
+    The manuscript describes C_j as a "local topological cue" without fixing its
+    estimator.  Here it is the primitive count of the primitive's own cell in a
+    regular grid over the current cloud, normalised by the mean count of the
+    occupied cells: isolated splats (their own cell, or a sparse cell) get a cue
+    close to 0, primitives embedded in a dense surface get 1.  Normalising by the
+    occupied-cell mean makes the cue invariant to the overall primitive budget.
+    """
+    n = int(xyz.shape[0])
+    if n == 0:
+        return torch.zeros((0,), dtype=torch.float32, device=xyz.device)
+    g = max(int(grid_size), 1)
+    lo = xyz.min(dim=0).values
+    hi = xyz.max(dim=0).values
+    span = (hi - lo).clamp_min(1e-6)
+    grid = ((xyz - lo) / span * g).floor().clamp(0, g - 1).to(torch.long)
+    keys = grid[:, 0] * g * g + grid[:, 1] * g + grid[:, 2]
+    # bincount over the occupied key range keeps this O(N) with no sort.
+    ids, inverse = torch.unique(keys, return_inverse=True)
+    counts = torch.bincount(inverse, minlength=int(ids.numel())).to(torch.float32)
+    occupied = counts[counts > 0]
+    if occupied.numel() == 0:
+        return torch.ones((n,), dtype=torch.float32, device=xyz.device)
+    if str(reference) == "max":
+        ref = float(occupied.max().item())
+    elif str(reference) == "median":
+        ref = float(occupied.median().item())
+    else:
+        ref = float(occupied.mean().item())
+    ref = max(ref, 1.0)
+    cue = (counts / ref).clamp(0.0, 1.0)
+    return cue[inverse]
+
+
+def multi_cue_survival(
+    gaussians,
+    opt,
+    mask_scores,
+    visible_views,
+    n_sampled_views,
+    xyz=None,
+):
+    """P_keep(g_j) = sigmoid(w_g . z_j - b_g), manuscript §2.6.
+
+    z_j = [M_j, log(O_j+eps), log(1+V_j), B_j, C_j], rescaled to [-1, 1]:
+
+        z_M = (M - tau_M) / (1 - tau_M)
+        z_O = (log(O+eps) - median log(O+eps)) / max(|median log(O+eps)|, eps)
+        z_V = (log(1+V) - log(1+V_ref)) / max(log(1+V_ref), eps)
+        z_B = (B - median B) / max(median B, 1 - median B)
+        z_C = (C - median C) / max(median C, eps)
+
+    tau_M is the manuscript's stated mask threshold (0.45), used verbatim, so the
+    mask cue is an absolute signed distance from the operating point.  V_ref is
+    the largest visible-view count among the sampled cameras (the paper's
+    "maximum view count" operating point).  The opacity/brightness/topology cues
+    are centred on the current round's median because B_j is defined as
+    "brightness *normality*" and C_j as a *local* topological cue: an average
+    primitive must contribute ~0, otherwise a mid-range opacity would offset a
+    failed mask test and silently neutralise the stated 0.45 threshold.
+    w_g defaults to `--pruning_cue_weights`, b_g to `--pruning_keep_bias`.
+
+    Returns (P_keep, cue_dict).
+    """
+    eps = 1e-8
+    xyz = gaussians.get_xyz.detach() if xyz is None else xyz
+    if mask_scores is None:
+        mask_scores = torch.ones((xyz.shape[0],), dtype=torch.float32, device=xyz.device)
+    if visible_views is None:
+        visible_views = torch.zeros((xyz.shape[0],), dtype=torch.float32, device=xyz.device)
+    opacity = gaussians.get_opacity.detach().squeeze().clamp(eps, 1.0 - eps)
+    if opacity.dim() > 1:
+        opacity = opacity.reshape(-1)
+    brightness = gaussian_brightness(gaussians).detach().float().clamp(0.0, 1.0).reshape(-1)
+    topology = topology_cue(
+        xyz,
+        int(getattr(opt, "pruning_topology_grid", 64)),
+        str(getattr(opt, "pruning_topology_reference", "mean")),
+    )
+
+    tau_m = float(opt.pruning_mask_threshold)
+    tau_o = float(opt.pruning_opacity_threshold)
+    # log(O) is centred on the manuscript's opacity threshold rather than on the
+    # population median: O_j is an absolute quantity and the paper states 0.005
+    # as the operating point, so a primitive must be able to fail it on its own.
+    log_o = torch.log(opacity + eps)
+    log_o_ref = math.log(max(tau_o + eps, eps))
+    scale_o = max(-log_o_ref, eps)
+    z_m = (mask_scores.float() - tau_m) / max(1.0 - tau_m, eps)
+    z_o = ((log_o - log_o_ref) / scale_o).clamp(-1.0, 1.0)
+    v_ref = float(visible_views.max().item()) if visible_views.numel() else 0.0
+    if v_ref <= 0.0:
+        v_ref = float(max(int(n_sampled_views), 1))
+    log_v = torch.log1p(visible_views.float().clamp_min(0.0))
+    # log(1+V) is centred on the largest visible count in the round, so a
+    # primitive seen by every camera is neutral (0) and one seen by a single
+    # camera is penalised proportionally to how much evidence it lacks.
+    z_v = (log_v - math.log1p(v_ref)) / max(math.log1p(v_ref), eps)
+    med_b = float(brightness.median().item())
+    scale_b = max(med_b, 1.0 - med_b, eps)
+    tau_b = float(opt.pruning_brightness_threshold)
+    # A primitive is brightness-anomalous if it is near-black in *absolute*
+    # terms (B_j below the manuscript's brightness floor tau_b) OR far below
+    # the population's own median.  The worse of the two governs: a constant
+    # population carries no relative signal, but a degenerate dark splat in it
+    # is still prunable, and a mid-grey splat in a bright population still is.
+    abs_deficit = (tau_b - brightness) / max(tau_b, eps)
+    rel_deficit = (med_b - brightness) / scale_b
+    z_b = (-torch.maximum(abs_deficit, rel_deficit)).clamp(-1.0, 1.0)
+    med_c = float(topology.median().item())
+    # C_j is a *local* cue, so it is centred on the population: an isolated splat
+    # is penalised relative to how crowded the rest of the cloud is.  scale_c is
+    # the manuscript's absolute local-density reference (mean occupied-cell
+    # count) so a small but uniform cloud is not treated as sparse.
+    scale_c = max(med_c, float(topology.mean().item()), eps)
+    z_c = ((topology - med_c) / scale_c).clamp(-1.0, 1.0)
+
+    weights = [float(v) for v in str(getattr(opt, "pruning_cue_weights", "3.0,1.0,0.25,1.0,0.5")).replace(";", ",").split(",") if str(v).strip()]
+    if len(weights) != 5:
+        raise ValueError("--pruning_cue_weights requires 5 comma-separated values "
+                         "[M, logO, logV, B, C]")
+    logit = (
+        weights[0] * z_m
+        + weights[1] * z_o
+        + weights[2] * z_v
+        + weights[3] * z_b
+        + weights[4] * z_c
+        - float(getattr(opt, "pruning_keep_bias", 0.0))
+    )
+    keep = torch.sigmoid(logit)
+    cues = {
+        "M": mask_scores.float(), "O": opacity, "V": visible_views.float(),
+        "B": brightness, "C": topology,
+        "z_M": z_m, "z_O": z_o, "z_V": z_v, "z_B": z_b, "z_C": z_c,
+        "logit": logit,
+    }
+    return keep, cues
+
 
 
 def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, capacity_state=None):
@@ -505,23 +671,53 @@ def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, c
     removed_by_mask = torch.zeros_like(prune_mask)
     mask_scores = None
     prune_score = torch.zeros((before,), dtype=torch.float32, device="cuda")
+    visible_views = None
+    n_sampled_views = 0
+    survival_mode = str(getattr(opt, "pruning_survival_mode", "multi_cue"))
+    survival_scores = None
+    survival_report = {}
 
-    if opt.pruning_mode in ("opacity", "topology"):
-        removed_by_opacity = (gaussians.get_opacity.detach().squeeze() < opt.pruning_opacity_threshold)
-        prune_mask = torch.logical_or(prune_mask, removed_by_opacity)
-        prune_score += (opt.pruning_opacity_threshold - gaussians.get_opacity.detach().squeeze()).clamp_min(0.0)
-    if opt.pruning_mode in ("brightness", "topology"):
-        brightness = gaussian_brightness(gaussians)
-        removed_by_brightness = brightness < opt.pruning_brightness_threshold
-        prune_mask = torch.logical_or(prune_mask, removed_by_brightness)
-        prune_score += (opt.pruning_brightness_threshold - brightness).clamp_min(0.0)
-    if opt.pruning_mode in ("mask", "topology") and cameras is not None:
-        mask_scores = mask_consistency_scores(gaussians, cameras, opt.pruning_mask_max_views)
-        if mask_scores is not None:
-            removed_by_mask = mask_scores < opt.pruning_mask_threshold
-            prune_mask = torch.logical_or(prune_mask, removed_by_mask)
-            mask_penalty = (opt.pruning_mask_threshold - mask_scores).clamp_min(0.0)
-            prune_score += mask_penalty * max(0.0, opt.pruning_mask_score_weight)
+    if survival_mode == "multi_cue":
+        # ── Manuscript §2.6: P_keep(g_j) = sigmoid(w_g . z_j - b_g) ──
+        # One five-cue descriptor for every primitive, then
+        #   Prune(g_j) = 1[P_keep < tau_g] . 1[N_rm/N_all < r_max]
+        if cameras is not None:
+            mask_scores, visible_views, n_sampled_views = mask_consistency_stats(
+                gaussians, cameras, opt.pruning_mask_max_views)
+        survival_scores, cues = multi_cue_survival(
+            gaussians, opt, mask_scores, visible_views, n_sampled_views)
+        tau_keep = float(getattr(opt, "pruning_survival_threshold", 0.45))
+        removed_by_mask = survival_scores < tau_keep
+        prune_mask = torch.logical_or(prune_mask, removed_by_mask)
+        # Removal ordering inside the budget: lowest survival first.
+        prune_score = -survival_scores.detach().float()
+        survival_report = {
+            "survival_mode": "multi_cue",
+            "survival_threshold": tau_keep,
+            "survival_mean": float(survival_scores.mean().item()),
+            "survival_cue_mean": {
+                key: float(value.mean().item()) for key, value in cues.items() if key.startswith("z_")
+            },
+        }
+    else:
+        # ── Legacy mask-only candidate path (kept for bitwise replay) ──
+        if opt.pruning_mode in ("opacity", "topology"):
+            removed_by_opacity = (gaussians.get_opacity.detach().squeeze() < opt.pruning_opacity_threshold)
+            prune_mask = torch.logical_or(prune_mask, removed_by_opacity)
+            prune_score += (opt.pruning_opacity_threshold - gaussians.get_opacity.detach().squeeze()).clamp_min(0.0)
+        if opt.pruning_mode in ("brightness", "topology"):
+            brightness = gaussian_brightness(gaussians)
+            removed_by_brightness = brightness < opt.pruning_brightness_threshold
+            prune_mask = torch.logical_or(prune_mask, removed_by_brightness)
+            prune_score += (opt.pruning_brightness_threshold - brightness).clamp_min(0.0)
+        if opt.pruning_mode in ("mask", "topology") and cameras is not None:
+            mask_scores = mask_consistency_scores(gaussians, cameras, opt.pruning_mask_max_views)
+            if mask_scores is not None:
+                removed_by_mask = mask_scores < opt.pruning_mask_threshold
+                prune_mask = torch.logical_or(prune_mask, removed_by_mask)
+                mask_penalty = (opt.pruning_mask_threshold - mask_scores).clamp_min(0.0)
+                prune_score += mask_penalty * max(0.0, opt.pruning_mask_score_weight)
+        survival_report = {"survival_mode": "legacy_mask"}
 
     requested = int(prune_mask.sum().item())
     if requested <= 0:
@@ -532,6 +728,7 @@ def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, c
             "gaussians_before": before,
             "gaussians_after": before,
             "removed": 0,
+            **survival_report,
         }
         if capacity_control_enabled(opt) and opt.save_capacity_report and should_save_capacity_report(opt, iteration):
             save_capacity_report(model_path, report)
@@ -590,6 +787,7 @@ def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, c
             "gaussians_after": before,
             "removed": 0,
             **capacity_report,
+            **survival_report,
         }
         if capacity_control_enabled(opt) and opt.save_capacity_report and should_save_capacity_report(opt, iteration):
             save_capacity_report(model_path, report)
@@ -610,9 +808,14 @@ def maybe_prune_gaussians(gaussians, opt, iteration, model_path, cameras=None, c
         "removed_by_brightness": int(torch.logical_and(prune_mask, removed_by_brightness).sum().item()),
         "removed_by_mask": int(torch.logical_and(prune_mask, removed_by_mask).sum().item()),
         **capacity_report,
+        **survival_report,
     }
     if capacity_state is not None and capacity_control_enabled(opt):
         report["capacity_state"] = dict(capacity_state)
+    if survival_scores is not None:
+        removed_survival = survival_scores[prune_mask]
+        report["survival_mean_removed"] = float(removed_survival.mean().item()) if removed > 0 else None
+        report["survival_max_removed"] = float(removed_survival.max().item()) if removed > 0 else None
     if mask_scores is not None:
         report["mask_score_mean_removed"] = float(mask_scores[prune_mask].mean().item()) if removed > 0 else None
         report["mask_score_min_removed"] = float(mask_scores[prune_mask].min().item()) if removed > 0 else None
@@ -630,6 +833,8 @@ def init_m2m3_go_state(opt):
     blocks = int(opt.m2m3_go_local_blocks) ** 3
     return {
         "block_reference": torch.zeros(blocks, dtype=torch.long, device="cuda"),
+        "block_frame": None,
+        "block_frame_history": [],
         "densified_keys": set(),
         "rounds": 0,
         "total_pruned": 0,
@@ -763,7 +968,13 @@ def run_m2m3_go_update(gaussians, opt, cameras, view_weights, pipe, background, 
     prune_candidates = torch.nonzero(valid & (utility < tau_p)).squeeze(1)
     max_remove = int(before * max(0.0, min(float(opt.m2m3_go_max_remove_ratio), 1.0)))
     n_blocks = int(opt.m2m3_go_local_blocks) ** 3
-    block_ids = assign_local_blocks(gaussians.get_xyz.detach(), int(opt.m2m3_go_local_blocks))
+    # Floor40's per-block capacity references are only meaningful if block ids
+    # denote the same spatial region in every round, so the block grid is frozen
+    # at the first update instead of being recomputed from the current bounds.
+    block_frame = resolve_block_frame(
+        gaussians.get_xyz.detach(), int(opt.m2m3_go_local_blocks), state)
+    block_ids = assign_local_blocks(
+        gaussians.get_xyz.detach(), int(opt.m2m3_go_local_blocks), frame=block_frame)
     block_counts = torch.bincount(block_ids, minlength=n_blocks)
     reference = state.get("block_reference")
     if reference is None or reference.numel() != n_blocks:
@@ -860,6 +1071,11 @@ def run_m2m3_go_update(gaussians, opt, cameras, view_weights, pipe, background, 
         "floor_report": floor_report,
         "local_floor_ratio": float(opt.m2m3_go_local_floor_ratio),
         "local_blocks_per_axis": int(opt.m2m3_go_local_blocks),
+        "block_frame_frozen_count": int(state.get("block_frame_frozen_count", 0)),
+        "block_reference_total": int(state["block_reference"].sum().item()),
+        "block_min_total": int(block_min.sum().item()),
+        "block_occupied": int((block_counts > 0).sum().item()),
+        "block_counts_after": [int(v) for v in block_counts.tolist()],
         "tau_p": float(tau_p),
         "tau_p_source": tau_source,
         "stats": {

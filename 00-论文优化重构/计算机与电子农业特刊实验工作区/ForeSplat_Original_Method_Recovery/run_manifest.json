@@ -1358,7 +1358,23 @@
       "num_cluster": 20,
       "mesh_res": 256,
       "archived_at": "2026-10-25T14:05:46.957628+00:00"
+    },
+    {
+      "run_dir": "runs/KongQueZhuYu_RAP_FULL_210_v3",
+      "frames": 210,
+      "report_sha256": null,
+      "params_sha256": "a24c7fbde37b4aea4b61f63cf9a5259d9f3a5977223c49b01db79478c1e387f0",
+      "status": "COMPLETE_BUT_CONFIG_DEFECT",
+      "note": "First v3 launch omitted --spnp_backend/--thin_repair_mode (defaults 'none'), so SB-FBPR and residual repair were skipped on all 210 frames. Masks contain SG-MPS + CDR + GCFC only; NOT the complete R6 chain. Superseded by v3full."
+    },
+    {
+      "run_dir": "runs/KongQueZhuYu_RAP_FULL_210_v3full",
+      "frames": 210,
+      "report_sha256": null,
+      "params_sha256": "0f8cf9a6fc0e6fda744c9117075d6ef270f507d0b9cf4c90390e0fe8a0656a37",
+      "status": "IN_PROGRESS",
+      "note": "Complete-chain v3 rerun: reuses the v3 candidate pool (selection masks byte-identical to v3, 7/7 verified) and runs SB-FBPR(points, sam3_if_supported) + residual repair (adjacent) + GCFC. Launched 2026-10-26 22:37; ~6-8 h."
     }
   ],
-  "run_count": 55
+  "run_count": 57
 }

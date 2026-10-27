@@ -264,13 +264,58 @@ def resolve_tau_p(
 
 # ── local Floor40 ────────────────────────────────────────────────────────────
 
-def assign_local_blocks(xyz: torch.Tensor, n_blocks_per_axis: int = 6) -> torch.Tensor:
-    """Assign each Gaussian to a regular 3-D block over the point-cloud bounds."""
+def resolve_block_frame(xyz: torch.Tensor, n_blocks_per_axis: int, state: dict | None) -> tuple[torch.Tensor, torch.Tensor]:
+    """Freeze the spatial reference frame used by the local capacity floor.
+
+    The floor keeps a per-block capacity reference across rounds, so block *ids*
+    must denote the same spatial region for the whole run.  Deriving the grid
+    bounds from the current cloud on every round (the previous behaviour) makes
+    the same id drift between regions as the cloud grows or shrinks, which
+    silently re-associates each block's reference with a different area.
+
+    The frame is therefore fixed on the first call and reused verbatim.  A 5%
+    margin is added up front so normal densification stays inside it; primitives
+    that later fall outside are clamped to the nearest edge block instead of
+    rescaling the grid (rescaling would move every existing primitive).
+    """
+    key = f"block_frame_{int(n_blocks_per_axis)}"
+    if state is not None and state.get(key) is not None:
+        lo, hi = state[key]
+        return lo, hi
+    if xyz.numel() == 0:
+        lo = torch.zeros(3, device=xyz.device)
+        hi = torch.ones(3, device=xyz.device)
+    else:
+        lo_raw = xyz.min(dim=0).values
+        hi_raw = xyz.max(dim=0).values
+        margin = (hi_raw - lo_raw).clamp_min(1e-6) * 0.05
+        lo = lo_raw - margin
+        hi = hi_raw + margin
+    if state is not None:
+        state[key] = (lo, hi)
+        state["block_frame_frozen_count"] = int(xyz.shape[0])
+    return lo, hi
+
+
+def assign_local_blocks(
+    xyz: torch.Tensor,
+    n_blocks_per_axis: int = 6,
+    frame: tuple[torch.Tensor, torch.Tensor] | None = None,
+) -> torch.Tensor:
+    """Assign each Gaussian to a regular 3-D block over a *stable* frame.
+
+    When `frame` is given (see `resolve_block_frame`) the block ids are stable
+    across rounds; when omitted the bounds are taken from `xyz` itself, which is
+    only appropriate for a one-shot call.
+    """
     if xyz.numel() == 0:
         return torch.zeros(0, dtype=torch.long, device=xyz.device)
     n = max(int(n_blocks_per_axis), 1)
-    lo = xyz.min(dim=0).values
-    hi = xyz.max(dim=0).values
+    if frame is None:
+        lo = xyz.min(dim=0).values
+        hi = xyz.max(dim=0).values
+    else:
+        lo, hi = frame
     span = (hi - lo).clamp_min(1e-6)
     grid = ((xyz - lo) / span * n).floor().clamp(0, n - 1).to(torch.long)
     return grid[:, 0] * n * n + grid[:, 1] * n + grid[:, 2]

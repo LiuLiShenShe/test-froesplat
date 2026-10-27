@@ -17,6 +17,17 @@ is the primary target (RAP-FSAM3 emits a potted-plant foreground prior);
 Per scene the candidate pool is produced once by the R6 run (real SAM3
 inference, prompts P1..P5, per_instance) and then reused by every other
 configuration, so the rungs differ ONLY in the selection/refinement rule.
+
+v3 additionally carries the two controlled arms the fix needs:
+
+  R0s/R1s  single-prompt P2 baseline, exactly as the manuscript states it
+           ("entire potted plant"), base / CDR-R1.
+  R3m      multi-prompt + gate with `--semantic_gate_target_mode plant_only`,
+           i.e. the *fixed* pipeline forced back onto the historical green-only
+           target definition.  R3 (potted_plant) minus R3m isolates the target
+           contract; R3m minus the archived v2 R3 isolates everything else
+           (prompt text, green-reference selection, pot anchoring, q_plant,
+           q_pot, area admissibility) at a fixed target definition.
 """
 from __future__ import annotations
 
@@ -40,7 +51,10 @@ FRAMES = ROOT / "00-论文优化重构/数据管理/01-输入图像/02-fft_frame
 GT_SPLIT = ROOT / "00-论文优化重构/数据管理/07-运行脚本与超参/S20-RAP-FSAM3掩膜生成与验证/GT口径拆分审计/gt_masks_split_v2"
 COLMAP = ROOT / "04-COLMAP"
 DEV_INPUT = RECOVERY / "dev_inputs"
-RUNS = RECOVERY / "runs/dev_ablation_v2"
+# v2 holds the pre-fix runs (P2 = "entire plant excluding pot", plant-only SG-MPS
+# descriptors).  It is kept as the "before" arm of the ablation; v3 is the fixed
+# pipeline.  Override with RAP_DEV_RUNS to avoid ever mixing the two.
+RUNS = Path(os.environ.get("RAP_DEV_RUNS", str(RECOVERY / "runs/dev_ablation_v3")))
 PYTHON = "/home/test/.venvs/sam3/bin/python"
 
 SCENES = {
@@ -62,6 +76,9 @@ MULTI = ["--prompt_list", "P1,P2,P3,P4,P5", "--default_prompt_id", "P2",
          "--use_prompt_ensemble", "--prompt_selection_mode", "score_select"]
 SINGLE = ["--prompt_list", "P2", "--default_prompt_id", "P2",
           "--prompt_selection_mode", "single"]
+# Per-scene COLMAP dir placeholder used by the feasibility rungs; resolved to
+# str(COLMAP / scene) inside the run loop.
+SCENE_COLMAP_TOKEN = "__SCENE_COLMAP__"
 GATE = ["--use_semantic_gate", "--semantic_gate_mode", "gated_softmax",
         "--semantic_gate_temperature", "0.25"]
 SPNP_BOXES = ["--use_spnp_refinement", "--spnp_backend", "sam3_if_supported",
@@ -79,8 +96,9 @@ def gcfc(scene: str) -> list[str]:
 
 
 CONFIGS = [
-    ("R0_single_P2_base", SINGLE + ["--ranking_policy", "base"]),
-    ("R1_single_P2_cdr", SINGLE + ["--ranking_policy", "r1"]),
+    # ── single-prompt baselines on the manuscript's own P2 definition ──
+    ("R0s_single_P2_base", SINGLE + ["--ranking_policy", "base"]),
+    ("R1s_single_P2_cdr", SINGLE + ["--ranking_policy", "r1"]),
     # R2/R3 gate ON vs R3n gate OFF isolates SG-MPS from the mere expansion of
     # the candidate set to five prompts: same pool, same ranking policy.
     ("R3n_multi_nogate_cdr", MULTI + ["--ranking_policy", "r1"]),
@@ -90,11 +108,39 @@ CONFIGS = [
     # only allowed to speak when it actually has a preference.
     ("R3g_multi_gate_margin", MULTI + GATE + ["--ranking_policy", "r1",
                                              "--semantic_gate_margin", "0.05"]),
+    # Controlled arm: the fixed pipeline on the historical plant-only target.
+    ("R3m_multi_gate_plant_only", MULTI + GATE + ["--ranking_policy", "r1",
+                                                 "--semantic_gate_target_mode", "plant_only"]),
     ("R2_multi_SGMPS_base", MULTI + GATE + ["--ranking_policy", "base"]),
     ("R3_multi_SGMPS_cdr", MULTI + GATE + ["--ranking_policy", "r1"]),
     ("R4b_R3_SPNP_boxes", MULTI + GATE + ["--ranking_policy", "r1"] + SPNP_BOXES),
     ("R4p_R3_SPNP_points", MULTI + GATE + ["--ranking_policy", "r1"] + SPNP_POINTS),
     ("R5_R4p_repair", MULTI + GATE + ["--ranking_policy", "r1"] + SPNP_POINTS + REPAIR),
+    # ── feasibility ladder (2026-10-27) ──────────────────────────────────────
+    # The oracle over the whole candidate pool is P2 in 16/16 dev frames, so the
+    # gate can at best reach parity with the single-prompt baseline.  A *positive*
+    # gain can therefore only come from the refinement stages improving the P2
+    # mask beyond the raw P2 candidate.  These rungs fix the selection to P2 and
+    # switch the refinement stages on one at a time.
+    ("S1s_single_P2_spnp_boxes", SINGLE + ["--ranking_policy", "r1"] + SPNP_BOXES),
+    ("S2s_single_P2_spnp_boxes_repair", SINGLE + ["--ranking_policy", "r1"] + SPNP_BOXES + REPAIR),
+    ("S3s_single_P2_spnp_boxes_repair_gcfc",
+     SINGLE + ["--ranking_policy", "r1"] + SPNP_BOXES + REPAIR
+     + ["--use_corrective_geometry", "--corrective_geometry_backend",
+        "colmap_tracks_gaussian", "--colmap_dir", SCENE_COLMAP_TOKEN,
+        "--strict_colmap_observations"]),
+    # Gate commitment margin on the multi-prompt path: the single dev error is a
+    # near-tie (0.550 vs 0.563), so margin=0.05 should remove it.
+    ("R3gm05_multi_gate_margin05_cdr",
+     MULTI + GATE + ["--ranking_policy", "r1", "--semantic_gate_margin", "0.05"]),
+    ("R4bm05_R3gm05_SPNP_boxes",
+     MULTI + GATE + ["--ranking_policy", "r1", "--semantic_gate_margin", "0.05"] + SPNP_BOXES),
+    ("R6m05_full_with_margin",
+     MULTI + GATE + ["--ranking_policy", "r1", "--semantic_gate_margin", "0.05"]
+     + SPNP_BOXES + REPAIR
+     + ["--use_corrective_geometry", "--corrective_geometry_backend",
+        "colmap_tracks_gaussian", "--colmap_dir", SCENE_COLMAP_TOKEN,
+        "--strict_colmap_observations"]),
 ]
 # R6 = R5 + GCFC, and it is the pool producer (real SAM3 inference).  It runs
 # FIRST in each scene so that every other rung reuses its candidate cache.
@@ -445,7 +491,9 @@ def main() -> int:
             for name, extra in CONFIGS:
                 if wanted and name not in wanted:
                     continue
-                run_config(scene, name, extra, source_dir=pool)
+                resolved = [str(COLMAP / scene) if tok == SCENE_COLMAP_TOKEN else tok
+                            for tok in extra]
+                run_config(scene, name, resolved, source_dir=pool)
 
     if cli.run_only:
         return 0

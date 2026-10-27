@@ -52,13 +52,15 @@ FFT 模块：`/data/fj/F2DMAS/02-FFT/blur_filter.py`
 | 提示词 | 文本 | 语义角色 |
 |---|---|---|
 | P1 | `green plant` | 绿色区域 |
-| P2 | `entire potted plant` | 植株实例（默认主提示词） |
-| P3 | `leaves and stems` | 器官级 |
+| P2 | `entire potted plant` | 带盆整株（默认主提示词；§2.3.2 锁定的目标） |
+| P3 | `leaves and stems` | 器官级（去盆，仅叶片/茎） |
 | P4 | `crop seedling` | 幼苗取向 |
 | P5 | `plant body without background` | 排除背景的植株 |
 
 状态：**VERIFIED (L1–L6)**。R6 实跑 5 帧分别产出 P1..P5 候选 23/7/5/5/13 个（`runs/R6_RAP_FULL_real/候选掩膜/raw_instance_*`）。
 注意：P4（`crop seedling`）在本场景多数帧返回 0 个可用实例，SG-MPS 中被标记为 `-1.0` 并自动从 softmax 分母中排除——这是真实行为，不是代码缺陷。
+
+> **P2 目标口径（本轮修正）**：论文 §2.3.2 / §3.2 / 表 4 明确把植株实例定义为 `entire potted plant`（含可见花盆，F1=0.9692），而修正前代码是 `entire plant excluding pot`。这等于在没有告知的情况下把"带盆整株"改成了"纯植株"，并让 SG-MPS 的目标函数与论文相反。现已统一为 `entire potted plant`；`validate_prompt_contract()` 会在 P2 文本含 `excluding pot` / `without pot` 时直接抛错。P6（`whole potted plant including the pot`）、`POT`、`CUBE` 只保留为诊断提示词，不属于论文的 K=5 集合（`PAPER_PROMPT_IDS=("P1","P2","P3","P4","P5")`）。
 
 ---
 
@@ -70,9 +72,16 @@ FFT 模块：`/data/fj/F2DMAS/02-FFT/blur_filter.py`
 | $\psi_i^{(k)}=[q_{table},q_{bg},q_{neighbour},q_{outlier}]^\top$ | `psi = [...]` | `:1659` | VERIFIED |
 | $c_i^{(k)}=\sigma(w_\phi^\top\phi-w_\psi^\top\psi-b)$ | `logit = Σwφ·φ − Σwψ·ψ − bias; gate_confidence = sigmoid(logit)` | `:1665-1666` | VERIFIED |
 | $w_\phi$ 默认 `0.5,0.3,0.15,0.15,0.0,0.1`，$w_\psi$ 默认 `0.3,0.3,0.3,0.2`，$b=0.5$ | `--semantic_phi_weights` / `--semantic_psi_weights` / `--semantic_gate_bias` | `:1660-1664` | VERIFIED |
+| §2.3.3「可见花盆不是负类」⇒ $q_{bg}$ 必须排除花盆、且 $\phi$ 需要正向的包含花盆证据 $q_{pot}$ | `background_region = ~(target_mask | pot_mask)`；`phi` 追加 `q_pot`，权重 `--semantic_pot_weight`（默认 0.2） | `semantic_gate_scores` | VERIFIED (本轮修正) |
+| $\phi$ 的 $q_{plant}$ 在带盆口径下是**植株区域的召回**，不是"候选里绿色像素的占比" | `green_fraction = |M∩green_ref|/|green_ref|`（`green_ref` 由候选并集支持的绿色分量给出） | `semantic_gate_scores` | VERIFIED (本轮修正) |
+| 语义参考必须是**植株**，不是场景里最大的绿色块 | `largest_green_component_mask(image, args, support=union)`：取与候选并集重叠最大的绿色连通域 | `:1564` | VERIFIED (本轮修正) |
+| 花盆带相对植株底部锚定 | `pot_top = plant_box.y0 + plant_height·semantic_pot_lower_start_ratio` | `build_semantic_gate_context` | VERIFIED (本轮修正) |
 | $a_i^{(k)}=\operatorname{softmax}_{k}(c_i^{(k)}/\tau_s)$，**按提示词**归一化 | `apply_semantic_gate_softmax()`：先按 prompt 取 `max` 代表值，再跨 prompt 做 softmax | `:1695` | VERIFIED (L1–L5) |
 | $k^*=\arg\max_k a_i^{(k)}$ | `semantic_gate_prompt()` | `:1733` | VERIFIED |
+| 面积合理区间是选择约束而非仅诊断 | `--candidate_area_admissibility {off,gate,all}`；`gate_usable_records()` 跳过不可采纳候选 | `:1832` | VERIFIED (本轮修正) |
 | 门控只选提示词，实例级排序交给 ranking | `select_mask(selection_meta=...)` 分层：`sg_mps_then_ranking` | `:1940` | VERIFIED |
+
+> 受控开关：`--semantic_gate_target_mode {potted_plant,plant_only}`。默认 `potted_plant` 是论文口径；`plant_only` 精确复现修正前的"绿色参考 + 花盆算背景 + 无 $q_{pot}$"行为，**只用于消融**，把目标口径这一因素单独隔离出来。同一候选池下 `potted_plant` 与 `plant_only` 的差异就是"目标定义"的贡献（见 `05_RAP_FSAM3_ABLATION.md` §5）。
 
 ### 3.1 逐提示词归一化（用户 P0-C 项）——已修正并验证
 
@@ -280,3 +289,25 @@ GCFC_after_<stem>.png
 | 分层选择元数据 `selection_path` | `select_mask` | 修 P0-C |
 | 提示证据新增无符号坐标 + 标签列 | `sam3_box_refinement` / CSV 写出 | 证据可读性 |
 | 逐帧报告扩到 39 列 | `main()` | 用户要求的报告字段 |
+
+---
+
+## 10. §2.8 TSDF 网格融合（本轮新增实现）
+
+论文 §2.8 写的是 weighted fusion：
+
+$$D(x)=\frac{\sum_c w_c(x)d_c(x)}{\sum_c w_c(x)+\varepsilon},\qquad w_c=w_c^{\text{vis}}w_c^{\text{normal}}w_c^{\text{mask}}$$
+
+修正前生产路径 `render.py` 只调用 Open3D `ScalableTSDFVolume`（每视角**均匀权重** + 掩膜背景清零），**没有**实现 §2.8 的三项权重，论文该公式在代码里不存在。本轮新增：
+
+| 论文 | 代码 | 位置 | 状态 |
+|---|---|---|---|
+| $D(x)=\sum w_c d_c/(\sum w_c+\varepsilon)$ | `GaussianExtractor.extract_mesh_weighted()`（逐体素、逐相机加权平均，`tsdf[idx]=(tsdf·prev+sdf·w)/new_w`） | `utils/mesh_utils.py` | VERIFIED |
+| $w^{vis}=\mathrm{clamp}(1-\|d_c\|/\delta,\ w_{vis}^{min},1)$ | `w_vis = (1 - |sdf|/sdf_trunc).clamp(vis_weight_min, 1)` | 同上 | VERIFIED |
+| $w^{normal}=w_n^{min}+(1-w_n^{min})\lvert n\cdot v\rvert^{p}$ | 渲染法向 `surf_normal` 旋到世界系后与视线夹角；`--mesh_normal_sharpness` | 同上 | VERIFIED |
+| $w^{mask}$ | 双线性采样 RAP-FSAM3 前景掩膜；`--mesh_mask_weight_min` | 同上 | VERIFIED |
+| 三项相乘 | `w_total = w_vis*w_normal*w_mask` | 同上 | VERIFIED |
+| 生产入口 | `render.py --mesh_weight_mode visibility_normal_mask`（输出 `fuse_weighted.ply`），诊断 JSON `--mesh_weight_diagnostics` | `render.py` | VERIFIED |
+| 独立数值验证 | `scripts/check_weighted_tsdf.py`：已知平面 z=1.0 上验证几何（内点 ≤0.5 体素）、$w_{mask}$ 开洞（掩膜外不重建）、$w_{normal}$（掠射视角不污染） | 新增脚本，GS venv 运行 | VERIFIED |
+
+> 注：三项权重的**具体估计器**论文未给出闭式定义，本实现按"可见性/法向/掩膜支撑"的物理含义选取并全部暴露为 CLI；`09_MANUSCRIPT_SYNC_REPORT.md` 已记录应在论文里补写这三项的定义。

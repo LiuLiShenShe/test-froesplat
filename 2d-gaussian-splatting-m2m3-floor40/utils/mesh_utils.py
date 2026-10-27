@@ -14,11 +14,13 @@ import numpy as np
 import os
 import math
 import cv2
+from pathlib import Path
 from tqdm import tqdm
 from utils.render_utils import save_img_f32, save_img_u8
 from functools import partial
 import open3d as o3d
 import trimesh
+from PIL import Image
 
 def post_process_mesh(mesh, cluster_to_keep=1000):
     """
@@ -174,7 +176,8 @@ class GaussianExtractor(object):
         # self.alphamaps = []
         self.rgbmaps = []
         # self.normals = []
-        # self.depth_normals = []
+        # §2.8 needs the rendered surface normal for w_normal, so it is kept.
+        self.depth_normals = []
         self.viewpoint_stack = []
 
     @torch.no_grad()
@@ -195,7 +198,8 @@ class GaussianExtractor(object):
             self.depthmaps.append(depth.cpu())
             # self.alphamaps.append(alpha.cpu())
             # self.normals.append(normal.cpu())
-            # self.depth_normals.append(depth_normal.cpu())
+            # §2.8 w_normal needs the rendered surface normal per view.
+            self.depth_normals.append(depth_normal.cpu())
         
         # self.rgbmaps = torch.stack(self.rgbmaps, dim=0)
         # self.depthmaps = torch.stack(self.depthmaps, dim=0)
@@ -262,6 +266,294 @@ class GaussianExtractor(object):
         return mesh
 
     @torch.no_grad()
+    def _fusion_grid(self, voxel_size, depth_trunc, padding=0.0):
+        """Voxel-centre grid covering the point cloud, plus world->voxel helpers.
+
+        The grid is anchored on the Gaussian centres so it is independent of the
+        camera bounding sphere: a foreground-object cloud has a much smaller
+        extent than the training cameras, and anchoring on the cameras wastes
+        most of the volume on empty background.
+        """
+        pts = self.gaussians.get_xyz.detach().cpu().numpy().astype(np.float32)
+        lo = pts.min(axis=0) - padding
+        hi = pts.max(axis=0) + padding
+        span = np.maximum(hi - lo, voxel_size)
+        dims = np.maximum(np.ceil(span / voxel_size).astype(int) + 1, 2)
+        return lo, hi, dims
+
+    @torch.no_grad()
+    def extract_mesh_weighted(
+        self,
+        voxel_size=0.004,
+        sdf_trunc=0.02,
+        depth_trunc=3,
+        mask_background=True,
+        mask_dir="",
+        mask_pattern="mask_{stem}.png",
+        normal_sharpness=8.0,
+        vis_weight_min=0.2,
+        normal_weight_min=0.2,
+        mask_weight_min=0.0,
+        chunk_size=200000,
+        export_diagnostics=None,
+    ):
+        """Manuscript §2.8: visibility-, normal- and mask-aware weighted TSDF.
+
+            D(x) = sum_c w_c(x) d_c(x) / (sum_c w_c(x) + eps)
+            w_c(x) = w_c^vis(x) * w_c^normal(x) * w_c^mask(x)
+
+        Every factor is a *support* weight in [0, 1] and none of them is a hard
+        cut for a view that genuinely observes the voxel:
+
+        w^vis     confidence that this view sees x near its rendered surface.
+                  w^vis = clamp(1 - |d_c(x)| / sdf_trunc, vis_weight_min, 1) for
+                  voxels inside the truncation band; views whose depth range does
+                  not reach x contribute nothing.  Uniform integration (Open3D)
+                  instead lets one grazing view outweigh twenty head-on ones.
+        w^normal  alignment of the *rendered* surface normal at the projected
+                  pixel with the view ray:
+                  w^normal = normal_weight_min + (1 - normal_weight_min) *
+                             |n . v|^normal_sharpness .
+                  Oblique observations have the least reliable depth, so they are
+                  down-weighted rather than discarded.
+        w^mask    the RAP-FSAM3 foreground prior sampled bilinearly at the
+                  projected pixel: 1 inside the potted-plant mask,
+                  `mask_weight_min` outside (default 0 = the view cannot support
+                  a voxel that falls outside its own foreground prior).
+
+        The grid is anchored on the Gaussian centres, so the volume covers the
+        reconstructed object rather than the (much larger) camera rig.  Colour is
+        fused with the same weights, so the exported mesh keeps a texture.
+
+        `export_diagnostics` (a dict) receives the fusion statistics.
+        """
+        eps = 1e-8
+        lo, hi, dims = self._fusion_grid(voxel_size, depth_trunc)
+        nx, ny, nz = (int(d) for d in dims)
+        n_vox = nx * ny * nz
+        print(f"[weighted TSDF] grid {nx}x{ny}x{nz} = {n_vox} voxels @ {voxel_size}")
+
+        xx = (lo[0] + (np.arange(nx, dtype=np.float32) + 0.5) * voxel_size)
+        yy = (lo[1] + (np.arange(ny, dtype=np.float32) + 0.5) * voxel_size)
+        zz = (lo[2] + (np.arange(nz, dtype=np.float32) + 0.5) * voxel_size)
+        gx, gy, gz = np.meshgrid(xx, yy, zz, indexing="ij")
+        grid = np.stack([gx, gy, gz], axis=-1).reshape(-1, 3)
+        del gx, gy, gz
+
+        tsdf = np.full((n_vox,), -1.0, dtype=np.float32)
+        wsum = np.zeros((n_vox,), dtype=np.float32)
+        rgb_acc = np.zeros((n_vox, 3), dtype=np.float32)
+        view_count = np.zeros((n_vox,), dtype=np.float32)
+        weight_sum_per_cue = {"vis": 0.0, "normal": 0.0, "mask": 0.0,
+                              "combined": 0.0}
+        n_contrib = 0
+
+        cams = to_cam_open3d(self.viewpoint_stack)
+        diag = {"views": len(self.viewpoint_stack), "grid": [nx, ny, nz],
+                "voxel_size": float(voxel_size), "sdf_trunc": float(sdf_trunc),
+                "depth_trunc": float(depth_trunc), "per_view": []}
+
+        def _load_mask(cam):
+            if not mask_dir:
+                return None
+            stem = Path(getattr(cam, "image_name", "") or "").stem
+            if not stem:
+                return None
+            path = Path(mask_dir) / mask_pattern.format(stem=stem)
+            if not path.exists():
+                return None
+            return np.array(Image.open(path).convert("L")) > 127
+
+        for i, cam_o3d in enumerate(tqdm(cams, desc="weighted TSDF integration")):
+            cam = self.viewpoint_stack[i]
+            rgb = self.rgbmaps[i]
+            depth = self.depthmaps[i]
+            normal = self.depth_normals[i] if getattr(self, "depth_normals", None) else None
+            h, w = int(depth.shape[-2]), int(depth.shape[-1])
+            intr = cam_o3d.intrinsic.intrinsic
+            fx, fy, cx, cy = intr[0, 0], intr[1, 1], intr[0, 2], intr[1, 2]
+            world = cam_o3d.extrinsic                      # x_cam = R x_world + t
+            R = torch.from_numpy(world[:3, :3].astype(np.float32))
+            t = torch.from_numpy(world[:3, 3].astype(np.float32))
+
+            fg_mask = _load_mask(cam)
+            if fg_mask is not None and fg_mask.shape[:2] != (h, w):
+                fg_mask = None              # mask resolution must match the render
+            mask_t = (torch.from_numpy(fg_mask.astype(np.float32))[None, None]
+                      if fg_mask is not None else None)
+            depth_t = depth.reshape(1, 1, h, w).float()
+            rgb_t = rgb.reshape(1, 3, h, w).float()
+            if normal is not None:
+                # `surf_normal` is rendered in view space; rotate to world space.
+                n_flat = normal.reshape(3, -1).permute(1, 0).float()
+                n_world = n_flat @ R.T
+                n_world = n_world / n_world.norm(dim=1, keepdim=True).clamp_min(eps)
+            else:
+                n_world = None
+
+            view_samples = 0
+            for start in range(0, n_vox, chunk_size):
+                pts = torch.from_numpy(grid[start:start + chunk_size])
+                cam_pts = pts @ R.T + t                    # (M, 3) in camera space
+                z = cam_pts[:, 2]
+                in_front = (z > 1e-6) & (z < depth_trunc)
+                if not bool(in_front.any()):
+                    continue
+                pix_u = fx * cam_pts[:, 0] / z.clamp_min(eps) + cx
+                pix_v = fy * cam_pts[:, 1] / z.clamp_min(eps) + cy
+                inside = (in_front
+                          & (pix_u >= 0) & (pix_u <= w - 1)
+                          & (pix_v >= 0) & (pix_v <= h - 1))
+                if not bool(inside.any()):
+                    continue
+                sel = torch.nonzero(inside, as_tuple=False).reshape(-1)
+                gx_n = 2.0 * pix_u[sel] / max(w - 1, 1) - 1.0
+                gy_n = 2.0 * pix_v[sel] / max(h - 1, 1) - 1.0
+                sample_grid = torch.stack([gx_n, gy_n], dim=1).reshape(1, 1, -1, 2)
+
+                d_sampled = torch.nn.functional.grid_sample(
+                    depth_t, sample_grid, mode="bilinear", padding_mode="zeros",
+                    align_corners=True).reshape(-1)
+                sdf = d_sampled - z[sel]
+                band = (d_sampled > 0) & (sdf.abs() <= sdf_trunc)
+                if not bool(band.any()):
+                    continue
+                sel2 = sel[band]
+                sdf = sdf[band]
+
+                w_vis = (1.0 - sdf.abs() / max(sdf_trunc, eps)).clamp(
+                    float(vis_weight_min), 1.0)
+                if n_world is not None:
+                    n_pix = torch.nn.functional.grid_sample(
+                        n_world.T.reshape(1, 3, h, w),
+                        sample_grid, mode="bilinear", padding_mode="zeros",
+                        align_corners=True).reshape(3, -1).T[band]
+                    n_pix = n_pix / n_pix.norm(dim=1, keepdim=True).clamp_min(eps)
+                    v = cam_pts[sel2]
+                    v = v / v.norm(dim=1, keepdim=True).clamp_min(eps)
+                    align = (n_pix * v).sum(dim=1).abs().clamp(0.0, 1.0)
+                    w_normal = float(normal_weight_min) + (
+                        1.0 - float(normal_weight_min)) * align.pow(float(normal_sharpness))
+                else:
+                    w_normal = torch.ones_like(w_vis)
+                if mask_t is not None:
+                    m_pix = torch.nn.functional.grid_sample(
+                        mask_t, sample_grid, mode="bilinear", padding_mode="zeros",
+                        align_corners=True).reshape(-1)[band]
+                    w_mask = m_pix * (1.0 - float(mask_weight_min)) + float(mask_weight_min)
+                else:
+                    w_mask = torch.ones_like(w_vis)
+
+                w_total = (w_vis * w_normal * w_mask).clamp_min(0.0)
+                keep = w_total > eps
+                if not bool(keep.any()):
+                    continue
+                sel3 = sel2[keep]
+                sdf3 = sdf[keep]
+                w3 = w_total[keep]
+                cue = w_vis[keep]
+                cue_n = w_normal[keep]
+                cue_m = w_mask[keep]
+
+                idx_np = (start + sel3).cpu().numpy()
+                sdf_np = (sdf3 / max(sdf_trunc, eps)).clamp(-1.0, 1.0).cpu().numpy()
+                w_np = w3.cpu().numpy()
+                prev = wsum[idx_np]
+                new_w = prev + w_np
+                tsdf[idx_np] = (tsdf[idx_np] * prev + sdf_np * w_np) / np.maximum(new_w, eps)
+                wsum[idx_np] = new_w
+                view_count[idx_np] += 1.0
+                pix_col = torch.nn.functional.grid_sample(
+                    rgb_t, sample_grid, mode="bilinear", padding_mode="zeros",
+                    align_corners=True).reshape(3, -1).T[band][keep]
+                rgb_acc[idx_np] = rgb_acc[idx_np] + pix_col.cpu().numpy() * w_np[:, None]
+                weight_sum_per_cue["vis"] += float(cue.sum())
+                weight_sum_per_cue["normal"] += float(cue_n.sum())
+                weight_sum_per_cue["mask"] += float(cue_m.sum())
+                weight_sum_per_cue["combined"] += float(w3.sum())
+                n_contrib += int(w3.numel())
+                view_samples += int(w3.numel())
+
+            diag["per_view"].append({"view": i, "view_weight_samples": view_samples})
+
+        occupied = wsum > eps
+        n_occ = int(occupied.sum())
+        if n_occ:
+            rgb_acc[occupied] /= wsum[occupied][:, None]
+        diag["occupied_voxels"] = n_occ
+        diag["mean_effective_views"] = (
+            float(view_count[occupied].mean()) if n_occ else 0.0)
+        diag["mean_fused_weight"] = (
+            float(wsum[occupied].mean()) if n_occ else 0.0)
+        diag["cue_mean"] = {
+            k: (v / max(n_contrib, 1)) for k, v in weight_sum_per_cue.items()}
+        print(f"[weighted TSDF] occupied {n_occ} voxels, "
+              f"mean effective views {diag['mean_effective_views']:.2f}, "
+              f"cue means {diag['cue_mean']}")
+
+        if isinstance(export_diagnostics, dict):
+            export_diagnostics.update(diag)
+
+        return self._marching_cubes_weighted(
+            tsdf.reshape(nx, ny, nz), wsum.reshape(nx, ny, nz),
+            rgb_acc.reshape(nx, ny, nz, 3), lo, voxel_size)
+
+    @torch.no_grad()
+    def _marching_cubes_weighted(self, tsdf, weights, colors, lo, voxel_size):
+        """Marching cubes on the weighted TSDF, keeping the fused colour.
+
+        Voxels outside every view's truncation band carry no distance estimate.
+        They are *sign-extrapolated* from the nearest supported voxel instead of
+        being forced to a constant: forcing them to +1 would place a spurious
+        zero crossing on the band's own boundary, which shows up as a shell one
+        truncation width off the true surface.
+        """
+        from skimage import measure
+        supported = weights > 1e-8
+        if not supported.any():
+            print("[weighted TSDF] no voxel received support; empty mesh")
+            return o3d.geometry.TriangleMesh()
+        field = np.ones_like(tsdf, dtype=np.float32)
+        field[supported] = tsdf[supported]
+        # Extrapolate along the depth axis of each voxel column: an unsupported
+        # voxel in a column that has support takes the sign of the nearest
+        # supported voxel *in its own column*.  A 3D nearest-neighbour fill is not
+        # safe here -- it can pick a voxel on the far side of the surface and
+        # create a spurious crossing one truncation width off the real surface.
+        nx, ny, nz = tsdf.shape
+        cols = field.reshape(-1, nz)
+        col_sup = supported.reshape(-1, nz)
+        has = col_sup.any(axis=1)
+        if has.any():
+            k = np.arange(nz)[None, :]
+            below = np.where(col_sup, k, -1)
+            below = np.maximum.accumulate(below, axis=1)
+            above = np.where(col_sup, k, nz)
+            above = np.minimum.accumulate(above[:, ::-1], axis=1)[:, ::-1]
+            safe_below = np.clip(below, 0, nz - 1)
+            safe_above = np.clip(above, 0, nz - 1)
+            val_below = np.take_along_axis(cols, safe_below, axis=1)
+            val_above = np.take_along_axis(cols, safe_above, axis=1)
+            pick_below = (below >= 0) & ((above >= nz) | ((k - safe_below) <= (safe_above - k)))
+            fill = np.where(pick_below, val_below, val_above)
+            filled = np.where(col_sup, cols, np.where(fill >= 0.0, 1.0, -1.0))
+            cols[has] = filled[has]
+        field = cols.reshape(nx, ny, nz)
+        verts, faces, _, _ = measure.marching_cubes(
+            field, level=0.0, spacing=(float(voxel_size),) * 3)
+        verts = verts + np.asarray(lo, dtype=np.float32)
+        mesh = o3d.geometry.TriangleMesh(
+            o3d.utility.Vector3dVector(verts.astype(np.float64)),
+            o3d.utility.Vector3iVector(faces.astype(np.int32)))
+        if colors is not None and np.any(colors):
+            # Nearest occupied voxel colour for each vertex (cheap and stable).
+            coords = np.clip(((verts - np.asarray(lo)) / voxel_size).round().astype(int),
+                             0, np.array(colors.shape[:3]) - 1)
+            mesh.vertex_colors = o3d.utility.Vector3dVector(
+                np.clip(colors[coords[:, 0], coords[:, 1], coords[:, 2]], 0.0, 1.0))
+        mesh.compute_vertex_normals()
+        return mesh
+
     def extract_mesh_unbounded(self, resolution=1024):
         """
         Experimental features, extracting meshes from unbounded scenes, not fully test across datasets. 

@@ -21,5 +21,9 @@ GCFC 边界带内正向补洞,§2.3.5 Eq.(10),生成RAP-FSAM3掩膜.py:boundary_
 GCFC 真实 COLMAP 观测加载,§2.3.5,生成RAP-FSAM3掩膜.py:load_colmap_observations (两端 backend),L1-L5,VERIFIED,gcfc_has_real_observation=1：5 帧 run 5/5、210 帧 run 210/210；--strict_colmap_observations
 Foreground-Object 2DGS 训练,§2.4,2d-gaussian-splatting-m2m3-floor40/train.py,L1-L5,VERIFIED,2×2 四档全部 COMPLETE（2132–2201 s）；PSNR_fg 见 metrics/downstream_2x2.csv；掩膜 provenance 183/183 一致
 M2M3-GO 双向微匹配,§2.7,2d-gaussian-splatting-m2m3-floor40/train.py:run_m2m3_go_update,L1-L5,RUNNABLE,2×2 两档真实执行（19 次更新，剪枝 107 955/115 825）；ΔPSNR_fg +0.011 dB（C_R1）/ −0.125 dB（RAP）
-TSDF mesh 提取,§2.8,2d-gaussian-splatting-m2m3-floor40/render.py,L1-L5,VERIFIED,runs/mesh/<tag>/mesh_post.ply ×4（标准 TSDF，74–106 s/档）；metrics/mesh_phenotype.csv
+TSDF mesh 提取（标准 uniform 权重）,§2.8,2d-gaussian-splatting-m2m3-floor40/render.py:extract_mesh_bounded + Open3D ScalableTSDFVolume,L1-L5,VERIFIED,runs/mesh/<tag>/mesh_post.ply ×4（74–106 s/档）；metrics/mesh_phenotype.csv
+§2.8 加权 TSDF 融合 D(x)=Σw_c d_c/Σw_c, w_c=w_vis·w_normal·w_mask,§2.8,2d-gaussian-splatting-m2m3-floor40/utils/mesh_utils.py:extract_mesh_weighted + render.py --mesh_weight_mode visibility_normal_mask,L1-L6,VERIFIED,"scripts/check_weighted_tsdf.py：已知平面 z=1.0 上验证几何(内点≤0.5体素)、w_mask 开洞(掩膜外不重建)、w_normal(掠射视角不污染) 三性质全过；01 §10 映射表"
+Floor40 块帧冻结（坐标范围漂移/致密化下块号稳定）,§2.7/Floor40,2d-gaussian-splatting-m2m3-floor40/utils/m2m3_go.py:resolve_block_frame/assign_local_blocks,L1-L5,VERIFIED,"tests/test_recovery_round2_contracts.py::test_block_frame_is_stable_while_the_cloud_grows + tests/test_floor40_targeted.py（9 项：坐标平移/致密化/参考跟踪/剪枝下限/致密化预算）"
+Floor40 逐块容量下限保护,§2.7/Floor40,2d-gaussian-splatting-m2m3-floor40/utils/m2m3_go.py:local_floor_select,L1-L5,VERIFIED,"test_floor40_targeted.py：块在 floor 时拒绝全部删除、恰好停在 floor、多块不互相饿死"
 表型几何测量（探索性，COLMAP 单位）,§2.8,scripts/run_mesh_phenotype.py:measure,L1-L5,PARTIALLY_VERIFIED,高 3.541–3.561 u、冠幅 3.122–3.142 u（四档差异 ≤0.5%）；无真实尺度→物理表型全部 PHYSICAL_SCALE_NOT_AVAILABLE
+SG-MPS k* 选择（修正后 dev 集 oracle 0.875）,§2.3.3 Eq.(4),生成RAP-FSAM3掩膜.py:semantic_gate_prompt,L1-L5,PARTIALLY_VERIFIED,修正目标口径后 v3 dev 16帧 oracle 选对 14/16（R6 0.875）；仍非 16/16，但灾难性 2/16 已消除（见 05 §10）
