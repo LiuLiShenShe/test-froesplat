@@ -262,6 +262,8 @@ cd /data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40 && $GS render.py \
 
 ### 9.1 首轮 v3 启动的配置缺陷（已发现并修正，2026-10-26）
 
+
+
 首轮 `run_rap_full_210_v3.sh` **漏传了两个 flag**，其默认值使两个细化阶段被静默跳过：
 
 | 漏传 flag | 默认值 | 后果 |
@@ -280,3 +282,57 @@ cd /data/fj/F2DMAS/2d-gaussian-splatting-m2m3-floor40 && $GS render.py \
 | 启动 | 2026-10-26 22:37，两遍循环（先全帧选择，再全帧细化） |
 | 预计 | 因复用需逐帧从机械盘重读候选掩膜，loop1 ~1.5 min/帧 → 全链 ~6–8 h |
 
+---
+
+### 9.2 R4bm05 生产重跑（2026-10-28，方法-结果对齐）
+
+`06` §9.1 的 v3full 虽然补回了 SB-FBPR，但它的 flag 与 dev 上测出正增益的 **R4bm05** 不一致
+（margin 0.0 vs 0.05；spnp points/manuscript vs boxes/ring；area_admissibility gate vs off；
+且 v3full 多了残差修复与 GCFC）。为让"论文方法 = 代码 = 报告数字"，已按 R4bm05 的 flag 重跑
+全场景 210 帧：
+
+| 项 | 值 |
+|---|---|
+| 输出 | `runs/KongQueZhuYu_RAP_FULL_210_R4bm05/`（不覆盖 v3 / v3full） |
+| 脚本 | `scripts/run_rap_full_210_r4bm05.sh` |
+| 候选池 | 复用 `runs/KongQueZhuYu_RAP_FULL_210_v3`（`--reuse_existing_candidates`） |
+| 决策链 | SG-MPS(gated_softmax, τ=0.25, **margin 0.05**) → CDR/r1 → **SB-FBPR(boxes, ring)** |
+| 关闭项 | `--candidate_area_admissibility off`；**无**残差修复；**无** GCFC |
+| 启动 / 完成 | 2026-10-27 约 13:2x / 2026-10-28（退出码 0） |
+
+**完整性核验（逐项实测）**：
+
+| 检查 | 结果 |
+|---|---|
+| 最终掩膜 | **210 / 210** |
+| `sb_fbpr_reason` | **ok 210/210** |
+| 提示证据 | `prompt_form=boxes` 210/210、`boxes_positive=1`、`boxes_negative=8`、`negative_region_mode=ring` 210/210 |
+| `residual_repair_executed` | 0 210/210（按 R4bm05 定义关闭） |
+| `gcfc_executed` | 0 210/210（按 R4bm05 定义关闭） |
+| `selection_path` | `sg_mps_then_ranking` 210/210 |
+| `sg_mps_prompt` 有值 | 仅 **8/210**；其余 **202/210 为空**（见下） |
+| 最终选中提示词 | **P1 111 / P2 98 / P3 1** |
+| 前景占比 | min 0.0916 / p1 0.1735 / median 0.3057 / mean 0.3113 / max 0.5444 |
+
+⚠️ **必须如实记录的机制行为**：开裕度 0.05 后，**202/210 帧门控让位**（`sg_mps_prompt` 为空、
+`argmax_prompt=-`），最终选提示词由 CDR/r1 排序决定，因此 P1 占 111 帧。这与 dev 16 帧不同
+（dev 上让位后排序恰好都落回 P2，所以 S1s 与 R4bm05 逐字节相同）。**结论：R4bm05 在 dev 上
+等价于"单 P2 + 框提示"这一性质不能外推到 KongQueZhuYu。**
+
+**5 帧四口径评分**（`metrics/kqz5_r4bm05_vs_splitGT.json`，GT 从 2160×3840 最近邻缩放到
+预测栅格 2120×3791，已在 JSON 中记录）：
+
+| 帧 | R6 potted F1 | **R4bm05 potted F1** | Δ |
+|---|---|---|---|
+| 0000 | 0.9832 | **0.9865** | +0.0033 |
+| 0025 | 0.9872 | **0.9900** | +0.0028 |
+| 0050 | 0.9810 | **0.9853** | +0.0043 |
+| 0075 | 0.9227 | **0.9858** | **+0.0631** |
+| 0100 | 0.9874 | 0.9871 | −0.0004 |
+| **均值** | 0.9723 | **0.9870** | **+0.0146** |
+
+增益几乎全部来自 0075 帧——旧 R6 在该帧被门控切到 P1（`05` §1 记录的门控错选），R4bm05 的
+裕度让它让位、排序选对，F1 从 0.9227 回到 0.9858。**这正是裕度 0.05 的设计目的。**
+
+⚠️ 下游 3D 仍**未用** R4bm05 掩膜训练（2DGS 按用户要求停止）。`06` §6.1 的 2×2 结论（掩膜
+来源 −0.285 dB）基于旧 v2 掩膜，**不能**当作 R4bm05 的下游结论。
