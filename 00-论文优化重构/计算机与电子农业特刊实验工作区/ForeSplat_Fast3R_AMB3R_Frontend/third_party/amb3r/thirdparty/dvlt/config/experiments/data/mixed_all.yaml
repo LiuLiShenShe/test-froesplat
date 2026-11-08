@@ -1,0 +1,81 @@
+defaults:
+  - base
+  - train_datasets:
+    - co3d
+    - blended_mvg
+    - dl3dv
+    - megadepth
+    - kubric
+    - wild_rgbd
+    - scannet
+    - hypersim
+    - metropolis
+    - taskonomy
+    - replica
+    - mvs_synth
+    - vkitti2
+    - aria_synth_env
+    - trellis
+    - cubify_anything
+    - bedlam
+    - mpsd
+    - matrix_city
+    - midair
+    - gtasfm
+    - dynamic_replica
+    - parallel_domain_4d
+    - scannetpp
+    - tartanair
+    - tartanairv2
+    - waymo
+    - unrealstereo4k
+    - spring
+  - test_datasets:
+    - dtu
+    - eth3d
+    - sevenscenes
+    - scannetpp
+    - nuscenes
+  - _self_
+
+train_config:
+  repeat_factors:
+    unrealstereo4k: 574.8037  # size=12,280
+    replica: 346.0888  # size=56,783
+    matrix_city_aerial: 275.9738  # size=14,789
+    vkitti2: 149.7425  # size=42,520
+    midair: 123.0932  # size=423,676
+    spring: 98.1334  # size=10,000
+    metropolis: 56.6488  # size=13,692
+    megadepth: 56.3648  # size=84,268
+    tartanair: 54.8652  # size=282,906
+    taskonomy: 51.4321  # size=3,292,527
+    scannetpp: 41.9483  # size=978,003
+    dynamic_replica: 40.4688  # size=289,800
+    tartanairv2: 38.6604  # size=1,427,191
+    scannet: 37.3624  # size=2,423,872
+    mvs_synth: 33.1457  # size=12,000
+    waymo: 31.3339  # size=474,240
+    parallel_domain_4d: 29.0847  # size=1,405,449
+    blended_mvg: 24.7912  # size=114,227
+    gtasfm: 23.7139  # size=17,062
+    hypersim: 20.2777  # size=29,587
+    cubify_anything: 16.6837  # size=2,047,319
+    dl3dv: 8.4254  # size=2,131,663
+    aria_synth_env: 6.2437  # size=11,839,593
+    kubric: 5.7864  # size=22,680
+    mpsd: 5.6407  # size=14,948
+    wild_rgbd: 5.4591  # size=5,420,969
+    bedlam: 3.6026  # size=246,108
+    co3d: 3.2708  # size=4,876,695
+    trellis: 1.0000  # size=5,101,487
+
+test_config:
+  normalize_scene: false
+  load_data_fields:
+    - images
+    - extrinsics_c2w
+    - intrinsics
+    - depths
+    - world_points
+    - point_masks

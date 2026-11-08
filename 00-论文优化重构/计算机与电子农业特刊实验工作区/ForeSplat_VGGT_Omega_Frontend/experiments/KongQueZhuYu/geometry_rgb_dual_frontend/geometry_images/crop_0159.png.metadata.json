@@ -1,0 +1,62 @@
+{
+  "schema": "foresplat.geometry_rgb_adapter.v1",
+  "source_index": 159,
+  "image_name": "crop_0159.png",
+  "geometry_rgb_source": {
+    "strategy": "RAP pixels inside Mask + matched raw RGB pixels outside Mask",
+    "rap_rgb": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu/crop_0159.png",
+    "matched_raw_rgb": "/data/fj/F2DMAS/02-FFT/KongQueZhuYu/0159.jpg",
+    "prepared_geometry_rgb": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/geometry_images/crop_0159.png",
+    "decoded_rgb_sha256": "30397ab443066b3b1041230e2a585752c1124c7f5d24086e02db36a5f9bbdad2"
+  },
+  "downstream_appearance_rgb_source": {
+    "path": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu/crop_0159.png",
+    "role": "unchanged RAP foreground RGB for later appearance/training; geometry context is not substituted here",
+    "decoded_rgb_sha256": "5dc768a877603b0aa565eeab3a6f5d9328b09ef139ed96753c59513a2af35d78"
+  },
+  "foreground_mask_source": {
+    "path": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu/mask_0159.png",
+    "unchanged": true,
+    "binary_values": [
+      0,
+      255
+    ]
+  },
+  "source_file_sha256": {
+    "/data/fj/F2DMAS/03-SAM/KongQueZhuYu/crop_0159.png": "cff317e084cd2ecffbd136e1a226e8caaae22b2b249957095667a57c7bc2491a",
+    "/data/fj/F2DMAS/03-SAM/KongQueZhuYu/mask_0159.png": "9ff0dfb8bb0f78e1ff595f311fcaf536d039725d39940c4c9ec21ec24a430358",
+    "/data/fj/F2DMAS/02-FFT/KongQueZhuYu/0159.jpg": "79fb2ea33da28a9043c08cf2b46de2d28a2810f0ccfcb3d8a15ea59c806e1ff4"
+  },
+  "original_resolution_wh": [
+    2160,
+    3840
+  ],
+  "geometry_to_appearance_pixel_transform": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "foreground_changed_pixels": 0,
+  "background_changed_pixels": 6242011,
+  "foreground_pixels": 2035854,
+  "background_pixels": 6258546,
+  "original_files_modified": false,
+  "resize": false,
+  "crop": false,
+  "exposure_compensation": false,
+  "mask_erosion": false,
+  "network_invoked": false,
+  "resampling_note": "Original-grid foreground pixels are exact. Subsequent unchanged model RGB resampling can blend changed outside context at the boundary; Mask interpolation remains nearest in the model adapter."
+}

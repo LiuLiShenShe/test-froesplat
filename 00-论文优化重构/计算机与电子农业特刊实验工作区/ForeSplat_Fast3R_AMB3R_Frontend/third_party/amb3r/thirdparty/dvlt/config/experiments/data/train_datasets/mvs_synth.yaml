@@ -1,0 +1,13 @@
+mvs_synth:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "pose"
+  view_sampling: "random"
+  window_size_ratio: 10.0
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "mvs_synth.MVSSynth"
+    params:
+      # single indexed tar
+      data_root: "${user.data_root}/train/mvs_synth"
+      resolution: 720
+      use_tar_file: true

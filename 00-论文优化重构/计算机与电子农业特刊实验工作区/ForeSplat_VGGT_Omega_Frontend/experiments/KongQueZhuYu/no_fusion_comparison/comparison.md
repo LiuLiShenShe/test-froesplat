@@ -1,0 +1,11 @@
+# No-fusion initialisation comparison - KongQueZhuYu
+
+Metrics are **Training-view Metrics** (all 208 views trained; eval split off).
+
+| label | PSNR | SSIM | LPIPS | FG-PSNR | FG-SSIM | Init Gaussians | Final Gaussians | Training Time (min) | Peak VRAM (MiB) |
+|---|---|---|---|---|---|---|---|---|---|
+| E1 fused (ForeSplat) | 17.8947 | 0.7858 | 0.2406 | 15.2787 | 0.6117 | 1252383 | 600458 | 40.3 | 8950 |
+| E2 raw depth (no fusion) | 17.9293 | 0.7849 | 0.2414 | 15.3148 | 0.6103 | 1252383 | 573373 | 37.2 | 8944 |
+| E3 official 100K | 17.9153 | 0.7852 | 0.2409 | 15.2979 | 0.6109 | 100000 | 601482 | 34.8 | 8779 |
+
+Fixed-view montages: `comparison_renders/<view>_gt_E1_E2_E3.png` (GT | E1 fused | E2 raw depth | E3 official 100K).

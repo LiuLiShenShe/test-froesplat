@@ -1,0 +1,49 @@
+{
+  "model": "VGGT-1B (facebookresearch/vggt)",
+  "checkpoint": "https://huggingface.co/facebook/vggt-1B/resolve/main/model.pt",
+  "checkpoint_sha256": "d15bf50a8615c8225ed48b51ea5cac673d82442ec0309036df555a053253afe0",
+  "checkpoint_bytes": 5026874952,
+  "vggt_repo_commit": "a288dd0f14786c93483e45524328726ab7b1b4ce",
+  "frontend_commit": "e6bb804b",
+  "environment": {
+    "python": "3.12",
+    "torch": "2.10.0+cu128",
+    "cuda": "12.8",
+    "gpu": "NVIDIA RTX A6000 48GB (sm86, GPU1)",
+    "package_manager": "uv",
+    "pycolmap": "3.10.0",
+    "plyfile": "1.1.5"
+  },
+  "inference_config": {
+    "model_resolution": 518,
+    "patch_size": 14,
+    "load_resolution": 1024,
+    "preprocess_mode": "square",
+    "background": "black (matches VGGT-Omega; official loader defaults to white)",
+    "precision": "bf16 aggregator autocast; camera/depth heads fp32 (official run_VGGT boundary)",
+    "heads": ["aggregator", "camera_head", "depth_head"],
+    "use_ba": false,
+    "point_head": false,
+    "track_head": false,
+    "pose_encoding_type": "absT_quaR_FoV"
+  },
+  "coordinate_export": {
+    "method": "exact affine p_model = A p_original; K_original = A^-1 K_model",
+    "note": "official rename_colmap_recons_and_rescale_camera has a padded point2D offset bug (mixes 1024-space offset with 518-space point); avoided by applying A^-1 everywhere",
+    "reprojection_error": {
+      "mean_px": 0.000379107427023023,
+      "p95_px": 0.0010548827462518908,
+      "max_px": 0.002321598529956984,
+      "ok": true
+    }
+  },
+  "dataset": {
+    "plant": "KongQueZhuYu",
+    "views": 208,
+    "image_resolution": "2160x3840",
+    "background": "black",
+    "init_points": 1252383,
+    "conf_percentile": 20.0,
+    "conf_threshold_value": 1.0264525413513184
+  }
+}

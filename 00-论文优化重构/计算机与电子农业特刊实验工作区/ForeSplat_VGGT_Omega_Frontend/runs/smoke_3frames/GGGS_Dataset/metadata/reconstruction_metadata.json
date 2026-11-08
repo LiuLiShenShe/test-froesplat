@@ -1,0 +1,211 @@
+{
+  "description": "VGGT-Omega -> COLMAP export summary for the ForeSplat GGGS frontend.",
+  "num_frames": 3,
+  "model_resolution": [
+    192,
+    336
+  ],
+  "num_points3d": 38488,
+  "confidence_threshold_percentile": 20.0,
+  "confidence_threshold_value": 1.0091005563735962,
+  "min_conf": 1e-05,
+  "max_points": 200000,
+  "depth_edge_filtering": {
+    "enabled": false,
+    "rtol": 0.03
+  },
+  "scene_alignment_matrix": [
+    [
+      -0.9999960357359423,
+      -0.0025262095149296356,
+      -0.0012553981147154518,
+      9.778252211493098e-05
+    ],
+    [
+      0.0025257939689692175,
+      -0.9999967283840805,
+      0.000332597834426983,
+      0.00015440367509547237
+    ],
+    [
+      -0.001256234295722835,
+      0.00032942563487264935,
+      0.9999991478185207,
+      0.00044777157545095785
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "scene_alignment_note": "T_align = inv(E0) @ opengl_conversion @ rotY(180) - applied ONCE to both the 3D points and the camera poses (identical to the community GLB exporter); no additional Y/Z flip is performed afterwards.",
+  "point_semantics": "Every points3D entry is a single-view depth back-projection from its own image's VGGT-Omega depth map, filtered by the RAP-FSAM3 foreground mask (foreground & finite geometry & valid confidence & valid depth). Tracks contain exactly one 2D observation each; reprojection error is undefined (zero) and must not be interpreted as bundle-adjustment residuals.",
+  "cameras": [
+    {
+      "image_id": 1,
+      "image_name": "crop_0000.png",
+      "camera_id": 1,
+      "camera_model": "CameraModelId.PINHOLE",
+      "width": 2120,
+      "height": 3791,
+      "params": [
+        7884.743372599285,
+        7588.129617418562,
+        1065.0208333333333,
+        1900.641369047619
+      ],
+      "cam_from_world_rotation": [
+        [
+          -0.9999872386298607,
+          0.0050519874051138235,
+          -8.281222744409115e-07
+        ],
+        [
+          -0.005051987402461426,
+          -0.9999872386251787,
+          -3.17430229960173e-06
+        ],
+        [
+          -8.441482416997809e-07,
+          -3.1700781278569757e-06,
+          0.999999999994619
+        ]
+      ],
+      "cam_from_world_translation": [
+        -9.530489479934339e-07,
+        3.9444048080620455e-07,
+        -0.000895470811496724
+      ],
+      "camera_center_world": [
+        -9.517999875540124e-07,
+        3.96411526051444e-07,
+        0.0008954708119547377
+      ],
+      "num_points2d": 14837
+    },
+    {
+      "image_id": 2,
+      "image_name": "crop_0070.png",
+      "camera_id": 2,
+      "camera_model": "CameraModelId.PINHOLE",
+      "width": 2120,
+      "height": 3791,
+      "params": [
+        5235.513000488282,
+        5064.592776707241,
+        1065.0208333333333,
+        1900.641369047619
+      ],
+      "cam_from_world_rotation": [
+        [
+          -0.9617495008026355,
+          0.007448220996893937,
+          -0.27382918345177054
+        ],
+        [
+          0.013312847078660053,
+          -0.9971781871843182,
+          -0.07388119589217286
+        ],
+        [
+          -0.27360677222711827,
+          -0.07470064931296673,
+          0.9589364667086547
+        ]
+      ],
+      "cam_from_world_translation": [
+        0.2350771622090664,
+        0.05401738502064707,
+        -0.24046661018656984
+      ],
+      "camera_center_world": [
+        0.15957292517675678,
+        0.034151039496845545,
+        0.2989540579138781
+      ],
+      "num_points2d": 13031
+    },
+    {
+      "image_id": 3,
+      "image_name": "crop_0140.png",
+      "camera_id": 3,
+      "camera_model": "CameraModelId.PINHOLE",
+      "width": 2120,
+      "height": 3791,
+      "params": [
+        9536.855443318686,
+        8991.589574359712,
+        1065.0208333333333,
+        1900.641369047619
+      ],
+      "cam_from_world_rotation": [
+        [
+          0.7345348938292722,
+          0.026034642373064742,
+          0.6780712994543617
+        ],
+        [
+          -0.22893822642073897,
+          -0.9311663345921413,
+          0.2837543758350938
+        ],
+        [
+          0.6387846102017068,
+          -0.3636639310115093,
+          -0.6780138398666435
+        ]
+      ],
+      "cam_from_world_translation": [
+        -0.5604218468780051,
+        -0.10549444318537382,
+        1.3493171694581982
+      ],
+      "camera_center_world": [
+        -0.4744253510547884,
+        0.4070554944072491,
+        1.3247961950976623
+      ],
+      "num_points2d": 10620
+    }
+  ],
+  "per_frame_point2d": [
+    14837,
+    13031,
+    10620
+  ],
+  "export_config": {
+    "images_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图",
+    "masks_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜",
+    "checkpoint": "weights/vggt_omega_1b_512.pt",
+    "output_dir": "runs/smoke_3frames/GGGS_Dataset",
+    "image_resolution": 256,
+    "preprocess_mode": "balanced",
+    "patch_size": 16,
+    "confidence_percentile": 20.0,
+    "max_points": 200000,
+    "min_conf": 1e-05,
+    "mask_threshold": 127,
+    "foreground_background": "black",
+    "image_prefix_to_strip": null,
+    "mask_prefix_to_strip": null,
+    "frame_stride": 70,
+    "max_frames": 3,
+    "filter_depth_edges": false,
+    "depth_edge_rtol": 0.03,
+    "no_align": false,
+    "device": "auto",
+    "seed": 0,
+    "gggs_repo": "/tmp/gggs_community",
+    "skip_verify": false,
+    "verify_resolution": 1,
+    "save_log": null,
+    "device_resolved": "cuda"
+  },
+  "checkpoint": "weights/vggt_omega_1b_512.pt",
+  "image_resolution": 256,
+  "preprocess_mode": "balanced",
+  "pycolmap_version": "3.10.0",
+  "elapsed_seconds": 3.333
+}

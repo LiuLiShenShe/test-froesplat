@@ -1,0 +1,38 @@
+--- 
++++ 
+@@ -399,7 +399,7 @@
+         const float4* __restrict__ ray_planes,
+         const float3* __restrict__ normals,
+         const float focal_x,
+-        const float focal_y,
++        const float focal_y, const float* ray_view, const float* ray_proj,
+         uint32_t* __restrict__ n_contrib,
+         uint32_t* __restrict__ max_contributors,
+         const float* __restrict__ bg_color,
+@@ -417,7 +417,7 @@
+     uint2 pix                  = {pix_min.x + block.thread_index().x, pix_min.y + block.thread_index().y};
+     uint32_t pix_id            = W * pix.y + pix.x;
+     float2 pixf                = {static_cast<float>(pix.x), static_cast<float>(pix.y)};
+-    const float2 pixnf         = {(pixf.x - static_cast<float>(W - 1) / 2.f) / focal_x, (pixf.y - static_cast<float>(H - 1) / 2.f) / focal_y};
++    const float2 pixnf         = {(pixf.x - foresplatPrincipal(ray_view,ray_proj,W,H).x) / focal_x, (pixf.y - foresplatPrincipal(ray_view,ray_proj,W,H).y) / focal_y};
+     const float rln            = rnorm3df(pixnf.x, pixnf.y, 1.f);
+ 
+     // Check if this thread is associated with a valid pixel or outside.
+@@ -681,7 +681,7 @@
+     const float4* ray_planes,
+     const float3* normals,
+     const float focal_x,
+-    const float focal_y,
++    const float focal_y, const float* ray_view, const float* ray_proj,
+     uint32_t* n_contrib,
+     uint32_t* max_contributor,
+     const float* bg_color,
+@@ -694,7 +694,7 @@
+ #define RENDER_CUDA_CALL(template_depth)                                                \
+     renderCUDA<NUM_CHANNELS, template_depth, SPLIT, SPLIT_ITERATIONS><<<grid, block>>>( \
+         ranges, point_list, W, H, means2D, conic_opacity, colors,                       \
+-        ray_planes, normals, focal_x, focal_y,                                          \
++        ray_planes, normals, focal_x, focal_y, ray_view, ray_proj,                                          \
+         n_contrib, max_contributor, bg_color, out_color, out_alpha,                     \
+         out_normal, out_mdepth, normal_length)
+ 

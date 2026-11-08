@@ -1,0 +1,11 @@
+megadepth:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "pose"
+  view_sampling: "random"
+  window_size_ratio: 4.0
+  dataverse_cfg:
+    target: "processed.light3r_preproc.MegaDepth"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/megadepth"
+      split: "train"

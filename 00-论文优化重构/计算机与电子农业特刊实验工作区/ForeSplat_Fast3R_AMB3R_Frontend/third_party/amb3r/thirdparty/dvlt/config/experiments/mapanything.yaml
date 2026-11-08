@@ -1,0 +1,17 @@
+defaults:
+  - model: mapanything
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Eval-only baseline. Wrapper at `dvlt/model/mapanything/model.py` raises
+# in `train_step`; only
+# `python -m dvlt.scripts.test --config-name mapanything.yaml` is supported.
+#
+# MapAnything HF card (CC-BY-NC-4.0): https://huggingface.co/facebook/map-anything
+# For the Apache-2.0 variant set `trainer.ckpt_dir=facebook/map-anything-apache`.
+
+trainer:
+  experiment_name: mapanything
+  ckpt_dir: facebook/map-anything

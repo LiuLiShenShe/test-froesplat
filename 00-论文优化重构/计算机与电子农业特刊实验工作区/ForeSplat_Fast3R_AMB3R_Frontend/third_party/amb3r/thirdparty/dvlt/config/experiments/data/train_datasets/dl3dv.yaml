@@ -1,0 +1,11 @@
+dl3dv:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  window_size_ratio: 3.0
+  dataverse_cfg:
+    target: "dl3dv_cut3r.DL3DV"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/dl3dv"
+      split: "train"

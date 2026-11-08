@@ -1,0 +1,60 @@
+{
+  "status": "complete",
+  "errors": [],
+  "user_authorized_categories": [
+    "old_colmap_intermediate",
+    "early_smoke_predictions",
+    "temporary_sfm_duplicate"
+  ],
+  "removed_targets": 79,
+  "categories": {
+    "old_colmap_intermediate": {
+      "targets": 60,
+      "removed_files": 11096,
+      "reclaimable_allocated_bytes": 197820743680
+    },
+    "early_smoke_predictions": {
+      "targets": 18,
+      "removed_files": 1012,
+      "reclaimable_allocated_bytes": 4322439168
+    },
+    "temporary_sfm_duplicate": {
+      "targets": 1,
+      "removed_files": 5145,
+      "reclaimable_allocated_bytes": 52311805952
+    }
+  },
+  "final_fused_clouds_preserved": 20,
+  "formal208_bundles_preserved": 7,
+  "smoke_inputs_cameras_reports_preserved": 4,
+  "archived_nested_smoke_text_records": 59,
+  "space_before": {
+    "/data": {
+      "device": 2049,
+      "available_bytes": 347739525120,
+      "free_bytes": 547795554304
+    },
+    "/tmp": {
+      "device": 66306,
+      "available_bytes": 175468912640,
+      "free_bytes": 277849616384
+    }
+  },
+  "space_after": {
+    "/data": {
+      "device": 2049,
+      "available_bytes": 549882675200,
+      "free_bytes": 749938704384
+    },
+    "/tmp": {
+      "device": 66306,
+      "available_bytes": 227780366336,
+      "free_bytes": 330161070080
+    }
+  },
+  "available_delta": {
+    "/data": 202143150080,
+    "/tmp": 52311453696
+  },
+  "measurement_note": "Reclaimable blocks computed per selected inode incl dirs. df/statvfs delta also includes concurrent unrelated filesystem activity. No CUDA or model execution."
+}

@@ -1,0 +1,41 @@
+{
+  "model": "Omega",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/weights/vggt_omega_1b_512.pt",
+  "checkpoint_bytes": 4576706117,
+  "checkpoint_sha256": "c02da418b18bb01d0392598d3f6147366bcde1bb70fd08a5e3bf7925b0667934",
+  "weight_hash_scope": "Reuse already recorded SHA; not re-read whole multiGB checkpoint solely for hashing.",
+  "official_model_commit": null,
+  "commit_scope": "Omega adapter is not an independent official git repository; source fingerprints used, enclosing workspace commit is not a model version.",
+  "source_file_sha256": {
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/foresplat_adapter/inference.py": "3f127d5ee9536f6c73d8380a4184310784a217c6a6cbc9ebf55a25f2e2dbd313",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/vggt_omega/models/vggt_omega.py": "27a4e820ddd9fbd2819bcf3dec33c73218220451214336cac17e139141483d45",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/vggt_omega/models/aggregator.py": "6b78e36ce52873edce789c97cd37dd0092b1fd5186c8e81bc650cf9c6af0fa3e",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/vggt_omega/utils/load_fn.py": "323ca6815d59cf51045146a8de243f70bed21be16ca99cda5c4a40063269dcb9"
+  },
+  "preprocessing": {
+    "name": "balanced",
+    "image_resolution": 512,
+    "patch_size": 16,
+    "model_size_wh": [
+      384,
+      688
+    ],
+    "rgb_background": "black",
+    "mask_interpolation": "nearest",
+    "numerical_policy": "Existing run_inference outerFP16; model FP16 aggregator, FP32 heads; pose conversion same existing adapter."
+  },
+  "seed": 0,
+  "historical208_reference": {
+    "camera_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/full_sequence_batch/KongQueZhuYu/GGGS_Dataset/per_frame/cameras.json",
+    "depth_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/full_sequence_batch/KongQueZhuYu/GGGS_Dataset/per_frame",
+    "confidence_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/full_sequence_batch/KongQueZhuYu/GGGS_Dataset/per_frame",
+    "transform_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/full_sequence_batch/KongQueZhuYu/GGGS_Dataset/metadata/preprocess_transforms.json"
+  },
+  "historical208_inference_rerun": false,
+  "scale_semantics": "Learned native world scale; no measured metric calibration, alignment, fusion or scan scale fitting.",
+  "point_head_executed": false,
+  "depth_and_camera_support": true,
+  "status": "historical_reference",
+  "input_views": 208,
+  "note": "No208 predictions copied or inferred; use exact existing source artifacts, all original predictions read-only."
+}

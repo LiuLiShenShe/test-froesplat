@@ -1,0 +1,107 @@
+{
+  "threshold": 0.05,
+  "before_count": 5153165,
+  "after_count": 1806635,
+  "removed_count": 3346530,
+  "removed_fraction": 0.6494125454938858,
+  "raw_opacity_ge_threshold_effective_below_count": 3055537,
+  "effective_formula": "native get_opacity_with_3D_filter: sigmoid(raw_opacity) * prod(scale/hypot(scale,filter_3D))",
+  "selected_fields": [
+    {
+      "name": "_xyz",
+      "shape": [
+        1806635,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "a3848e819cf9b62d4243ac39402469841337950796f0c40b59a06339ae5bb5c5"
+    },
+    {
+      "name": "_features_dc",
+      "shape": [
+        1806635,
+        1,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "86df717eae5dbca599a34e9480137a4db7d1b500e1e9638bae632ad924a2122f"
+    },
+    {
+      "name": "_features_rest",
+      "shape": [
+        1806635,
+        15,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "64234b81f8d2ce4a58ef13482705e8d3c9d7f34389ab50e674f99ab4dede10bb"
+    },
+    {
+      "name": "_opacity",
+      "shape": [
+        1806635,
+        1
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "2743f88d5e18d02a97a233f3481bb1ec7460b932889980a2b04f013a0ffc3228"
+    },
+    {
+      "name": "_scaling",
+      "shape": [
+        1806635,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "8203475bf7921f6e894b7578f410f292acfeff7c1ff8183589bf4a91a014f4d3"
+    },
+    {
+      "name": "_rotation",
+      "shape": [
+        1806635,
+        4
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "8330b7f43bcba00f6027bd265db6548b1069e5bdee7c581de35b620ed2e2bbfc"
+    },
+    {
+      "name": "_sg_axis",
+      "shape": [
+        1806635,
+        0,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "_sg_sharpness",
+      "shape": [
+        1806635,
+        0
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "_sg_color",
+      "shape": [
+        1806635,
+        0,
+        3
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "filter_3D",
+      "shape": [
+        1806635,
+        1
+      ],
+      "dtype": "torch.float32",
+      "retained_values_sha256": "5c9d53fa1756e87ebd4e36e08f72d1349e8d89a464717a6916be9aacda52c9d0"
+    }
+  ],
+  "optimizer_used": false,
+  "remaining_gaussian_parameters_bit_identical": true
+}

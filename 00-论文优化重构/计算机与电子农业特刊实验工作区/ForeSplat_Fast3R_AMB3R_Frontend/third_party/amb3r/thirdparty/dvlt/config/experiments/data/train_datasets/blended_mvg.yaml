@@ -1,0 +1,8 @@
+blended_mvg:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  window_size_ratio: 3.0
+  view_ranking: "index"
+  dataverse_cfg:
+    target: "optimized_hdf5.OptimizedHDF5Dataset"
+    params:
+      data_root: "${user.data_root}/train/blended_mvg"

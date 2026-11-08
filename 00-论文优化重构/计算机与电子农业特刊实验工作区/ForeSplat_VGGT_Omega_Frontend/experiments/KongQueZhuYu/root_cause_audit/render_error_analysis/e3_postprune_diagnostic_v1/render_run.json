@@ -1,0 +1,133 @@
+{
+  "experiment": "E3",
+  "status": "complete",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E3_GGGS_Foreground/checkpoints/final_gaussians/point_cloud.ply",
+  "checkpoint_sha256": "9aad04e3688779365dee0ac46a97943346df5896ddda61077eabc50b80b205b6",
+  "repo": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community",
+  "renderer_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community/gaussian_renderer/__init__.py",
+  "renderer_sha256": "5a9c34c87de59d0293c9f5bee99e815b3dacd79646c8cdbbb29a15dea56368c3",
+  "python": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/.venv/bin/python",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "physical_gpu": 1,
+  "resolution_divisor": 2,
+  "rendered_views": 3,
+  "source_ids": [
+    0,
+    95,
+    189
+  ],
+  "gaussian_count": 1036619,
+  "peak_allocated_gib": 0.7906222343444824,
+  "peak_reserved_gib": 0.953125,
+  "wall_seconds": 99.59679750399664,
+  "camera_count": 208,
+  "native_rgb_background": [
+    0,
+    0,
+    0
+  ],
+  "rgb_for_metrics": "float32 clamp of actual native render, no PNG requantization or exposure",
+  "historical_outputs_changed": false,
+  "original_guard": {
+    "multi_view.json": "d78ccbef17dfa6d75e05ed8c129a584f60e0fae7ab122aaf4b421b033964fc07",
+    "cameras.json": "1c373693f6c5b7905abc4d2af2e851fa4ace6d1b330943c87e87e9085a8d2097"
+  },
+  "depth_ratio_baseline": null,
+  "two_dgs_readonly_allmap_observer": false,
+  "view_records": [
+    {
+      "source_id": 0,
+      "name": "crop_0000",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 3.810150336998049,
+      "gaussian_count": 1036619,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "f8c876d37b456931e67505edc77fb11ab99080d37130521cb7e94a53996e5e4d",
+      "gt_mask_sha256": "ad4141869b7697e52bd20608b884d676bb11f038272feadad51902eee3bf4726",
+      "render_rgb_tensor_sha256": "69b9456b3c438e9b9435b7f615a9cf871c92e2b237c23ac89e09709a9e84a4f5",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1036619,
+        "positive_radii_count": 1035329,
+        "positive_radii_fraction": 0.9987555697898649,
+        "visibility_filter_count": 1035329,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          6.0,
+          14.0,
+          28.0
+        ],
+        "maximum": 219.0,
+        "positive_radii_gt20_fraction": 0.028876811139261046
+      }
+    },
+    {
+      "source_id": 95,
+      "name": "crop_0095",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.136894113995368,
+      "gaussian_count": 1036619,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "593157fe7a6629f74c9eb7c361899f75f47b769e421acc1cc4ef6690bf71c5ac",
+      "gt_mask_sha256": "4b6e772f1f7d13cfaad1210c7f3ce5234d51d020f5ceaa9bd6fba39c749eeb83",
+      "render_rgb_tensor_sha256": "9d838c0e61368787be8bcba2d9a350fd1eb935bf4f616fc821a813becd88a3c6",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1036619,
+        "positive_radii_count": 1028750,
+        "positive_radii_fraction": 0.9924089757181761,
+        "visibility_filter_count": 1028750,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          7.0,
+          16.0,
+          31.0
+        ],
+        "maximum": 276.0,
+        "positive_radii_gt20_fraction": 0.0424408262454435
+      }
+    },
+    {
+      "source_id": 189,
+      "name": "crop_0189",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.8515712520165835,
+      "gaussian_count": 1036619,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "fbdab6068558b5f873ddaa4e82f26b9657be0f3366eeb37b7c0dde6117fba677",
+      "gt_mask_sha256": "d31168375dd1073b90262cb51ba7f15f499bdfca0cb694d75924dce520dedeab",
+      "render_rgb_tensor_sha256": "ec4f0381285b740e034efe1ae8d90cee67c9d9be0c660b04fc572b2205b12a7e",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1036619,
+        "positive_radii_count": 559857,
+        "positive_radii_fraction": 0.5400798171748733,
+        "visibility_filter_count": 559857,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          12.0,
+          25.0,
+          51.0
+        ],
+        "maximum": 638.0,
+        "positive_radii_gt20_fraction": 0.1753483478816912
+      }
+    }
+  ],
+  "checkpoint_kind": "final post-prune 1036619 PLY",
+  "peak_memory_scope": "after Scene load, actual render and raw export; checkpoint-load transient peak not instrumented",
+  "wall_time_scope": "Scene load, historical guard hashing, native render, CPU raw/PNG export, final checkpoint hashing"
+}

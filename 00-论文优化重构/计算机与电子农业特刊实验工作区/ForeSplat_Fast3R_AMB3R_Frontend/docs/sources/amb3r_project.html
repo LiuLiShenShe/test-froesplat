@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Accurate Feed-forward Metric-scale 3D Reconstruction with Backend">
+  <meta name="keywords" content="3D reconstruction">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMB3R</title>
+
+  <!-- ### MODIFICATION: Updated Google Fonts link to match gs.index ### -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora&family=Source+Serif+4&family=Nunito+Sans&display=swap"
+    rel="stylesheet" />
+  <!-- ### END MODIFICATION ### -->
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" type="text/css" href="./static/css/mag.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Loads <model-viewer> for modern browsers: -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js">
+  </script>
+
+  <!-- Loads <model-viewer> for old browsers like IE11: -->
+  <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js">
+  </script>
+  <script src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="./static/js/image-hover.js"></script>
+  <script src="./static/js/carousel-gallery.js"></script>
+
+  <!-- ### MODIFICATION: Added CSS from your snippet ### -->
+  <style>
+    /* Removed global font rules to avoid conflict with Bulma */
+    body {
+      margin: 0;
+    }
+
+    /* Copied from style.css, but scoped to .header */
+    .header a,
+    .header {
+      color: white;
+    }
+
+    .header {
+      display: block;
+      position: relative;
+      /* background: black; <-- Removed, video will be the background */
+      height: 100vh;
+      /* Full screen height */
+      font-family: "Nunito Sans", sans-serif;
+      /* This is the correct font */
+      overflow: hidden;
+      /* Ensure video doesn't spill */
+    }
+
+    .additional-results {
+      display: block;
+      position: relative;
+      background: black;
+      font-family: "Nunito Sans", sans-serif;
+      color: white;
+      text-shadow: black 0 0 1px;
+      padding-bottom: 75%;
+    }
+
+
+
+    .main {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem 3rem;
+    }
+
+    .main h1 {
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .main h2 {
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .main h3 {
+      font-weight: 400;
+      margin: 0;
+    }
+
+    .main .authors {
+      margin: 0.618rem 0;
+    }
+
+    .sep {
+      border-bottom: 1px solid #c0c0c0;
+      margin: 2rem -0.1618rem 2rem -0.1618rem;
+    }
+
+    .block {
+      margin: 0.618rem 0;
+    }
+
+    #mobile-warning {
+      display: none;
+    }
+
+    summary {
+      font-size: 1rem;
+      font-weight: 300;
+    }
+
+    .info {
+      z-index: 100;
+      position: absolute;
+      top: calc(3 * 1.618rem);
+      left: 3rem;
+      padding: 1rem;
+      /* background: rgba(0, 0, 0, 0.2); */
+      /* backdrop-filter: blur(10px); */
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .info2 {
+      z-index: 100;
+      position: absolute;
+      top: 3rem;
+      left: 3em;
+      /* text-shadow: 0 0 1px black; */
+    }
+
+    /* ### MODIFICATION: Cleaned up header font rules ### */
+    /* These rules now correctly combine size and weight */
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgb(253, 169, 65);
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .header h3 {
+      margin: 5px 0;
+      font-weight: 300;
+      /* Matching the others */
+      font-size: 1.0rem;
+      /* Added a reasonable default */
+    }
+
+    /* ### END MODIFICATION ### */
+
+    .header p {
+      margin: 5px 0;
+      font-size: small;
+    }
+
+    pre {
+      overflow: auto;
+    }
+
+    .emphasis {
+      display: inline-block;
+    }
+
+
+
+    .scene,
+    #message {
+      position: absolute;
+      display: flex;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 2;
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #message {
+      font-weight: bold;
+      font-size: large;
+      color: red;
+      pointer-events: none;
+    }
+
+    details {
+      font-size: small;
+    }
+
+    #progress {
+      position: absolute;
+      top: 0;
+      height: 5px;
+      background: blue;
+      z-index: 99;
+      transition: width 0.1s ease-in-out;
+    }
+
+    .chevron-down {
+      position: absolute;
+      bottom: 10px;
+      z-index: 999;
+      right: 10px;
+      text-align: center;
+    }
+
+    #canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      /* ### MODIFICATION: Added object-fit and z-index for video ### */
+      object-fit: cover;
+      z-index: -1;
+      background-color: black;
+      /* Prevent white flash */
+    }
+
+    #canvas2 {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    #instructions {
+      /* background: rgba(0, 0, 0, 0.6); */
+      /* white-space: pre-wrap; */
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .add-r-button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      font-family: inherit;
+      font-size: inherit;
+
+      /* Adjust padding as needed */
+      background-color: inherit;
+      /* Button background color */
+      color: inherit;
+      /* Text color */
+      border-radius: 3px;
+      border: none;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-r-button:hover {
+      background-color: #eeeeee;
+      /* Change color on hover */
+    }
+
+    .add-r-button.selected {
+      background-color: #eeeeee;
+    }
+
+    .disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .video iframe {
+      border: 0;
+      width: 80vw;
+      height: 45vw;
+      max-width: 100%;
+      max-height: 600px;
+    }
+
+    .video-cols {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 1rem;
+    }
+
+    .video-col-elem {
+      display: inline-block;
+      width: 100%;
+    }
+
+    .notice {
+      color: red;
+    }
+
+
+    @media only screen and (max-width: 768px) {
+      .video-cols {
+        grid-template-columns: repeat(1, 1fr);
+      }
+
+      .header {
+        height: auto;
+        aspect-ratio: 16/9;
+      }
+
+      .info {
+        left: 1rem;
+        top: 1rem;
+        padding: 0.5rem;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .header h2 {
+        font-size: 1rem;
+      }
+
+      .header p {
+        font-size: 0.9rem !important;
+        margin-top: 5px !important;
+      }
+
+      /* Hide scroll down on mobile to save space */
+      .chevron-down {
+        display: none;
+      }
+
+      /* Adjust dots position */
+      .header-video-dots {
+        bottom: 10px;
+      }
+    }
+
+    /* Reduce section spacing */
+    .section {
+      padding: 1.5rem 1.5rem;
+    }
+
+    hr {
+      margin: 1rem 0;
+    }
+
+    /* Header Video Dots */
+    .header-video-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .video-dot {
+      width: 12px;
+      height: 12px;
+      border: 2px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      background-color: transparent;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .video-dot:hover {
+      transform: scale(1.2);
+    }
+
+    .video-dot.active {
+      background-color: white;
+    }
+
+    @keyframes bounce-right {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(5px);
+      }
+    }
+
+    .sound-arrow-anim {
+      animation: bounce-right 1s infinite;
+    }
+  </style>
+  <!-- ### END MODIFICATION ### -->
+
+</head>
+
+<body>
+
+  <!-- ### MODIFICATION: Replaced original nav/hero with your new header structure ### -->
+  <div class="header" id="demo">
+    <!-- ### MODIFICATION: Replaced canvas with your video ### -->
+    <video id="canvas" autoplay muted playsinline>
+      <source src="./amber/videos/3d_1080.mp4" type="video/mp4">
+    </video>
+
+    <!-- Loading Indicator -->
+    <!-- Loading Indicator -->
+    <div id="header-loader"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; z-index: 1;">
+      Loading...
+    </div>
+
+    <!-- Video Switcher Control -->
+    <div
+      style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; display: flex; gap: 10px; align-items: center;">
+      <style>
+        #video-switcher-container::after {
+          border-color: #fff !important;
+        }
+      </style>
+      <div id="video-switcher-container" class="select is-rounded is-small is-dark">
+        <select id="video-switcher"
+          style="font-weight: bold; background-color: #363636; color: #fff; border-color: transparent;">
+          <option value="./amber/videos/3d_1080.mp4" data-low-res="./amber/videos/3d_720.mp4" data-speed="1.5">3D
+            Reconstruction</option>
+          <option value="./amber/videos/vo_taylor_v2.mp4" data-low-res="./amber/videos/vo_taylor_720.mp4"
+            data-has-sound="true">VO (Dynamic)</option>
+          <option value="./amber/videos/vo_static.mp4" data-low-res="./amber/videos/vo_static_720.mp4">VO (Static)
+          </option>
+          <option value="./amber/videos/sfm.mp4" data-low-res="./amber/videos/sfm_720.mp4">SfM</option>
+        </select>
+      </div>
+      <style>
+        @keyframes bounceDown {
+
+          0%,
+          100% {
+            transform: translate(-50%, 0);
+          }
+
+          50% {
+            transform: translate(-50%, -10px);
+          }
+        }
+      </style>
+      <div style="position: relative;">
+        <div id="sd-suggestion"
+          style="display: none; position: absolute; top: -35px; left: 50%; transform: translateX(-50%); color: white; animation: bounceDown 1s infinite;">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+        <button id="hd-toggle" class="button is-small is-rounded is-dark" style="font-weight: bold;">
+          HD
+        </button>
+      </div>
+      <button id="speed-toggle" class="button is-small is-rounded is-dark" style="font-weight: bold;">
+        1.0x
+      </button>
+      <button id="sound-toggle" class="button is-small is-rounded is-dark">
+        <span class="icon is-small">
+          <i class="fas fa-volume-mute"></i>
+        </span>
+      </button>
+      <div id="sound-indicator" style="display: none; color: white; margin-left: 10px; align-items: center;">
+        <i class="fas fa-arrow-left sound-arrow-anim" style="margin-right: 5px;"></i> <span class="is-size-7">Sound
+          On</span>
+      </div>
+    </div>
+    <!-- ### END MODIFICATION ### -->
+
+    <div class="info">
+      <!-- ### MODIFICATION: Content moved from old hero ### -->
+      <h1>
+        AMB3R
+      </h1>
+      <h2>Accurate Feed-forward Metric-scale <br>3D Reconstruction with Backend</h2>
+      <p style="font-size: 1.2rem; font-weight: bold; margin-top: 15px;">CVPR 2026 Highlight</p>
+
+      <!-- <br />
+      <details>
+        <summary>Use mouse navigate.</summary>
+
+        <div id="instructions">
+          trackpad<br />
+          - click and drag to orbit<br />
+          - click with two fingers and drag to move<br />
+          - hold ctrl/cmd key and scroll/pinch to move forward/back<br />
+          <br />
+          mouse<br />
+          - click and drag to orbit<br />
+          - right click and drag to move<br />
+          - middle click and drag or hold ctrl/cmd key and scroll to move
+          forward/back<br />
+        </div>
+      </details> -->
+
+
+    </div>
+
+    <div id="progress"></div>
+
+    <div id="message"></div>
+
+    <div class="chevron-down" id="scroll-down">
+      <div>Scroll Down</div>
+      <div>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <!-- Dots Container -->
+    <div class="header-video-dots" id="header-dots"></div>
+  </div>
+  <!-- ### END MODIFICATION ### -->
+
+
+
+
+  <nav class="navbar" id="main-nav" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://hengyiwang.github.io">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://hengyiwang.github.io/projects/spanner.html">
+              Spann3R
+            </a>
+            <a class="navbar-item" href="https://hengyiwang.github.io/projects/morpheus.html">
+              MorpheuS
+            </a>
+            <a class="navbar-item" href="https://hengyiwang.github.io/projects/CoSLAM.html">
+              Co-SLAM
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-widescreen">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">AMB3R: Accurate Feed-forward Metric-scale <br>3D Reconstruction
+              with Backend</h1>
+            <div class="is-size-5 publication-authors">
+              <div class="author-block">
+                <!-- <div class="author-portrait">
+                  <img src="./Co-SLAM/portrait/hengyi_photo.jpg" class="rgb">
+                </div> -->
+                <a href="https://hengyiwang.github.io" target="_blank">Hengyi Wang</a>,
+              </div>
+
+
+              <div class="author-block">
+                <!-- <div class="author-portrait">
+                  <img src="https://scholar.googleusercontent.com/citations?view_op=medium_photo&user=IRMX4-4AAAAJ&citpid=4" class="rgb">
+                </div> -->
+                <a href="http://www0.cs.ucl.ac.uk/staff/L.Agapito" target="_blank">Lourdes Agapito</a>
+              </div>
+
+
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <br>
+              <span class="author-block">Department of Computer Science,<br> University College London</span>
+            </div>
+            <h1 style="font-size:24px;font-weight:bold;margin-top:15px">CVPR 2026 Highlight</h1>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="./amber/amb3r.pdf" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <!-- <span class="link-block">
+                  <a href="https://arxiv.org/abs/2312.00778" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span> -->
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                  <a href="https://www.youtube.com/watch?v=Ke5mI9R_A98"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                    </span>
+                    <span>Video</span>
+                  </a>
+                </span> -->
+                <!-- Poster Link. -->
+                <!-- <span class="link-block">
+                  <a href="./morpheus/images/morpheus_poster.pdf"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-palette"></i>
+                    </span>
+                    <span>Poster</span>
+                  </a>
+                </span> -->
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/HengyiWang/amb3r"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Dataset Link. -->
+                <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <img src="./amber/images/amber_tasks.png" class="center" width="100%">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <hr>
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <!-- <img src="./amber/images/amber_tasks3.png" class="center" width="100%"> -->
+            <!-- <br> -->
+            <p>
+              We present AMB3R, a multi-view feed-forward model for dense 3D reconstruction on a metric-scale that
+              addresses diverse 3D vision tasks. The key idea is to leverage a sparse, yet compact, volumetric scene
+              representation as our backend,
+              enabling geometric reasoning with spatial compactness. Although trained solely for multi-view
+              reconstruction, we demonstrate that AMB3R can be seamlessly
+              extended to uncalibrated visual odometry (online)
+              or large-scale structure from motion without the need for task-specific fine-tuning or test-time
+              optimization.
+              Compared to prior pointmap-based models, our approach achieves state-of-the-art performance in camera pose
+              estimation,
+              depth estimation, metric-scale estimation, and 3D reconstruction, and even surpasses optimization-based
+              SLAM and SfM with dense
+              reconstruction priors on common benchmarks.
+            </p>
+            <br>
+            <p>
+              <strong>TL;DR:</strong> 1) Spatial representations matter for feed-forward reconstruction; 2) Multi-view
+              transformer by itself can be used as a feed-forward VO/SfM without the need for task-specific fine-tuning
+              or test-time optimization.
+            </p>
+
+
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+
+      <!-- Paper video. -->
+      <!-- <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Video</h2>
+          <div class="publication-video">
+            <iframe src="./spanner/videos/spanner_intro.mp4" frameborder="0" allow="autoplay; encrypted-media"
+              allowfullscreen></iframe>
+          </div>
+        </div>
+      </div> -->
+      <!--/ Paper video. -->
+
+
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Pipeline. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <hr>
+          <h2 class="title is-3">AMB3R (Scene Representations)</h2>
+          <img src="./amber/images/pipeline.png" class="center" width="100%">
+          <div class="content has-text-justified">
+            <br>
+            <p>
+              AMB3R consists of a front-end that predicts pointmaps and geometric
+              features, and a back-end that fuses them into sparse voxels, which are
+              serialized into a 1D sequence, processed by a transformer, and unserialized
+              back to 3D. Per-pixel features are obtained via KNN interpolation and injected
+              into the frozen front-end via zero-convolution for final prediction.
+            </p>
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Pipeline. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <hr>
+          <h2 class="title is-3">AMB3R (VO)</h2>
+          <h2 class="title is-6 has-text-right"><span style="font-size: 1rem; vertical-align: middle;">&#8212;</span> No
+            test-time optimization, no task-specific fine-tuning</h2>
+          <img src="./amber/images/amb3r_vo.png" class="center" width="100%">
+
+          <div class="content has-text-justified">
+            <br>
+            <p>
+              Input frames are mapped with keyframes stored in the active keyframe memory to predict camera poses and
+              geometry. The coordinate alignment is done via 1) transforming the active keyframe map from global to
+              local coordinates 2) estimating the relative scale of the corresponding keyframe geometry 3) transforming
+              the local map to global coordinates via the weighted average of relative poses of each corresponding
+              keyframe. We then select new keyframes from the newly mapped frames, and update the global keyframe
+              memory. If the number of keyframes in active keyframe memory has not reached its capacity, we append the
+              new keyframe; otherwise, we refresh the entire active keyframe memory by resampling from the global
+              keyframe memory.
+            </p>
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <!-- <h2 class="title is-3">Reconstruction showcase</h2> -->
+          <div class="video-showcase">
+            <div class="showcase-thumbnails">
+              <img src="./amber/videos/thumbnails/sf_gold.png" data-video="./amber/videos/vo_sf.mp4" alt="sf_gold">
+              <img src="./amber/videos/thumbnails/room.jpg" data-video="./amber/videos/vo_static.mp4" alt="room">
+              <img src="./amber/videos/thumbnails/taylor.png" data-video="./amber/videos/vo_taylor_v2.mp4" alt="taylor">
+              <img src="./amber/videos/thumbnails/office.png" data-video="./amber/videos/vo_office.mp4" alt="office">
+              <img src="./amber/videos/thumbnails/pumpkin.png" data-video="./amber/videos/vo_pumpkin.mp4" alt="pumpkin">
+              <img src="./amber/videos/thumbnails/ethshake.jpg" data-video="./amber/videos/vo_ethshake.mp4"
+                alt="ethshake">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Pipeline. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <hr>
+          <h2 class="title is-3">AMB3R (SfM)</h2>
+          <h2 class="title is-6 has-text-right"><span style="font-size: 1rem; vertical-align: middle;">&#8212;</span> No
+            test-time optimization, no task-specific fine-tuning</h2>
+          <img src="./amber/images/amb3r_sfm.png" class="center" width="100%">
+          <div class="content has-text-justified">
+            <br>
+            <p>
+              Our SfM mainly consists of 3 stages: 1) Image clustering that groups images into small clusters, 2) Coarse
+              registration that registers each cluster incrementally, and 3) Global mapping that refines keyframe and
+              non-keyframes via mapping.
+            </p>
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <!-- <h2 class="title is-3">Reconstruction showcase</h2> -->
+          <div class="video-showcase">
+            <div class="showcase-thumbnails">
+              <img src="./amber/videos/thumbnails/museum.jpg" data-video="./amber/videos/sfm.mp4" alt="museum">
+              <img src="./amber/videos/thumbnails/truck.jpg" data-video="./amber/videos/sfm_truck.mp4" alt="truck">
+              <img src="./amber/videos/thumbnails/south.JPG" data-video="./amber/videos/sfm_south.mp4" alt="south">
+              <img src="./amber/videos/thumbnails/mipnerf.jpg" data-video="./amber/videos/mipnerf.mp4" alt="mipnerf">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+
+
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      bulmaCarousel.attach('#galleryCarousel', {
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        loop: true, // Optional: Enable carousel to loop
+        autoplay: true, // Optional: Enable autoplay
+      });
+
+      // Reusable Video Showcase Logic
+      const showcases = document.querySelectorAll('.video-showcase');
+
+      showcases.forEach(showcase => {
+        const thumbnailsContainer = showcase.querySelector('.showcase-thumbnails');
+        const thumbnails = Array.from(thumbnailsContainer.querySelectorAll('img'));
+
+        if (thumbnails.length === 0) return;
+
+        // Create Main Video Player Structure
+        const mainVideoContainer = document.createElement('div');
+        mainVideoContainer.innerHTML = `
+          <div style="width: 100%;">
+              <div class="columns is-centered has-text-centered">
+                  <div class="column is-full panel-style">
+                      <div class="video-container" style="width: 100%; max-width: none;">
+                          <div class="video-display-container" style="display: flex; justify-content: center; width: 100%;">
+                              <div class="video-wrapper" style="width: 100%; position: relative; background-color: black; aspect-ratio: 16/9;">
+                                  <video class="main-video" controls autoplay muted loop playsinline disablePictureInPicture style="width: 100%; height: 100%; object-fit: contain; background-color: black;">
+                                      <source class="main-video-source" type="video/mp4">
+                                  </video>
+                                  <div class="video-placeholder" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: black; display: none; align-items: center; justify-content: center; color: #666; font-size: 16px;">
+                                      Loading...
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="thumbnail-container" style="margin-top: 20px;"></div>
+                  </div>
+              </div>
+          </div>
+        `;
+
+        // Insert main video before thumbnails
+        showcase.insertBefore(mainVideoContainer, thumbnailsContainer);
+
+        // Move thumbnails into the new container
+        const newThumbContainer = mainVideoContainer.querySelector('.thumbnail-container');
+        thumbnails.forEach(thumb => {
+          thumb.classList.add('thumbnail', 'pts-thumbnail');
+          thumb.style.cursor = 'pointer';
+          thumb.style.width = '100px';
+          thumb.style.margin = '5px';
+          newThumbContainer.appendChild(thumb);
+        });
+
+        // Remove original thumbnails container
+        thumbnailsContainer.remove();
+
+        // Logic
+        const mainVideo = mainVideoContainer.querySelector('.main-video');
+        const mainSource = mainVideoContainer.querySelector('.main-video-source');
+        const placeholder = mainVideoContainer.querySelector('.video-placeholder');
+
+        // Initialize first video
+        const firstThumb = thumbnails[0];
+        firstThumb.style.border = '3px solid #92A8D1';
+        mainSource.src = firstThumb.getAttribute('data-video');
+        mainVideo.load();
+        mainVideo.playbackRate = 1.0; // Default speed
+
+        // Add Click Listeners
+        thumbnails.forEach(thumb => {
+          thumb.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (thumb.style.border.includes('3px solid')) return;
+
+            // Reset borders
+            thumbnails.forEach(t => t.style.border = '2px solid #fff');
+            thumb.style.border = '3px solid #92A8D1';
+
+            // Show placeholder
+            placeholder.style.display = 'flex';
+            mainVideo.pause();
+            mainVideo.style.opacity = '0';
+
+            // Change source
+            mainSource.src = thumb.getAttribute('data-video');
+            mainVideo.load();
+
+            // Play when ready
+            Promise.all([
+              new Promise(resolve => mainVideo.addEventListener('loadeddata', resolve, { once: true })),
+              new Promise(resolve => mainVideo.addEventListener('canplay', resolve, { once: true }))
+            ]).then(() => {
+              setTimeout(() => {
+                placeholder.style.display = 'none';
+                mainVideo.style.opacity = '1';
+              }, 50);
+              mainVideo.play().catch(() => { });
+            }).catch(err => {
+              console.warn('Error loading video:', err);
+              placeholder.style.display = 'none';
+            });
+          });
+        });
+      });
+
+      // Inject Styles if not already present
+      if (!document.getElementById('showcase-styles')) {
+        const style = document.createElement('style');
+        style.id = 'showcase-styles';
+        style.textContent = `
+            .thumbnail {
+                border-radius: 6px;
+                border: 2px solid #fff;
+                box-shadow: 0 0 4px #888;
+                width: 100px;
+                height: 70px;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+            .thumbnail:hover { transform: scale(1.1); }
+        `;
+        document.head.appendChild(style);
+      }
+
+      // Video Switcher Logic
+      const videoSwitcher = document.getElementById('video-switcher');
+      const videoElement = document.getElementById('canvas');
+      const sourceElement = videoElement.querySelector('source');
+      const dotsContainer = document.getElementById('header-dots');
+      const headerLoader = document.getElementById('header-loader');
+
+      // Video Event Listeners for Loader
+      videoElement.addEventListener('waiting', () => {
+        headerLoader.style.display = 'flex'; // Show loader
+      });
+
+      videoElement.addEventListener('canplay', () => {
+        headerLoader.style.display = 'none'; // Hide loader
+      });
+
+      videoElement.addEventListener('playing', () => {
+        headerLoader.style.display = 'none'; // Hide loader
+      });
+
+      // Fallback: If video is actually progressing, hide loader
+      videoElement.addEventListener('timeupdate', () => {
+        if (videoElement.currentTime > 0 && !videoElement.paused && !videoElement.ended && videoElement.readyState > 2) {
+          headerLoader.style.display = 'none';
+        }
+      });
+
+      // Auto-advance to next video
+      videoElement.addEventListener('ended', () => {
+        const nextIndex = (videoSwitcher.selectedIndex + 1) % videoSwitcher.options.length;
+        videoSwitcher.selectedIndex = nextIndex;
+        videoSwitcher.dispatchEvent(new Event('change'));
+      });
+
+      // Generate Dots
+      Array.from(videoSwitcher.options).forEach((option, index) => {
+        const dot = document.createElement('div');
+        dot.classList.add('video-dot');
+        if (index === videoSwitcher.selectedIndex) dot.classList.add('active');
+
+        dot.addEventListener('click', () => {
+          videoSwitcher.selectedIndex = index;
+          videoSwitcher.dispatchEvent(new Event('change'));
+        });
+
+        dotsContainer.appendChild(dot);
+      });
+
+      // HD Toggle Logic
+      const hdToggle = document.getElementById('hd-toggle');
+      let isHD = localStorage.getItem('isHD') !== 'false'; // Default to true
+
+      function updateHDButton() {
+        if (isHD) {
+          hdToggle.classList.add('is-dark');
+          hdToggle.classList.remove('is-light');
+          hdToggle.textContent = 'HD';
+        } else {
+          hdToggle.classList.remove('is-dark');
+          hdToggle.classList.add('is-light');
+          hdToggle.textContent = 'SD';
+        }
+      }
+
+      hdToggle.addEventListener('click', () => {
+        isHD = !isHD;
+        localStorage.setItem('isHD', isHD);
+        updateHDButton();
+        updateVideo();
+      });
+
+      // Initialize HD Button state
+      updateHDButton();
+
+      // Speed Toggle Logic
+      const speedToggle = document.getElementById('speed-toggle');
+      const multipliers = [1.0, 1.5, 2.0, 0.5];
+      let currentMultiplier = 1.0;
+
+      speedToggle.addEventListener('click', () => {
+        // Find next multiplier
+        let nextIndex = multipliers.indexOf(currentMultiplier) + 1;
+        if (nextIndex >= multipliers.length) nextIndex = 0;
+
+        currentMultiplier = multipliers[nextIndex];
+
+        // Calculate actual speed based on video's base speed
+        const selectedOption = videoSwitcher.options[videoSwitcher.selectedIndex];
+        const baseSpeed = parseFloat(selectedOption.getAttribute('data-speed') || 1.0);
+
+        videoElement.playbackRate = baseSpeed * currentMultiplier;
+        speedToggle.textContent = currentMultiplier + 'x';
+      });
+
+      function updateVideo() {
+        const selectedOption = videoSwitcher.options[videoSwitcher.selectedIndex];
+        const hdSrc = selectedOption.value;
+        const sdSrc = selectedOption.getAttribute('data-low-res');
+
+        // Choose source based on HD preference
+        // If SD is requested but not available, fall back to HD (or placeholder if we had one)
+        let newSrc = isHD ? hdSrc : (sdSrc || hdSrc);
+
+        const baseSpeed = parseFloat(selectedOption.getAttribute('data-speed') || 1.0);
+
+        if (sourceElement.getAttribute('src') !== newSrc) {
+          // Check if we are just switching quality of the same video
+          const oldSrc = sourceElement.getAttribute('src');
+          const isSameContent = (oldSrc === hdSrc || oldSrc === sdSrc);
+          const currentTime = videoElement.currentTime;
+
+          // Delay loader display to avoid flickering on fast loads
+          if (loaderDisplayTimeout) clearTimeout(loaderDisplayTimeout);
+          loaderDisplayTimeout = setTimeout(() => {
+            headerLoader.style.display = 'flex';
+          }, 1200); // 500ms delay
+
+          sourceElement.setAttribute('src', newSrc);
+          videoElement.load();
+
+          if (isSameContent && currentTime > 0) {
+            videoElement.addEventListener('loadedmetadata', function () {
+              videoElement.currentTime = currentTime;
+            }, { once: true });
+          }
+        }
+
+        // Reset multiplier on video switch
+        currentMultiplier = 1.0;
+        videoElement.playbackRate = baseSpeed * currentMultiplier;
+        speedToggle.textContent = currentMultiplier + 'x';
+
+        videoElement.play().catch(e => console.log("Autoplay prevented:", e));
+
+        // Update Dots
+        const dots = dotsContainer.querySelectorAll('.video-dot');
+        dots.forEach((dot, index) => {
+          if (index === videoSwitcher.selectedIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+
+        // Update Sound Indicator
+        checkSoundIndicator();
+      }
+
+      function checkSoundIndicator() {
+        const selectedOption = videoSwitcher.options[videoSwitcher.selectedIndex];
+        const hasSound = selectedOption.getAttribute('data-has-sound') === 'true';
+        const soundIndicator = document.getElementById('sound-indicator');
+
+        if (hasSound && videoElement.muted) {
+          soundIndicator.style.display = 'flex';
+        } else {
+          soundIndicator.style.display = 'none';
+        }
+      }
+
+      // Sound Toggle Logic
+      const soundToggle = document.getElementById('sound-toggle');
+      const soundIconContainer = soundToggle.querySelector('.icon');
+
+      soundToggle.addEventListener('click', () => {
+        videoElement.muted = !videoElement.muted;
+        const soundIndicator = document.getElementById('sound-indicator');
+
+        if (videoElement.muted) {
+          // Use innerHTML to force FA JS to re-render the SVG
+          soundIconContainer.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        } else {
+          soundIconContainer.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }
+
+        // Re-check indicator visibility
+        const selectedOption = videoSwitcher.options[videoSwitcher.selectedIndex];
+        if (selectedOption.getAttribute('data-has-sound') === 'true' && videoElement.muted) {
+          soundIndicator.style.display = 'flex';
+        } else {
+          soundIndicator.style.display = 'none';
+        }
+      });
+
+      videoSwitcher.addEventListener('change', updateVideo);
+
+      // Initialize on load
+      updateVideo();
+
+
+
+      // SD Suggestion Logic
+      const sdSuggestion = document.getElementById('sd-suggestion');
+      let loadingTimeout;
+      let loaderDisplayTimeout; // For delaying the "Loading..." text
+
+      function startLoadingTimer() {
+        if (isHD && !loadingTimeout) {
+          loadingTimeout = setTimeout(() => {
+            sdSuggestion.style.display = 'block';
+          }, 3000); // Show after 3 seconds of loading
+        }
+      }
+
+      function stopLoadingTimer() {
+        if (loadingTimeout) {
+          clearTimeout(loadingTimeout);
+          loadingTimeout = null;
+        }
+        if (loaderDisplayTimeout) {
+          clearTimeout(loaderDisplayTimeout);
+          loaderDisplayTimeout = null;
+        }
+        sdSuggestion.style.display = 'none';
+        headerLoader.style.display = 'none';
+      }
+
+      videoElement.addEventListener('waiting', startLoadingTimer);
+      videoElement.addEventListener('loadstart', startLoadingTimer);
+
+      videoElement.addEventListener('playing', stopLoadingTimer);
+      videoElement.addEventListener('canplay', stopLoadingTimer);
+
+      // Also hide when HD button is clicked (handled in toggle listener, but good to be safe)
+      hdToggle.addEventListener('click', stopLoadingTimer);
+
+      // Scroll Down Logic
+      const scrollDown = document.getElementById('scroll-down');
+      const mainNav = document.getElementById('main-nav');
+
+      if (scrollDown && mainNav) {
+        scrollDown.addEventListener('click', () => {
+          mainNav.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+      @article{wang2025amb3r,
+        title={AMB3R: Accurate Feed-forward Metric-scale 3D Reconstruction with Backend},
+        author={Wang, Hengyi and Agapito, Lourdes},
+        journal={arXiv preprint arXiv:2511.20343},
+        year={2025}
+      }
+    </code></pre>
+    </div>
+  </section>
+
+  <!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Reference</h2>
+    <br>
+    
+  </div>
+</section> -->
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">Acknowledgement</h2>
+      Research presented here has been supported by the UCL Centre for Doctoral Training in Foundational AI under UKRI
+      grant number EP/S021566/1. This project was also supported by UKRI/EPSRC AI Hub in Generative Models under grant
+      number EP/Y028805/1. Hengyi Wang was supported from a sponsored research award by Cisco Research. The page design
+      was inspired
+      by <a href="https://nerfies.github.io/">Nerfies</a>, <a
+        href="https://rmurai.co.uk/projects/GaussianSplattingSLAM/">Gaussian Splatting SLAM</a>,
+      and <a href="https://worldmodels.github.io/">World Models</a>.
+    </div>
+  </section>
+
+
+  <!-- <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/HengyiWang" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              The page design was inspired from <a href="https://nerfies.github.io/">Nerfies</a>,
+              <a href="https://rmurai.co.uk/projects/GaussianSplattingSLAM/">Gaussian Splatting SLAM</a>,
+              and <a href="https://worldmodels.github.io/">World Models</a>. 
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer> -->
+
+</body>
+
+</html>

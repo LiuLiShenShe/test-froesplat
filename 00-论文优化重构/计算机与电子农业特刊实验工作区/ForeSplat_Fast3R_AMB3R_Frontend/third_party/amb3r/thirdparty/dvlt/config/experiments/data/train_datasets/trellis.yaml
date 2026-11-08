@@ -1,0 +1,18 @@
+trellis:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "pose"
+  view_sampling: "random"
+  max_depth_thresh: 10.0
+  window_size: 49  # use fully random pose since all views are centered around the object
+  dataverse_cfg:
+    target: "trellis.Trellis"
+    params:
+      root_path: "${user.data_root}/train/trellis/root_path"
+      depth_root_path: "${user.data_root}/train/trellis/depth_root_path"
+      split_file_path: "${user.data_root}/train/trellis/split_file_path"
+      splits:
+        - 3d_future
+        - abo
+        - hssd
+        - toys4k
+        - objaversexl_sketchfab

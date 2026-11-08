@@ -1,0 +1,65 @@
+{
+  "status": "complete",
+  "scope": "6 recorded effective-pruned float RGB views, no render or training",
+  "CUDA_VISIBLE_DEVICES": "",
+  "metric_device": "cpu",
+  "threads": 8,
+  "rendered_views": 0,
+  "new_training": false,
+  "network_weight_downloads": false,
+  "local_backbone_loads": [
+    "/home/test/.cache/torch/hub/checkpoints/alexnet-owt-7be5be79.pth"
+  ],
+  "backbone": {
+    "path": "/home/test/.cache/torch/hub/checkpoints/alexnet-owt-7be5be79.pth",
+    "sha256": "7be5be791159472b1fbf3c69796f7cb30dca7ad8466c2df70058c37116cdee02"
+  },
+  "LPIPS_calibration": {
+    "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/.venv/lib/python3.12/site-packages/lpips/weights/v0.1/alex.pth",
+    "sha256": "df73285e35b22355a2df87cdb6b70b343713b667eddbda73e1977e0c860835c0"
+  },
+  "versions": {
+    "torch": "2.10.0",
+    "torchvision": "0.25.0",
+    "lpips": "0.1.4",
+    "scikit-image": "0.26.0"
+  },
+  "protocol": {
+    "RGB": "saved float32 clamped native renderer; unchanged GT;1080x1920;no PNG quantization",
+    "SSIM": "channel_axis2,data_range1,win7,gaussianFalse,sampleCovTrue, same scikit-image implementation as main12",
+    "LPIPS": "same Alex backbone/calibration; full resolution [-1,1]; one CPU instance; no resizing",
+    "baseline": "same source0/95/189 rows reused from original GPU main12 CSV; never recomputed",
+    "numeric_limit": "LPIPS baseline ran GPU, supplement ran CPU; small device rounding differences are possible, so no bit-identical inference claim"
+  },
+  "baseline_csv": {
+    "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/render_error_analysis/common_evaluation_v1/per_view_common_metrics.csv",
+    "sha256": "ec67851e22357eabf086918579f0accd3f806137a5e2eda2f5ec7bdcd6816a52"
+  },
+  "original_comparison_hashes_unchanged": {
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/controlled_fixes/prune_effective_render/E1/evaluation/comparison.json": "0baa2941838035a06ff7f2272703ea0b296780fc3d0a7580093c95d1816afc21",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/controlled_fixes/prune_effective_render/E5/evaluation/comparison.json": "1480dcd95fb9644ba007241d04349dc7f0c18098d0ace9d90c5e382d85a8c90a"
+  },
+  "summaries": [
+    {
+      "experiment": "E1",
+      "views": 3,
+      "ssim_baseline_reused": 0.7722126046816508,
+      "ssim_effective_pruned": 0.7714410424232483,
+      "ssim_delta": -0.0007715622584025065,
+      "lpips_alex_baseline_reused": 0.2522412637869517,
+      "lpips_alex_effective_pruned": 0.25266649822394055,
+      "lpips_alex_delta": 0.00042523443698883057
+    },
+    {
+      "experiment": "E5",
+      "views": 3,
+      "ssim_baseline_reused": 0.7262365818023682,
+      "ssim_effective_pruned": 0.7220907409985861,
+      "ssim_delta": -0.0041458408037821455,
+      "lpips_alex_baseline_reused": 0.3530873159567515,
+      "lpips_alex_effective_pruned": 0.35523541768391925,
+      "lpips_alex_delta": 0.002148101727167765
+    }
+  ],
+  "wall_seconds": 14.691344679013127
+}

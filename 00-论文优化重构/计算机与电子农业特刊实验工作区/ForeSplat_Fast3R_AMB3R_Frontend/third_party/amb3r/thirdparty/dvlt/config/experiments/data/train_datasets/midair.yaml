@@ -1,0 +1,11 @@
+midair:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  window_size_ratio: 10.0
+  view_ranking: "index"
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "midair.MidAir"
+    params:
+      # format: zip per sequence/modality
+      data_root: "${user.data_root}/train/midair"
+      split: "train"

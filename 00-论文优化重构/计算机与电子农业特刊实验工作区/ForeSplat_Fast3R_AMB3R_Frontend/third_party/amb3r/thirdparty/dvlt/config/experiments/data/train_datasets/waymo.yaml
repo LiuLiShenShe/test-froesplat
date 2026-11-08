@@ -1,0 +1,12 @@
+waymo:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  window_size_ratio: 2.0
+  view_indices: [0, 1, 3]  # Front, Front-left, Front-right
+  dataverse_cfg:
+    target: "processed.light3r_preproc.Waymo"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/waymo"
+      split: "train"

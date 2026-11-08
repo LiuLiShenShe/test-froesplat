@@ -1,0 +1,259 @@
+{
+  "run_args": {
+    "images_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图",
+    "masks_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜",
+    "checkpoint": "weights/vggt_omega_1b_512.pt",
+    "output_dir": "runs/diag_10consec_512/GGGS_Dataset",
+    "image_resolution": 512,
+    "preprocess_mode": "balanced",
+    "patch_size": 16,
+    "confidence_percentile": 20.0,
+    "max_points": 800000,
+    "min_conf": 1e-05,
+    "mask_threshold": 127,
+    "foreground_background": "black",
+    "image_prefix_to_strip": null,
+    "mask_prefix_to_strip": null,
+    "frame_stride": 1,
+    "max_frames": 10,
+    "filter_depth_edges": false,
+    "depth_edge_rtol": 0.03,
+    "no_align": false,
+    "device": "auto",
+    "seed": 0,
+    "gggs_repo": "/tmp/gggs_community",
+    "skip_verify": false,
+    "verify_resolution": 1,
+    "save_predictions": true,
+    "save_log": null,
+    "device_resolved": "cuda"
+  },
+  "num_frames": 10,
+  "num_points3d": 481521,
+  "per_frame_point2d": [
+    51857,
+    53119,
+    51886,
+    50097,
+    49103,
+    47706,
+    47155,
+    43763,
+    42856,
+    43979
+  ],
+  "frames": [
+    {
+      "image_name": "crop_0000.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0000.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0000.png"
+    },
+    {
+      "image_name": "crop_0001.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0001.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0001.png"
+    },
+    {
+      "image_name": "crop_0002.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0002.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0002.png"
+    },
+    {
+      "image_name": "crop_0003.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0003.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0003.png"
+    },
+    {
+      "image_name": "crop_0004.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0004.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0004.png"
+    },
+    {
+      "image_name": "crop_0005.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0005.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0005.png"
+    },
+    {
+      "image_name": "crop_0006.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0006.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0006.png"
+    },
+    {
+      "image_name": "crop_0007.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0007.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0007.png"
+    },
+    {
+      "image_name": "crop_0008.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0008.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0008.png"
+    },
+    {
+      "image_name": "crop_0009.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0009.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0009.png"
+    }
+  ],
+  "log": [
+    "[15:14:16] collecting frames from /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图 + /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜",
+    "[15:14:16] 10 frame(s) selected (order preserved)",
+    "[15:14:19] foreground ratios (original resolution): crop_0000.png=0.2300, crop_0001.png=0.2316, crop_0002.png=0.2319, crop_0003.png=0.2300, crop_0004.png=0.2272, crop_0005.png=0.2228, crop_0006.png=0.2203, crop_0007.png=0.2153, crop_0008.png=0.2286, crop_0009.png=0.2402",
+    "[15:14:19] preprocessing images + masks (identical geometry)",
+    "[15:14:27] model input tensor: (10, 3, 688, 384), mask tensor: (10, 688, 384), foreground pixel fraction: 0.2278",
+    "[15:14:27] loading checkpoint weights/vggt_omega_1b_512.pt on cuda",
+    "[15:16:36] running VGGT-Omega inference",
+    "[15:16:44] raw predictions saved to runs/diag_10consec_512/GGGS_Dataset/debug/predictions.npz",
+    "[15:16:44] exporting GGGS dataset (foreground-mask-constrained COLMAP)",
+    "[15:17:08] export finished: {'output_dir': 'runs/diag_10consec_512/GGGS_Dataset', 'num_frames': 10, 'num_points3d': 481521, 'colmap_dir': 'runs/diag_10consec_512/GGGS_Dataset/sparse/0', 'per_frame_point2d': [51857, 53119, 51886, 50097, 49103, 47706, 47155, 43763, 42856, 43979], 'elapsed_seconds': 24.545}",
+    "[15:17:08] verifying dataset with GGGS reader from /tmp/gggs_community",
+    "[15:17:11] GGGS verification all_checks_passed=True points=481521"
+  ],
+  "gggs_verification": {
+    "gggs_repo": "/tmp/gggs_community",
+    "dataset_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/diag_10consec_512/GGGS_Dataset",
+    "num_train_cameras": 10,
+    "num_test_cameras": 0,
+    "ply_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/runs/diag_10consec_512/GGGS_Dataset/sparse/0/points3D.ply",
+    "point_cloud": {
+      "num_points": 481521,
+      "color_range": [
+        0.0,
+        0.9882352941176471
+      ],
+      "finite_points": true
+    },
+    "nerf_normalization_radius": 0.3084123730659485,
+    "cameras": [
+      {
+        "image_name": "crop_0000",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7122095841258215,
+        "FoVy": 1.1607330386968198,
+        "Fx": 2849.7514597574873,
+        "Fy": 2890.83713620208,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0001",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7122392581921972,
+        "FoVy": 1.1611270680242924,
+        "Fx": 2849.6220652262373,
+        "Fy": 2889.595463597497,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0002",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7133188687089452,
+        "FoVy": 1.1615915195950774,
+        "Fx": 2844.921404520671,
+        "Fy": 2888.1328324606247,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0003",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7110602249034953,
+        "FoVy": 1.157437803913778,
+        "Fx": 2854.771226247152,
+        "Fy": 2901.2504376256184,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0004",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7027353979400967,
+        "FoVy": 1.1453312981678438,
+        "Fx": 2891.598796844483,
+        "Fy": 2939.963919528694,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0005",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7007907210094438,
+        "FoVy": 1.1452606575174766,
+        "Fx": 2900.3224817911787,
+        "Fy": 2940.191940662473,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0006",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.6987222244077238,
+        "FoVy": 1.1409483717619155,
+        "Fx": 2909.652703603109,
+        "Fy": 2954.1590758922484,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0007",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.7009997982878441,
+        "FoVy": 1.14519940021128,
+        "Fx": 2899.3823496500654,
+        "Fy": 2940.3896935041553,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0008",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.6898240608348721,
+        "FoVy": 1.1324937572663143,
+        "Fx": 2950.4008611043296,
+        "Fy": 2981.8172322650285,
+        "alpha_mask_set": false
+      },
+      {
+        "image_name": "crop_0009",
+        "colmap_camera_width": 2120,
+        "colmap_camera_height": 3791,
+        "image_width": 2120,
+        "image_height": 3791,
+        "FoVx": 0.6839077118894398,
+        "FoVy": 1.1238410682370807,
+        "Fx": 2978.0572573343916,
+        "Fy": 3010.506864769514,
+        "alpha_mask_set": false
+      }
+    ],
+    "checks": {
+      "ply_exists": true,
+      "num_points_positive": true,
+      "camera_count_matches": true,
+      "image_size_matches_intrinsics": true,
+      "masks_dir_exists": true,
+      "all_masks_present": true,
+      "colmap_files_present": true
+    },
+    "all_checks_passed": true
+  }
+}

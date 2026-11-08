@@ -1,0 +1,12 @@
+gtasfm:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  window_size_ratio: 4.0
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "gta_sfm.GTASfM"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/gtasfm"
+      split: "train"

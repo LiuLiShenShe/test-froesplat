@@ -1,0 +1,38 @@
+--- 
++++ 
+@@ -433,7 +433,7 @@
+                    feature_ptr,
+                    geomState.ray_planes,
+                    geomState.normals,
+-                   focal_x, focal_y,
++                   focal_x, focal_y, viewmatrix, projmatrix,
+                    imgState.n_contrib,
+                    tileState.max_contributor,
+                    background,
+@@ -542,7 +542,7 @@
+                    dL_dpix_mdepth,
+                    dL_dalphas,
+                    dL_dpixel_normals,
+-                   focal_x, focal_y,
++                   focal_x, focal_y, viewmatrix, projmatrix,
+                    (float3*)dL_dmean2D,
+                    geomBwdState.conic_opacity,
+                    dL_dcolor,
+@@ -1461,7 +1461,7 @@
+                    binningState.point_list,
+                    point_binningState.point_list,
+                    width, height,
+-                   focal_x, focal_y,
++                   focal_x, focal_y, viewmatrix, projmatrix,
+                    pointState.points2D,
+                    geomState.means2D,
+                    geomState.conic_opacity,
+@@ -1542,7 +1542,7 @@
+                    binningState.point_list,
+                    point_binningState.point_list,
+                    width, height,
+-                   focal_x, focal_y,
++                   focal_x, focal_y, viewmatrix, projmatrix,
+                    pointState.points2D,
+                    geomState.means2D,
+                    geomState.conic_opacity,

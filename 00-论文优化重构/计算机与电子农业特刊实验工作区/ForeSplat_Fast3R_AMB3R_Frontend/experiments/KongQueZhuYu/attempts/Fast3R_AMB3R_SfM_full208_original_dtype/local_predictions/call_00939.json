@@ -1,0 +1,282 @@
+{
+  "call_id": 939,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    18,
+    8,
+    183,
+    186,
+    111,
+    151,
+    148
+  ],
+  "local_reference_frame": 18,
+  "anchor_frame_indices": [
+    18,
+    8,
+    183,
+    186,
+    111,
+    151
+  ],
+  "benchmark_early_stop_requested": true,
+  "status": "predicted",
+  "seconds": 0.9647645429940894,
+  "raw_export_seconds": 0.06004300998756662,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        431.3075866699219,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        431.3075866699219,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 1.2946432828903198,
+  "confidence_range": [
+    1.0,
+    5.080624580383301
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 115947,
+      "iterations": 100,
+      "pnp_inliers": 92520
+    },
+    {
+      "status": "success",
+      "valid_points": 135885,
+      "iterations": 100,
+      "pnp_inliers": 98187
+    },
+    {
+      "status": "success",
+      "valid_points": 147002,
+      "iterations": 100,
+      "pnp_inliers": 5152
+    },
+    {
+      "status": "success",
+      "valid_points": 146639,
+      "iterations": 100,
+      "pnp_inliers": 5082
+    },
+    {
+      "status": "success",
+      "valid_points": 147376,
+      "iterations": 100,
+      "pnp_inliers": 4067
+    },
+    {
+      "status": "success",
+      "valid_points": 147456,
+      "iterations": 100,
+      "pnp_inliers": 3273
+    },
+    {
+      "status": "success",
+      "valid_points": 147448,
+      "iterations": 100,
+      "pnp_inliers": 3935
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.010054217081929188,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.3148629776855874,
+        "foreground_reprojection_p90_px": 3.0474119739845382,
+        "points": 47948,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.788144808312822e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 1.9218303511209065,
+        "foreground_reprojection_p90_px": 3.4067161960975154,
+        "points": 33427,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.5410212602161834e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 2,
+        "foreground_reprojection_median_px": 35.39981188581569,
+        "foreground_reprojection_p90_px": 85.00931672631741,
+        "points": 69067,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.7179846107297757e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 3,
+        "foreground_reprojection_median_px": 42.91245336311249,
+        "foreground_reprojection_p90_px": 93.34665064866223,
+        "points": 69218,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 2.1553479593791416e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 4,
+        "foreground_reprojection_median_px": 100.09221082714856,
+        "foreground_reprojection_p90_px": 202.76061721553813,
+        "points": 50738,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.5531452449762008e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 5,
+        "foreground_reprojection_median_px": 45.28116648577954,
+        "foreground_reprojection_p90_px": 103.8452016813486,
+        "points": 43955,
+        "rotation_determinant": 1.0000001192092896,
+        "orthogonality_error": 1.6620863896919737e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 6,
+        "foreground_reprojection_median_px": 25.612573206373025,
+        "foreground_reprojection_p90_px": 52.50191906443892,
+        "points": 42540,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.249505066594477e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 7,
+      "recorded_views": 7,
+      "actual_success_count": 7,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

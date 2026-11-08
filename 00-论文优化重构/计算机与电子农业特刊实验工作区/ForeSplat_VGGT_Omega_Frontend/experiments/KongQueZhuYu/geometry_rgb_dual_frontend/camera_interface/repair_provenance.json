@@ -1,0 +1,24 @@
+{
+  "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/gggs_community",
+  "source_commit": "23b418c2f0f19b30b251acad6fe13445dae968c7",
+  "corrected": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/camera_interface/gggs_corrected",
+  "changed_files": [
+    "utils/camera_utils.py",
+    "scene/cameras.py",
+    "scene/dataset_readers.py",
+    "gaussian_renderer/__init__.py",
+    "corrected_rasterizer/cuda_rasterizer/sample_forward.h",
+    "corrected_rasterizer/cuda_rasterizer/render_backward.h",
+    "corrected_rasterizer/cuda_rasterizer/sample_backward.h",
+    "corrected_rasterizer/cuda_rasterizer/render_forward.h",
+    "corrected_rasterizer/cuda_rasterizer/rasterizer_impl.cu",
+    "corrected_rasterizer/cuda_rasterizer/sample_backward.cu",
+    "corrected_rasterizer/cuda_rasterizer/render_backward.cu",
+    "corrected_rasterizer/cuda_rasterizer/auxiliary.h",
+    "corrected_rasterizer/cuda_rasterizer/sample_forward.cu",
+    "corrected_rasterizer/cuda_rasterizer/render_forward.cu"
+  ],
+  "unchanged_optimizer": true,
+  "python_cpp_public_abi_unchanged": true,
+  "repair": "Source K -> actual PIL half-pixel resize -> Camera Fx/Fy/Cx/Cy -> asymmetric P -> forward/backward render and sample-depth rays; NCC already consumes Camera K"
+}

@@ -1,0 +1,21 @@
+defaults:
+  - model: vggt
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Eval-only baseline. Wrapper at `dvlt/model/vggt/model.py` raises in
+# `train_step`; only `python -m dvlt.scripts.test --config-name vggt.yaml`
+# is supported.
+#
+# VGGT-1B HF card: https://huggingface.co/facebook/VGGT-1B
+# A commercial-license variant lives at facebook/VGGT-1B-Commercial.
+
+data:
+  image_size: 518
+  patch_size: 14
+
+trainer:
+  experiment_name: vggt-1B
+  ckpt_dir: facebook/VGGT-1B

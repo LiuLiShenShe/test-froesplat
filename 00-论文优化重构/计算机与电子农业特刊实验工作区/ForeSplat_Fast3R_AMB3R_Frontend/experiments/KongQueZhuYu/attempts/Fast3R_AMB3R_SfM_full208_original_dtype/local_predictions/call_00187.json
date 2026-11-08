@@ -1,0 +1,177 @@
+{
+  "call_id": 187,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    63,
+    2,
+    8,
+    204
+  ],
+  "local_reference_frame": 63,
+  "anchor_frame_indices": [
+    63,
+    2,
+    8
+  ],
+  "benchmark_early_stop_requested": false,
+  "status": "predicted",
+  "seconds": 0.754865944996709,
+  "raw_export_seconds": 0.03355399300926365,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        440.8209228515625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.8209228515625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.8209228515625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.8209228515625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.8209228515625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.8209228515625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.8209228515625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.8209228515625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 1.574042797088623,
+  "confidence_range": [
+    1.0,
+    8.161718368530273
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 114451,
+      "iterations": 100,
+      "pnp_inliers": 98531
+    },
+    {
+      "status": "success",
+      "valid_points": 136344,
+      "iterations": 100,
+      "pnp_inliers": 51163
+    },
+    {
+      "status": "success",
+      "valid_points": 131022,
+      "iterations": 100,
+      "pnp_inliers": 61442
+    },
+    {
+      "status": "success",
+      "valid_points": 147456,
+      "iterations": 100,
+      "pnp_inliers": 5218
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.0519531050598684,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.48005131833589,
+        "foreground_reprojection_p90_px": 2.923073559606036,
+        "points": 28943,
+        "rotation_determinant": 0.9999998807907104,
+        "orthogonality_error": 1.6859728577718445e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 3.339171744951856,
+        "foreground_reprojection_p90_px": 8.474926720912187,
+        "points": 33722,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 8.638009713340101e-08,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 2,
+        "foreground_reprojection_median_px": 3.4179326899554945,
+        "foreground_reprojection_p90_px": 6.177509031932063,
+        "points": 33427,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 4.481909866650026e-08,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 3,
+        "foreground_reprojection_median_px": 14.652718744117301,
+        "foreground_reprojection_p90_px": 40.445698742111674,
+        "points": 37914,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.6985367543364912e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 4,
+      "recorded_views": 4,
+      "actual_success_count": 4,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

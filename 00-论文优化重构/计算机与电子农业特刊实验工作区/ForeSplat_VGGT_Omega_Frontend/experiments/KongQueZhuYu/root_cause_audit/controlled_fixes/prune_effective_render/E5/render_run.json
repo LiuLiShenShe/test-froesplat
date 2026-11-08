@@ -1,0 +1,241 @@
+{
+  "experiment": "E5",
+  "status": "complete",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "checkpoint_sha256": "98974a5d38fd3c79f6b399a291e8ee9d9f977e4c2e32114134ceab0d9fe71469",
+  "repo": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community",
+  "renderer_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community/gaussian_renderer/__init__.py",
+  "renderer_sha256": "5a9c34c87de59d0293c9f5bee99e815b3dacd79646c8cdbbb29a15dea56368c3",
+  "python": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/.venv/bin/python",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "physical_gpu": 1,
+  "resolution_divisor": 2,
+  "rendered_views": 3,
+  "source_ids": [
+    0,
+    95,
+    189
+  ],
+  "gaussian_count": 1806635,
+  "peak_allocated_gib": 1.340536117553711,
+  "peak_reserved_gib": 1.869140625,
+  "wall_seconds": 99.6975541379943,
+  "camera_count": 208,
+  "native_rgb_background": [
+    0,
+    0,
+    0
+  ],
+  "rgb_for_metrics": "float32 clamp of actual native render, no PNG requantization or exposure",
+  "historical_outputs_changed": false,
+  "original_guard": {
+    "multi_view.json": "e7bbc2d9b5d3026f9129b18b46a2564722e62d04479d927834f7d679cd35fcf0",
+    "cameras.json": "3cac4d34d93ae408e52cdef59083b2e0fae367afda0792423d5595d57974b14f"
+  },
+  "depth_ratio_baseline": null,
+  "two_dgs_readonly_allmap_observer": false,
+  "view_records": [
+    {
+      "source_id": 0,
+      "name": "crop_0000",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.699882829008857,
+      "gaussian_count": 1806635,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "f8c876d37b456931e67505edc77fb11ab99080d37130521cb7e94a53996e5e4d",
+      "gt_mask_sha256": "ad4141869b7697e52bd20608b884d676bb11f038272feadad51902eee3bf4726",
+      "render_rgb_tensor_sha256": "f1905ceb1f8479e40bb192d0f53132a7f23a56b7fb9b4466d190c23ab8c3f004",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1806635,
+        "positive_radii_count": 397547,
+        "positive_radii_fraction": 0.22004832188018056,
+        "visibility_filter_count": 397547,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          12.0,
+          43.0,
+          134.0
+        ],
+        "maximum": 3148.0,
+        "positive_radii_gt20_fraction": 0.27844757978301937
+      }
+    },
+    {
+      "source_id": 95,
+      "name": "crop_0095",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.21004436298972,
+      "gaussian_count": 1806635,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "593157fe7a6629f74c9eb7c361899f75f47b769e421acc1cc4ef6690bf71c5ac",
+      "gt_mask_sha256": "4b6e772f1f7d13cfaad1210c7f3ce5234d51d020f5ceaa9bd6fba39c749eeb83",
+      "render_rgb_tensor_sha256": "11ab486ed5d46db877005bfb01224ce3308b8afc5924df4e8967680fa5d2f473",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1806635,
+        "positive_radii_count": 799206,
+        "positive_radii_fraction": 0.4423726984144556,
+        "visibility_filter_count": 799206,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          7.0,
+          29.0,
+          100.0
+        ],
+        "maximum": 2462.0,
+        "positive_radii_gt20_fraction": 0.1643668841325015
+      }
+    },
+    {
+      "source_id": 189,
+      "name": "crop_0189",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.946452900010627,
+      "gaussian_count": 1806635,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "fbdab6068558b5f873ddaa4e82f26b9657be0f3366eeb37b7c0dde6117fba677",
+      "gt_mask_sha256": "d31168375dd1073b90262cb51ba7f15f499bdfca0cb694d75924dce520dedeab",
+      "render_rgb_tensor_sha256": "987f93922630c64539a3088a83f1c6b3d72f81f88c07228a6e7df26dbe111e6d",
+      "native_screen_radius_statistics": {
+        "total_gaussians": 1806635,
+        "positive_radii_count": 518479,
+        "positive_radii_fraction": 0.2869860265078447,
+        "visibility_filter_count": 518479,
+        "units": "actual native rasterizer screen-space radius in pixels",
+        "quantiles": [
+          11.0,
+          41.0,
+          126.0
+        ],
+        "maximum": 2469.0,
+        "positive_radii_gt20_fraction": 0.2608919551225797
+      }
+    }
+  ],
+  "checkpoint_kind": "saved iteration30000 PLY",
+  "peak_memory_scope": "after Gaussian deletion subset, actual render and raw export; checkpoint-load/selection transient peaks not instrumented",
+  "wall_time_scope": "Scene load, historical guard hashing, Gaussian subset selection/parameter SHA, native render, CPU raw/PNG export, final source checkpoint hashing",
+  "point_subset_control": {
+    "threshold": 0.05,
+    "before_count": 5153165,
+    "after_count": 1806635,
+    "removed_count": 3346530,
+    "removed_fraction": 0.6494125454938858,
+    "raw_opacity_ge_threshold_effective_below_count": 3055537,
+    "effective_formula": "native get_opacity_with_3D_filter: sigmoid(raw_opacity) * prod(scale/hypot(scale,filter_3D))",
+    "selected_fields": [
+      {
+        "name": "_xyz",
+        "shape": [
+          1806635,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "a3848e819cf9b62d4243ac39402469841337950796f0c40b59a06339ae5bb5c5"
+      },
+      {
+        "name": "_features_dc",
+        "shape": [
+          1806635,
+          1,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "86df717eae5dbca599a34e9480137a4db7d1b500e1e9638bae632ad924a2122f"
+      },
+      {
+        "name": "_features_rest",
+        "shape": [
+          1806635,
+          15,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "64234b81f8d2ce4a58ef13482705e8d3c9d7f34389ab50e674f99ab4dede10bb"
+      },
+      {
+        "name": "_opacity",
+        "shape": [
+          1806635,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "2743f88d5e18d02a97a233f3481bb1ec7460b932889980a2b04f013a0ffc3228"
+      },
+      {
+        "name": "_scaling",
+        "shape": [
+          1806635,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "8203475bf7921f6e894b7578f410f292acfeff7c1ff8183589bf4a91a014f4d3"
+      },
+      {
+        "name": "_rotation",
+        "shape": [
+          1806635,
+          4
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "8330b7f43bcba00f6027bd265db6548b1069e5bdee7c581de35b620ed2e2bbfc"
+      },
+      {
+        "name": "_sg_axis",
+        "shape": [
+          1806635,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_sharpness",
+        "shape": [
+          1806635,
+          0
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_color",
+        "shape": [
+          1806635,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "filter_3D",
+        "shape": [
+          1806635,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "5c9d53fa1756e87ebd4e36e08f72d1349e8d89a464717a6916be9aacda52c9d0"
+      }
+    ],
+    "optimizer_used": false,
+    "remaining_gaussian_parameters_bit_identical": true
+  },
+  "scope": "existing checkpoint isolated Gaussian deletion, no training; baseline comparison must use same source IDs"
+}

@@ -1,0 +1,36 @@
+{
+  "Omega": {
+    "env_CPU_import": "passed",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "frame0_model_input_shape_NCHW": [
+      1,
+      3,
+      688,
+      384
+    ],
+    "frame0_RGB_uint8_equal_historical208": true,
+    "frame0_Mask_equal_historical208": true,
+    "scope": "Actual independent CPU frame0 preprocessing test; not a full208 input tensor rehash"
+  },
+  "Standard": {
+    "env_CPU_import": "passed",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "frame0_load_input_shape_NCHW": [
+      1,
+      3,
+      1024,
+      1024
+    ],
+    "frame0_Mask_shape": [
+      1,
+      518,
+      518
+    ],
+    "historical_affine_equal": true
+  },
+  "new_N70_N110_common_sources": 38,
+  "GPU_probe_in_CPU_checks": false,
+  "initial_import_failure_preserved": "Omega_attempt1_import_failed.json"
+}

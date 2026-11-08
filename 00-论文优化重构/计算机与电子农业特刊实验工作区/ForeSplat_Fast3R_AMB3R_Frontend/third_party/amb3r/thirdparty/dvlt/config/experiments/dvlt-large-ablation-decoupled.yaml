@@ -1,0 +1,17 @@
+defaults:
+  - dvlt-large-ablation
+  - _self_
+
+# Fully decoupled blocks: a distinct block per step with no parameter sharing
+# and no recurrence (16 steps, no looping). `recurrence_mode=none` drops depth
+# scaling; fixing min_steps=num_steps and k_sampling=null disables variable-K so
+# every forward runs all 16 blocks.
+model:
+  recurrence_mode: none
+  num_steps: 16
+  min_steps: 16
+  inference_steps: 16
+  k_sampling: null
+
+trainer:
+  experiment_name: dvlt-large-ablation-decoupled

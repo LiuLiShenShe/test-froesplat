@@ -1,0 +1,33 @@
+{
+  "checked_at_utc": "2026-11-07T17:06:17.001056+00:00",
+  "check_scope": "CPU first-frame unified reader and coordinate roundtrip; separate bundle_audit.json checks all-frame artifact schemas/counts",
+  "methods_passed": [
+    "Fast3R",
+    "AMB3R_Base_OFF",
+    "AMB3R_Base_ON",
+    "AMB3R_SfM",
+    "VGGT_Omega_Existing",
+    "Fast3R_FP32",
+    "Fast3R_AMB3R_SfM"
+  ],
+  "frame_checked": "crop_0000.png",
+  "checks_passed": [
+    "RGB/mask/world-pointmap dimensions",
+    "source and usable frame indices",
+    "W2C times C2W identity at 2e-5 tolerance",
+    "K_original equals inverse pixel transform times K_model at 1e-3 tolerance"
+  ],
+  "python_modules_ast_valid": 18,
+  "official_source_worktree_status": {
+    "fast3r": "clean",
+    "amb3r": "only untracked checkpoints/amb3r.pt; tracked core unchanged"
+  },
+  "does_not_establish": [
+    "measured 3D accuracy",
+    "physical metric scale",
+    "GGGS readColmapSceneInfo compatibility"
+  ],
+  "only_physical_gpu_allowed": 1,
+  "dependency_manager": "uv",
+  "hybrid_validation_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Fast3R_AMB3R_Frontend/experiments/KongQueZhuYu/attempts/Fast3R_AMB3R_SfM_full208_original_dtype"
+}

@@ -1,0 +1,164 @@
+{
+  "method": "Fast3R_AMB3R_SfM",
+  "seed": 0,
+  "full_sequence": true,
+  "input_views": 208,
+  "available_views": 208,
+  "gpu_physical": 1,
+  "torch_version": "2.10.0+cu128",
+  "torch_cuda": "12.8",
+  "long_edge": 512,
+  "padding_alignment": 16,
+  "inference_mode": "official image clustering, coarse registration and global mapping",
+  "core_network_modified": false,
+  "official_sfm_modified": false,
+  "config_changes": {
+    "device": "cuda:0 under CUDA_VISIBLE_DEVICES=1",
+    "allow_unmapped_frames": true
+  },
+  "official_default_allow_unmapped_frames": false,
+  "feature_extraction_chunk_size": 8,
+  "descriptor_fp32": false,
+  "retry_of": null,
+  "execution_output_directory": "/tmp/foresplat_KongQueZhuYu/Fast3R_AMB3R_SfM_full208_original_dtype_20261107",
+  "final_persistent_output_directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Fast3R_AMB3R_Frontend/experiments/KongQueZhuYu/attempts/Fast3R_AMB3R_SfM_full208_original_dtype",
+  "output_storage_policy": "temporary SSD output; every artifact must be copied and verified before canonical completion",
+  "local_prediction_compression": "none",
+  "confidence_raw_semantics": "1 + exp(logit); direct model values",
+  "confidence_memory_semantics": "official mean of (raw_conf-1)/raw_conf",
+  "final_confidence": "recovered as 1/(1-memory_sig); raw local confidences saved separately",
+  "pointcloud_processing": "Official SfMemory confidence weighted fusion only; no additional frontend fusion",
+  "timing_scope": {
+    "pipeline": "wall time of features/clustering/mapping including observation and raw export",
+    "local_model": "wall time around official local model call; Fast3R includes CPU PnP",
+    "local_raw_export": "D2H transfers, array conversion and NPZ serialization/writes"
+  },
+  "intrinsic_provenance": "last accepted local prediction participating in official memory; no global intrinsic optimizer",
+  "world_frame": "official SfM initialized map reference: usable_index=23, source_index=23, name=crop_0023.png",
+  "scale": "ambiguous normalized pointmap/pose scale; not verified metres",
+  "amb3r_git_commit": "92c4081f910f98e683503092b85301861519175e",
+  "fast3r_git_commit": "33104d4b5b8df43795ecded236194958bbdac572",
+  "feature_descriptor": "mean pooled original Fast3R CroCo encoder patch tokens; original SfM whitening",
+  "pnp_iterations": 100,
+  "pnp_focal_method": "first_view_from_global_head",
+  "weight_source": "jedyang97/Fast3R_ViT_Large_512",
+  "fast3r_license": "FAIR Noncommercial Research License",
+  "weight_sha256": "1357d42e74539ba03510ea1986c7464a7facf17157779e2b7ebd6284e79e0427",
+  "weight_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Fast3R_AMB3R_Frontend/weights/fast3r/model.safetensors",
+  "git_commit": "33104d4b5b8df43795ecded236194958bbdac572",
+  "code_commits": {
+    "sfm": "92c4081f910f98e683503092b85301861519175e",
+    "base_model": "33104d4b5b8df43795ecded236194958bbdac572"
+  },
+  "inference_seconds": 2073.705868986988,
+  "elapsed_seconds_including_model_load": 2136.7271649840113,
+  "local_model_seconds": 1260.9329743554117,
+  "local_raw_export_seconds": 99.18404293048661,
+  "peak_vram_gib": 4.606028079986572,
+  "peak_reserved_vram_gib": 5.001953125,
+  "local_prediction_calls": 1310,
+  "local_call_phase_counts": {
+    "coarse_registration": 1135,
+    "initial_cluster_prediction": 29,
+    "initialization": 6,
+    "keyframe_refinement": 35,
+    "non_keyframe_refinement": 105
+  },
+  "official_benchmark_early_stop_calls": 0,
+  "backend_frontend_fallback_count": 0,
+  "mapped_frames": 208,
+  "unmapped_frames": 0,
+  "map_reference_usable_index": 23,
+  "map_reference_source_index": 23,
+  "map_reference_frame_name": "crop_0023.png",
+  "initial_map_reference_c2w": [
+    [
+      0.9999997615814209,
+      6.962598854443058e-05,
+      0.0006506118807010353,
+      -6.422535807359964e-05
+    ],
+    [
+      -7.093826570780948e-05,
+      0.9999979734420776,
+      0.0020171874202787876,
+      -0.0004977407515980303
+    ],
+    [
+      -0.0006504700868390501,
+      -0.0020172330550849438,
+      0.9999977350234985,
+      -5.450175376608968e-05
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "initial_map_reference_identity_distance": 0.003041284587727052,
+  "final_map_reference_c2w": [
+    [
+      0.9970844984054565,
+      -0.04463140293955803,
+      -0.06189120560884476,
+      0.017270758748054504
+    ],
+    [
+      0.050935763865709305,
+      0.9932364821434021,
+      0.10433991998434067,
+      -0.05677371472120285
+    ],
+    [
+      0.05681576579809189,
+      -0.10718818753957748,
+      0.9926140308380127,
+      0.13252627849578857
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "final_map_reference_identity_distance": 0.23497795501059696,
+  "bundle_export_seconds": 276.0741171160189,
+  "post_pipeline_seconds": 328.81650417498895,
+  "elapsed_seconds_through_bundle_export": 2465.543669545994,
+  "unmapped_local_geometry_supplement_count": 0,
+  "predicted_geometry_field": "Fast3R local-cluster first-view global point maps, registered by original SfMemory; camera-local maps saved separately",
+  "base_model_benchmark_early_stop": "Single-stage Fast3R returns full prediction; original SfM best-frame confidence selection/mapping thresholds are unchanged; native early-stop only avoids its Backend",
+  "persistence": {
+    "state": "complete persistent artifact set",
+    "execution_directory": "/tmp/foresplat_KongQueZhuYu/Fast3R_AMB3R_SfM_full208_original_dtype_20261107",
+    "persistent_directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Fast3R_AMB3R_Frontend/experiments/KongQueZhuYu/attempts/Fast3R_AMB3R_SfM_full208_original_dtype",
+    "copied_from_temporary_storage": true,
+    "copy_seconds": 3250.702002219012,
+    "copied_file_count": 5145,
+    "original_total_bytes": 52300419491,
+    "file_set_and_sizes_verified": true,
+    "prediction_array_spot_checks": "first, map reference, last"
+  },
+  "manifest_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Fast3R_AMB3R_Frontend/experiments/KongQueZhuYu/manifest.csv",
+  "manifest_sha256": "fd4fe15ccd95a4fa9cf549be4d052f3d9c4742e819cb16eb558649b580ee5afb",
+  "manifest_provenance": "Associated unchanged shared manifest; original RGB/mask hashes recorded by Stage0 audit. No original images are altered or reread by finalization.",
+  "input_pair_order_sha256": "5bc96b6865fa7addf6269876e91132009ff3f34737b24a237ae337edab2db6db",
+  "input_pair_order_hash_scope": "Ordered original filenames plus original RGB and mask SHA256 strings from manifest; includes every actual input view",
+  "registered_frames": 208,
+  "inference_time_scope": "wall time of features/clustering/mapping including observation and raw export",
+  "host_io_context": {
+    "input_and_environment_storage": "/data ext4 /dev/sda1 HDD",
+    "temporary_ssd": "/tmp /dev/nvme0n1p2",
+    "observed_pressure": "shared /data I/O pressure during native run: some avg60 approximately 70%, full avg60 approximately 66%",
+    "timing_comparison_limitation": "Native output writes directly to congested HDD; hybrid execution stages output on SSD. Pipeline wall time is not solely model compute and cannot isolate a model speed difference."
+  },
+  "observed_pnp_status_counts_over_all_local_calls": {
+    "success": 9885
+  },
+  "pnp_instrumentation_incomplete_views": 0,
+  "total_frontend_seconds": 2465.543669545994,
+  "total_frontend_time_scope": "Measured from model loading after inputs were prepared through CPU bundle export; includes official pipeline and observation/raw export; excludes original input reading/preparation and final SSD-to-HDD persistence copy"
+}

@@ -1,0 +1,15 @@
+--- 
++++ 
+@@ -355,4 +355,12 @@
+ #define CUDA_VERSION_AT_LEAST_12_9 0
+ #endif
+ 
+-#endif+// Recover the integer-center principal point from supplied W2C/full P.
++// Matrices have the existing GGGS column-major storage convention.
++__device__ __forceinline__ float2 foresplatPrincipal(const float* view, const float* proj, int W, int H) {
++    const float x=view[2], y=view[6], z=view[10];
++    const float invw=1.f/(proj[3]*x+proj[7]*y+proj[11]*z);
++    return {ndc2Pix((proj[0]*x+proj[4]*y+proj[8]*z)*invw,W),
++            ndc2Pix((proj[1]*x+proj[5]*y+proj[9]*z)*invw,H)};
++}
++#endif

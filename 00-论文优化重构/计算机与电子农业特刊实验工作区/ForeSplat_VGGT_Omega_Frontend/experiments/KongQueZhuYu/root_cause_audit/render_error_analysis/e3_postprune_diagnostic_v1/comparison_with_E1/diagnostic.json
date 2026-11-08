@@ -1,0 +1,45 @@
+{
+  "scope": "3 common training views, existing checkpoint re-render; no training",
+  "E3_checkpoint": "final post-prune PLY 1036619 Gaussians; saved iteration30000 PLY has1037020 and is a different artifact",
+  "source_ids": [
+    0,
+    95,
+    189
+  ],
+  "GT_and_masks_identical": true,
+  "summaries": [
+    {
+      "experiment": "E1",
+      "views": 3,
+      "full_psnr": 18.132728944806065,
+      "fg_mask_psnr": 13.790990739367793,
+      "boundary_band5_psnr": 11.07091113913018,
+      "foreground_alpha_mean": 0.9954548279444376,
+      "background_alpha_mean": 0.9072445034980774,
+      "background_alpha_gt01_fraction": 0.9529148229455195,
+      "background_alpha_gt05_fraction": 0.9271266510667303,
+      "background_alpha_gt09_fraction": 0.822454055339184,
+      "alpha_mask05_iou": 0.35649946155495565,
+      "alpha_mask05_precision": 0.35665359613802794,
+      "alpha_mask05_recall": 0.9982962886562472,
+      "background_rgb_mean_abs_error": 0.007135955927272637
+    },
+    {
+      "experiment": "E3",
+      "views": 3,
+      "full_psnr": 15.431178720444711,
+      "fg_mask_psnr": 16.00477264149504,
+      "boundary_band5_psnr": 9.313796752055715,
+      "foreground_alpha_mean": 0.9896984895070394,
+      "background_alpha_mean": 0.10244789222876231,
+      "background_alpha_gt01_fraction": 0.17525308240112036,
+      "background_alpha_gt05_fraction": 0.08861187627988991,
+      "background_alpha_gt09_fraction": 0.05576164289572924,
+      "alpha_mask05_iou": 0.8372639421506571,
+      "alpha_mask05_precision": 0.8405717154323104,
+      "alpha_mask05_recall": 0.9951185477965669,
+      "background_rgb_mean_abs_error": 0.07382342467705409
+    }
+  ],
+  "limitation": "This3-view diagnostic does not replace old208-view E3 evaluation or establish a preferred mask-loss weight."
+}

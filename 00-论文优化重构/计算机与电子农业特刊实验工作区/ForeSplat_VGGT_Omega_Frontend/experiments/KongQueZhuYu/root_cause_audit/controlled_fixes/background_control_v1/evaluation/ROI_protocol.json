@@ -1,0 +1,54 @@
+{
+  "rois_original": {
+    "leaf_window": [
+      540,
+      570,
+      1080,
+      1230
+    ],
+    "leaf_edge_window": [
+      510,
+      630,
+      720,
+      1110
+    ],
+    "pot_rim_window": [
+      800,
+      1680,
+      1700,
+      2000
+    ]
+  },
+  "source_ids": [
+    0,
+    1,
+    19,
+    20,
+    38,
+    39,
+    57,
+    58,
+    76,
+    77,
+    95,
+    96,
+    114,
+    115,
+    133,
+    134,
+    152,
+    153,
+    170,
+    171,
+    189,
+    190,
+    208,
+    209
+  ],
+  "foreground_reference": "Common old Omega foreground Mask mapped original coordinates, same seeded1500query/ROI for allconditions",
+  "leaf_windows": "Fixed source0 image windows, not tracked physical leaf instances. Empty foreground ROI pairs explicit; same ROI-selected original SIFT inliers reused, min3 per pair. Limited to24source/12pairs.",
+  "boundary": "Depth boundary1pixel on common384688 innerMask. RGB boundary<=4shared pixels uses saved SIFT cache edge flag on either endpoint; includespot/blue, not pure leafGT",
+  "matched_images": "Exactly prior fixed foreground-only RANSAC inliers, subset only by common coordinates or cache edge flag; no feature extraction percondition",
+  "no_gpu": true,
+  "no_new_predictions": true
+}

@@ -1,0 +1,71 @@
+{
+  "run_args": {
+    "images_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图",
+    "masks_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜",
+    "checkpoint": "weights/vggt_omega_1b_512.pt",
+    "output_dir": "runs/smoke_3frames/GGGS_Dataset",
+    "image_resolution": 256,
+    "preprocess_mode": "balanced",
+    "patch_size": 16,
+    "confidence_percentile": 20.0,
+    "max_points": 200000,
+    "min_conf": 1e-05,
+    "mask_threshold": 127,
+    "foreground_background": "black",
+    "image_prefix_to_strip": null,
+    "mask_prefix_to_strip": null,
+    "frame_stride": 70,
+    "max_frames": 3,
+    "filter_depth_edges": false,
+    "depth_edge_rtol": 0.03,
+    "no_align": false,
+    "device": "auto",
+    "seed": 0,
+    "gggs_repo": "/tmp/gggs_community",
+    "skip_verify": false,
+    "verify_resolution": 1,
+    "save_log": null,
+    "device_resolved": "cuda"
+  },
+  "num_frames": 3,
+  "num_points3d": 38488,
+  "per_frame_point2d": [
+    14837,
+    13031,
+    10620
+  ],
+  "frames": [
+    {
+      "image_name": "crop_0000.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0000.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0000.png"
+    },
+    {
+      "image_name": "crop_0070.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0070.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0070.png"
+    },
+    {
+      "image_name": "crop_0140.png",
+      "source_image": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图/crop_0140.png",
+      "source_mask": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜/mask_0140.png"
+    }
+  ],
+  "log": [
+    "[14:53:10] collecting frames from /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/前景图 + /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Original_Method_Recovery/runs/KongQueZhuYu_RAP_FULL_210_R4bm05/最终掩膜",
+    "[14:53:10] 3 frame(s) selected (order preserved)",
+    "[14:53:10] foreground ratios (original resolution): crop_0000.png=0.2300, crop_0070.png=0.2023, crop_0140.png=0.3139",
+    "[14:53:10] preprocessing images + masks (identical geometry)",
+    "[14:53:12] model input tensor: (3, 3, 336, 192), mask tensor: (3, 336, 192), foreground pixel fraction: 0.2486",
+    "[14:53:12] loading checkpoint weights/vggt_omega_1b_512.pt on cuda",
+    "[14:53:46] running VGGT-Omega inference",
+    "[14:53:47] exporting GGGS dataset (foreground-mask-constrained COLMAP)",
+    "[14:53:50] export finished: {'output_dir': 'runs/smoke_3frames/GGGS_Dataset', 'num_frames': 3, 'num_points3d': 38488, 'colmap_dir': 'runs/smoke_3frames/GGGS_Dataset/sparse/0', 'per_frame_point2d': [14837, 13031, 10620], 'elapsed_seconds': 3.333}",
+    "[14:53:50] verifying dataset with GGGS reader from /tmp/gggs_community",
+    "[14:53:50] GGGS verification failed: ModuleNotFoundError(\"No module named 'simple_knn'\")"
+  ],
+  "gggs_verification": {
+    "failed": true,
+    "error": "ModuleNotFoundError(\"No module named 'simple_knn'\")"
+  }
+}

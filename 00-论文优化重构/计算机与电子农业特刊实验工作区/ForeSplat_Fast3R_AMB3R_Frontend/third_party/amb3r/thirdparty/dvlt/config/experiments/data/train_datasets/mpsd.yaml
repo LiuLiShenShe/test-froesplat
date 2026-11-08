@@ -1,0 +1,12 @@
+mpsd:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  window_size_ratio: 2.0
+  view_ranking: "index"
+  max_depth_thresh: 500.0
+  depth_filter_percentile: 95
+  dataverse_cfg:
+    target: "mpsd.MPSD"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/mpsd/data_root"
+      split_file: "${user.data_root}/train/mpsd/split_file"

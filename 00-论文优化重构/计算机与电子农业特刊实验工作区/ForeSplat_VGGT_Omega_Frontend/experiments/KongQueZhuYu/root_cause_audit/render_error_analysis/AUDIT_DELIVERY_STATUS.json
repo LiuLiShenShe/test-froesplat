@@ -1,0 +1,107 @@
+{
+  "status": "complete",
+  "actual_primary_checkpoint_render_views": 36,
+  "actual_E3_postprune_diagnostic_views": 3,
+  "actual_primary_runtime_cameras": 624,
+  "portable_json_files_verified": 68,
+  "native_jsonl_files": [
+    {
+      "path": "render_error_analysis/checkpoint_rerender_v1/E5/runtime_checkpoint/multi_view.json",
+      "format": "official native JSONL despite .json suffix",
+      "records": 208
+    },
+    {
+      "path": "render_error_analysis/checkpoint_rerender_v1/E1/runtime_checkpoint/multi_view.json",
+      "format": "official native JSONL despite .json suffix",
+      "records": 208
+    },
+    {
+      "path": "render_error_analysis/e3_postprune_diagnostic_v1/runtime_checkpoint/multi_view.json",
+      "format": "official native JSONL despite .json suffix",
+      "records": 208
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/E5/runtime_checkpoint/multi_view.json",
+      "format": "official native JSONL despite .json suffix",
+      "records": 208
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/E1/runtime_checkpoint/multi_view.json",
+      "format": "official native JSONL despite .json suffix",
+      "records": 208
+    }
+  ],
+  "control_effective_prune_status": "complete",
+  "files": [
+    {
+      "path": "05_render_evaluation_audit.md",
+      "bytes": 13749,
+      "sha256": "475b26f830f1ea5fd2e79642060d08235cc5b03f26b0eed47cbb8bf866fc37f6"
+    },
+    {
+      "path": "scripts/render_checkpoint_views.py",
+      "bytes": 16524,
+      "sha256": "d38fc17fb5bc539bf2fd81f6eefc91af247e3bf7064ac8540cb532d9a238f39f"
+    },
+    {
+      "path": "scripts/render_evaluate_common.py",
+      "bytes": 15176,
+      "sha256": "e3c143f467d7a2645a03b6288a2f7a068e454c6f0298a8314366182f09e9b59a"
+    },
+    {
+      "path": "scripts/render_principal_translation_diagnostic.py",
+      "bytes": 4658,
+      "sha256": "fa28366853d46327a3fbc95ff821f6b2211da359b7f065c40d318603ad40b485"
+    },
+    {
+      "path": "scripts/render_e3_postprune_diagnostic.py",
+      "bytes": 4103,
+      "sha256": "4b075059f0b0b586d2a62bd8e1274d57034d80dbe51e0329d77905a2660c2f73"
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render.py",
+      "bytes": 1245,
+      "sha256": "fd48424a7195a379113c572910e19767dba60ec6a2ffb3420e9825cae2c1f6f8"
+    },
+    {
+      "path": "controlled_fixes/evaluate_effective_prune.py",
+      "bytes": 5638,
+      "sha256": "de96d5b5d0ab2838fd93f79d56b99216e8e343318ab0064b392ad45b14806ab1"
+    },
+    {
+      "path": "controlled_fixes/PRUNE_EFFECTIVE_RENDER_REPORT.md",
+      "bytes": 5279,
+      "sha256": "0f062c286d6806df1024d3bae6616bd86c970ecfb35eb56d3428dcbbfedbf28c"
+    },
+    {
+      "path": "controlled_fixes/evaluate_effective_prune_perceptual_cpu.py",
+      "bytes": 6810,
+      "sha256": "857afea7a2727617dfe140ca9fbe078ee21eca71924978a2ec6965ac529ac4c8"
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/perceptual_cpu_supplement/perceptual_supplement.json",
+      "bytes": 3348,
+      "sha256": "d89125dc7137656e90cba699440716c2c714e87d58520fa808eb472a5b4fc6fa"
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/perceptual_cpu_supplement/per_view_perceptual_metrics.csv",
+      "bytes": 1977,
+      "sha256": "385ddfabf2e2cecd1ebc3ff6fce91da9de89e89cb8c84eb2e02dca0cdb00ac75"
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/perceptual_cpu_supplement/summary_perceptual_metrics.csv",
+      "bytes": 400,
+      "sha256": "39fe6e8b8dbc781a2aa85d0afc09beb9823778470df4bd04bfabef5c7e6e2f7b"
+    }
+  ],
+  "actual_control_checkpoint_render_views": 6,
+  "actual_control_runtime_cameras": 416,
+  "GPU1_released": true,
+  "control_report": "controlled_fixes/PRUNE_EFFECTIVE_RENDER_REPORT.md",
+  "final_verification_scope": "render_error_analysis and controlled_fixes/prune_effective_render only; no other agents files modified",
+  "control_perceptual_CPU_supplement_status": "complete",
+  "control_perceptual_metric_views": 6,
+  "control_perceptual_supplement": "controlled_fixes/prune_effective_render/perceptual_cpu_supplement/perceptual_supplement.json",
+  "control_perceptual_GPU_actions": 0,
+  "control_perceptual_downloads": 0
+}

@@ -1,0 +1,40 @@
+{
+  "offsets_original_source_id": [
+    1,
+    5,
+    15,
+    30,
+    60
+  ],
+  "views": 208,
+  "shared_query_reference": "Actual Omega model-mask pixels mapped by saved A^-1 to common original-source pixel coordinates; same query coordinates before each model eligibility test; at most1500 source-number-seeded samples/ROI",
+  "regions": {
+    "leaf_window": [
+      540,
+      570,
+      1080,
+      1230
+    ],
+    "leaf_edge_window": [
+      510,
+      630,
+      720,
+      1110
+    ],
+    "pot_rim_window": [
+      800,
+      1680,
+      1700,
+      2000
+    ]
+  },
+  "boundary": "One pixel inner boundary on common384x688 reference grid, includes plant/pot/blue, evaluation only",
+  "confidence_controls": [
+    "mask_finite",
+    "confidence_gt1"
+  ],
+  "occlusion": "Source projected z-buffer1.005; target predicted occlusion when projected source depth >1.05 target depth. Occlusion can also reflect erroneous predictions; all-query support and raw-overlap errors retain that failure evidence.",
+  "sampling": "Queries only; all208saved depth/pointmaps and cameras read; no output point averaging, no raw prediction or camera modifications",
+  "relative_errors": "depth error divided by target depth; cycle error in original pixels; no metric/GT scale correction",
+  "limitations": "Predictions across different input views provide internal multiview evidence, not absolute geometry accuracy. Independent RGB epipolar evidence is in camera_projection_comparison/epipolar*. Saved full point_head does not exist for Omega/standard; do not infer learned point-head accuracy from depth unprojection."
+}

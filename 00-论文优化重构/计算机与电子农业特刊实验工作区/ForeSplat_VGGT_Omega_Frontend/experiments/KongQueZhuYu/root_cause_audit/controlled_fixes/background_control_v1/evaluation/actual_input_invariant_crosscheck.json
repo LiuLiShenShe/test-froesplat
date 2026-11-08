@@ -1,0 +1,112 @@
+{
+  "Omega": {
+    "conditions": [
+      "Omega_RAP_baseline_24",
+      "Omega_background_restored_24"
+    ],
+    "same_source_ids": [
+      0,
+      1,
+      19,
+      20,
+      38,
+      39,
+      57,
+      58,
+      76,
+      77,
+      95,
+      96,
+      114,
+      115,
+      133,
+      134,
+      152,
+      153,
+      170,
+      171,
+      189,
+      190,
+      208,
+      209
+    ],
+    "common_frames": 24,
+    "metadata_invariants_equal": {
+      "checkpoint_sha256": true,
+      "seed": true,
+      "torch_version": true,
+      "python": true,
+      "preprocessing": true,
+      "source_file_sha256": true
+    },
+    "frame_mask_geometry_invariants_equal": {
+      "mask_sha256_model": true,
+      "pixel_transform": true,
+      "pixel_transform_pixel_center": true,
+      "model_width": true,
+      "model_height": true,
+      "original_width": true,
+      "original_height": true
+    },
+    "identical_model_RGB_float32_sha_frames": 0,
+    "expected_RGB_identical": false,
+    "all_required_invariants": true,
+    "historical208_note": "No old complete environment freeze; excluded from strict70vs110 input/env invariant claim",
+    "background_note": "Only original Mask-exterior pixels restored; prepared_sources.json is producer exact pixel assertion. Model RGB can differ at interpolated foreground boundaries and is the intended condition change."
+  },
+  "Standard": {
+    "conditions": [
+      "Standard_RAP_baseline_24",
+      "Standard_background_restored_24"
+    ],
+    "same_source_ids": [
+      0,
+      1,
+      19,
+      20,
+      38,
+      39,
+      57,
+      58,
+      76,
+      77,
+      95,
+      96,
+      114,
+      115,
+      133,
+      134,
+      152,
+      153,
+      170,
+      171,
+      189,
+      190,
+      208,
+      209
+    ],
+    "common_frames": 24,
+    "metadata_invariants_equal": {
+      "checkpoint_sha256": true,
+      "seed": true,
+      "torch_version": true,
+      "python": true,
+      "preprocessing": true,
+      "source_file_sha256": true
+    },
+    "frame_mask_geometry_invariants_equal": {
+      "mask_sha256_model": true,
+      "pixel_transform": true,
+      "pixel_transform_pixel_center": true,
+      "model_width": true,
+      "model_height": true,
+      "original_width": true,
+      "original_height": true
+    },
+    "identical_model_RGB_float32_sha_frames": 0,
+    "expected_RGB_identical": false,
+    "all_required_invariants": true,
+    "historical208_note": "No old complete environment freeze; excluded from strict70vs110 input/env invariant claim",
+    "background_note": "Only original Mask-exterior pixels restored; prepared_sources.json is producer exact pixel assertion. Model RGB can differ at interpolated foreground boundaries and is the intended condition change."
+  }
+}

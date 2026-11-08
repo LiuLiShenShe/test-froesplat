@@ -1,0 +1,177 @@
+{
+  "call_id": 113,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    23,
+    18,
+    29,
+    97
+  ],
+  "local_reference_frame": 23,
+  "anchor_frame_indices": [
+    23,
+    18,
+    29
+  ],
+  "benchmark_early_stop_requested": false,
+  "status": "predicted",
+  "seconds": 0.7192331289988942,
+  "raw_export_seconds": 0.034835621976526454,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        448.85284423828125,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        448.85284423828125,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        448.85284423828125,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        448.85284423828125,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        448.85284423828125,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        448.85284423828125,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        448.85284423828125,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        448.85284423828125,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 1.9048304557800293,
+  "confidence_range": [
+    1.0,
+    7.6754560470581055
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 112501,
+      "iterations": 100,
+      "pnp_inliers": 96933
+    },
+    {
+      "status": "success",
+      "valid_points": 108129,
+      "iterations": 100,
+      "pnp_inliers": 83181
+    },
+    {
+      "status": "success",
+      "valid_points": 105645,
+      "iterations": 100,
+      "pnp_inliers": 82466
+    },
+    {
+      "status": "success",
+      "valid_points": 142000,
+      "iterations": 100,
+      "pnp_inliers": 35664
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.01525769922161699,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.5360504532950396,
+        "foreground_reprojection_p90_px": 3.498970355100168,
+        "points": 61494,
+        "rotation_determinant": 1.0000001192092896,
+        "orthogonality_error": 1.7881406065680092e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 2.1165910158780195,
+        "foreground_reprojection_p90_px": 4.091207185997095,
+        "points": 47948,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.0389173774607657e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 2,
+        "foreground_reprojection_median_px": 1.9114401292159693,
+        "foreground_reprojection_p90_px": 3.5509338871018614,
+        "points": 43722,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.8577664301680022e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 3,
+        "foreground_reprojection_median_px": 3.194388303985828,
+        "foreground_reprojection_p90_px": 6.691295002028245,
+        "points": 42864,
+        "rotation_determinant": 1.0000001192092896,
+        "orthogonality_error": 1.7071535053017738e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 4,
+      "recorded_views": 4,
+      "actual_success_count": 4,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

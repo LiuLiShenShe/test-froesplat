@@ -1,0 +1,1351 @@
+                                          AMB3R: Accurate Feed-forward Metric-scale 3D Reconstruction with Backend
+
+                                                                                              Hengyi Wang Lourdes Agapito
+                                                                                  Department of Computer Science, University College London
+                                                                                               https://hengyiwang.github.io/projects/amber
+arXiv:2511.20343v1 [cs.CV] 25 Nov 2025
+
+
+
+
+                                         a) Monocular Depth Estimation c) Multi-view Depth Estimation
+
+
+
+                                                                                               12.1cm
+
+                                          b) Camera Pose Estimation      d) Metric-scale Estimation     e) Multi-view Geometry Estimation        f) Visual Odometry / SLAM (static/dynamic)   g) Structure from Motion
+
+                                         Figure 1. Overview. We present AMB3R, a feed-forward model for metric-scale 3D reconstruction. AMB3R supports camera pose
+                                         estimation, monocular/multi-view metric depth/3D reconstruction, and can be seamlessly extended to visual odometry (VO)/SLAM and
+                                         Structure from Motion (SfM) with no task-specific fine-tuning or test-time optimization. We use in-the-wild images for a)-e), scenes
+                                         from Co-SLAM [123], TTT3R [19], and KITTI [36] for f), scenes from COLMAP [99], Tanks&Temples [55], and IMC PhotoTourism [49]
+                                         (all images) for g). No confidence threshold is used. f) & g) results are randomly down-sampled to 3 million points for visualization.
+
+                                                                                Abstract                                                    Yet, this raises a fundamental question: Is the mapping from
+                                                                                                                                            2D pixels to 3D scene points truly one-to-one?
+                                         We present AMB3R, a multi-view feed-forward model for                                                  In practice, this is not the case. Due to visual overlap,
+                                         dense 3D reconstruction on a metric-scale that addresses                                           multiple pixels often correspond to the same 3D point. This
+                                         diverse 3D vision tasks. The key idea is to leverage a                                             many-to-one mapping, known as correspondence, lies at
+                                         sparse, yet compact, volumetric scene representation as                                            the heart of decades of research in 3D vision. Early sparse
+                                         our backend, enabling geometric reasoning with spatial                                             reconstruction methods [3, 23] leverage correspondences
+                                         compactness. Although trained solely for multi-view re-                                            between interest points to recover camera parameters and
+                                         construction, we demonstrate that AMB3R can be seam-                                               sparse geometry. Multi-view stereo (MVS) methods [34]
+                                         lessly extended to uncalibrated visual odometry (online) or                                        construct cost volumes for depth estimation, which essen-
+                                         large-scale structure from motion without the need for task-                                       tially match pixel correspondences within the volume. For
+                                         specific fine-tuning or test-time optimization. Compared to                                        dense 3D reconstruction, approaches ranging from tradi-
+                                         prior pointmap-based models, our approach achieves state-                                          tional methods (e.g., KinectFusion [85]) to modern neural
+                                         of-the-art performance in camera pose, depth, and metric-                                          implicit models (e.g., DeepSDF [90], NeRF [80], Neural-
+                                         scale estimation, 3D reconstruction, and even surpasses                                            Recon [109]) adopt compact 3D representations such as
+                                         optimization-based SLAM and SfM methods with dense re-                                             TSDF grids, feature grids, or coordinate-based networks.
+                                         construction priors on common benchmarks.                                                          Despite their diverse forms, these representations share a
+                                                                                                                                            commonality—spatial compactness (i.e., the same 3D co-
+                                                                                                                                            ordinate can only have a unique property). This compact-
+                                                                                                                                            ness enforces the fusion of multiple corresponding observa-
+                                         1. Introduction
+                                                                                                                                            tions of the same scene point into a coherent geometry.
+                                         Pointmaps have emerged as the cornerstone of modern 3D                                                 Recent feed-forward models such as Spann3R [122] or
+                                         foundation models. By exploiting the one-to-one corre-                                             VGGT [124] follow the DUSt3R [128] paradigm, formu-
+                                         spondence between 2D pixels and 3D point coordinates, we                                           lating the task as per-pixel 2D-to-3D regression. While the
+                                         can train a neural network to tackle various 3D vision tasks.                                      pointmap output space implicitly encourages multiple cor-
+
+
+                                                                                                                                        1
+responding pixels to have the same 3D location regardless          introduced, including lossless representations such as voxel
+of viewpoint, the network itself operates on 2D grids and          hashing [86] and octrees [46, 78], as well as lossy ones
+lacks explicit geometric reasoning or spatial compactness.         such as hash feature grids [81], triplanes [16, 91], and vec-
+   In this paper, we propose AMB3R, a feed-forward re-             tor–matrix [17], many of which rely on a low-rank approx-
+construction pipeline with a compact scene representation          imation of the 3D scene. Point clouds are also a widely
+as backend. We use VGGT as our front-end to predict fea-           used spatial data-structure as they are readily available from
+tures and geometry, with an additional scale head trained to       posed RGB-D images. Unlike voxels, point clouds are ir-
+recover the metric scale. For the backend, we adopt sparse         regular and typically sampled only around visible surface
+voxels as our spatial data structure. Thanks to decades            regions. To process such data, HilbertNet [18] proposes
+of progress in 3D geometry processing, we organize these           mapping points onto a Hilbert curve [1, 39] – a fractal
+sparse voxels into a 1D sequence via space-filling curves          space-filling curve that traverses the entire 3D space while
+and process them using a transformer-based architecture,           preserving spatial locality – thereby serializing the point
+enabling efficient reasoning in compact 3D space. The              cloud into a 1D sequence that can be efficiently processed
+fused features are injected back into the front-end decoder        with a transformer-based architecture [64, 131, 132, 150].
+via zero-convolution layers as in ControlNet [146], allow-
+ing the model to benefit from pre-trained weights and the          2.2. Pointmap-based Reconstruction
+learned confidence function of the front-end, substantially        Pointmaps, or scene coordinates, were originally introduced
+reducing the training cost (∼ 80 H100 GPU hours).                  by SCoRF [105] as a scene-specific 3D representation for
+   Furthermore, we demonstrate that AMB3R can be seam-             camera localization [7, 9, 10, 96]. DUSt3R [128] and
+lessly extended to perform uncalibrated visual odometry or         MASt3R [58] extend this concept by training neural net-
+structure from motion without the need for fine-tuning or          works to regress pointmaps from two-view inputs in a gen-
+test time optimization. To sum up, our contributions are:          eralizable manner. Since pointmaps inherently encode both
+1. A Compact Backend Scene Representation for a feed-              camera information and scene geometry, they provide a uni-
+   forward pointmap-based foundation model that enables            fied representation that enables a single network to address
+   explicit 3D reasoning with spatial compactness.                 diverse geometric vision tasks. To scale feed-forward re-
+2. Metric-scale Reconstruction with a light-weight scale           construction beyond two views, Spann3R [122] and oth-
+   head to recover metric depth information.                       ers [13, 19, 20, 54, 57, 63, 69, 73, 75, 126, 133, 156]
+                                                                   adopt an incremental paradigm in a similar spirit to in-
+3. Uncalibrated Visual Odometry without the need for
+                                                                   cremental SfM/SLAM [23, 99], whereas VGGT [124] and
+   fine-tuning or an optimization-based backend. Notably,
+                                                                   others [30, 113, 120, 129, 136] follow a global paradigm
+   we show for the first time, feed-forward visual odometry
+                                                                   that jointly processes all images as in global SfM [3,
+   can surpass its optimization-based counterparts.
+                                                                   88]. Beyond multi-view dense reconstruction, extensions
+4. Feed-forward Structure from Motion capable of                   have been proposed for calibrated settings [47, 52], cam-
+   large-scale reconstruction without optimization.                era calibration [72], camera localisation [27, 42, 68, 70],
+5. State-of-the-Art Performance on 7 tasks across 13               monocular depth estimation [60, 71, 111], dynamic recon-
+   datasets, surpassing existing 3D foundation models and          struction [33, 48, 59, 76, 114, 147], novel view synthe-
+   only requiring academic-level training resources (∼ 80          sis [44, 61, 65, 66, 79, 103, 135, 148], surface reconstruc-
+   H100 GPU hrs) to train the metric-scale head and new            tion [154], semantic segmentation [157], spatial reason-
+   backend on top of frozen VGGT [124] weights.                    ing [32, 41, 93], and scientific imaging [145]. Since feed-
+6. Open Source Release of code, weights, and an evalua-            forward approaches are typically constrained to moderate
+   tion toolkit to facilitate future research.                     scene sizes [122] or limited image counts [124], several
+                                                                   works [24, 28, 83, 143, 153] also explore optimization-
+2. Related Work                                                    based formulations to scale up reconstruction.
+
+2.1. 3D Scene Representations                                      3. Preliminaries: Pointmap-based Front-end
+A 3D scene can be represented through various scene prop-          Given a set of input images {It }Tt=1 , pointmap-based mod-
+erties – such as signed distance functions (SDFs), vol-            els independently encode each image into visual features:
+ume density, radiance, surface normals, or learned features
+– stored in spatial data structures like voxel grids, point                               F_t = \mathrm {Encoder}(I_t)       (1)
+clouds, meshes, or even MLPs. Among these, voxel grids
+are especially popular in geometric deep learning, as they         Since the pointmap is defined up to a rigid transformation,
+naturally extend 2D pixels into 3D. Since grids grow cubi-         we fix an anchor image and assume its camera pose to be the
+cally with scene size, many sparse alternatives have been          identity. The task becomes to predict a pointmap per image
+
+
+                                                               2
+                                   ViT Encoder                                    ViT Decoder
+
+
+                                                                          Zero Zero Zero Zero
+                        Front-end                                         Conv Conv Conv Conv
+
+
+
+                         Back-end
+                                                                                                               KNN 
+
+                                                                                                              interp                             Transformer
+
+
+
+
+Figure 2. Overview of AMB3R. AMB3R consists of a front-end that predicts pointmaps and geometric features, and a back-end that
+fuses them into sparse voxels, which are serialized into a 1D sequence, processed by a transformer, and unserialized back to 3D. Per-pixel
+features are obtained via KNN interpolation and injected into the frozen front-end via zero-convolution for final prediction.
+
+expressed in the anchor coordinate system. To achieve this,                                                                                      where I denotes the set of valid pixels. Confidence Ct is
+the model requires a temporal encoding that (i) disentangles                                                                                     learned in a self-supervised way that depends on both the
+visual features across images while being generalizable to                                                                                       data distribution and the training recipe. Consequently, fine-
+many images, and (ii) identifies the anchor image to pro-                                                                                        tuning a pre-trained model on different data distributions
+vide a consistent reference frame. Existing models can be                                                                                        using a modified training setup without careful initializa-
+categorized into three paradigms:                                                                                                                tion may lead to catastrophic forgetting of the learned con-
+(a) Network-based temporal encoding. DUSt3R [128]                                                                                                fidence, potentially degrading reconstruction performance.
+employs two intertwined decoders for two images, where
+the coordinate system is defined by the reference decoder:                                                                                       4. Method
+      P_1^{(1)} = \mathrm {Decoder}^1(I_1), \quad P_2^{(1)} = \mathrm {Decoder}^2(I_2).                                                (2)       4.1. Metric-scale Reconstruction
+This design choice satisfies condition (ii), but inherently                                                                                      VGGT [124] predicts pointmaps normalized by the median
+limits its scalability to only two images.                                                                                                       distance across all frames (Sec. 3), suggesting that it might
+(b) Causal temporal encoding. Spann3R [122] proposes                                                                                             implicitly encode metric cues. Thus, we employ a scale
+an incremental reconstruction framework, where each in-                                                                                          head to recover metric scale from its frozen features.
+coming frame queries accumulated memory features:                                                                                                   A simple way is to regress the global scale difference be-
+                                                                                                                                                 tween GT and the prediction via a ROE solver [127]. Since
+                                P_t^{(1)} = \mathrm {Decoder}(M_{1:t-1}, F_t). \label {eq:typeb}                                       (3)       this global information depends on ALL frames, we use all
+This formulation naturally satisfies (i) and (ii) in a causal                                                                                    intermediate features after the encoder for regression. In
+setting. By sparsifying memory features, Spann3R can pro-                                                                                        practice, though, we find this approach is difficult to train
+cess long sequences without exploding GPU memory.                                                                                                and prone to overfitting, as the scale difference can vary
+(c) Token-based temporal encoding. VGGT [124] intro-                                                                                             with different frame combinations or even frame order.
+duces two tokens for the anchor and other images and uses                                                                                           Instead, for each frame we regress the metric log depth
+alternating attention as a generalizable temporal encoding:                                                                                      of the pixel with median predicted depth. This captures
+                                                                                                                                                 the intrinsic, per-frame property recoverable from individ-
+      \{P_t^{(1)}\}_{t=1}^T = \mathrm {Decoder}\big (F_1 + e_{1}, \{F_t + e_{2}\}_{t=2}^T\big ). \label {eq:typec}                     (4)
+                                                                                                                                                 ual encoder features, avoiding a strong dependence on the
+This enables offline reconstruction with densely connected                                                                                       model’s (global) prediction, making the task substantially
+attention, leading to superior reconstruction quality.                                                                                           easier. In addition we include the decoder depth feature as
+Coordinate normalization. Pointmap prediction from im-                                                                                           guidance. At inference, we estimate per-frame scales and
+ages is always up to an unknown scale. To address this dur-                                                                                      take their median to align the reconstruction to metric space.
+ing training, DUSt3R and Spann3R normalize both the pre-                                                                                         4.2. Backend
+dicted and ground-truth geometry, whereas VGGT normal-                                                                                                                                                     (1)
+izes only the ground-truth geometry and trains the model                                                                                         Given pointmap predictions {Pt }Tt=1 and corresponding
+to predict in this normalized space. This forms a canonical                                                                                      geometric features {Gt }Tt=1 extracted from visual features
+space and generally leads to more stable training.                                                                                               and decoder features, we align their resolution and construct
+                                                                                                                                                 a sparse voxel grid V. Voxel features {Hi }N i=1 are obtained
+Confidence-aware supervision. These models are trained                                                                                           by averaging features within the same voxel Vi :
+with a confidence loss on the ground-truth geometry:
+                \gL _{\mathrm {conf}} = \sum _t \sum _{i\in \gI } \left (C_t^i \gL _{\mathrm {reg}}(i) - \alpha \log C_t^i\right ),    (5)                          H_i = \frac {1}{|\gP _i|} \sum _{(t,\rvu ) \in \gP _i} G_t[\rvu ],    (6)
+
+
+
+                                                                                                                                             3
+                                            (1)
+where Pi = {(t, u) | Pt [u] ∈ Vi }, u denotes the pixel co-                                                               alignment introduces non-negligible errors, existing meth-
+ordinates. We set the voxel size to 0.01 in normalized space,                                                             ods usually rely on an optimisation-based backend [74].
+naturally enabling adaptive voxel resolution depending on                                                                 However, we argue this ignores a strong prior in pointmap-
+the scene scale. The sparse voxel grid is serialized into 1D                                                              based methods: predictions are always expressed in the ref-
+feature sequences via space-filling curves, processed by a                                                                erence (first) frame coordinate system up to an unknown
+transformer, and un-serialized back to voxel space:                                                                       (median) scale. That is to say, it is not necessary to estimate
+                                                                                                                          the transformation for coordinate system alignment.
+            \{\hat {H}_i\}_{i=1}^N = (\gS ^{-1} \circ f_{\theta } \circ \gS )\left (\{H_i\}_{i=1}^N\right ),    (7)       Keyframes as memory. If we rewrite Eq. 4 as
+
+where S denotes the serialization and fθ is implemented                                                                        \{P_t^{(1)}\}_{t=1}^{T-1}, P_T^{(1)}= \mathrm {Decoder}\big (\gM _{1:T-1}, F_T + e_2\big ), \label {eq:typec2}  (10)
+via Point Transformer v3 [132], a U-Net-like architecture
+                                                                                                                                                                                                                       −1
+                                                                                                                          where M1:T −1 = F1 + e1 , {Ft + e2 }Tt=2
+                                                                                                                                                                     
+for efficient geometry processing. We then use K-nearest                                                                                                                                                                        . Compared
+neighbor interpolation to obtain per-point features:                                                                      to Eq. 3 under the streaming setting, type-(c) methods can
+                                                                                                                          be considered as a special memory network that can also
+                   \tilde {G}_t[\rvu ] = \mathrm {KNN}\big (P_t^{(1)}[\rvu ], \{\hat {H}\}_{i=1}^N\big ).       (8)       update the previous predictions with non-causal attention.
+                                                                                                                          Thus, we can use carefully selected keyframes as our mem-
+These features are fused back to each decoder layer using                                                                 ory, enabling the model to run in a visual odometry mode.
+zero convolution, allowing the model to reuse the attention                                                               Keyframe selection. We can measure the pose distance as
+and confidence functions learned by the front-end model                                                                   in VGGT [124] and our training frame sampling strategy:
+while substantially reducing training cost. See Fig. 2.
+
+4.3. Training                                                                                                                   D_{i, j} = \arccos \left (\frac {\operatorname {Tr}(R_j R_i^T) - 1}{2}\right ) + \lambda \|\tau '_i - \tau '_j\|_2,  (11)
+
+We freeze our front-end model (i.e., VGGT [124]) and only
+train our backend. Our loss is the same as VGGT for                                                                       where R and τ ′ are rotation and normalized translation vec-
+pointmap, depth, and camera pose (except tracking loss):                                                                  tor. We set a minimal pose distance with respect to the
+                                                                                                                          poses of existing keyframes ηd = 0.15 and iteratively add
+                                                                                                                          the frame with the highest confidence within each mapping
+               \gL = \gL _{\mathrm {depth}} + \gL _{\mathrm {pointmap}} + \gL _{\mathrm {camera}}.              (9)
+                                                                                                                          window as our new keyframe. These keyframes serve as
+Since our training loss, training data, and pre-processing                                                                our memory for the next mapping window of Nw = 8 new
+scripts differ from those in VGGT, the expected canonical                                                                 frames. Since our prediction is up to the median scale of
+scale learned by minimizing L may not align with that of                                                                  all input frames, we estimate the scale of the new window
+VGGT. Directly training on normalized data would there-                                                                   w prediction relative to the global map based on keyframe
+fore force the model to waste capacity compensating for                                                                   k ∈ KFw :
+this scale mismatch. To mitigate this, we align the pre-                                                                                     s^{w} = \mathrm {ROE}(P_{k}^{(1)}, P_{k}^{(1), w}) \label {eq:roe}  (12)
+dicted geometry with the normalized ground truth using the
+                                                                                                                          After the scale estimation, we will fuse the new window
+ROE [127] solver before supervision. For pointmap predic-
+                                                                                                                          prediction to the existing map in a running average manner:
+tion, we estimate a single scale factor per sequence, while
+for depth prediction we relax this constraint and estimate                                                                                   P_k &\leftarrow (C_k P_k + C_k^w s^{w} P_k^w) / (C_k + C_k^w), \label {eq:update_p} \\ m &\leftarrow (C_k m + C_k^w m^w / s^{w}) / (C_k + C_k^w), \\ \tau _k &\leftarrow (C_k \tau _k + C_k^w s^{w} \tau _k^w) / (C_k + C_k^w), \label {eq:update_t} \\ q_k &\leftarrow \operatorname {slerp}(q_k, q_k^w, C_k^w / (C_k + C_k^w)), \\ C_k &\leftarrow C_k + C_k^w. \label {eq:update_c}
+an independent scale per image. Because the front-end
+(VGGT) is trained to produce geometry in a consistent scale
+and remains frozen, this strategy allows our backend to fo-
+cus on refining fine structural details without compromising
+global consistency. The backend is trained for 40 epochs on                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (17)
+a mixture of 12 datasets, each epoch containing 2000 sam-
+ples—a total of 80K samples, still less than a single epoch                                                               where qk is the quaternion vector of the rotation matrix. Ck
+of VGGT training data—with 5–16 frames per sample, re-                                                                    is the predicted confidence. m is the metric-scale factor.
+quiring roughly 50 H100 GPU hours to train.                                                                               Active keyframe management. Once the number of active
+                                                                                                                          keyframes reaches Nmax = 10, we resample Nmin = 7
+4.4. Uncalibrated Visual Odometry                                                                                         keyframes from all historical keyframes. The last keyframe
+To extend type-(c) methods into a visual odometry (VO)                                                                    will always be preserved, and we will sample Ntopk
+or SLAM system, a straightforward approach is to sequen-                                                                  keyframes that have the least pose distance to the last
+tially build overlapping submaps and estimate both the rela-                                                              keyframe. To encourage the model to use earlier frames
+tive transformations and scale differences between them us-                                                               to form a loop, we set a backward search window ηb = 0.4
+ing the Kabsch–Umeyama algorithm [50, 117]. Since such                                                                    and iteratively add the earliest keyframe that fits this search
+
+
+                                                                                                                      4
+window, resulting in Nold in total. A keyframe that has the                                Method
+                                                                                                               NYUv2 [84] KITTI [36] ETH3D [100] ScanNet [22] DIODE [119]
+                                                                                                               Rel   δ1.25     Rel δ1.25 Rel       δ1.25      Rel   δ1.25     Rel   δ1.25
+minimal sum pose distance to existing keyframes is sam-
+                                                                                           Omnidata [29]     7.4     94.5     14.9   83.5 16.6     77.8       7.5 93.6 33.9         74.2
+pled to serve as the first frame. Note that once the max pose                              DepthAny v2 [137] 4.3     97.9      8.0   94.4 5.7      98.3      (4.2) (97.9) 21.6      75.2
+distance of the active keyframes are larger than ηmax = 1.2,                               Marigold [51]     5.5     96.4      9.9   91.6 6.5      96.0       6.4 95.1 30.8         77.3
+                                                                                           Diffusion-E2E[35] 5.2     96.6     9.6    91.9 6.2      95.9       5.8 96.2 30.2         77.9
+we resample keyframes to ensure the model only covers a                                    MoGe [127]        3.6     98.0      5.5   97.6 3.3      98.8       3.5 98.3 22.4         82.3
+reasonable scene region within the training distribution.                                  VGGT [124]          3.6   98.0      8.8   92.7    3.8   97.9      (2.7) (98.8) 26.9      79.1
+                                                                                           AMB3R               3.0   98.9      7.3   95.4    3.2   98.8      (2.7) (98.9) 24.7      80.7
+Coordinate alignment. After keyframe resampling, the
+first keyframe in memory might not be the first frame, re-                                 Table 1. Monocular depth estimation. Our method achieves
+sulting in a different coordinate system between our global                                competitive zero-shot monocular depth performance.
+map and local prediction. Instead of jointly estimating scale                                            DUSt3R [128] MASt3R [58] Fast3R [136] VGGT [124] VGGT [124] AMB3R
+and relative transformation from the local map to the global                               Re10K [152]       67.7            76.4           72.7           85.3        81.8         86.3
+map, we can first map our global map into the local map:
+                                                                                           Table 2. Camera Pose Estimation. We evaluate AUC@30 by
+                      P_k^{(k_0)} = T_{k_0}^{-1}P_k^{(1)}, \label {eq:align}    (18)       randomly sampling 10 frames from the entire sequence.
+
+where Tk0 = [Rk0 , τk0 ]. We can then estimate the scale be-                               the keyframe list into sub-clusters based on pose distance.
+         (k )       (k ),w
+tween Pk 0 and Pk 0 . After scaling the camera pose, we                                    Subsequent clusters are then mapped against the top-k=5
+can obtain the relative pose of each corresponding keyframe                                smaller sub-clusters to improve registration accuracy. For
+and use their weighted average to map the local map back to                                each frame, only the prediction from the highest-confidence
+the global frame of reference and fuse them as in Eq. 13-17,                               mapping is kept; low-confidence frames are marked as un-
+thus avoiding explicit Kabsch–Umeyama alignment.                                           registered and mapped again after registration finishes. Map
+Robust estimation. To reduce inference cost without sac-                                   update and coordinate alignment follow Sec. 4.4.
+rificing performance, we only run the backend when the                                     Global mapping. After coarse registration, we perform
+confidence of the front-end prediction falls below a pre-                                  a two-stage mapping as refinement. First, we refine all
+defined threshold. Based on both the confidence and a self-                                keyframes: starting from the first, we find its top-k closest
+consistency score from the raw pointmap and the unpro-                                     keyframes within ηr = 1.5 and perform mapping. We then
+jected pointmap from the front-end and backend, we either                                  apply a confidence-prioritized breadth-first search (BFS),
+use backend prediction or blend them, ensuring robust per-                                 adding keyframes in the current mapping window to a prior-
+formance in the sequential system.                                                         ity queue sorted by confidence, thereby traversing the entire
+                                                                                           keyframe graph, and mapping each keyframe with its clos-
+4.5. Structure from Motion                                                                 est top-k keyframes. Finally, each non-keyframe is refined
+Feed-forward pointmap-based models, while efficient, are                                   by mapping with the top-k closest frames.
+typically limited by the scale and motion range observed
+during training. Moreover, type-(c) approaches exhibit                                     5. Experiments
+quadratic computational complexity with respect to the
+                                                                                           5.1. Setup
+number of images, making them impractical for large-scale
+reconstruction. To extend AMB3R into a scalable feed-                                      Benchmarks. We evaluate across 7 tasks on 13 datasets to
+forward SfM system, we adopt a divide-and-conquer strat-                                   show the effectiveness and versatility of our approach:
+egy: images are partitioned into small clusters and solved                                 • Camera Pose Estimation. We evaluate against SOTA
+following incremental SfM without optimization.                                              pointmap-based methods on RealEstate10K [152].
+Image clustering. For each given image It , we extract its                                 • Monocular Depth Estimation.             We follow prior
+feature descriptor F̄t ∈ RC , apply feature whitening, and                                   works [51] and show zero-shot generalization of our
+construct the feature distance matrix DF ∈ RT ×T . Furthest                                  model on five benchmarks: NYUv2 [84], KITTI [36],
+Point Sampling (FPS) with iterative splitting and merging                                    ETH3D [100], ScanNet [22], and DIODE [119].
+is then applied to construct image clusters, each containing                               • Multi-View (Metric) Depth Estimation. We compare
+between Ncmin and Ncmax images.                                                              against various (metric) depth estimation methods on
+Coarse registration. We initialize the map using the cluster                                 RMVDB [102], using KITTI [36], ETH3D [100], Scan-
+with highest confidence and maintain a global keyframe list                                  Net [22], DTU [2], and Tanks & Temples [55] datasets.
+with ηd = 0.2. After initialization, the map is incrementally                              • 3D Reconstruction. We benchmark against pointmap-
+built by: (1) identifying the top-k=5 unmapped clusters with                                 based models on ETH3D [100] and DTU [2] (RMVDB
+the smallest feature distance to existing keyframes, (2) map-                                splits), as well as 7Scenes [105] (Spann3R [122] splits).
+ping with existing keyframes, and 3) updating global map                                     Note that Replica [107] is within DUSt3R [128] and
+using the cluster with highest confidence. When the num-                                     VGGT [124] training data, and we remove NRGBD [5]
+ber of global keyframes exceeds Nkmax = 8, we partition                                      due to the potential overlap with synthetic training data.
+
+
+                                                                                       5
+Approach               KITTI        ScanNet       ETH3D           DTU           T&T         Average                               KITTI [36]       ScanNet [22]     ETH3D [100]       DTU [2]         T&T [55]
+                    rel ↓ δ1.03 ↑ rel ↓ δ1.03 ↑ rel ↓ δ1.03 ↑ rel ↓ δ1.03 ↑ rel ↓ δ1.03 ↑ rel ↓ δ1.03 ↑       Method
+                                                                                                                                 rel δ1.03 δ1.25 rel   δ1.03 δ1.25 rel δ1.03 δ1.25 rel δ1.03 δ1.25 rel δ1.03 δ1.25
+a) Classic approaches
+COLMAP [99]         12.0 58.2 14.6 34.2 16.4 55.1 0.7 96.5 2.7 95.0 9.3 67.8                                  MASt3R [58]     56.8 0.1 8.4 (10.5) (27.0) (91.0) 40.4 10.3 26.7 129.0 1.7 8.1 63.7 0.0 1.5
+b) Single-view depth                                                                                          MUSt3R [13]     82.4 0.0 0.0 (40.2) (0.7) (6.2) 63.3 1.0 3.9 46.8 2.6 25.3 77.0 0.0 0.0
+UniDepthV2 [92]      4.0 55.3 (2.1) (82.6) 3.7 66.2 3.2 72.3 3.6 68.4 3.3 68.9                                Spann3R [122]   16.4 18.9 76.5 (33.1) (3.3) (23.0) 25.1 18.6 65.3 67.8 8.7 42.7 23.3 17.6 57.4
+                                                                                                              CUT3R [126]     28.6 4.1 29.5 (9.9) (19.2) (96.3) 29.4 6.4 40.7 138.5 0.7 2.3 46.7 0.1 1.9
+DepthAny V2 [137] 6.6 38.6 4.0 58.6 4.7 56.5 2.6 74.7 4.5 57.5 4.8 54.1                                              ‡
+                                                                                                              MapAny [52]     12.8 16.1 78.2 31.9 7.7 41.2 15.4 26.6 83.1 718.5 0.0 0.2 24.6 15.3 41.5
+c) Depth from frames and poses (w/ per-image range)                                                           AMB3R (dec. sc.) 4.5 56.5 97.8 (9.3) ( 41.4) ( 91.7) 12.2 42.1 83.9 96.2 25.6 59.3 9.4 42.6 83.8
+Vis-MVSNet [144] 9.5 55.4 8.9 33.5 10.8 43.3 (1.8) (87.4) 4.1 87.2 7.0 61.4                                   AMB3R (enc. z) 8.2 27.9 95.6 (9.3) ( 26.9) ( 95.2) 8.5 48.3 90.4 240.9 30.3 60.9 6.3 49.9 95.7
+MVSFormer++ [15] 4.4 65.7 7.9 39.4 7.8 50.4 (0.9) (95.3) 3.2 88.1 4.8 67.8
+d) Depth from frames and poses (w/o per-image range)
+Robust MVD [102] 7.1 41.9 7.4 38.4 9.0 42.6 2.7 82.0 5.0 75.1 6.3 56.0                                        Table 4.  Multi-view metric-scale depth estimation on
+MVSA [45]            3.2 68.8 3.7 62.9 3.2 68.0 1.3 95.0 2.1 90.5 2.7 77.0                                    RMVDB [102]. ‡: concurrent work.
+e) Depth from frames (w/o poses)
+DeMoN [118]         15.5 15.2 12.0 21.0 17.4 15.4 21.8 16.6 13.0 23.2 16.0 18.3
+                                                                                                                                               ETH3D                      DTU                     7-Scenes
+DUSt3R [128]         5.4 49.5 (3.1) (71.8) 3.0 76.0 3.9 68.6 3.3 75.1 3.7 68.2                                         Method
+Spann3R [122]        7.9 36.2 (3.3) (67.1) 5.7 58.6 3.5 65.2 4.7 58.5 5.0 57.1                                                         rel ↓    Acc↓     Cp↓      rel ↓   Acc↓    Cp↓     rel ↓    Acc↓      Cp↓
+Pow3R [47]           5.7 45.7 (3.2) (68.8) 3.0 74.7 3.0 74.3 3.3 76.6 3.6 68.0
+MUSt3R [13]          4.5 55.0 (4.0) (59.8) 2.5 80.3 4.6 55.4 (2.6) (80.4) 3.7 66.2                                     Spann3R [122]   24.96 47.63 31.87          4.96    1.89    0.64 8.58         4.81      5.48
+
+
+
+
+                                                                                                               Onl.
+VGGT [124]           4.5 59.6 (2.3) (80.8) 1.8 86.3 0.9 95.6 2.4 84.1 2.4 81.3                                         MUSt3R [13]     19.91 45.19 82.72          5.26    1.68    1.09 11.57        8.94     14.97
+π3‡ [129]            2.8 72.9 (2.0) (83.6) 1.3 92.4 1.3 91.8 1.8 87.3 1.8 85.6                                         CUT3R [126]     18.83 38.90 22.93          9.11    3.75    0.96 6.32         2.88     3.26
+         ‡
+MapAny [52]          4.0 59.4 4.0 60.5 2.8 73.2 3.9 63.7 3.3 73.0 3.6 66.0                                             VGGT [124]       6.02   12.81 11.89 0.83           0.22    0.08    5.51      2.32     3.51
+AMB3R                2.8 74.4 (1.9) (85.8) 1.4 90.9 0.9 95.1 1.7 90.2 1.7 87.3
+                                                                                                                       π3‡ [129]        5.82   10.54 10.42 1.57           0.50    0.29    5.92      2.60     3.42
+
+
+
+
+                                                                                                               Offl.
+                                                                                                                       MapAny‡ [52]    11.20   21.87 19.76 10.37          4.35    1.54    7.61      3.48     3.33
+Table 3. Multi-view depth estimation on RMVDB [102]. ‡                                                                 AMB3R            4.64    9.98 9.69   0.81          0.22    0.08    4.74      1.74     2.84
+means concurrent works, and () indicate training dataset. Please
+refer to supplement for full table.                                                                           Table 5. Multi-view 3D Reconstruction [cm]. For ETH3D and
+                                                                                                              DTU, we use image tuples from RMVDB [102]. For 7 scenes, we
+• Video Depth Estimation. We evaluate on Sintel [11],                                                         use frames as in Spann3R with improved GT poses (See Tab. 7).
+  BONN [87], and KITTI [36] without finetuning.
+                                                                                                              and our run of VGGT on datasets available to us. AMB3R
+• VO/SLAM. Our model is compared against traditional
+                                                                                                              outperforms VGGT in both cases with our performance
+  sparse/dense and uncalibrated VO/SLAM methods on
+                                                                                                              gain resulting purely from the improved geometric features.
+  static and dynamic scenes from TUM [108] and ETH3D
+  SLAM [101] and pseudo groundtruth on 7scenes [104].                                                         5.4. Multi-view (metric) depth estimation
+• SfM. We compare against SOTA optimization-based SfM
+                                                                                                              We conduct a comprehensive evaluation on RMVDB [102]
+  on ETH3D [100] and Tanks&Temples [55] datasets.
+                                                                                                              in Tab. 3, where our model establishes a new SOTA on
+Metrics. For depth estimation, we report absolute relative                                                    RMVDB, outperforming concurrent pointmap-based mod-
+error (rel) and inlier ratios of 3% (δ1.03 ) and 25% (δ1.25 ).                                                els (π3 [129] and MapAnything [52]) while requiring one
+For 3D reconstruction, we evaluate rel ratio as well as ac-                                                   order of magnitude less training resources. Our model also
+curacy, and completeness, which measures distances be-                                                        outperforms SOTA depth estimation model MVSA [45],
+tween prediction and ground-truth. We remove ICP align-                                                       which requires ground-truth poses and intrinsics.
+ment in Spann3R [122] evaluation as pointmap has ex-                                                              For metric depth evaluation (Tab. 4), we report results
+act correspondence with ground-truth in contrast to prior                                                     under both 3% and 25% inlier thresholds, as 3% is overly
+works [123, 155] that requires randomly sampling points                                                       strict for metric-depth methods. Our approach achieves the
+from their mesh. We use median-scale alignment for all                                                        best overall performance under both metrics. Compared to
+depth & 3D reconstruction tasks except metric and monoc-                                                      directly regressing scale-differences from decoder features,
+ular depth estimation. For all VO/SLAM tasks, we evaluate                                                     our log-depth regression yields overall better results. On
+the trajectory using ATE RMSE with evo package [37]. All                                                      DTU, larger absolute errors occur in scenes with toy build-
+distance metrics are reported with same unit [cm].                                                            ings placed on white tables with dark backgrounds, which
+5.2. Monocular depth estimation                                                                               some models mistakenly interpret as real structures.
+
+We compared our zero-shot monocular depth estimation                                                          5.5. 3D reconstruction
+performance in Tab. 1 with VGGT [124] and various repre-                                                      We evaluate 3D reconstruction in Tab. 5 and show some
+sentative works. Our model shows consistent improvement                                                       qualitative examples in Fig. 3. For object-level reconstruc-
+over VGGT and SOTA performance on NYUv2 [84] and                                                              tion (DTU), both our model and VGGT achieve millimeter
+ETH3D [100], outperforming models specifically trained                                                        accuracy with less than 1% error. For outdoor (ETH3D) and
+for monocular depth estimation on those datasets.                                                             indoor (7-scenes) scenes, we achieve SOTA performance
+                                                                                                              compared to concurrent work π3 [129].
+5.3. Camera pose estimation.
+Following [124, 128], we evaluate camera pose estimation
+                                                                                                              5.6. Dynamic reconstruction
+(see Tab. 2) by randomly sampling 10 frames per scene and                                                     We evaluate video depth estimation in Tab. 6. To align with
+evaluating AUC@30. For VGGT, we report their official re-                                                     other depth estimations tasks for static scenes, we addition-
+sults (gray) (which include some non-accessible datasets),                                                    ally report inlier ratio of 3% for a reality check. Despite
+
+
+                                                                                                          6
+                    Figure 3. Qualitative showcase of generalization to in-the-wild images such as Longmen Grottoes [151].
+
+                           Sintel                            Bonn                           KITTI                                                                fr1                      fr2    fr3
+Method
+                 rel ↓    δ1.03 ↑    δ1.25 ↑       rel ↓    δ1.03 ↑     δ1.25 ↑   rel ↓    δ1.03 ↑ δ1.25 ↑                                     360 desk desk2 plant room rpy teddy xyz xyz desk long AVG
+Spann3R [122] 55.2         7.3           46.3      5.5       40.9        97.8     24.7      10.4      64.4          ORB-SLAM3 [82] X 2.0 X 11.8 X 5.6 X 1.0 0.5                                       1.3   1.7      X
+CUT3R [126]   58.4         9.6           46.6      5.1       47.4        98.0     13.6      18.0      81.0        S DSO [31]       X 27.2 66.0 6.0 58.6 X X 3.8 0.3                                   2.2   9.9      X
+VGGT [124]    28.0         13.6          61.8      3.6       63.2        98.4     8.2       40.4      90.9          DPVO [67]     13.1 9.4 6.5 3.0 39.8 3.5 6.2 1.3 0.5                               3.5   5.5     8.4
+ 3
+π [129]       31.9         13.3          66.8      3.0       72.0        98.8     3.6       59.5      98.8
+                                                                                                                    TANDEM [56]                 X 4.3      33.7 X     X 4.9 43.1 2.4 0.3 2.0 8.3                      X
+AMB3R         23.6         14.0          62.7      3.3       66.0        98.5     4.1       53.8      98.3
+                                                                                                                    MonoGS [77]                14.2 6.3    74.0 9.3 64.9 3.4 35.6 1.6 4.5 133.1 3.3                 31.8
+                                                                                                                    DeepFactors [21]           17.9 15.9   20.2 31.9 38.3 3.8 56.0 5.9 8.4 26.3 49.0                24.9
+Table 6. Video depth estimation on Sintel, Bonn, and KITTI.
+                                                                                                                  D DepthCov [25]              12.8 5.6     4.8 26.1 25.7 5.2 47.5 5.6 1.2 15.9 68.8                19.9
+We evaluate all methods on all scenes from Sintel and Bonn, rather                                                  DROID-VO [116]             15.7 5.2    11.1 6.0 33.4 3.2 19.1 5.6 10.7 7.9 7.3                  11.4
+than selecting 14 and 4 scenes as in prior works. In contrast to                                                    COMO [26]                  12.9 4.9     9.5 13.8 27.0 4.8 24.5 4.0 0.7 6.3 10.5                 10.8
+Pi3 [129], we did not do specific finetuning on dynamic datasets.                                                   GlORIE-VO[142]             13.1 4.0     8.6 4.1 32.7 2.9 14.5 1.2 0.2 16.1 4.8                   9.3
+                                                                                                                    Spann3R [122]              20.7 16.1   28.3 57.4 84.8 6.1 92.4 2.1        4.4 20.7 193.9 47.9
+                               chess        fire     head      office     pump      redkit    stair    avg        U MUSt3R [13]                 8.9 5.1    7.1 5.4 13.4 5.2 6.9 2.7           1.7 15.6 4.3 7.1
+                                                                                                                    MUSt3R⋆ [13]                7.8 4.0    4.6 4.0 9.9 4.3 4.2 1.3            1.2 15.3 4.3 5.5
+         Pseudo GT [85]           3.5       2.5       1.4       9.4        15.1      4.9       2.9     5.7
+                                                                                                                    AMB3R (ALL)                 4.6 1.9    2.8 2.9 5.8 2.3 3.7 1.1            2.1 3.4 5.0 3.2
+         AMB3R (ALL)              1.8       1.8       2.1       4.7        2.4       1.6       3.7     2.1
+                                                                                                                    AMB3R (KF)                  3.9 1.7    2.3 2.7 5.5 2.2 2.8 0.8            0.6 3.0 4.0 2.7
+         COLMAP (GT) [8]          25.3     25.7      22.6      25.8        25.0      21.9     24.7     24.4
+PSNR     Pseudo GT [85]           21.2     22.1      21.2      22.6        22.6      19.9     23.1     21.8
+                                                                                                                  Table 8. VO: ATE RMSE [cm] on TUM RGB. We compare
+         AMB3R                    20.6     22.3      20.2      22.0        23.6      21.8     22.2     21.8
+                                                                                                                  with Sparse (S) versus dense (D) versus dense unconstrained (U)
+Table 7. VO: ATE RMSE [cm] on 7 scenes. We show our online                                                        methods. The baseline methods are re-run without Loop Closure
+model surpasses the pseudo GT prior works used [83, 122] on ATE                                                   and global bundle adjustment. We compare with MUSt3R [13] on
+and achieve on-par novel view synthesis PSNR. COLMAP [8] GT                                                       all frames while keeping keyframe predictions as a reference.
+is obtained via all sequences on each scene.
+                                                                                                                                                     360 desk desk2 floor plant room           rpy teddy xyz avg
+
+AMB3R not being specifically trained for dynamic scene                                                                            ORB-SLAM3 [82]       X  1.7    21.0     X     3.4      X       X       X        0.9  -
+                                                                                                                                  DeepV2D [115]      24.3 16.6   37.9   165.3   20.3   24.6    10.5     31.6      6.4 37.5
+reconstruction, it still shows consistent improvement over
+                                                                                                                   Calibrated
+
+
+
+
+                                                                                                                                  DeepFactors [21]   15.9 17.0   25.3    16.9   30.5   36.4     4.3     60.1      3.5 23.3
+                                                                                                                                  DPV-SLAM [67]      11.2 1.8     2.9    5.7     2.1   33.0    3.0      8.4       1.0 7.6
+VGGT [124] and competitive reconstruction results com-                                                                            DPV-SLAM++ [67]    13.2 1.8     2.9    5.0    2.2    9.6     3.2      9.8       1.0 5.4
+                                                                                                                                  GO-SLAM [149]       8.9 1.6     2.8    2.5     2.6    5.2    1.9      4.8       1.0 3.5
+pared to concurrent work π3[129], which includes dynamic                                                                          DROID-SLAM [116]   11.1 1.8    4.2     2.1     1.6    4.9     2.6     4.8       1.2 3.8
+                                                                                                                                  MASt3R-SLAM [83]    4.9 1.6     2.4    2.5     2.0    6.1     2.7     4.1       0.9 3.0
+scenes at training. This lays a foundation for making a VO
+                                                                                                                   Uncalibrated
+
+
+
+
+                                                                                                                                  DROID-SLAM[116] 20.2     3.2   9.1     6.4    4.5    91.8     5.6     4.5       1.2 15.8
+system possible in dynamic environments.                                                                                          MASt3R-SLAM [83] 7.0     3.5   5.5    5.6     3.5    11.8     4.1     11.4      2.0 6.0
+                                                                                                                                  VGGT-SLAM [74]   7.1     2.5   4.0    14.1    2.3    10.2     3.0     3.4       1.4 5.3
+                                                                                                                                  AMB3R (ALL)      4.6     1.9   2.8    3.2     2.9     5.8     2.3     3.7       1.1 3.1
+5.7. Uncalibrated Visual Odometry/SLAM                                                                                            AMB3R (KF)       3.9     1.7   2.3    2.7     2.7     5.5     2.2     2.8       0.8 2.7
+
+
+We present VO/SLAM results in Tab. 7- 11. Our model,                                                              Table 9. SLAM: ATE RMSE [cm] on TUM RGB. We use im-
+Spann3R [122], and MUSt3R [13], together establish a new                                                          age stride of 2 and keyframe poses evaluation as in MASt3R-
+class of uncalibrated visual odometry methods with un-                                                            SLAM [83] with all poses evaluation shown as a reference. Note
+known camera intrinsics. Both MUSt3R and our approach                                                             that we did not do any post-processing on trajectories
+outperform classic optimization-based VO, with our model
+further reducing the tracking error of previous SOTA from                                                         tems in Tab. 9, where baseline methods are allowed to
+7.1cm to 3.2cm on TUM and from 11.2cm to 2.6cm on                                                                 use loop closure and global bundle adjustment as post-
+ETH3D. Our method even surpasses pseudo GT used in                                                                processing after tracking the last frame. The impact of these
+prior work [83, 122] on 7-Scenes (Tab. 7), where we val-                                                          post-processing steps can be seen by comparing Tab. 8 and
+idate ground-truth reliability through novel-view synthesis.                                                      Tab. 9. Following prior work [74, 83], we evaluate on raw
+   We further compare against state-of-the-art SLAM sys-                                                          keyframe poses for fair comparison. Our method shows for
+
+
+                                                                                                              7
+                      cables1 camshake1 einstein1 plant1 plant2 sofa1 table3 table7 avg                                                                                                           Training (7 scenes) Intermediate (8 scenes) Advanced (6 scenes)
+                                                                                                                                                                     Method
+  Spann3R [122]        33.2          5.1            30.9         4.1         5.7         17.1     19.3     18.9    16.8                                                                           RRA@5                RTA@5    RRA@5       RTA@5               RRA@5            RTA@5
+  MUSt3R [13]          20.7          5.6            15.4         2.3         2.7         15.8     17.6      9.5    11.2
+  MUSt3R⋆ [13]         20.7          5.3            11.2         1.8         2.7         15.5     17.3      5.5    10.0                                              ACE-Zero [10]                     73.9             72.9     67.6           74.0               22.9           19.1
+  AMB3R (ALL)          2.8           2.4             2.3         1.5         1.6          3.6      3.7      2.8     2.6                                              MASt3R-SfM [28]                   56.2             64.9     50.8           57.5               38.8           36.5
+  AMB3R (KF)           2.3           2.1             1.9         0.5         0.9          3.1      2.6      2.4     2.0                                              AMB3R (SfM)                       95.0             94.5     98.7           96.9               68.0           72.4
+
+Table 10. VO: ATE RMSE [cm] on ETH3D SLAM [101]. We                                                                                           Table 13. SfM on Tanks&Temples [55]. Each scene contains 151
+use the same scene sets and image stride of 2 as in MUSt3R [13]                                                                               to 1106 images. We only retain methods succeed on every scene.
+                      sit xyz desk p walk rpy walk s walk h sit s sit h walk x sit r avg
+
+
+
+
+                                                                                                                                  Estimated Total Hours (H100 Equivalent)
+                                                                                                                                                                            16000
+                                                                                                                                                                                                         Model Names
+  MUSt3R [13]          3.5     3.3            6.7          2.2         5.5         1.5     5.3      7.8      4.9 4.5                                                        14000     dust3r            vggt                     amb3r                   4750
+  MUSt3R⋆ [13]         2.4     2.2            5.0          1.9         3.9         1.3     4.6      5.4      4.0 3.4                                                                  pi3               mapanything                                      4700
+                                                                                                                                                                            12000
+  MegaSaM [62]         1.1    OOM             3.3          0.6         1.8         0.6     2.5      1.4      2.5 -                                                                                                                                       4650
+  AMB3R                1.3     2.1            4.2          0.9         1.9         0.8     2.2      2.0      2.0 1.9                                                        10000                                                                        4600
+                                                                                                                                                                                                                                                         4550
+                                                                                                                                                                            8000
+                                                                                                                   ⋆
+Table 11. VO: ATE RMSE on TUM Dynamic. MUSt3R uses                                                                                                                          6000
+re-rendering with trajectory smoothness. MegaSaM uses keyframe                                                                                                              4000
+
+& global BA at the end followed by a trajectory smoother.                                                                                                                   2000
+
+
+
+                                                                                                                                                                                    dust3r        vggt             amb3r        pi3 mapanything
+                                                                                                                                                                               0
+            COLMAP [99] ACE-Zero [10] VGGSfM [124] DF-SfM [38] MASt3R-SfM AMB3R (SfM)
+Scenes
+            RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5
+
+courtyard      56.3    60.0    4.0          1.9 50.5        51.2 80.7              74.8 89.8 64.4 100.0                96.5
+                                                                                                                                              Figure 4. Training cost comparison. We roughly estimate the
+delivery area 34.0     28.1   27.4          1.9 22.0        19.6 82.5              82.0 83.1 81.8 91.0                 76.6                   training cost of each model. ‡ indicates concurrent works.
+electro        53.3    48.5   16.9          7.9 79.9        58.6 82.8              81.2 100.0 95.5 95.6                81.2
+facade         92.2    90.0   74.5         64.1 57.5        48.7 80.9              82.6 74.3 75.3 100.0                95.4
+kicker         87.3    86.2   26.2         16.8 100.0       97.8 93.5              91.0 100.0 100.0 100.0              99.2                                                                             ETH3D                            DTU                            7-Scenes
+meadow          0.9     0.9    3.8          0.9 100.0       96.2 56.2              58.1 58.1 58.1 100.0                95.2                                                 Method
+office         36.9    32.3    0.9          0.0 64.9        42.1 71.1              54.5 100.0 98.5 100.0               53.9                                                                    rel ↓      Acc↓           Cp↓    rel ↓    Acc↓     Cp↓           rel ↓     Acc↓      Cp↓
+pipes          30.8    28.6    9.9          1.1 100.0       97.8 72.5              61.5 100.0 100.0 100.0              87.9                                                 w/o backend        6.02      12.81          11.89   0.83     0.22     0.08      5.51          2.32      3.51
+playground     17.2    18.1    3.8          2.6 37.3        40.8 70.5              70.1 100.0 93.6 98.7                62.2                                                 w 2D backend       5.32      11.78          12.78   0.92     0.23     0.19      5.15          1.92      3.10
+relief         16.8    16.8   16.8         17.0 59.6        57.9 32.9              32.9 34.2 40.2 100.0                90.1                                                 Full               4.64       9.98           9.69   0.81     0.22     0.08      4.74          1.74      2.84
+relief 2       11.8    11.8    7.3          5.6 69.9        70.3 40.9              39.1 57.4 76.1 100.0                75.7
+terrace       100.0   100.0    5.5          2.0 38.7        29.6 100.0             99.6 100.0 100.0 100.0              97.2
+terrains      100.0    99.5   15.8          4.5 70.4        54.9 100.0             91.9 58.2 52.5 91.6                 53.8                   Table 14. Ablation study. We ablate on our 3D backend versus
+Average       49.0     47.8   16.4          9.7   65.4      58.9       74.2        70.7    81.2     79.7    98.2       81.9                   2D backend implemented by alternating attention.
+Table 12. SfM on ETH3D [100]. Our method does not need
+optimization-based BA, unlike all baseline methods.                                                                                           6. Discussion
+the first time an uncalibrated feed-forward approach outper-                                                                                  6.1. Analysis
+forming optimization-based methods (with calibration and                                                                                      Training cost. We show the estimated training cost com-
+post-processing) on the TUM [108] dataset.                                                                                                    parison in Fig. 4, where 1 H100 hour counts as 3 A100
+   Compared to hybrid systems combining dense pri-                                                                                            hours. Since π3 did not report their overall training time,
+ors with optimization-based backends, such as MASt3R-                                                                                         we roughly estimate their training cost based the number of
+SLAM [83] and VGGT-SLAM [74], our model achieves                                                                                              training epochs and GPUs used for training. The training
+superior performance in the uncalibrated setting, and even                                                                                    of our model requires around 80 H100 hours. Compared to
+surpasses MASt3R-SLAM with known calibration.                                                                                                 π3 [129] and MapAnything [129], our model requires sig-
+   Finally, we evaluate on dynamic environments (Tab. 11),                                                                                    nificantly less add-on cost on top of VGGT [124].
+where our model again surpasses the previous SOTA uncal-                                                                                      Ablation studies. Tab. 14 compares our compact 3D back-
+ibrated VO, MUSt3R [13]. Neither model is trained for dy-                                                                                     end with a 2D variant using alternating attention. Our 3D
+namic reconstruction, yet our raw predictions remain com-                                                                                     backend consistently outperforms the 2D one, highlighting
+parable to MegaSaM [62], a method explicitly designed                                                                                         the advantage of maintaining a sparse yet compact 3D scene
+for dynamic scenes and equipped with global bundle ad-                                                                                        representation for explicit geometric reasoning.
+justment and trajectory smoothing as post-processing steps.
+Please refer to suppl. material/video for qualitative results.                                                                                6.2. Conclusion
+                                                                                                                                              We presented AMB3R, a feed-forward model that inte-
+5.8. Structure from Motion                                                                                                                    grates a sparse yet compact volumetric scene representa-
+We report SfM results in Tab. 12-13. Unlike all base-                                                                                         tion as its backend. Our paper shows this spatial com-
+lines, our method operates in a feed-forward manner with-                                                                                     pactness leads to state-of-the-art performance across diverse
+out optimization-based BA. Despite this, it achieves sub-                                                                                     3D vision tasks—including monocular/multi-view metric-
+stantial improvements in rotation accuracy over MASt3R-                                                                                       scale depth/3D reconstruction, uncalibrated visual odom-
+SfM [28] on ETH3D [100], an unordered image collection.                                                                                       etry and structure-from-motion. Notably, all these results
+On Tanks&Temples [55, 97] with video input, our method                                                                                        are achieved without test time optimization or task-specific
+further surpass ACE-Zero [10] by a large margin. Please re-                                                                                   fine-tuning. This shows a step towards a scalable, unified,
+fer to suppl. material/video for extensive qualitative results.                                                                               and generalizable feed-forward 3D perception system.
+
+
+                                                                                                                              8
+AMB3R: Accurate Feed-forward Metric-scale 3D Reconstruction with Backend
+                                             Supplementary Material
+7. Limitations                                                     or fail under long-term kidnapping scenarios. In this case,
+                                                                   an optimization-based module could help for loop closure
+7.1. Scene Representations                                         or relocalization. Noteably, our backward search strategy
+Local scene representation. Our backend representation is          in keyframe selection could also mitigate this issue. Once
+a local scene representation that cannot perform joint rea-        loop is closed, as long as the accumulative pose error is less
+soning across multiple chunks predicted by the front-end.          than the backward search pose distance, our model can still
+Extending it to a global representation can be a promising         leverage the earlier frame to bring the system back on track.
+direction as it would enable long-term consistency across          This is useful for an online system, as it is not necessary to
+chunks. However, training such a global backend would              fix the earlier trajectory in that case.
+also require substantially more computational resources.
+Computation complexity. Our model shares the inherent              7.3. Structure from Motion
+limitation of type-(c) methods regarding the quadratic com-        Reliance on dense reconstruction prior. Our SfM shares
+putational complexity with respect to the number of input          the same limitations as in VO as they rely on the same prior.
+images. However, a key advantage of our sparse yet com-            Initialization. Our initialization is purely based on the
+pact 3D representation is that its complexity depends on the       feature-based image clustering and the confidence of the lo-
+amount of 3D content rather than the number of views. This         cal chunk. We notice that our confidence usually prefers in-
+is, in fact, one of our motivations to introduce a compact         door regions. In some photo-tourism scenarios, our model
+3D scene representation as a backend. Due to the compu-            might initialize with indoor images that do not guarantee
+tational constraint, we are not able to investigate on how         overlap with the outdoor regions that are of primary inter-
+to re-design the entire pointmap-based foundation models.          est. One possible solution is to use explicit feature matching
+However, our work serves as a proof-of-concept demon-              to construct the view graph at cost of extra complexity.
+strating the effectiveness of the spatial compactness. We          Mapping window selection. Our mapping window selec-
+believe this opens a promising direction towards making            tion for global mapping is based on pose distance. This
+pointmap-based foundation models themselves more scal-             is usually sufficient for visual odometry due to the local
+able to longer sequences. One possible direction is to re-         smoothness of the trajectory. However, for a large-scale
+duce the usage of global attention and leverage the compact        structure from motion system. The same geometry is likely
+3D scene representation as an alternative to reduce the com-       to be observed from diverse views. Selecting mapping
+putational complexity for long sequences.                          frames using pose distance can therefore omit overlapping
+Dynamic scenes. Since our model has not been trained               views with wide baselines. In that case, a geometry-based
+for dynamic scenarios, it heavily relies on statics cues for       view selection might help at the cost of extra complexity.
+dynamic environment. Thus, it might fail when the target           Non-overlap reconstruction. The ability to reconstruct
+scene is dominated by dynamic objects. This can be solved          non-overlapping views is useful for small-scale problems
+by including dynamic scenes as training datasets.                  where overlap genuinely does not exist. However, this could
+                                                                   become problematic at larger scales: image clustering may
+7.2. Visual Odometry                                               group visually similar images from entirely different lo-
+Reliance on dense reconstruction prior. Our visual odom-           cations into the same cluster despite having no geometric
+etry relies on the prior that the model predicts geometry          overlap. In such cases, the model may hallucinate geometry
+in reference (first) frame’s coordinate system, up to an un-       for these non-overlapping images and give them moderate
+known scale factor. When this assumption breaks, typically         confidence, preventing them from being pruned and leading
+in scenes with diverse depth ranges and complex thin struc-        to irreversible reconstruction errors. One possible remedy
+tures, the scale alignment becomes unreliable, often leading       is to filter out false clusters (e.g., Doppelgangers [14]).
+to tracking failure. Similarly, scenes dominated by distant        Pose consistency. The final camera poses are weighted
+content can increase prediction variance, resulting in poor        average feed-forward poses. Compared to COLMAP [99]
+scale alignment and trajectory accuracy. In this case, type-       poses obtained via BA, our poses may not strictly follow the
+(b) method might benefit from its persistent memory and a          geometry constraint. For downstream tasks like novel view
+generally longer perception window.                                synthesis, which requires strict pose coherence, our poses,
+Drift/Kidnapping issue. Our system is a visual odome-              even metrically better in some cases, might still result in
+try without explicit loop closure or relocalization. Con-          lower PSNR. This is the inherent limitation of feed-forward
+sequently, tracking might drift in large-scale environments        poses and can be addressed via BA as post-processing.
+
+
+                                                               9
+                                            Coordinate 
+               sponding keyframe. We then select new keyframes from
+ Images         Local Mapping
+                                            Alignment                  the newly mapped frames, and update the global keyframe
+                                                                       memory. If the number of keyframes in active keyframe
+                                                   is keyframe?
+                                                                       memory has not reached its capacity, we append the new
+                                                                       keyframe; otherwise, we refresh the entire active keyframe
+               Active Keyframe Sample Global Keyframe
+                   Memory                 Memory                       memory by resampling from the global keyframe memory.
+
+                                                                       8.4. Structure from Motion Pipeline
+Figure 5. Overview of AMB3R (VO). Input frames are mapped
+with the keyframes in the active keyframe memory to predict ge-        We show the pipeline of our SfM as in Fig. 6. Our SfM
+ometry and camera poses. After coordinate alignment, we select         mainly consists of 3 stages: 1) Image clustering that groups
+new keyframes and update the global keyframe memory; poses             images into small clusters, 2) Coarse registration that regis-
+and geometry for non-keyframes are also stored. If the active          ters each cluster incrementally, and 3) Global mapping that
+keyframe memory is not full, the new keyframe is appended; oth-        refines keyframe and non-keyframes via mapping.
+erwise, we refresh the active keyframe memory by resampling a
+new set of keyframes from the global keyframe memory.                  8.5. Visual Odometry Runtime Analysis
+                                                                       We evaluate the runtime of our visual odometry on the TUM
+8. Additional Details                                                  dataset [108]. Note that we exclude the data-loading over-
+                                                                       head. Our method runs at an average of 4.2 FPS, with a
+8.1. Metric-scale Head                                                 best case of 6.0 FPS and a worst case of 3.4 FPS on an
+To predict metric scale factor, we first map encoder feature           NVIDIA RTX 4090 GPU with input resolution of (392,
+into one feature vector via a three-layer MLP. We then add             518). The variation in speed is primarily caused by the fluc-
+this feature with depth feature from depth DPT [94] branch             tuating number of active keyframes and the scene difficulty
+of VGGT [124], and map this new feature into a metric                  (The backend can be skipped if the front-end confidence is
+scale factor via a two-layer convolution. We supervise this            sufficiently high). Importantly, since we cap the maximum
+prediction using an L1 loss. In cases where the selected               number of active keyframes at 10, the computational com-
+pixels contain missing depth values, which frequently oc-              plexity does not grow with respect to number of frames,
+curs in the Waymo [110] dataset, we use a ROE solver to                unlike type-(b) methods that do not have memory pruning.
+estimate the relative scale difference. This allows us to re-             Depending on the computation budget, one might reduce
+cover a consistent ground-truth log-depth value for supervi-           the input resolution or number of active keyframes for better
+sion even when raw depth is unavailable.                               runtime at the cost of accuracy (See Fig. 7).
+
+8.2. Training Datasets                                                 8.6. Imperfect Ground-truth on 7 Scenes
+We use ScanNet [22], ScannetPP [139], WildRGBD [134],                  We find that the pseudo ground truth in the original 7-
+Mapfree [4], Aria [89], Waymo [110], Virtual Kitti2 [12],              Scenes [105] dataset often contains noticeable drift in cer-
+GTASfM [125], MVS-Synth [43], OminiObject3d [130],                     tain sequences. This is because those poses are obtained via
+and Hypersim [98] to train our model. Due to the con-                  ICP-based KinectFusion [85]. ICP is prone to have rotation
+straint of the data storage, we only store a subset of each            drift in scenes with near-spherical geometry and translation
+dataset. Although we only sample 2k samples in total for               drift in scenes with many flat surfaces. 7 scenes dataset is
+each epoch, we find data diversity is significantly more im-           the latter case. For instance, in Pumpkin/seq01, we find a
+portant than the data amount for training pointmap-based               substantial drift toward the end of the sequence. As a result,
+foundation model. We exclude Co3D [95] as we observe                   it is fundamentally impossible to achieve accurate tracking
+that VGGT might overfit on certain patterns on Co3D.                   when evaluated against this pseudo GT unless the model
+                                                                       happens to drift in exactly the same way. This makes the
+8.3. Visual Odometry Pipeline                                          original pseudo GT unsuitable for fair comparison.
+Fig. 5 illustrates our visual odometry pipeline. Input frames              To address this, we adopt COLMAP GT [8] that is ob-
+are mapped with keyframes stored in the active keyframe                tained via global optimization across all sequences of each
+memory to predict camera poses and geometry. The co-                   scene. To ensure its reliability, we follow ACE-Zero [10]
+ordinate alignment is done via 1) transforming the active              and evaluate novel view synthesis using NeRFstudio [112].
+keyframe map from global to local coordinates 2) estimat-              As shown in Tab. 7, the PSNR obtained from rendering with
+ing the relative scale of the corresponding keyframe geom-             the new GT is consistently higher, confirming its accuracy.
+etry 3) transforming the local map to global coordinates               We therefore use it as the new ground-truth for evaluating
+via the weighted average of relative poses of each corre-              3D reconstruction and visual odometry.
+
+
+                                                                  10
+                         Images                          Image Clustering                             Coarse Registration                             Global Mapping         Dense Reconstruction
+
+                                                             Feature Encoding                   Initialization                                        Keyframe Mapping
+
+
+                                                             Image Grouping                 Cluster Registration       Outlier Filtering             Non-keyframe Mapping
+
+
+
+  Figure 6. Overview of AMB3R (SfM). Our SfM pipeline contains 1) Image clustering that groups images into small clusters, 2) Coarse
+  registration that constructs an initial coarse reconstruction, and 3) Global mapping that performs keyframe and non-keyframe refinement.
+
+                                  5.5
+ATE (Absolute Trajectory Error)
+
+
+
+
+                                  5.0                                                  (518, 182)         (518, 154)
+
+                                  4.5                                     (518, 224)
+
+                                  4.0
+
+
+                                  3.5             (518, 308)(518, 266)                                                                     Figure 8. Examples of buildings in DTU [2] dataset.
+                                            (518, 350)
+                                  3.0
+                                      (518, 392)
+                                                                                                                              raw images without any prior information required: De-
+                                  2.5
+                                        4                6                8            10                 12                  MoN [118], DUSt3R [128], Spann3R [122], Pow3R [47],
+                                                               FPS (Frames Per Second)
+                                                                                                                              MUSt3R [13], VGGT [124], as well as concurrent works
+  Figure 7. VO runtime with respect to resolution. By reducing                                                                π3 [129], and MapAnything [52]. We evaluate those meth-
+  input resolution, our method can achieve over 10FPS inference                                                               ods on RMVDB [102], using KITTI [36], ETH3D [100],
+  while being more accurate compared to other uncalibrated VO.                                                                ScanNet [22], DTU [2], and Tanks & Temples [55] datasets.
+                                                                                                                              Metric-scale estimation. We compare with existing
+                                                                                                                              pointmap-based foundation models which can recover
+  8.7. Baselines and Evaluation Datasets
+                                                                                                                              metric-scale factors: MASt3R [58], Spann3R [122],
+  Monocular depth estimation.           We compare against                                                                    MUSt3R [13], CUT3R [126], and concurrent work MapA-
+  Ominidata [29], Depth Anything v2 [137], Marigold [51],                                                                     nything [52] on RMVDB [102]. Note that DTU datasets
+  Diffusion-E2E [35], and MoGe [127], which are explic-                                                                       contains many buildings placed on a pure white table as
+  itly trained for monocular depth estimation. In contrast,                                                                   in Fig. 8. Due to the lack of background environment
+  VGGT [124] and our model are trained with a multi-view                                                                      for scale reasoning, existing models would usually predict
+  objective, and evaluated on monocular depth in a zero-shot                                                                  those buildings as real buildings, resulting in high absolute
+  manner. We use NYUv2 [84], KITTI [36], ETH3D [100],                                                                         relative errors. In that case, inlier ratio could be a good
+  ScanNet [22], and DIODE [119] for evaluation following                                                                      measure of the metri-scale prediction.
+  Marigold [51]. Note that for DIODE, there is a known                                                                        3D reconstruction. We compare with existing represen-
+  issue about floaters in ground-truth geometry. Existing                                                                     tative pointmap-based foundation models: Spann3R [122],
+  works like depth anything v2 [137] and MoGe [127] eval-                                                                     MUSt3R [13], CUT3R [126], VGGT [124], as well as
+  uate on DIODE with a pre-processing script that excludes                                                                    concurrent works π3 [129], and MapAnything [52] on
+  those floaters. Since these scripts are not publicly avail-                                                                 ETH3D [100], DTU [2], and 7 scenes [105]. We use im-
+  able, we evaluate on the original noisy ground-truth follow-                                                                age tuples from RMVDB [102] for ETH3D and DTU. For
+  ing Marigold and Diffusion-E2E.                                                                                             7 scenes, we use Spann3R [122] split with improved GT.
+  Multi-view depth estimation. We compare with 5 dif-                                                                         Video depth estimation. We compare with pointmap-
+  ferent categories of methods here: a) classic approach:                                                                     based models:           Spann3R [122], CUT3R [126],
+  COLMAP [99], which is an integrated solution of SfM                                                                         VGGT [124], and π3 [129] on dynamic video depth
+  and MVS based on optimization, b) monocular depth es-                                                                       estimation task on Sintel [11], Bonn [87], and Kitti [36]
+  timation methods that estimate depth from a single view:                                                                    datasets. Among those methods, CUT3R [126] and
+  Depth Pro [6], Metric3D [140], UniDepthV2 [92], and                                                                         π3 [129] are trained on dynamic datasets while our model
+  Depth Anything v2 [137], c) Multi-view depth estimation                                                                     is not specifically trained on dynamic data.
+  methods that requires known calibration, camera poses,                                                                      VO and SLAM. For visual odometry, we compare
+  and per-image range: MVSNet [138], Vis-MVSNet [144],                                                                        with 1) Sparse VO: ORB-SLAM3 [82], DSO [31], and
+  PatchmatchNet [121], and MVSFormer++ [15]. d) Multi-                                                                        DPVO [67], 2) Dense VO: TANDEM [56], MonoGS [77],
+  view depth estimation methods without the need for per-                                                                     DeepFactors [21], DepthCov [25], DROID-VO [116],
+  image range: Fast-MVSNet [141], Robust MVD base-                                                                            COMO [26], and GLORIE-VO [142], and 3) Uncalibrated
+  line [102], and MVSA [45]. and e) Depth estimation from                                                                     VO: Spann3R [122] and MUSt3R [13]. In addition to visual
+
+
+                                                                                                                       11
+Method         KITTI       ScanNet     ETH3D       DTU        T&T       Avg            10. Qualitative examples
+              rel ↓ δ ↑   rel ↓   δ↑   rel ↓ δ ↑ rel ↓ δ ↑ rel ↓ δ ↑ rel ↓ δ ↑
+w/o backend     4.5 60.4 (2.3) (80.8) 1.8 85.3   1.0   94.8 2.0 83.9 2.3 80.6          Visual Odometry. As in Fig. 9 and Fig. 10, we present
+w/ 2d backend 2.9 73.9 (2.0) (84.2) 1.4 90.2     1.1   94.4 1.8 88.4 1.8 86.2
+w/o scale align 3.0 72.0 (2.0) (84.8) 1.5 89.7   0.9   95.3 1.9 89.0 1.9 86.2
+                                                                                       qualitative results of our visual odometry on all static scenes
+w/o zero conv 26.9 7.8 (17.5) (15.5) 19.8 17.8   7.3   34.6 16.2 23.9 17.5 19.9        from the 7Scenes [105], TUM [108], and ETH SLAM [101]
+Full            2.8 74.4 (1.9) (85.8) 1.4 90.9   0.9   95.1 1.7 90.2 1.7 87.3
+                                                                                       datasets used in our evaluation.
+                                                                                       Structure from Motion. Fig. 11 and Fig. 12 show quali-
+Table 15. Ablation studies. We ablate design choices of back-
+end, scale alignment for supervision, and zero convolution on                          tative results of SfM on all scenes from the ETH3D [100]
+RMVDB [102].                                                                           and Tanks&Temples [55] datasets. In Fig. 13, we further
+                                                                                       include qualitative results on the Cambridge Landmarks
+                                                                                       dataset, in-the-wild image collections, and the IMC Photo-
+                                                                                       tourism [49] dataset, which contains large-scale unordered
+odometry baselines, we also consider SLAM baselines with
+                                                                                       images captured by tourists.
+global bundle adjustment and loop closure: 1) SLAM with
+calibration: ORB-SLAM3 [82], DeepV2D [115], Deep-
+Factors [21], DPV-SLAM [67], GO-SLAM [149], DROID-
+SLAM [116], MASt3R-SLAM [83] and 2) SLAM without
+calibration: DROID-SLAM [116], MASt3R-SLAM [83],
+VGGT-SLAM [124]. We compare with those methods us-
+ing common SLAM benchmarks, including TUM [108],
+ETH-SLAM [101], and 7scenes [105]. We also com-
+pare with MegaSaM [62], a structure-and-motion methods
+specifically designed for dynamic environment, on TUM
+Dynamic [108] dataset to test the generalization on dynamic
+scenes.
+Structure from Motion. We compare with optimization-
+based SfM methods: COLMAP [99], ACE-Zero [10],
+FlowMAP [106], VGGSfM [124], DF-SfM [38],
+and MASt3R-SfM [28] on ETH3D [100] and
+Tanks&Temples [55] dataset. ETH3D [100] contains
+unordered image collection while Tanks&Temples [55]
+contains images from video.
+
+
+9. Additional Quantitative Results
+Ablation study. We present additional ablation studies in
+Tab. 15 to analyze the impact of key design choices, includ-
+ing the backend (2D vs. 3D), scale alignment for supervi-
+sion, and zero convolution. Notably, training without zero
+convolution fails to converge under our current computa-
+tional budget and dataset size. As discussed in Sec. 3, this is
+caused by catastrophic forgetting of the learned confidence:
+without zero convolution, the confidence function with ran-
+domly initialized weights of the backend will shift drasti-
+cally, and lead to inconsistent learning objectives. In this
+case, convergence would likely require training resources
+and data comparable to those used for VGGT [124].
+Multi-view depth estimation. We show the full table of
+multi-view depth estimation results in Tab. 16 with detailed
+input modality and the alignment.
+Structure from motion. We show per-scene decompo-
+sition of SfM on Tanks&Temples [55] in Tab. 17. The
+COLMAP results [97] are used as the ground-truth.
+
+
+                                                                                  12
+  Approach                           GT        GT        GT        Align       KITTI          ScanNet           ETH3D             DTU               T&T             Average
+                                     Poses    Range    Intrinsic           rel ↓ δ1.03 ↑   rel ↓ δ1.03 ↑    rel ↓ δ1.03 ↑    rel ↓   δ1.03 ↑   rel ↓ δ1.03 ↑     rel ↓ δ1.03 ↑
+  a) Classic approaches
+  COLMAP [99]                   ✗      ✗      ✗         ✗                  12.0   58.2     14.6    34.2     16.4    55.1      0.7      96.5     2.7     95.0     9.3     67.8
+  COLMAP Dense [99]             ✗      ✗      ✗         ✗                  26.9   52.7     38.0    22.5     89.8    23.2     20.8      69.3    25.7     76.4     40.2    48.8
+  b) Single-view depth
+  Depth Pro [6]                 ✗      ✗      ✓       med                  6.1    39.6     (4.3)   (58.4)    6.1    53.5      5.6      49.6    5.6      57.5      5.6    51.7
+  Metric3D [40]                 ✗      ✗      ✓       med                  5.1    44.1      2.4     78.3     4.4    54.5     10.1      39.5    6.2      48.0      5.6    52.9
+  UniDepthV2 [92]               ✗      ✗      ✓       med                  4.0    55.3     (2.1)   (82.6)    3.7    66.2      3.2      72.3    3.6      68.4      3.3    68.9
+  DepthAnything V2 [137]        ✗      ✗      ✗      lstsq †               6.6    38.6      4.0     58.6     4.7    56.5      2.6      74.7    4.5      57.5      4.8    54.1
+  c) Depth from frames and poses (w/ per-image range)
+  MVSNet [138]                  ✓      ✓      ✓         ✗                  22.7   36.1     24.6    20.4     35.4    31.4     (1.8)    (86.0)   8.3      73.0     18.6    49.4
+  Vis-MVSNet [144]              ✓      ✓      ✓         ✗                  9.5    55.4      8.9    33.5     10.8    43.3     (1.8)    (87.4)   4.1      87.2     7.0     61.4
+  PatchmatchNet [121]           ✓      ✓      ✓         ✗                  10.8   45.8      8.5    35.3     19.1    34.8     (2.1)    (82.8)   4.8      82.9     9.1     56.3
+  MVSFormer++ [15]              ✓      ✓      ✓         ✗                  4.4    65.7      7.9    39.4     7.8     50.4     (0.9)    (95.3)   3.2      88.1     4.8     67.8
+  d) Depth from frames and poses (w/o per-image range)
+  Fast-MVSNet [141]             ✓      ✗      ✓         ✗                  12.1   37.4     287.1   9.4      131.2    9.6    (540.4)    (1.9)   33.9     47.2     200.9   21.1
+  Robust MVD Baseline [102]     ✓      ✗      ✓         ✗                  7.1    41.9      7.4    38.4      9.0    42.6      2.7      82.0     5.0     75.1      6.3    56.0
+  MVSA [45]                     ✓      ✗      ✓         ✗                  3.2    68.8      3.7    62.9      3.2    68.0      1.3      95.0     2.1     90.5      2.7    77.0
+  e) Depth from frames (w/o poses)
+  DeMoN [118]                   ✗      ✗      ✓        ∥t∥                 15.5   15.2     12.0     21.0    17.4    15.4     21.8      16.6    13.0      23.2    16.0    18.3
+  DUSt3R [128]                  ✗      ✗      ✗       med                  5.4    49.5     (3.1)   (71.8)   3.0     76.0      3.9      68.6     3.3      75.1    3.7     68.2
+  Spann3R [122]                 ✗      ✗      ✗       med                  7.9    36.2     (3.3)   (67.1)   5.7     58.6      3.5      65.2     4.7      58.5    5.0     57.1
+  Pow3R [47]                    ✗      ✗      ✗       med                  5.7    45.7     (3.2)   (68.8)   3.0     74.7      3.0      74.3     3.3      76.6    3.6     68.0
+  MUSt3R [13]                   ✗      ✗      ✗       med                  4.5    55.0     (4.0)   (59.8)   2.5     80.3      4.6      55.4    (2.6)    (80.4)   3.7     66.2
+  VGGT [124]                    ✗      ✗      ✗       med                  4.5    59.6     (2.3)   (80.8)   1.8     86.3      0.9      95.6     2.4      84.1    2.4     81.3
+     ‡
+  π3 [129]                      ✗      ✗      ✗       med                  2.8    72.9     (2.0)   (83.6)   1.3     92.4      1.3      91.8     1.8      87.3    1.8     85.6
+                ‡
+  MapAnything [124]             ✗      ✗      ✗       med                  4.0    59.4      4.0     60.5    2.8     73.2      3.9      63.7     3.3      73.0    3.6     66.0
+  AMB3R                         ✗      ✗      ✗       med                  2.8    74.4     (1.9)   (85.8)   1.4     90.9      0.9      95.1     1.7      90.2    1.7     87.3
+
+Table 16. Multi-view depth estimation. Our method achieves state-of-the-art performance on RMVDB [102]. ‡ means concurrent works,
+and (parentheses) indicate. We only report a subset of a)-e) methods, and please refer to supplementary material for the full table.
+
+                              COLMAP [99] ACE-Zero [10] FlowMap [106] VGGSfM [124] DF-SfM [38] MASt3R-SfM [28] AMB3R (SfM)
+                Scenes
+                              RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5 RTA@5 RRA@5                                                RTA@5        RRA@5 RTA@5
+
+                Barn            GT           GT       56.1         55.6       -          -         -           -    100.    99.8      52.6             85.6 91.8         96.4
+                Caterpillar     GT           GT       87.3         95.6       -          -         -           -       -       -      84.2             92.3 100.0        98.6
+ Training
+
+
+
+
+                Church          GT           GT       90.5         76.3       -          -         -           -       -       -      11.6             16.8 93.0         92.9
+                Courthouse      GT           GT       44.1         45.0       -          -         -           -       -       -       8.8              9.9 79.9         77.7
+                Ignatius        GT           GT       100.         99.9    62.5       70.0         -           -    100.    99.9      43.6             60.1 100.0        99.5
+                Meetingroom     GT           GT       39.3         38.5    26.3       39.8         -           -    84.1    89.0      92.6             89.9 100.0        96.3
+                Truck           GT           GT       100.         99.7    53.4       69.6         -           -    100.    99.8      100.             99.7 100.0        99.7
+                Family          GT           GT       38.9         44.6       -          -         -           -       -       -      22.3             25.9 100.0        99.6
+                Francis         GT           GT       57.4         79.0    57.6       67.7         -           -    100.    99.7      17.0             41.0 100.0        92.1
+ Intermediate
+
+
+
+
+                Horse           GT           GT       68.2         81.8       -          -         -           -       -       -       6.4              6.3 100.0        98.8
+                Lighthouse      GT           GT       30.6         38.8     4.8        9.5         -           -    66.3    66.0      50.8             72.1 100.0        98.7
+                M60             GT           GT       100.         99.9    50.4       48.3         -           -    100.    99.8      100.             100. 100.0        99.0
+                Panther         GT           GT       100.         99.5    100.       77.6         -           -    100.    99.1      100.             99.5 100.0        99.6
+                Playground      GT           GT       82.7         85.5    49.1       63.8         -           -    100.    99.9      99.3             99.3 100.0        98.3
+                Train           GT           GT       62.6         62.5    18.4       29.2         -           -    42.8    41.8      10.6             15.8 89.4         88.8
+                Auditorium      GT           GT        1.6          1.1     1.3        1.4         -           -     1.7     1.7       1.7              1.5 96.0         88.7
+                                GT           GT       56.4         43.2    14.1       16.7         -           -    56.0    44.4      43.8             29.6 35.2         37.5
+ Advanced
+
+
+
+
+                Ballroom
+                Courtroom       GT           GT       62.5         54.1     5.3        3.6         -           -    66.8    66.3      67.2             69.1 38.7         51.1
+                Museum          GT           GT       13.5         11.1     0.8        1.2         -           -    14.8    13.5      12.3             11.0 100.0        98.4
+                Palace          GT           GT        3.1          3.9       -          -         -           -    25.6    27.7      27.0             35.7 38.6         61.4
+                Temple          GT           GT        0.4          0.9     0.5        1.2         -           -    55.5    60.7      80.7             72.2 99.3         96.9
+
+Table 17. Detailed per-scene SfM results on Tanks and Temples [55]. We use COLMAP GT [97] for evaluation as in MASt3R-SfM [28].
+The baseline results are obtained from MASt3R-SfM. (-) indicates failure.
+
+
+
+
+                                                                                             13
+Figure 9. Qualitative showcase of VO on 7scenes [105]. We visualize keyframe poses as red cameras and non-keyframe poses as green
+dots.
+
+                                                               14
+Figure 10. Qualitative showcase of VO on TUM [108] and ETH SLAM [101] datasets.
+
+                                      15
+Figure 11. Qualitative showcase of structure from motion on ETH3D [100]
+
+
+
+
+                                  16
+Figure 12. Qualitative showcase of structure from motion on Tanks and Temples [55] dataset.
+
+
+
+
+                                            17
+Figure 13. Qualitative showcase of structure from motion on IMC phototourism [49], Cambridge landmarks [53]. The results are randomly
+downsampled to 3 million points for visualization purpose.
+
+                                                                 18
+References                                                              [13] Yohann Cabon, Lucas Stoffl, Leonid Antsfeld, Gabriela
+                                                                             Csurka, Boris Chidlovskii, Jerome Revaud, and Vincent
+ [1] 3Blue1Brown. Hilbert’s curve: Is infinite math useful?,                 Leroy. Must3r: Multi-view network for stereo 3d recon-
+     2017. Accessed: 2025-09-26. 2                                           struction. In Proceedings of the IEEE Conference on Com-
+ [2] Henrik Aanæs, Rasmus Ramsbøl Jensen, George Vogiatzis,                  puter Vision and Pattern Recognition (CVPR), pages 1050–
+     Engin Tola, and Anders Bjorholm Dahl. Large-scale data                  1060, 2025. 2, 6, 7, 8, 11, 13
+     for multiple-view stereopsis. International Journal of Com-        [14] Ruojin Cai, Joseph Tung, Qianqian Wang, Hadar Averbuch-
+     puter Vision, 120(2):153–168, 2016. 5, 6, 11                            Elor, Bharath Hariharan, and Noah Snavely. Doppel-
+ [3] Sameer Agarwal, Noah Snavely, Ian Simon, Steven M                       gangers: Learning to disambiguate images of similar struc-
+     Seitz, and Richard Szeliski. Building rome in a day. In                 tures. In Proceedings of the IEEE Conference on Com-
+     Proceedings of the International Conference on Computer                 puter Vision and Pattern Recognition (CVPR), pages 34–44,
+     Vision (ICCV), pages 72–79, 2009. 1, 2                                  2023. 9
+ [4] Eduardo Arnold, Jamie Wynn, Sara Vicente, Guillermo                [15] Chenjie Cao, Xinlin Ren, and Yanwei Fu. Mvsformer++:
+     Garcia-Hernando, Áron Monszpart, Victor Adrian                         Revealing the devil in transformer’s details for multi-view
+     Prisacariu, Daniyar Turmukhambetov, and Eric Brach-                     stereo. arXiv preprint arXiv:2401.11673, 2024. 6, 11, 13
+     mann. Map-free visual relocalization: Metric pose relative         [16] Eric R Chan, Connor Z Lin, Matthew A Chan, Koki
+     to a single image. In Proceedings of the European                       Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo,
+     Conference on Computer Vision (ECCV), 2022. 10                          Leonidas J Guibas, Jonathan Tremblay, Sameh Khamis,
+ [5] Dejan Azinović, Ricardo Martin-Brualla, Dan B Goldman,                 et al. Efficient geometry-aware 3d generative adversar-
+     Matthias Nießner, and Justus Thies. Neural rgb-d surface                ial networks. In Proceedings of the IEEE Conference on
+     reconstruction. In Proceedings of the IEEE Conference on                Computer Vision and Pattern Recognition (CVPR), pages
+     Computer Vision and Pattern Recognition (CVPR), pages                   16123–16133, 2022. 2
+     6290–6301, 2022. 5                                                 [17] Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
+ [6] Alexey Bochkovskiy, Amaël Delaunoy, Hugo Germain,                      Hao Su. Tensorf: Tensorial radiance fields. In Proceedings
+     Marcel Santos, Yichao Zhou, Stephan Richter, and Vladlen                of the European Conference on Computer Vision (ECCV),
+     Koltun. Depth pro: Sharp monocular metric depth in less                 pages 333–350. Springer, 2022. 2
+     than a second. In Proceedings of the International Confer-         [18] Wanli Chen, Xinge Zhu, Guojin Chen, and Bei Yu. Efficient
+     ence on Learning Representations (ICLR), 2025. 11, 13                   point cloud analysis using hilbert curve. In Proceedings
+                                                                             of the European Conference on Computer Vision (ECCV),
+ [7] Eric Brachmann, Alexander Krull, Sebastian Nowozin,
+                                                                             pages 730–747. Springer, 2022. 2
+     Jamie Shotton, Frank Michel, Stefan Gumhold, and Carsten
+     Rother. Dsac-differentiable ransac for camera localization.        [19] Xingyu Chen, Yue Chen, Yuliang Xiu, Andreas Geiger, and
+     In Proceedings of the IEEE Conference on Computer Vision                Anpei Chen. Ttt3r: 3d reconstruction as test-time training.
+     and Pattern Recognition (CVPR), pages 6684–6692, 2017.                  arXiv preprint arXiv:2509.26645, 2025. 1, 2
+     2                                                                  [20] Zhuoguang Chen, Minghui Qin, Tianyuan Yuan, Zhe Liu,
+                                                                             and Hang Zhao. Long3r: Long sequence streaming 3d re-
+ [8] Eric Brachmann, Martin Humenberger, Carsten Rother, and
+                                                                             construction. arXiv preprint arXiv:2507.18255, 2025. 2
+     Torsten Sattler. On the limits of pseudo ground truth in
+                                                                        [21] Jan Czarnowski, Tristan Laidlow, Ronald Clark, and An-
+     visual camera re-localisation. In Proceedings of the In-
+                                                                             drew J Davison. Deepfactors: Real-time probabilistic dense
+     ternational Conference on Computer Vision (ICCV), pages
+                                                                             monocular slam. IEEE Robotics and Automation Letters, 5
+     6218–6228, 2021. 7, 10
+                                                                             (2):721–728, 2020. 7, 11, 12
+ [9] Eric Brachmann, Tommaso Cavallari, and Victor Adrian               [22] Angela Dai, Angel X Chang, Manolis Savva, Maciej Hal-
+     Prisacariu. Accelerated coordinate encoding: Learning to                ber, Thomas Funkhouser, and Matthias Nießner. Scannet:
+     relocalize in minutes using rgb and poses. In Proceedings               Richly-annotated 3d reconstructions of indoor scenes. In
+     of the IEEE Conference on Computer Vision and Pattern                   Proceedings of the IEEE Conference on Computer Vision
+     Recognition (CVPR), pages 5044–5053, 2023. 2                            and Pattern Recognition (CVPR), pages 5828–5839, 2017.
+[10] Eric Brachmann, Jamie Wynn, Shuai Chen, Tommaso Cav-                    5, 6, 10, 11
+     allari, Áron Monszpart, Daniyar Turmukhambetov, and               [23] Andrew J Davison, Ian D Reid, Nicholas D Molton, and
+     Victor Adrian Prisacariu. Scene coordinate reconstruction:              Olivier Stasse. Monoslam: Real-time single camera slam.
+     Posing of image collections via incremental learning of a               IEEE Transactions on Pattern Analysis and Machine Intel-
+     relocalizer. arXiv preprint arXiv:2404.14351, 2024. 2, 8,               ligence (PAMI), 29(6):1052–1067, 2007. 1, 2
+     10, 12, 13                                                         [24] Junyuan Deng, Heng Li, Tao Xie, Weiqiang Ren, Qian
+[11] Daniel J Butler, Jonas Wulff, Garrett B Stanley, and                    Zhang, Ping Tan, and Xiaoyang Guo. Sail-recon: Large sfm
+     Michael J Black. A naturalistic open source movie for                   by augmenting scene regression with localization. arXiv
+     optical flow evaluation. In Proceedings of the European                 preprint arXiv:2508.17972, 2025. 2
+     Conference on Computer Vision (ECCV), pages 611–625.               [25] Eric Dexheimer and Andrew J Davison. Learning a depth
+     Springer, 2012. 6, 11                                                   covariance function. In Proceedings of the IEEE Confer-
+[12] Yohann Cabon, Naila Murray, and Martin Humenberger.                     ence on Computer Vision and Pattern Recognition (CVPR),
+     Virtual kitti 2. arXiv preprint arXiv:2001.10773, 2020. 10              pages 13122–13131, 2023. 7, 11
+
+
+                                                                   19
+[26] Eric Dexheimer and Andrew J Davison. Como: Compact                         ence on Computer Vision and Pattern Recognition (CVPR),
+     mapping and odometry. In Proceedings of the European                       pages 21594–21603, 2024. 8, 12, 13
+     Conference on Computer Vision (ECCV), pages 349–365.                  [39] David Hilbert. Über die stetige abbildung einer linie auf ein
+     Springer, 2024. 7, 11                                                      flächenstück. In Dritter Band: Analysis· Grundlagen der
+[27] Siyan Dong, Shuzhe Wang, Shaohui Liu, Lulu Cai, Qing-                      Mathematik· Physik Verschiedenes: Nebst Einer Lebens-
+     nan Fan, Juho Kannala, and Yanchao Yang. Reloc3r:                          geschichte, pages 1–2. Springer, 1935. 2
+     Large-scale training of relative camera pose regression for           [40] Mu Hu, Wei Yin, Chi Zhang, Zhipeng Cai, Xiaoxiao Long,
+     generalizable, fast, and accurate visual localization. In Pro-             Hao Chen, Kaixuan Wang, Gang Yu, Chunhua Shen, and
+     ceedings of the IEEE Conference on Computer Vision and                     Shaojie Shen. Metric3d v2: A versatile monocular geomet-
+     Pattern Recognition (CVPR), pages 16739–16752, 2025. 2                     ric foundation model for zero-shot metric depth and surface
+[28] Bardienus Pieter Duisterhof, Lojze Zust, Philippe Weinza-                  normal estimation. IEEE Transactions on Pattern Analysis
+     epfel, Vincent Leroy, Yohann Cabon, and Jerome Revaud.                     and Machine Intelligence (PAMI), 2024. 13
+     Mast3r-sfm: a fully-integrated solution for unconstrained             [41] Wenbo Hu, Yining Hong, Yanjun Wang, Leison Gao, Zibu
+     structure-from-motion. In Proceedings of the International                 Wei, Xingcheng Yao, Nanyun Peng, Yonatan Bitton, Idan
+     Conference on 3D Vision (3DV), pages 1–10. IEEE, 2025.                     Szpektor, and Kai-Wei Chang. 3dllm-mem: Long-term
+     2, 8, 12, 13                                                               spatial-temporal memory for embodied 3d large language
+[29] Ainaz Eftekhar, Alexander Sax, Jitendra Malik, and Amir                    model. arXiv preprint arXiv:2505.22657, 2025. 2
+     Zamir. Omnidata: A scalable pipeline for making multi-                [42] Jiahui Huang, Qunjie Zhou, Hesam Rabeti, Aleksandr Ko-
+     task mid-level vision datasets from 3d scans. In Proceed-                  rovko, Huan Ling, Xuanchi Ren, Tianchang Shen, Jun Gao,
+     ings of the IEEE Conference on Computer Vision and Pat-                    Dmitry Slepichev, Chen-Hsuan Lin, et al. Vipe: Video
+     tern Recognition (CVPR), pages 10786–10796, 2021. 5, 11                    pose engine for 3d geometric perception. arXiv preprint
+[30] Sven Elflein, Qunjie Zhou, and Laura Leal-Taixé. Light3r-                 arXiv:2508.10934, 2025. 2
+     sfm: Towards feed-forward structure-from-motion. In Pro-              [43] Po-Han Huang, Kevin Matzen, Johannes Kopf, Narendra
+     ceedings of the IEEE Conference on Computer Vision and                     Ahuja, and Jia-Bin Huang. Deepmvs: Learning multi-view
+     Pattern Recognition (CVPR), pages 16774–16784, 2025. 2                     stereopsis. In Proceedings of the IEEE Conference on Com-
+[31] Jakob Engel, Vladlen Koltun, and Daniel Cremers. Direct                    puter Vision and Pattern Recognition (CVPR), pages 2821–
+     sparse odometry. IEEE Transactions on Pattern Analysis                     2830, 2018. 10
+     and Machine Intelligence (PAMI), 40(3):611–625, 2017. 7,              [44] Rui Huang, Guangyao Zhai, Zuria Bauer, Marc Pollefeys,
+     11                                                                         Federico Tombari, Leonidas Guibas, Gao Huang, and Fran-
+[32] Zhiwen Fan, Jian Zhang, Renjie Li, Junge Zhang, Runjin                     cis Engelmann. Video perception models for 3d scene syn-
+     Chen, Hezhen Hu, Kevin Wang, Huaizhi Qu, Dilin Wang,                       thesis. arXiv preprint arXiv:2506.20601, 2025. 2
+     Zhicheng Yan, et al. Vlm-3r: Vision-language models aug-              [45] Sergio Izquierdo, Mohamed Sayed, Michael Firman,
+     mented with instruction-aligned 3d reconstruction. arXiv                   Guillermo Garcia-Hernando, Daniyar Turmukhambetov,
+     preprint arXiv:2505.20279, 2025. 2                                         Javier Civera, Oisin Mac Aodha, Gabriel Brostow, and
+[33] Xin Fei, Wenzhao Zheng, Yueqi Duan, Wei Zhan,                              Jamie Watson. Mvsanywhere: Zero-shot multi-view stereo.
+     Masayoshi Tomizuka, Kurt Keutzer, and Jiwen Lu. Driv3r:                    In Proceedings of the IEEE Conference on Computer Vi-
+     Learning dense 4d reconstruction for autonomous driving.                   sion and Pattern Recognition (CVPR), pages 11493–11504,
+     arXiv preprint arXiv:2412.06777, 2024. 2                                   2025. 6, 11, 13
+[34] Yasutaka Furukawa, Carlos Hernández, et al. Multi-view               [46] Chris L Jackins and Steven L Tanimoto. Oct-trees and their
+     stereo: A tutorial. Foundations and trends® in Computer                    use in representing three-dimensional objects. Computer
+     Graphics and Vision, 9(1-2):1–148, 2015. 1                                 Graphics and Image Processing, 14(3):249–270, 1980. 2
+[35] Gonzalo Martin Garcia, Karim Abou Zeid, Christian                     [47] Wonbong Jang, Philippe Weinzaepfel, Vincent Leroy, Lour-
+     Schmidt, Daan De Geus, Alexander Hermans, and Bastian                      des Agapito, and Jerome Revaud. Pow3r: Empowering un-
+     Leibe. Fine-tuning image-conditional diffusion models is                   constrained 3d reconstruction with camera and scene priors.
+     easier than you think. In IEEE Winter Conference on Appli-                 In Proceedings of the IEEE Conference on Computer Vision
+     cations of Computer Vision (WACV), pages 753–762. IEEE,                    and Pattern Recognition (CVPR), pages 1071–1081, 2025.
+     2025. 5, 11                                                                2, 6, 11, 13
+[36] Andreas Geiger, Philip Lenz, and Raquel Urtasun. Are we               [48] Zeren Jiang, Chuanxia Zheng, Iro Laina, Diane Larlus,
+     ready for autonomous driving? the kitti vision benchmark                   and Andrea Vedaldi. Geo4d: Leveraging video genera-
+     suite. In Proceedings of the IEEE Conference on Computer                   tors for geometric 4d scene reconstruction. arXiv preprint
+     Vision and Pattern Recognition (CVPR), pages 3354–3361,                    arXiv:2504.07961, 2025. 2
+     2012. 1, 5, 6, 11                                                     [49] Yuhe Jin, Dmytro Mishkin, Anastasiia Mishchuk, Jiri
+[37] Michael Grupp. evo: Python package for the evaluation of                   Matas, Pascal Fua, Kwang Moo Yi, and Eduard Trulls. Im-
+     odometry and slam., 2017. 6                                                age matching across wide baselines: From paper to prac-
+[38] Xingyi He, Jiaming Sun, Yifan Wang, Sida Peng, Qix-                        tice. International Journal of Computer Vision, 129(2):
+     ing Huang, Hujun Bao, and Xiaowei Zhou. Detector-free                      517–547, 2021. 1, 12, 18
+     structure from motion. In Proceedings of the IEEE Confer-             [50] Wolfgang Kabsch. A solution for the best rotation to relate
+
+
+                                                                      20
+     two sets of vectors. Foundations of Crystallography, 32(5):         [63] Zizun Li, Jianjun Zhou, Yifan Wang, Haoyu Guo, Wen-
+     922–923, 1976. 4                                                         zheng Chang, Yang Zhou, Haoyi Zhu, Junyi Chen, Chun-
+[51] Bingxin Ke, Anton Obukhov, Shengyu Huang, Nando Met-                     hua Shen, and Tong He. Wint3r: Window-based stream-
+     zger, Rodrigo Caye Daudt, and Konrad Schindler. Re-                      ing reconstruction with camera token pool. arXiv preprint
+     purposing diffusion-based image generators for monocu-                   arXiv:2509.05296, 2025. 2
+     lar depth estimation. In Proceedings of the IEEE Confer-            [64] Zhen Colin Li, Weiwei Sun, Shrisudhan Govindarajan,
+     ence on Computer Vision and Pattern Recognition (CVPR),                  Shaobo Xia, Daniel Rebain, Kwang Moo Yi, and Andrea
+     pages 9492–9502, 2024. 5, 11                                             Tagliasacchi. Noksr: Kernel-free neural surface reconstruc-
+[52] Nikhil Keetha, Norman Müller, Johannes Schönberger,                    tion via point cloud serialization. In Proceedings of the In-
+     Lorenzo Porzi, Yuchen Zhang, Tobias Fischer, Arno                        ternational Conference on 3D Vision (3DV), pages 78–89.
+     Knapitsch, Duncan Zauss, Ethan Weber, Nelson Antunes,                    IEEE, 2025. 2
+     et al. Mapanything: Universal feed-forward metric 3d re-            [65] Chenguo Lin, Yuchen Lin, Panwang Pan, Yifan Yu, Hon-
+     construction. arXiv preprint arXiv:2509.13414, 2025. 2, 6,               glei Yan, Katerina Fragkiadaki, and Yadong Mu. Movies:
+     11                                                                       Motion-aware 4d dynamic view synthesis in one second.
+[53] Alex Kendall, Matthew Grimes, and Roberto Cipolla.                       arXiv preprint arXiv:2507.10065, 2025. 2
+     Posenet: A convolutional network for real-time 6-dof cam-           [66] Chin-Yang Lin, Cheng Sun, Fu-En Yang, Min-Hung Chen,
+     era relocalization. In Proceedings of the International                  Yen-Yu Lin, and Yu-Lun Liu. Longsplat: Robust unposed
+     Conference on Computer Vision (ICCV), pages 2938–2946,                   3d gaussian splatting for casual long videos. arXiv preprint
+     2015. 18                                                                 arXiv:2508.14041, 2025. 2
+[54] Ramil Khafizov, Artem Komarichev, Ruslan Rakhimov, Pe-              [67] Lahav Lipson, Zachary Teed, and Jia Deng. Deep patch
+     ter Wonka, and Evgeny Burnaev. G-cut3r: Guided 3d re-                    visual slam. In Proceedings of the European Conference on
+     construction with camera and depth prior integration. arXiv              Computer Vision (ECCV), pages 424–440. Springer, 2024.
+     preprint arXiv:2508.11379, 2025. 2                                       7, 11, 12
+[55] Arno Knapitsch, Jaesik Park, Qian-Yi Zhou, and Vladlen              [68] Sidun Liu, Wenyu Li, Peng Qiao, and Yong Dou. Regist3r:
+     Koltun. Tanks and temples: Benchmarking large-scale                      Incremental registration with stereo foundation model.
+     scene reconstruction. ACM Transactions on Graphics, 36                   arXiv preprint arXiv:2504.12356, 2025. 2
+     (4), 2017. 1, 5, 6, 8, 11, 12, 13, 17                               [69] Yuzheng Liu, Siyan Dong, Shuzhe Wang, Yingda Yin, Yan-
+[56] Lukas Koestler, Nan Yang, Niclas Zeller, and Daniel Cre-                 chao Yang, Qingnan Fan, and Baoquan Chen. Slam3r:
+     mers. Tandem: Tracking and dense mapping in real-time                    Real-time dense scene reconstruction from monocular rgb
+     using deep multi-view stereo. In Conference on Robot                     videos.     In Proceedings of the IEEE Conference on
+     Learning, pages 34–45. PMLR, 2022. 7, 11                                 Computer Vision and Pattern Recognition (CVPR), pages
+[57] Yushi Lan, Yihang Luo, Fangzhou Hong, Shangchen Zhou,                    16651–16662, 2025. 2
+     Honghua Chen, Zhaoyang Lyu, Shuai Yang, Bo Dai,                     [70] Thibaut Loiseau, Guillaume Bourmaud, and Vincent Lep-
+     Chen Change Loy, and Xingang Pan. Stream3r: Scalable                     etit. Alligat0r: Pre-training through co-visibility segmen-
+     sequential 3d reconstruction with causal transformer. arXiv              tation for relative camera pose regression. arXiv preprint
+     preprint arXiv:2508.10893, 2025. 2                                       arXiv:2503.07561, 2025. 2
+[58] Vincent Leroy, Yohann Cabon, and Jérôme Revaud.                   [71] Jiahao Lu, Tianyu Huang, Peng Li, Zhiyang Dou, Cheng
+     Grounding image matching in 3d with mast3r. In Pro-                      Lin, Zhiming Cui, Zhen Dong, Sai-Kit Yeung, Wenping
+     ceedings of the European Conference on Computer Vision                   Wang, and Yuan Liu. Align3r: Aligned monocular depth
+     (ECCV), pages 71–91. Springer, 2024. 2, 5, 6, 11                         estimation for dynamic videos. In Proceedings of the IEEE
+[59] Haodong Li, Chen Wang, Jiahui Lei, Kostas Daniilidis, and                Conference on Computer Vision and Pattern Recognition
+     Lingjie Liu. Stereodiff: Stereo-diffusion synergy for video              (CVPR), pages 22820–22830, 2025. 2
+     depth estimation. arXiv preprint arXiv:2506.20756, 2025.            [72] Ziqi Lu, Heng Yang, Danfei Xu, Boyi Li, Boris Ivanovic,
+     2                                                                        Marco Pavone, and Yue Wang. Lora3d: Low-rank self-
+[60] Rui Li, Biao Zhang, Zhenyu Li, Federico Tombari, and Pe-                 calibration of 3d geometric foundation models. arXiv
+     ter Wonka. Lari: Layered ray intersections for single-view               preprint arXiv:2412.07746, 2024. 2
+     3d geometric reasoning. arXiv preprint arXiv:2504.18424,            [73] Jiahao Ma, Lei Wang, David Ahmedt-Aristizabal, Chuong
+     2025. 2                                                                  Nguyen, et al. Puzzles: Unbounded video-depth augmen-
+[61] Zhiqi Li, Chengrui Dong, Yiming Chen, Zhangchi Huang,                    tation for scalable end-to-end 3d reconstruction. arXiv
+     and Peidong Liu. Vicasplat: A single run is all you need for             preprint arXiv:2506.23863, 2025. 2
+     3d gaussian splatting and camera estimation from unposed            [74] Dominic Maggio, Hyungtae Lim, and Luca Carlone. Vggt-
+     video frames. arXiv preprint arXiv:2503.10286, 2025. 2                   slam: Dense rgb slam optimized on the sl (4) manifold.
+[62] Zhengqi Li, Richard Tucker, Forrester Cole, Qianqian                     arXiv preprint arXiv:2505.12549, 2025. 4, 7, 8
+     Wang, Linyi Jin, Vickie Ye, Angjoo Kanazawa, Aleksander             [75] Soroush Mahdi, Fardin Ayar, Ehsan Javanmardi, Manabu
+     Holynski, and Noah Snavely. Megasam: Accurate, fast and                  Tsukada, and Mahdi Javanmardi. Evict3r: Training-free to-
+     robust structure and motion from casual dynamic videos. In               ken eviction for memory-bounded streaming visual geom-
+     Proceedings of the Computer Vision and Pattern Recogni-                  etry transformers. arXiv preprint arXiv:2509.17650, 2025.
+     tion Conference, pages 10486–10496, 2025. 8, 12                          2
+
+
+                                                                    21
+[76] Jinjie Mai, Wenxuan Zhu, Haozhe Liu, Bing Li, Cheng                 [89] Xiaqing Pan, Nicholas Charron, Yongqian Yang, Scott Pe-
+     Zheng, Jürgen Schmidhuber, and Bernard Ghanem. Can                      ters, Thomas Whelan, Chen Kong, Omkar Parkhi, Richard
+     video diffusion model reconstruct 4d geometry? arXiv                     Newcombe, and Yuheng Carl Ren. Aria digital twin: A new
+     preprint arXiv:2503.21082, 2025. 2                                       benchmark dataset for egocentric 3d machine perception. In
+[77] Hidenobu Matsuki, Riku Murai, Paul HJ Kelly, and An-                     Proceedings of the International Conference on Computer
+     drew J Davison. Gaussian splatting slam. In Proceedings                  Vision (ICCV), pages 20133–20143, 2023. 10
+     of the IEEE Conference on Computer Vision and Pattern               [90] Jeong Joon Park, Peter Florence, Julian Straub, Richard
+     Recognition (CVPR), pages 18039–18048, 2024. 7, 11                       Newcombe, and Steven Lovegrove. Deepsdf: Learning
+[78] Donald Meagher. Geometric modeling using octree encod-                   continuous signed distance functions for shape representa-
+     ing. Computer graphics and image processing, 19(2):129–                  tion. In Proceedings of the IEEE Conference on Computer
+     147, 1982. 2                                                             Vision and Pattern Recognition (CVPR), pages 165–174,
+[79] Andreas Meuleman, Ishaan Shah, Alexandre Lanvin, Bern-                   2019. 1
+     hard Kerbl, and George Drettakis. On-the-fly reconstruc-            [91] Songyou Peng, Michael Niemeyer, Lars Mescheder, Marc
+     tion for large-scale novel view synthesis from unposed im-               Pollefeys, and Andreas Geiger. Convolutional occupancy
+     ages. ACM Transactions on Graphics (TOG), 44(4):1–14,                    networks. In Proceedings of the European Conference on
+     2025. 2                                                                  Computer Vision (ECCV), pages 523–540. Springer, 2020.
+[80] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,                     2
+     Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:              [92] Luigi Piccinelli, Christos Sakaridis, Yung-Hsu Yang, Mat-
+     Representing scenes as neural radiance fields for view syn-              tia Segu, Siyuan Li, Wim Abbeloos, and Luc Van Gool.
+     thesis. In Proceedings of the European Conference on Com-                Unidepthv2: Universal monocular metric depth estimation
+     puter Vision (ECCV), pages 405–421, 2020. 1                              made simpler. arXiv preprint arXiv:2502.20110, 2025. 6,
+[81] Thomas Müller, Alex Evans, Christoph Schied, and                        11, 13
+     Alexander Keller. Instant neural graphics primitives with           [93] Quanhao Qian, Guoyang Zhao, Gongjie Zhang, Jiuniu
+     a multiresolution hash encoding. ACM Transactions on                     Wang, Ran Xu, Junlong Gao, and Deli Zhao. Gp3: A 3d
+     Graphics (TOG), 41(4):1–15, 2022. 2                                      geometry-aware policy with multi-view images for robotic
+[82] Raul Mur-Artal, Jose Maria Martinez Montiel, and Juan D                  manipulation. arXiv preprint arXiv:2509.15733, 2025. 2
+     Tardos. Orb-slam: a versatile and accurate monocular slam
+                                                                         [94] René Ranftl, Alexey Bochkovskiy, and Vladlen Koltun. Vi-
+     system. IEEE transactions on robotics, 31(5):1147–1163,
+                                                                              sion transformers for dense prediction. In Proceedings of
+     2015. 7, 11, 12
+                                                                              the International Conference on Computer Vision (ICCV),
+[83] Riku Murai, Eric Dexheimer, and Andrew J Davison.                        pages 12179–12188, 2021. 10
+     Mast3r-slam: Real-time dense slam with 3d reconstruction
+                                                                         [95] Jeremy Reizenstein, Roman Shapovalov, Philipp Henzler,
+     priors. In Proceedings of the Computer Vision and Pattern
+                                                                              Luca Sbordone, Patrick Labatut, and David Novotny. Com-
+     Recognition Conference, pages 16695–16705, 2025. 2, 7,
+                                                                              mon objects in 3d: Large-scale learning and evaluation
+     8, 12
+                                                                              of real-life 3d category reconstruction. In Proceedings of
+[84] Pushmeet Kohli Nathan Silberman, Derek Hoiem and Rob
+                                                                              the International Conference on Computer Vision (ICCV),
+     Fergus. Indoor segmentation and support inference from
+                                                                              pages 10901–10911, 2021. 10
+     rgbd images. In Proceedings of the European Conference
+     on Computer Vision (ECCV), 2012. 5, 6, 11                           [96] Jerome Revaud, Yohann Cabon, Romain Brégier, JongMin
+[85] Richard A Newcombe, Shahram Izadi, Otmar Hilliges,                       Lee, and Philippe Weinzaepfel. Sacreg: Scene-agnostic co-
+     David Molyneaux, David Kim, Andrew J Davison, Push-                      ordinate regression for visual localization. In Proceedings
+     meet Kohi, Jamie Shotton, Steve Hodges, and Andrew                       of the IEEE Conference on Computer Vision and Pattern
+     Fitzgibbon. Kinectfusion: Real-time dense surface map-                   Recognition Workshops (CVPRW), pages 688–698, 2024. 2
+     ping and tracking. In ISMAR, pages 127–136, 2011. 1, 7,             [97] Gernot Riegler and Vladlen Koltun. Free view synthesis.
+     10                                                                       In Proceedings of the European Conference on Computer
+[86] Matthias Nießner, Michael Zollhöfer, Shahram Izadi, and                 Vision (ECCV), 2020. 8, 12, 13
+     Marc Stamminger. Real-time 3d reconstruction at scale us-           [98] Mike Roberts, Jason Ramapuram, Anurag Ranjan, At-
+     ing voxel hashing. ACM Transactions on Graphics (ToG),                   ulit Kumar, Miguel Angel Bautista, Nathan Paczan, Russ
+     32(6):1–11, 2013. 2                                                      Webb, and Joshua M. Susskind. Hypersim: A photorealistic
+[87] Emanuele Palazzolo, Jens Behley, Philipp Lottes, Philippe                synthetic dataset for holistic indoor scene understanding. In
+     Giguere, and Cyrill Stachniss. Refusion: 3d reconstruc-                  Proceedings of the International Conference on Computer
+     tion in dynamic environments for rgb-d cameras exploiting                Vision (ICCV), 2021. 10
+     residuals. In 2019 IEEE/RSJ International Conference on             [99] Johannes L Schonberger and Jan-Michael Frahm.
+     Intelligent Robots and Systems (IROS), pages 7855–7862.                  Structure-from-motion revisited.         In Proceedings of
+     IEEE, 2019. 6, 11                                                        the IEEE Conference on Computer Vision and Pattern
+[88] Linfei Pan, Dániel Baráth, Marc Pollefeys, and Jo-                     Recognition (CVPR), pages 4104–4113, 2016. 1, 2, 6, 8, 9,
+     hannes Lutz Schönberger. Global structure-from-motion                   11, 12, 13
+     revisited. In Proceedings of the European Conference on            [100] Thomas Schops, Johannes L Schonberger, Silvano Galliani,
+     Computer Vision (ECCV), 2024. 2                                          Torsten Sattler, Konrad Schindler, Marc Pollefeys, and An-
+
+
+                                                                   22
+      dreas Geiger. A multi-view stereo benchmark with high-                   Unigeo: Taming video diffusion for unified consistent ge-
+      resolution images and multi-camera videos. In Proceedings                ometry estimation. arXiv preprint arXiv:2505.24521, 2025.
+      of the IEEE Conference on Computer Vision and Pattern                    2
+      Recognition (CVPR), pages 3260–3269, 2017. 5, 6, 8, 11,            [112] Matthew Tancik, Ethan Weber, Evonne Ng, Ruilong Li,
+      12, 16                                                                   Brent Yi, Justin Kerr, Terrance Wang, Alexander Kristof-
+[101] Thomas Schops, Torsten Sattler, and Marc Pollefeys. Bad                  fersen, Jake Austin, Kamyar Salahi, Abhik Ahuja, David
+      slam: Bundle adjusted direct rgb-d slam. In Proceedings                  McAllister, and Angjoo Kanazawa. Nerfstudio: A modular
+      of the IEEE Conference on Computer Vision and Pattern                    framework for neural radiance field development. In ACM
+      Recognition (CVPR), pages 134–144, 2019. 6, 8, 12, 15                    SIGGRAPH 2023 Conference Proceedings, 2023. 10
+[102] Philipp Schröppel, Jan Bechtold, Artemij Amiranashvili,           [113] Zhenggang Tang, Yuchen Fan, Dilin Wang, Hongyu Xu,
+      and Thomas Brox. A benchmark and a baseline for robust                   Rakesh Ranjan, Alexander Schwing, and Zhicheng Yan.
+      multi-view depth estimation. In Proceedings of the Inter-                Mv-dust3r+: Single-stage scene reconstruction from sparse
+      national Conference on 3D Vision (3DV), pages 637–645.                   views in 2 seconds. In Proceedings of the IEEE Confer-
+      IEEE, 2022. 5, 6, 11, 12, 13                                             ence on Computer Vision and Pattern Recognition (CVPR),
+[103] Duochao Shi, Weijie Wang, Donny Y Chen, Zeyu Zhang,                      pages 5283–5293, 2025. 2
+      Jia-Wang Bian, Bohan Zhuang, and Chunhua Shen. Re-                 [114] Aether Team, Haoyi Zhu, Yifan Wang, Jianjun Zhou, Wen-
+      visiting depth representations for feed-forward 3d gaussian              zheng Chang, Yang Zhou, Zizun Li, Junyi Chen, Chun-
+      splatting. arXiv preprint arXiv:2506.05327, 2025. 2                      hua Shen, Jiangmiao Pang, et al. Aether: Geometric-aware
+[104] Jamie Shotton, Ben Glocker, Christopher Zach, Shahram                    unified world modeling. arXiv preprint arXiv:2503.18945,
+      Izadi, Antonio Criminisi, and Andrew Fitzgibbon. Scene                   2025. 2
+      coordinate regression forests for camera relocalization in         [115] Zachary Teed and Jia Deng. Deepv2d: Video to depth
+      rgb-d images. In Proceedings of the IEEE Conference on                   with differentiable structure from motion. In Proceedings of
+      Computer Vision and Pattern Recognition (CVPR), pages                    the International Conference on Learning Representations
+      2930–2937, 2013. 6                                                       (ICLR), 2020. 7, 12
+[105] Jamie Shotton, Ben Glocker, Christopher Zach, Shahram              [116] Zachary Teed and Jia Deng. Droid-slam: Deep visual slam
+      Izadi, Antonio Criminisi, and Andrew Fitzgibbon. Scene                   for monocular, stereo, and rgb-d cameras. Advances in Neu-
+      coordinate regression forests for camera relocalization in               ral Information Processing Systems (NeurIPS), 34:16558–
+      rgb-d images. In Proceedings of the IEEE Conference on                   16569, 2021. 7, 11, 12
+      Computer Vision and Pattern Recognition (CVPR), pages
+                                                                         [117] Shinji Umeyama. Least-squares estimation of transforma-
+      2930–2937, 2013. 2, 5, 10, 11, 12, 14
+                                                                               tion parameters between two point patterns. IEEE Transac-
+[106] Cameron Smith, David Charatan, Ayush Tewari, and Vin-
+                                                                               tions on Pattern Analysis and Machine Intelligence (PAMI),
+      cent Sitzmann. Flowmap: High-quality camera poses, in-
+                                                                               13(4):376–380, 2002. 4
+      trinsics, and depth via gradient descent. arXiv preprint
+      arXiv:2404.15259, 2024. 12, 13                                     [118] Benjamin Ummenhofer, Huizhong Zhou, Jonas Uhrig,
+                                                                               Nikolaus Mayer, Eddy Ilg, Alexey Dosovitskiy, and
+[107] Julian Straub, Thomas Whelan, Lingni Ma, Yufan Chen,
+                                                                               Thomas Brox. Demon: Depth and motion network for
+      Erik Wijmans, Simon Green, Jakob J Engel, Raul Mur-
+                                                                               learning monocular stereo. In Proceedings of the IEEE
+      Artal, Carl Ren, Shobhit Verma, et al. The replica
+                                                                               Conference on Computer Vision and Pattern Recognition
+      dataset: A digital replica of indoor spaces. arXiv preprint
+                                                                               (CVPR), pages 5038–5047, 2017. 6, 11, 13
+      arXiv:1906.05797, 2019. 5
+[108] Jürgen Sturm, Nikolas Engelhard, Felix Endres, Wolfram            [119] Igor Vasiljevic, Nick Kolkin, Shanyi Zhang, Ruotian Luo,
+      Burgard, and Daniel Cremers. A benchmark for the eval-                   Haochen Wang, Falcon Z Dai, Andrea F Daniele, Moham-
+      uation of rgb-d slam systems. In Proceedings of the                      madreza Mostajabi, Steven Basart, Matthew R Walter, et al.
+      IEEE/RSJ Conference on Intelligent Robots and Systems                    Diode: A dense indoor and outdoor depth dataset. arXiv
+      (IROS), pages 573–580, 2012. 6, 8, 10, 12, 15                            preprint arXiv:1908.00463, 2019. 5, 11
+[109] Jiaming Sun, Yiming Xie, Linghao Chen, Xiaowei Zhou,               [120] Chung-Shien Brian Wang, Christian Schmidt, Jens Pieken-
+      and Hujun Bao. Neuralrecon: Real-time coherent 3d re-                    brinck, and Bastian Leibe. Faster vggt with block-sparse
+      construction from monocular video. In Proceedings of the                 global attention. arXiv preprint arXiv:2509.07120, 2025. 2
+      IEEE Conference on Computer Vision and Pattern Recog-              [121] Fangjinhua Wang, Silvano Galliani, Christoph Vogel, Pablo
+      nition (CVPR), pages 15598–15607, 2021. 1                                Speciale, and Marc Pollefeys. Patchmatchnet: Learned
+[110] Pei Sun, Henrik Kretzschmar, Xerxes Dotiwalla, Aure-                     multi-view patchmatch stereo. In Proceedings of the IEEE
+      lien Chouard, Vijaysai Patnaik, Paul Tsui, James Guo, Yin                Conference on Computer Vision and Pattern Recognition
+      Zhou, Yuning Chai, Benjamin Caine, et al. Scalability in                 (CVPR), pages 14194–14203, 2021. 11, 13
+      perception for autonomous driving: Waymo open dataset.             [122] Hengyi Wang and Lourdes Agapito. 3d reconstruction with
+      In Proceedings of the IEEE Conference on Computer Vi-                    spatial memory. In Proceedings of the International Con-
+      sion and Pattern Recognition (CVPR), pages 2446–2454,                    ference on 3D Vision (3DV), pages 78–89. IEEE, 2025. 1,
+      2020. 10                                                                 2, 3, 5, 6, 7, 8, 11, 13
+[111] Yang-Tian Sun, Xin Yu, Zehuan Huang, Yi-Hua Huang,                 [123] Hengyi Wang, Jingwen Wang, and Lourdes Agapito. Co-
+      Yuan-Chen Guo, Ziyi Yang, Yan-Pei Cao, and Xiaojuan Qi.                  slam: Joint coordinate and sparse parametric encodings for
+
+
+                                                                    23
+      neural real-time slam. In Proceedings of the IEEE Confer-          [135] Jiale Xu, Shenghua Gao, and Ying Shan. Freesplatter:
+      ence on Computer Vision and Pattern Recognition (CVPR),                  Pose-free gaussian splatting for sparse-view 3d reconstruc-
+      pages 13293–13302, 2023. 1, 6                                            tion. arXiv preprint arXiv:2412.09573, 2024. 2
+[124] Jianyuan Wang, Minghao Chen, Nikita Karaev, Andrea                 [136] Jianing Yang, Alexander Sax, Kevin J Liang, Mikael
+      Vedaldi, Christian Rupprecht, and David Novotny. Vggt:                   Henaff, Hao Tang, Ang Cao, Joyce Chai, Franziska Meier,
+      Visual geometry grounded transformer. In Proceedings                     and Matt Feiszli. Fast3r: Towards 3d reconstruction of
+      of the IEEE Conference on Computer Vision and Pattern                    1000+ images in one forward pass. In Proceedings of the
+      Recognition (CVPR), pages 5294–5306, 2025. 1, 2, 3, 4, 5,                IEEE Conference on Computer Vision and Pattern Recog-
+      6, 7, 8, 10, 11, 12, 13                                                  nition (CVPR), pages 21924–21935, 2025. 2, 5
+[125] Kaixuan Wang and Shaojie Shen. Flow-motion and depth               [137] Lihe Yang, Bingyi Kang, Zilong Huang, Zhen Zhao, Xiao-
+      network for monocular stereo and beyond. IEEE Robotics                   gang Xu, Jiashi Feng, and Hengshuang Zhao. Depth any-
+      and Automation Letters, 5(2):3307–3314, 2020. 10                         thing v2. Advances in Neural Information Processing Sys-
+[126] Qianqian Wang, Yifei Zhang, Aleksander Holynski,                         tems (NeurIPS), 37:21875–21911, 2024. 5, 6, 11, 13
+      Alexei A Efros, and Angjoo Kanazawa. Continuous 3d per-            [138] Yao Yao, Zixin Luo, Shiwei Li, Tian Fang, and Long
+      ception model with persistent state. In Proceedings of the               Quan. Mvsnet: Depth inference for unstructured multi-
+      IEEE Conference on Computer Vision and Pattern Recog-                    view stereo. In Proceedings of the European Conference
+      nition (CVPR), pages 10510–10522, 2025. 2, 6, 7, 11                      on Computer Vision (ECCV), pages 767–783, 2018. 11, 13
+[127] Ruicheng Wang, Sicheng Xu, Cassie Dai, Jianfeng Xiang,             [139] Chandan Yeshwanth, Yueh-Cheng Liu, Matthias Nießner,
+      Yu Deng, Xin Tong, and Jiaolong Yang. Moge: Unlocking                    and Angela Dai. Scannet++: A high-fidelity dataset of 3d
+      accurate monocular geometry estimation for open-domain                   indoor scenes. In Proceedings of the International Confer-
+      images with optimal training supervision. In Proceedings                 ence on Computer Vision (ICCV), 2023. 10
+      of the IEEE Conference on Computer Vision and Pattern              [140] Wei Yin, Chi Zhang, Hao Chen, Zhipeng Cai, Gang Yu,
+      Recognition (CVPR), pages 5261–5271, 2025. 3, 4, 5, 11                   Kaixuan Wang, Xiaozhi Chen, and Chunhua Shen. Met-
+[128] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris                          ric3d: Towards zero-shot metric 3d prediction from a single
+      Chidlovskii, and Jerome Revaud. Dust3r: Geometric 3d vi-                 image. In Proceedings of the International Conference on
+      sion made easy. In Proceedings of the IEEE Conference on                 Computer Vision (ICCV), pages 9043–9053, 2023. 11
+      Computer Vision and Pattern Recognition (CVPR), pages              [141] Zehao Yu and Shenghua Gao. Fast-mvsnet: Sparse-
+      20697–20709, 2024. 1, 2, 3, 5, 6, 11, 13                                 to-dense multi-view stereo with learned propagation and
+[129] Yifan Wang, Jianjun Zhou, Haoyi Zhu, Wenzheng Chang,                     gauss-newton refinement. In Proceedings of the IEEE
+      Yang Zhou, Zizun Li, Junyi Chen, Jiangmiao Pang, Chun-                   Conference on Computer Vision and Pattern Recognition
+      hua Shen, and Tong He. pi3: Scalable permutation-                        (CVPR), pages 1949–1958, 2020. 11, 13
+      equivariant visual geometry learning.        arXiv preprint        [142] Ganlin Zhang, Erik Sandström, Youmin Zhang, Manthan
+      arXiv:2507.13347, 2025. 2, 6, 7, 8, 11, 13                               Patel, Luc Van Gool, and Martin R Oswald. Glorie-slam:
+[130] Tong Wu, Jiarui Zhang, Xiao Fu, Yuxin Wang, Jiawei Ren,                  Globally optimized rgb-only implicit encoding point cloud
+      Liang Pan, Wayne Wu, Lei Yang, Jiaqi Wang, Chen Qian,                    slam. arXiv preprint arXiv:2403.19549, 2024. 7, 11
+      et al. Omniobject3d: Large-vocabulary 3d object dataset            [143] Ganlin Zhang, Shenhan Qian, Xi Wang, and Daniel Cre-
+      for realistic perception, reconstruction and generation. In              mers. Vista-slam: Visual slam with symmetric two-view
+      Proceedings of the IEEE Conference on Computer Vision                    association. arXiv preprint arXiv:2509.01584, 2025. 2
+      and Pattern Recognition (CVPR), pages 803–814, 2023. 10            [144] Jingyang Zhang, Shiwei Li, Zixin Luo, Tian Fang, and Yao
+[131] Xiaoyang Wu, Yixing Lao, Li Jiang, Xihui Liu, and Heng-                  Yao. Vis-mvsnet: Visibility-aware multi-view stereo net-
+      shuang Zhao. Point transformer v2: Grouped vector atten-                 work. International Journal of Computer Vision (IJCV),
+      tion and partition-based pooling. Advances in Neural Infor-              131(1):199–214, 2023. 6, 11, 13
+      mation Processing Systems (NeurIPS), 35:33330–33342,               [145] Jiakai Zhang, Shouchen Zhou, Haizhao Dai, Xinhang Liu,
+      2022. 2                                                                  Peihao Wang, Zhiwen Fan, Yuan Pei, and Jingyi Yu. Cry-
+[132] Xiaoyang Wu, Li Jiang, Peng-Shuai Wang, Zhijian Liu,                     ofastar: Fast cryo-em ab initio reconstruction made easy.
+      Xihui Liu, Yu Qiao, Wanli Ouyang, Tong He, and Heng-                     arXiv preprint arXiv:2506.05864, 2025. 2
+      shuang Zhao. Point transformer v3: Simpler faster stronger.        [146] Lvmin Zhang, Anyi Rao, and Maneesh Agrawala. Adding
+      In Proceedings of the IEEE Conference on Computer Vision                 conditional control to text-to-image diffusion models. In
+      and Pattern Recognition (CVPR), pages 4840–4851, 2024.                   Proceedings of the International Conference on Computer
+      2, 4                                                                     Vision (ICCV), pages 3836–3847, 2023. 2
+[133] Yuqi Wu, Wenzhao Zheng, Jie Zhou, and Jiwen Lu.                    [147] Songyan Zhang, Yongtao Ge, Jinyuan Tian, Guangkai Xu,
+      Point3r: Streaming 3d reconstruction with explicit spatial               Hao Chen, Chen Lv, and Chunhua Shen. Pomato: Marrying
+      pointer memory. arXiv preprint arXiv:2507.02863, 2025. 2                 pointmap matching with temporal motion for dynamic 3d
+[134] Hongchi Xia, Yang Fu, Sifei Liu, and Xiaolong Wang.                      reconstruction. arXiv preprint arXiv:2504.05692, 2025. 2
+      Rgbd objects in the wild: Scaling real-world 3d object             [148] Shangzhan Zhang, Jianyuan Wang, Yinghao Xu, Nan Xue,
+      learning from rgb-d videos. In Proceedings of the IEEE                   Christian Rupprecht, Xiaowei Zhou, Yujun Shen, and Gor-
+      Conference on Computer Vision and Pattern Recognition                    don Wetzstein. Flare: Feed-forward geometry, appear-
+      (CVPR), pages 22378–22389, 2024. 10                                      ance and camera estimation from uncalibrated sparse views.
+
+
+                                                                    24
+      In Proceedings of the IEEE Conference on Computer Vi-
+      sion and Pattern Recognition (CVPR), pages 21936–21947,
+      2025. 2
+[149] Youmin Zhang, Fabio Tosi, Stefano Mattoccia, and Mat-
+      teo Poggi. Go-slam: Global optimization for consistent 3d
+      instant reconstruction. In Proceedings of the IEEE/CVF In-
+      ternational Conference on Computer Vision, pages 3727–
+      3737, 2023. 7, 12
+[150] Hengshuang Zhao, Li Jiang, Jiaya Jia, Philip HS Torr, and
+      Vladlen Koltun. Point transformer. In Proceedings of the
+      IEEE/CVF international conference on computer vision,
+      pages 16259–16268, 2021. 2
+[151] Xinyi Zheng, Steve Zhang, Weizhe Lin, Aaron Zhang, Wal-
+      terio W Mayol-Cuevas, Yunze Liu, and Junxiao Shen. Cul-
+      ture3d: A large-scale and diverse dataset of cultural land-
+      marks and terrains for gaussian-based scene rendering. In
+      Proceedings of the International Conference on Computer
+      Vision (ICCV), pages 29064–29074, 2025. 7
+[152] Tinghui Zhou, Richard Tucker, John Flynn, Graham Fyffe,
+      and Noah Snavely.         Stereo magnification: Learning
+      view synthesis using multiplane images. arXiv preprint
+      arXiv:1805.09817, 2018. 5
+[153] Yuxuan Zhou, Xingxing Li, Shengyu Li, Zhuohao Yan,
+      Chunxi Xia, and Shaoquan Feng. Mast3r-fusion: Inte-
+      grating feed-forward visual model with imu, gnss for high-
+      functionality slam. arXiv preprint arXiv:2509.20757, 2025.
+      2
+[154] Haodong Zhu, Changbai Li, Yangyang Ren, Zichao Feng,
+      Xuhui Liu, Hanlin Chen, Xiantong Zhen, and Baochang
+      Zhang. Surf3r: Rapid surface reconstruction from sparse
+      rgb views in seconds. arXiv preprint arXiv:2508.04508,
+      2025. 2
+[155] Zihan Zhu, Songyou Peng, Viktor Larsson, Weiwei Xu,
+      Hujun Bao, Zhaopeng Cui, Martin R Oswald, and Marc
+      Pollefeys. Nice-slam: Neural implicit scalable encod-
+      ing for slam. In Proceedings of the IEEE Conference on
+      Computer Vision and Pattern Recognition (CVPR), pages
+      12786–12796, 2022. 6
+[156] Dong Zhuo, Wenzhao Zheng, Jiahe Guo, Yuqi Wu, Jie
+      Zhou, and Jiwen Lu. Streaming 4d visual geometry trans-
+      former. arXiv preprint arXiv:2507.11539, 2025. 2
+[157] Lojze Zust, Yohann Cabon, Juliette Marrie, Leonid Ants-
+      feld, Boris Chidlovskii, Jerome Revaud, and Gabriela
+      Csurka. Panst3r: Multi-view consistent panoptic segmenta-
+      tion. arXiv preprint arXiv:2506.21348, 2025. 2
+
+
+
+
+                                                                    25
+

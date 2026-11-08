@@ -1,0 +1,45 @@
+{
+  "model": "Standard",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/checkpoints/model.pt",
+  "checkpoint_bytes": 5026874952,
+  "checkpoint_sha256": "d15bf50a8615c8225ed48b51ea5cac673d82442ec0309036df555a053253afe0",
+  "weight_hash_scope": "Reuse already recorded SHA; not re-read whole multiGB checkpoint solely for hashing.",
+  "official_model_commit": "a288dd0f14786c93483e45524328726ab7b1b4ce",
+  "commit_scope": "Independent official VGGT repository",
+  "source_file_sha256": {
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/vggt_foreground/inference.py": "4cf15ff40999114d59a9047d7b61b0d9ccacf29a6af34bd8be228aeed98ffd60",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/vggt_foreground/preprocess.py": "61c27ecfb271a86248b4789665d9f62838550e474b5a0088f549c7f94e1af2fb",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/vggt/vggt/models/vggt.py": "dbc92d6214882161d9042b1bc60cc932a9fd6bb609fc913d14906328f7833607"
+  },
+  "preprocessing": {
+    "name": "original square black padding",
+    "load_resolution": 1024,
+    "model_resolution": 518,
+    "model_size_wh": [
+      518,
+      518
+    ],
+    "rgb_interpolation": [
+      "PIL bicubic square→1024",
+      "torch bilinear1024→518 align_corners=False"
+    ],
+    "mask_interpolation": "original nearest square→518",
+    "numerical_policy": "Existing run_vggt_heads: BF16 aggregator on A6000; camera/depth heads and pose conversion FP32.",
+    "affine_policy": "Keep historical nominal A for count-only comparison; separately save correct half-pixel A, without changing network input/predictions."
+  },
+  "seed": 0,
+  "historical208_reference": {
+    "colmap_camera_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/Standard_VGGT_Dataset/sparse/0",
+    "depth_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/Standard_VGGT_Frontend/depth",
+    "confidence_dir": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/Standard_VGGT_Frontend/confidence",
+    "transform_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/Standard_VGGT_Frontend/metadata/input_manifest.json"
+  },
+  "historical208_inference_rerun": false,
+  "scale_semantics": "Learned native world scale; no measured metric calibration, alignment, fusion or scan scale fitting.",
+  "point_head_executed": false,
+  "depth_and_camera_support": true,
+  "control_factor": "geometry RGB source on full historical208",
+  "all_frames": 208,
+  "training_rgb_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/training_images",
+  "mask_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/masks"
+}

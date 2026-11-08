@@ -1,0 +1,244 @@
+{
+  "experiment": "E1",
+  "status": "complete",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "checkpoint_sha256": "19f61faedca7935b75fcedcbdd9d81ec9a1281ec8c484f4179b25c3abe30bab8",
+  "repo": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community",
+  "renderer_file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community/gaussian_renderer/__init__.py",
+  "renderer_sha256": "5a9c34c87de59d0293c9f5bee99e815b3dacd79646c8cdbbb29a15dea56368c3",
+  "python": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/.venv/bin/python",
+  "torch": "2.10.0+cu128",
+  "cuda": "12.8",
+  "physical_gpu": 1,
+  "resolution_divisor": 2,
+  "rendered_views": 12,
+  "source_ids": [
+    0,
+    19,
+    38,
+    57,
+    76,
+    95,
+    114,
+    133,
+    152,
+    170,
+    189,
+    209
+  ],
+  "gaussian_count": 600458,
+  "peak_allocated_gib": 0.5926547050476074,
+  "peak_reserved_gib": 1.212890625,
+  "wall_seconds": 146.13527840701863,
+  "camera_count": 208,
+  "native_rgb_background": [
+    0,
+    0,
+    0
+  ],
+  "rgb_for_metrics": "float32 clamp of actual native render, no PNG requantization or exposure",
+  "historical_outputs_changed": false,
+  "original_guard": {
+    "multi_view.json": "d78ccbef17dfa6d75e05ed8c129a584f60e0fae7ab122aaf4b421b033964fc07",
+    "cameras.json": "1c373693f6c5b7905abc4d2af2e851fa4ace6d1b330943c87e87e9085a8d2097"
+  },
+  "depth_ratio_baseline": null,
+  "two_dgs_readonly_allmap_observer": false,
+  "view_records": [
+    {
+      "source_id": 0,
+      "name": "crop_0000",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.4534898530109785,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "f8c876d37b456931e67505edc77fb11ab99080d37130521cb7e94a53996e5e4d",
+      "gt_mask_sha256": "ad4141869b7697e52bd20608b884d676bb11f038272feadad51902eee3bf4726",
+      "render_rgb_tensor_sha256": "f6b627c0f3e371a8651b31b981179846b7c3f16297777721515394253b40bef5"
+    },
+    {
+      "source_id": 19,
+      "name": "crop_0019",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.008995125012007,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "d57ba6d8adbfefd5e8bb1d874acaef9341cec0b4fe9f8c75b288a27b6e2ae0a7",
+      "gt_mask_sha256": "c3ac639172bf753c14f7023f510804767f78b50dd3942c6907ba1ed212377139",
+      "render_rgb_tensor_sha256": "35fbc8c6887f71c4b1ae19c0da5eef9610546f65b61bf51101d531d338d9ffff"
+    },
+    {
+      "source_id": 38,
+      "name": "crop_0038",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.582539007009473,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "09c7e5a2bb3fae334770e502be24fa33d6fc995f9fee03cc09a59170e216ec3d",
+      "gt_mask_sha256": "e1d23205962d1fc00055a6df3d41364c09bad52a2466b998d666c5973943581a",
+      "render_rgb_tensor_sha256": "576a84a3fb6631edb4e017a816e8d4bd9fe14044dd919618c33ae0f6fd7110c3"
+    },
+    {
+      "source_id": 57,
+      "name": "crop_0057",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.9047897290147375,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "698689abed513904effe367e6767c3d47d52c6b890d48cb7c6b74440c763c33a",
+      "gt_mask_sha256": "088aa25bfedd4c139d6d8d94ca27ff019fbcc500468ee04236245c6f237b188c",
+      "render_rgb_tensor_sha256": "429ef65666aa95683dc3aabf1bbc0cac082c9f56a4b1e70367d6cbd4e4ffa521"
+    },
+    {
+      "source_id": 76,
+      "name": "crop_0076",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.762988720991416,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "6366add695cb47cf73da8ab1880d87a9c9c6ef879414166f7600145afc0e0ea7",
+      "gt_mask_sha256": "3db42fa38a299820add31672b4f00483b49687b5d35a3d1d1c969b3462f0cc4d",
+      "render_rgb_tensor_sha256": "022800466093d1f8604b60620f99fc48eb7c8c5e246cfee5f6212b61c0d92605"
+    },
+    {
+      "source_id": 95,
+      "name": "crop_0095",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.34445580598549,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "593157fe7a6629f74c9eb7c361899f75f47b769e421acc1cc4ef6690bf71c5ac",
+      "gt_mask_sha256": "4b6e772f1f7d13cfaad1210c7f3ce5234d51d020f5ceaa9bd6fba39c749eeb83",
+      "render_rgb_tensor_sha256": "e3242d292edd17d05a5f299bcb23c62c2868ad11f3bb733218a4da3b1372b968"
+    },
+    {
+      "source_id": 114,
+      "name": "crop_0114",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.711092178011313,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "51faf802d6156b87679fdfc61242b7f4b4caffb3529cf461a13b922e80aaa0fe",
+      "gt_mask_sha256": "2d6b11ce294d7f55bb209aad7dde2e4c14cf03676af60ece1078ae4cd78b6f30",
+      "render_rgb_tensor_sha256": "c1eeef24b3d492fbc591f81c12c69b19ee1bcd7f55c93f7636d484f3f79a0a79"
+    },
+    {
+      "source_id": 133,
+      "name": "crop_0133",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.636773758975323,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "4ce739920f1b4efc5baf89e654a68e189c967e5b0a9ca81a976a5da841bda626",
+      "gt_mask_sha256": "50f1f4a5cf0ae37bbe760c877de4df05be8649118edeaf7ef5b843d67400114b",
+      "render_rgb_tensor_sha256": "7225b6a83d6e10f29a42e27f2ca124df91b9a2385d87f56a6ee18d5118cbbb1f"
+    },
+    {
+      "source_id": 152,
+      "name": "crop_0152",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.6675408679875545,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "a68b4b9ac1a41d7806913fb5cfc34f57dacd2fc6c489bc3133277765e9e685cf",
+      "gt_mask_sha256": "8297e538becf71be3081df55dbf529edcd40f3ea9596bf2f470c215b69a4e2b2",
+      "render_rgb_tensor_sha256": "91aa0f516e5dcdbf71e162eeac69b7ad4f1675203ee7cb6b884e8498aa83755a"
+    },
+    {
+      "source_id": 170,
+      "name": "crop_0170",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.312181598012103,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "60e9be0ac56f667b0c3deee4b78156634905f3d136bb347dbf20b83b3fccd9a3",
+      "gt_mask_sha256": "f410fd49db86d43d9b687cc1f0985af99d4dc07a61342a563d97b81039bbf409",
+      "render_rgb_tensor_sha256": "834c1b2820f49684c819b585e257b0d877afbf716801659723b30cdfd59b345b"
+    },
+    {
+      "source_id": 189,
+      "name": "crop_0189",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.029383018001681,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "fbdab6068558b5f873ddaa4e82f26b9657be0f3366eeb37b7c0dde6117fba677",
+      "gt_mask_sha256": "d31168375dd1073b90262cb51ba7f15f499bdfca0cb694d75924dce520dedeab",
+      "render_rgb_tensor_sha256": "3fe70921c540a158985e09deca6188999f125afdc9b10d1386caa5a2fc4f14a6"
+    },
+    {
+      "source_id": 209,
+      "name": "crop_0209",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.49451832100749,
+      "gaussian_count": 600458,
+      "native_normal_convention": "camera",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "3b26313db29503602741c10188dbd691f6dc11ab7342a8c5c7bac5511b07be5b",
+      "gt_mask_sha256": "1d070d9d98d2f45c012bd52c18d01e71786cffcb4c82f6b7af985fd6d0408c9a",
+      "render_rgb_tensor_sha256": "5d1b4b400f7f80c89578f48355b728555b41fcbed11fd92c7260f12bb168abec"
+    }
+  ],
+  "checkpoint_kind": "saved iteration30000 PLY",
+  "peak_memory_scope": "after Scene load, actual render and raw export; checkpoint-load transient peak not instrumented",
+  "wall_time_scope": "Scene load, historical guard hashing, native render, CPU raw/PNG export, final checkpoint hashing"
+}

@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -32,7 +32,7 @@
+     const uint32_t* gaussian_list,
+     const uint32_t* point_list,
+     int W, int H,
+-    float focal_x, float focal_y,
++    float focal_x, float focal_y, const float* ray_view, const float* ray_proj,
+     const float2* points2D,
+     const float2* gaussians2D,
+     const float4* conic_opacity,

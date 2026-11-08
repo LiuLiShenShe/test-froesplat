@@ -1,0 +1,12 @@
+--- 
++++ 
+@@ -11,6 +11,9 @@
+ 
+ import math
+ import torch
++import sys
++from pathlib import Path
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'corrected_rasterizer'))
+ from diff_gaussian_rasterization import (
+     GaussianRasterizationSettings,
+     GaussianRasterizer,

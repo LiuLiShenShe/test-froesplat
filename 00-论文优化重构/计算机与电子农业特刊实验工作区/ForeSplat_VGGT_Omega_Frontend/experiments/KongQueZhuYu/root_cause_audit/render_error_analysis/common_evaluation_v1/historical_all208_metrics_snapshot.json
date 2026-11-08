@@ -1,0 +1,55 @@
+{
+  "E1": {
+    "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/metrics/render_metrics.json",
+    "file_sha256": "444115d4b29d21746c92eacdbf5c64a592cde1ff9759371bd36b67a8037d07b0",
+    "report": {
+      "experiment": "E1_fused",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 17.894746642500202,
+      "ssim": 0.7857713226515514,
+      "lpips": 0.24062663366874823,
+      "fg_psnr": 15.278662291803034,
+      "fg_ssim": 0.6116511596796604,
+      "eo_corrected_psnr": null,
+      "num_gaussians": 600458
+    }
+  },
+  "E5": {
+    "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/metrics/render_metrics.json",
+    "file_sha256": "2f10cdd43e2ae48a0480bb6c906dfd19cea1c07e18edc636bf80b6c849f83c3b",
+    "report": {
+      "experiment": "E5_Standard_VGGT_GGGS_Baseline",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 13.105665606402756,
+      "ssim": 0.7192950857659945,
+      "lpips": 0.35461500204669744,
+      "fg_psnr": 10.45202559813496,
+      "fg_ssim": 0.5005526448098513,
+      "eo_corrected_psnr": null,
+      "num_gaussians": 5153165
+    }
+  },
+  "E6": {
+    "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/metrics/render_metrics.json",
+    "file_sha256": "c2b78552df1c450bf8f2c2c2b153b49d9d5a797e6d2efd5dbe124ca5e0fdd906",
+    "report": {
+      "experiment": "E6_2DGS_Standard_VGGT",
+      "method": "Official 2DGS (hbb1) on Standard VGGT COLMAP dataset",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 13.201827022023057,
+      "ssim": 0.7133631322246331,
+      "lpips": 0.37659200180608493,
+      "fg_psnr": 10.519415952863381,
+      "fg_ssim": 0.4771730322390795,
+      "num_gaussians": 119836,
+      "regularization": {
+        "lambda_dist": 0.2,
+        "lambda_normal": 0.05,
+        "iterations": 30000
+      }
+    }
+  }
+}

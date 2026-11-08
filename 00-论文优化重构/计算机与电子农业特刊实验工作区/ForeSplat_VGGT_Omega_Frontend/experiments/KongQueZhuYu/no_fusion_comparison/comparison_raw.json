@@ -1,0 +1,57 @@
+{
+  "summaries": {
+    "E1_fused": {
+      "experiment": "E1_fused",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 17.894746642500202,
+      "ssim": 0.7857713226515514,
+      "lpips": 0.24062663366874823,
+      "fg_psnr": 15.278662291803034,
+      "fg_ssim": 0.6116511596796604,
+      "eo_corrected_psnr": null,
+      "num_gaussians": 600458,
+      "label": "E1 fused (ForeSplat)"
+    },
+    "E2_raw_depth": {
+      "experiment": "E2_raw_depth",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 17.92926538571173,
+      "ssim": 0.784932555200962,
+      "lpips": 0.24137876422789234,
+      "fg_psnr": 15.314811498002882,
+      "fg_ssim": 0.6103290080164487,
+      "eo_corrected_psnr": null,
+      "num_gaussians": 573373,
+      "label": "E2 raw depth (no fusion)"
+    },
+    "E3_official_100k": {
+      "experiment": "E3_official_100k",
+      "metric_scope": "training_views",
+      "num_views": 208,
+      "psnr": 17.91526719338643,
+      "ssim": 0.7852187209690993,
+      "lpips": 0.2409004383505537,
+      "fg_psnr": 15.297932350488527,
+      "fg_ssim": 0.6108698145701335,
+      "eo_corrected_psnr": null,
+      "num_gaussians": 601482,
+      "label": "E3 official 100K"
+    }
+  },
+  "train": {
+    "E1_fused": {
+      "training_seconds": 2416.293300151825,
+      "peak_vram_mib": 8949.88671875
+    },
+    "E2_raw_depth": {
+      "training_seconds": 2230.399223089218,
+      "peak_vram_mib": 8943.984375
+    },
+    "E3_official_100k": {
+      "training_seconds": 2088.162650346756,
+      "peak_vram_mib": 8778.68798828125
+    }
+  }
+}

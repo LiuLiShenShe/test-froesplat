@@ -1,0 +1,13 @@
+metropolis:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  window_size_ratio: 2.0
+  view_ranking: "index"
+  max_depth_thresh: 500.0
+  view_indices: [0, 3]  # Front, Back
+  depth_filter_percentile: 95
+  dataverse_cfg:
+    target: "mapillary_metropolis.MapillaryMetropolis"
+    params:
+      # format: zip per modality
+      data_root: "${user.data_root}/train/metropolis"
+      split: "train"

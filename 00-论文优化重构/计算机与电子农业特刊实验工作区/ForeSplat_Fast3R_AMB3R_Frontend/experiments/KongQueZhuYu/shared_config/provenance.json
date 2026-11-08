@@ -1,0 +1,41 @@
+{
+  "source_dataset": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+  "original_input_resolution_wh": [
+    2160,
+    3840
+  ],
+  "total_source_frames": 210,
+  "usable_frames": 208,
+  "invalid_source_rgb": [
+    "crop_0044.png",
+    "crop_0206.png"
+  ],
+  "hardware": "NVIDIA RTX A6000, 590.48.01, 49140 MiB, GPU-6836f890-98b2-5891-07ef-675c25199c65",
+  "only_physical_gpu": 1,
+  "dependency_manager": "uv 0.10.12 (x86_64-unknown-linux-gnu)",
+  "conda_used": false,
+  "fast3r_commit": "33104d4b5b8df43795ecded236194958bbdac572",
+  "fast3r_weight_sha256": "1357d42e74539ba03510ea1986c7464a7facf17157779e2b7ebd6284e79e0427",
+  "fast3r_torch": "2.10.0+cu128",
+  "fast3r_cuda_runtime": "12.8",
+  "fast3r_seed": 0,
+  "amb3r_commit": "92c4081f910f98e683503092b85301861519175e",
+  "amb3r_weight_sha256": "2d9342282cce0a20e1074ad1513d9a18c3d100dc06c734a4a11f2d1baeea5239",
+  "amb3r_dependencies": {
+    "torch": "2.5.0+cu121",
+    "torchvision": "0.20.0+cu121",
+    "numpy": "1.26.4",
+    "flash-attn": "2.7.3",
+    "pytorch3d": "0.7.8",
+    "torch-scatter": "2.1.2+pt25cu121",
+    "spconv-cu120": "2.3.6",
+    "cumm-cu120": "0.4.11",
+    "utils3d": "0.0.2"
+  },
+  "amb3r_base_seed": 42,
+  "notes": [
+    "OFF/ON both use identical seed42; Fast3R/SfM seed0. Cross-model conclusions do not assume identical stochastic networks.",
+    "Official core networks unchanged. Source RGB, masks and pretrained weights unchanged.",
+    "Bocha search endpoint returned403 quota failure. Sources retrieved directly from official repositories, arXiv andCVF."
+  ]
+}

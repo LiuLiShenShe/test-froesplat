@@ -1,0 +1,73 @@
+{
+  "status": "complete",
+  "recorded_unix": 1794132415.3935294,
+  "direct_model_vision": true,
+  "external_vision_api_used": false,
+  "directly_viewed_files": [
+    {
+      "path": "render_comparison/compact_review/texture_early_native.png",
+      "sha256": "e46b276dd71db7d5ba64c7e5bbbffee63f2049699848fbda010c0ed2e1429af2",
+      "width": 1344,
+      "height": 864,
+      "bytes": 1248132
+    },
+    {
+      "path": "render_comparison/compact_review/texture_late_native.png",
+      "sha256": "1bd2394399d1e41e2f3dee7ef30cf8ee4623a00c1be5b870c64f4be3385bc631",
+      "width": 1344,
+      "height": 864,
+      "bytes": 1171598
+    },
+    {
+      "path": "render_comparison/compact_review/edge_native.png",
+      "sha256": "fab3f00f3daba7f1ba610fd179d908c8d1a017d820c24571f0c1ec29b9346162",
+      "width": 1344,
+      "height": 432,
+      "bytes": 585145
+    },
+    {
+      "path": "render_comparison/compact_review/whole_plant_overview.png",
+      "sha256": "95f88a3874c3a9c4a14df065a14409e393e21e67f9209ff316e61290b37b10f6",
+      "width": 1260,
+      "height": 688,
+      "bytes": 487517
+    },
+    {
+      "path": "render_comparison/compact_review/renderer_channels_0105.png",
+      "sha256": "ae548b1fd52ee5fa1d6b27c74316e741bba6a9d57fb5b089e35de924bd4bd70f",
+      "width": 1080,
+      "height": 1000,
+      "bytes": 558029
+    },
+    {
+      "path": "render_comparison/compact_review/geometry_overview.png",
+      "sha256": "a8ddd62f3ddb3b10643e6b5651ef3483482690e49e4c4c5e214fe4d8f1485189",
+      "width": 1248,
+      "height": 980,
+      "bytes": 410183
+    }
+  ],
+  "texture_source_ids": [
+    0,
+    26,
+    53,
+    79,
+    105,
+    131,
+    157,
+    183
+  ],
+  "whole_and_edge_source_ids": [
+    0,
+    105
+  ],
+  "channels_source_id": 105,
+  "observations": [
+    "New predictions recover plant outline, leaf separation and broad variegation versus E1/E5.",
+    "Fine leaf veins and small serrations remain soft; source53 overlap and source183 fine texture remain unresolved.",
+    "E10 source105 native alpha/normal/depth shows external ray-like structures; corrected alpha improves versus original interfaces but is not clean.",
+    "Both foreground clouds show recognizable plant structure; Omega is more concentrated in the display, standard is unfused and dispersed. Fusion and gauge differ.",
+    "E9 final means retain peripheral scatter; E8/E10 appear more concentrated. Means plots cannot establish absence of internal double layers or surface breaks."
+  ],
+  "limitations": "Six bounded sheets were directly viewed, not every original full-size image. Native texture/edge crops use no interpolation; nearest overview reductions and arbitrary scene gauges cannot establish absolute3D accuracy."
+}

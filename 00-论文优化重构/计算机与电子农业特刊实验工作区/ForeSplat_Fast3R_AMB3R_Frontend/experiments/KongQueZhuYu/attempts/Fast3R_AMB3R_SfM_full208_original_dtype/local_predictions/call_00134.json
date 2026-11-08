@@ -1,0 +1,177 @@
+{
+  "call_id": 134,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    63,
+    2,
+    8,
+    180
+  ],
+  "local_reference_frame": 63,
+  "anchor_frame_indices": [
+    63,
+    2,
+    8
+  ],
+  "benchmark_early_stop_requested": true,
+  "status": "predicted",
+  "seconds": 0.7323457729944494,
+  "raw_export_seconds": 0.034531426994362846,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        440.7141418457031,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.7141418457031,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.7141418457031,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.7141418457031,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.7141418457031,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.7141418457031,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        440.7141418457031,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        440.7141418457031,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 1.6105430126190186,
+  "confidence_range": [
+    1.0,
+    7.780579090118408
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 112647,
+      "iterations": 100,
+      "pnp_inliers": 92086
+    },
+    {
+      "status": "success",
+      "valid_points": 135788,
+      "iterations": 100,
+      "pnp_inliers": 51718
+    },
+    {
+      "status": "success",
+      "valid_points": 132031,
+      "iterations": 100,
+      "pnp_inliers": 60565
+    },
+    {
+      "status": "success",
+      "valid_points": 145670,
+      "iterations": 100,
+      "pnp_inliers": 2710
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.017230321282715212,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.34574933270754,
+        "foreground_reprojection_p90_px": 2.630345681019915,
+        "points": 28943,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 6.880904665191231e-10,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 5.445086826352211,
+        "foreground_reprojection_p90_px": 11.00255034003803,
+        "points": 33722,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.744438491024803e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 2,
+        "foreground_reprojection_median_px": 3.826588614086843,
+        "foreground_reprojection_p90_px": 7.1325192708178164,
+        "points": 33427,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 2.1049193021051947e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 3,
+        "foreground_reprojection_median_px": 47.282551511448844,
+        "foreground_reprojection_p90_px": 111.61485291777811,
+        "points": 63148,
+        "rotation_determinant": 1.0000001192092896,
+        "orthogonality_error": 2.7346786023834633e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 4,
+      "recorded_views": 4,
+      "actual_success_count": 4,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

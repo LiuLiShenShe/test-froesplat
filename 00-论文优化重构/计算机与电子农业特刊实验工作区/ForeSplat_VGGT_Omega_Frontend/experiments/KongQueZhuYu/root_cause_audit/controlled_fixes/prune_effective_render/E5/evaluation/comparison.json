@@ -1,0 +1,179 @@
+{
+  "experiment": "E5",
+  "status": "complete",
+  "source_ids": [
+    0,
+    95,
+    189
+  ],
+  "single_factor": "remove native effective-opacity<0.05 Gaussian rows",
+  "new_training": false,
+  "all208_runtime_camera_arrays_exactly_equal": true,
+  "GT_and_masks_exactly_equal": true,
+  "retained_parameter_selection": {
+    "threshold": 0.05,
+    "before_count": 5153165,
+    "after_count": 1806635,
+    "removed_count": 3346530,
+    "removed_fraction": 0.6494125454938858,
+    "raw_opacity_ge_threshold_effective_below_count": 3055537,
+    "effective_formula": "native get_opacity_with_3D_filter: sigmoid(raw_opacity) * prod(scale/hypot(scale,filter_3D))",
+    "selected_fields": [
+      {
+        "name": "_xyz",
+        "shape": [
+          1806635,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "a3848e819cf9b62d4243ac39402469841337950796f0c40b59a06339ae5bb5c5"
+      },
+      {
+        "name": "_features_dc",
+        "shape": [
+          1806635,
+          1,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "86df717eae5dbca599a34e9480137a4db7d1b500e1e9638bae632ad924a2122f"
+      },
+      {
+        "name": "_features_rest",
+        "shape": [
+          1806635,
+          15,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "64234b81f8d2ce4a58ef13482705e8d3c9d7f34389ab50e674f99ab4dede10bb"
+      },
+      {
+        "name": "_opacity",
+        "shape": [
+          1806635,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "2743f88d5e18d02a97a233f3481bb1ec7460b932889980a2b04f013a0ffc3228"
+      },
+      {
+        "name": "_scaling",
+        "shape": [
+          1806635,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "8203475bf7921f6e894b7578f410f292acfeff7c1ff8183589bf4a91a014f4d3"
+      },
+      {
+        "name": "_rotation",
+        "shape": [
+          1806635,
+          4
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "8330b7f43bcba00f6027bd265db6548b1069e5bdee7c581de35b620ed2e2bbfc"
+      },
+      {
+        "name": "_sg_axis",
+        "shape": [
+          1806635,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_sharpness",
+        "shape": [
+          1806635,
+          0
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_color",
+        "shape": [
+          1806635,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "filter_3D",
+        "shape": [
+          1806635,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "5c9d53fa1756e87ebd4e36e08f72d1349e8d89a464717a6916be9aacda52c9d0"
+      }
+    ],
+    "optimizer_used": false,
+    "remaining_gaussian_parameters_bit_identical": true
+  },
+  "checkpoint_sha256": "98974a5d38fd3c79f6b399a291e8ee9d9f977e4c2e32114134ceab0d9fe71469",
+  "summaries": [
+    {
+      "experiment": "E5",
+      "condition": "baseline",
+      "views": 3,
+      "full_psnr": 13.705013050510514,
+      "fg_mask_psnr": 8.948265521386148,
+      "boundary_band5_psnr": 10.302293165624626,
+      "inner_fg_edge5_psnr": 8.021698831695701,
+      "foreground_alpha_mean": 0.9902867674827576,
+      "background_alpha_mean": 0.9933495918909708,
+      "background_alpha_gt05_fraction": 0.9943400350274084,
+      "alpha_mask05_iou": 0.3415171017935643,
+      "alpha_mask05_precision": 0.34179614750465515,
+      "alpha_mask05_recall": 0.9946992066095878,
+      "background_rgb_mean_abs_error": 0.007008776844789584,
+      "foreground_gradient_retention": 0.2187297816077868,
+      "inner_edge_gradient_retention": 0.08890424979229768,
+      "foreground_gradient_mae": 0.03099956549704075
+    },
+    {
+      "experiment": "E5",
+      "condition": "effective_pruned",
+      "views": 3,
+      "full_psnr": 13.620669027903878,
+      "fg_mask_psnr": 8.855617144351706,
+      "boundary_band5_psnr": 10.303915236767152,
+      "inner_fg_edge5_psnr": 7.978549787583833,
+      "foreground_alpha_mean": 0.9898532032966614,
+      "background_alpha_mean": 0.9933279355367025,
+      "background_alpha_gt05_fraction": 0.9943245258246028,
+      "alpha_mask05_iou": 0.3415065242487569,
+      "alpha_mask05_precision": 0.3417885973324967,
+      "alpha_mask05_recall": 0.9946413515506215,
+      "background_rgb_mean_abs_error": 0.006833737638468544,
+      "foreground_gradient_retention": 0.2140831525127093,
+      "inner_edge_gradient_retention": 0.0867829571167628,
+      "foreground_gradient_mae": 0.031113316615422566
+    }
+  ],
+  "deltas_effective_pruned_minus_baseline": {
+    "full_psnr": -0.08434402260663632,
+    "fg_mask_psnr": -0.09264837703444151,
+    "boundary_band5_psnr": 0.0016220711425258827,
+    "inner_fg_edge5_psnr": -0.043149044111868484,
+    "foreground_alpha_mean": -0.0004335641860961914,
+    "background_alpha_mean": -2.1656354268317912e-05,
+    "background_alpha_gt05_fraction": -1.5509202805574773e-05,
+    "alpha_mask05_iou": -1.0577544807433004e-05,
+    "alpha_mask05_precision": -7.550172158421464e-06,
+    "alpha_mask05_recall": -5.7855058966271855e-05,
+    "background_rgb_mean_abs_error": -0.0001750392063210402,
+    "foreground_gradient_retention": -0.004646629095077515,
+    "inner_edge_gradient_retention": -0.002121292675534875,
+    "foreground_gradient_mae": 0.00011375111838181698
+  },
+  "metrics_scope": "CPU same-mask float32 RGB, no LPIPS/new GPU model job; baseline subset is exactly same three source IDs",
+  "limitation": "Three existing training views test this deletion rule only. Results do not establish retraining or generalization gains."
+}

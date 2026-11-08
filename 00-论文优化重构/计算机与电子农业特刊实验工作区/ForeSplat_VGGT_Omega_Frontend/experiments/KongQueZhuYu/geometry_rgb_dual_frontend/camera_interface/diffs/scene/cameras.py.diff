@@ -1,0 +1,32 @@
+--- 
++++ 
+@@ -20,7 +20,7 @@
+ class Camera(nn.Module):
+     def __init__(self, colmap_id, R, T, FoVx, FoVy, image, gt_alpha_mask,
+                  image_name, uid,
+-                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, data_device = "cuda",
++                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, data_device = "cuda", intrinsics=None,
+                  ):
+         super(Camera, self).__init__()
+ 
+@@ -50,6 +50,8 @@
+         self.Fy = self.image_height / (2 * math.tan(self.FoVy / 2.))
+         self.Cx = float(self.image_width - 1) / 2
+         self.Cy = float(self.image_height - 1) / 2
++        if intrinsics is not None:
++            self.Fx,self.Fy,self.Cx,self.Cy=map(float,intrinsics)
+ 
+         if gt_alpha_mask is not None:
+             self.gt_mask = gt_alpha_mask.to(self.data_device)
+@@ -64,6 +66,11 @@
+ 
+         self.world_view_transform = torch.tensor(getWorld2View2(R, T, trans, scale)).transpose(0, 1).cuda()
+         self.projection_matrix = getProjectionMatrix(znear=self.znear, zfar=self.zfar, fovX=self.FoVx, fovY=self.FoVy).transpose(0,1).cuda()
++        # Integer pixel centers, matching CUDA ndc2Pix.
++        self.projection_matrix[2,0]=(2*self.Cx+1)/self.image_width-1
++        self.projection_matrix[2,1]=(2*self.Cy+1)/self.image_height-1
++        self.projection_matrix[0,0]=2*self.Fx/self.image_width
++        self.projection_matrix[1,1]=2*self.Fy/self.image_height
+         self.full_proj_transform = (self.world_view_transform.unsqueeze(0).bmm(self.projection_matrix.unsqueeze(0))).squeeze(0)
+         self.camera_center = self.world_view_transform.inverse()[3, :3]
+ 

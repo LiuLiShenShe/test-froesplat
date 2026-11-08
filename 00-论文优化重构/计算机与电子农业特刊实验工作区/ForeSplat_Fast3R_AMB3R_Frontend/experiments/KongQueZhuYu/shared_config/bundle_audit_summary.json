@@ -1,0 +1,114 @@
+{
+  "schema": "foresplat.bundle.audit.summary.v1",
+  "completed_utc": "2026-11-07T17:34:06.177348+00:00",
+  "all_passed": true,
+  "total_bundle_frames": 1456,
+  "total_ply_files_checked": 6286,
+  "bundles": [
+    {
+      "bundle": "Fast3R",
+      "report": "Fast3R/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 208,
+      "local_geometry_kind": "camera-local network point head",
+      "ply_files_checked": 1254,
+      "issues": [],
+      "warnings": [],
+      "exemptions": []
+    },
+    {
+      "bundle": "Fast3R_FP32",
+      "report": "Fast3R_FP32/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 208,
+      "local_geometry_kind": "camera-local network point head",
+      "ply_files_checked": 1254,
+      "issues": [],
+      "warnings": [],
+      "exemptions": []
+    },
+    {
+      "bundle": "AMB3R_Base_OFF",
+      "report": "AMB3R_Base_OFF/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 0,
+      "local_geometry_kind": "no model-native camera-local point head",
+      "ply_files_checked": 424,
+      "issues": [],
+      "warnings": [
+        "Point-head metric gauge is unvalidated; depth-scale geometry has predicted, not measured, metric accuracy."
+      ],
+      "exemptions": []
+    },
+    {
+      "bundle": "AMB3R_Base_ON",
+      "report": "AMB3R_Base_ON/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 0,
+      "local_geometry_kind": "no model-native camera-local point head",
+      "ply_files_checked": 424,
+      "issues": [],
+      "warnings": [
+        "Point-head metric gauge is unvalidated; depth-scale geometry has predicted, not measured, metric accuracy."
+      ],
+      "exemptions": []
+    },
+    {
+      "bundle": "AMB3R_SfM",
+      "report": "AMB3R_SfM/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 0,
+      "local_geometry_kind": "no model-native camera-local point head",
+      "ply_files_checked": 422,
+      "issues": [],
+      "warnings": [],
+      "exemptions": []
+    },
+    {
+      "bundle": "Fast3R_AMB3R_SfM",
+      "report": "Fast3R_AMB3R_SfM/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 208,
+      "local_geometry_kind": "camera-local network point head",
+      "ply_files_checked": 1254,
+      "issues": [],
+      "warnings": [],
+      "exemptions": []
+    },
+    {
+      "bundle": "VGGT_Omega_Existing",
+      "report": "VGGT_Omega_Existing/bundle_audit.json",
+      "passed": true,
+      "frames": 208,
+      "finite_camera_count": 208,
+      "local_map_count": 208,
+      "local_geometry_kind": "archived-depth camera-local unprojection (derived, not a native point head)",
+      "ply_files_checked": 1254,
+      "issues": [],
+      "warnings": [],
+      "exemptions": [
+        "Legacy VGGT commit cannot be recovered from the original archive; not invented.",
+        "Existing VGGT timing/resolution are inherited from its original run.",
+        "Legacy VGGT has no archived native point heads; geometry is documented depth unprojection.",
+        "Legacy archive did not record per-frame PnP/registration statuses."
+      ]
+    }
+  ],
+  "array_check_scope": "NPY headers plus stored ZIP member CRC/size fingerprints; this does not recompute full payload checksums",
+  "raw_value_evidence": "Independent completed full-frame evaluate.py and confidence_control_audit.json passes",
+  "establishes_geometric_accuracy": false,
+  "legacy_failed_audit_preserved": "VGGT_Omega_Existing/bundle_audit_before_legacy_per_frame_export.json",
+  "legacy_lossless_repair_proof": "VGGT_Omega_Existing/lossless_split_audit.json"
+}

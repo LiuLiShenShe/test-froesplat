@@ -1,0 +1,20 @@
+--- 
++++ 
+@@ -48,6 +48,8 @@
+     width: int
+     height: int
+     mask: np.array = None
++    cx: float = None
++    cy: float = None
+ 
+ class SceneInfo(NamedTuple):
+     point_cloud: BasicPointCloud
+@@ -156,7 +158,7 @@
+         image = Image.open(image_path)
+ 
+         cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image,  
+-                              image_path=image_path, image_name=image_name, width=width, height=height)
++                              image_path=image_path, image_name=image_name, width=width, height=height, cx=float(intr.params[-2]), cy=float(intr.params[-1]))
+         cam_infos.append(cam_info)
+     sys.stdout.write('\n')
+     return cam_infos

@@ -1,0 +1,40 @@
+--- 
++++ 
+@@ -554,7 +554,7 @@
+         const uint32_t* __restrict__ gaussian_list,
+         const uint32_t* __restrict__ point_list,
+         int W, int H,
+-        float focal_x, float focal_y,
++        float focal_x, float focal_y, const float* ray_view, const float* ray_proj,
+         const float2* __restrict__ points2D,
+         const float2* __restrict__ gaussians2D,
+         const float4* __restrict__ conic_opacity,
+@@ -803,8 +803,8 @@
+         float w_max                 = __saturatef((T_p[p][0] - 0.5f) / (T_p[p][0] - T_p[p][SPLIT]));
+         float w_min                 = 1.f - w_max;
+         float mDepth                = inside_range[p] ? w_max * depth_max[p] + w_min * depth_min[p] : 0.f;
+-        float2 pixnf                = {(point_xy[p].x - static_cast<float>(W - 1) / 2.f) / focal_x,
+-                                       (point_xy[p].y - static_cast<float>(H - 1) / 2.f) / focal_y};
++        float2 pixnf                = {(point_xy[p].x - foresplatPrincipal(ray_view,ray_proj,W,H).x) / focal_x,
++                                       (point_xy[p].y - foresplatPrincipal(ray_view,ray_proj,W,H).y) / focal_y};
+         const float rln             = rnorm3df(pixnf.x, pixnf.y, 1.f);
+         float depth                 = mDepth * rln;
+         output[point_idx[p]]        = {pixnf.x * depth, pixnf.y * depth, depth};
+@@ -974,7 +974,7 @@
+     const uint32_t* gaussian_list,
+     const uint32_t* point_list,
+     int W, int H,
+-    float focal_x, float focal_y,
++    float focal_x, float focal_y, const float* ray_view, const float* ray_proj,
+     const float2* points2D,
+     const float2* gaussians2D,
+     const float4* conic_opacity,
+@@ -995,7 +995,7 @@
+         gaussian_list,
+         point_list,
+         W, H,
+-        focal_x, focal_y,
++        focal_x, focal_y, ray_view, ray_proj,
+         points2D,
+         gaussians2D,
+         conic_opacity,

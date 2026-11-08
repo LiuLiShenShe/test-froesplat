@@ -1,0 +1,137 @@
+{
+  "scope": "CPU image-domain translation approximation; existing real RGB render only",
+  "delta_definition": "desired K principal point minus runtime centered principal point, positive right/down",
+  "ground_truth_and_mask_unchanged": true,
+  "interpolation": "bilinear, zero/black outside image; no wraparound",
+  "source_ids": [
+    0,
+    19,
+    38,
+    57,
+    76,
+    95,
+    114,
+    133,
+    152,
+    170,
+    189,
+    209
+  ],
+  "shifts": {
+    "E1": {
+      "train_saved_principal": [
+        1.40625,
+        1.3953488372093
+      ]
+    },
+    "E5": {
+      "train_saved_principal": [
+        0.25,
+        0.25
+      ],
+      "true_PIL_pixel_transform": [
+        1.8532818532818252,
+        1.8532818532818252
+      ]
+    },
+    "E6": {
+      "train_saved_principal": [
+        0.25,
+        0.25
+      ],
+      "true_PIL_pixel_transform": [
+        1.8532818532818252,
+        1.8532818532818252
+      ]
+    }
+  },
+  "delta_source": "camera_projection_comparison/intrinsic_chain_per_frame.csv, parent verified constants across all208",
+  "interpretation": "Measures sensitivity to this small principal-point translation only. Cannot establish shader-level or retraining gains; does not exclude other K/FoV errors.",
+  "summaries": [
+    {
+      "experiment": "E1",
+      "scenario": "train_saved_principal",
+      "views": 12,
+      "full_psnr_baseline": 17.500320464294866,
+      "full_psnr_translated": 17.3928351793615,
+      "full_psnr_delta": -0.10748528493335992,
+      "fg_mask_psnr_baseline": 13.03085070141068,
+      "fg_mask_psnr_translated": 12.91552754082619,
+      "fg_mask_psnr_delta": -0.11532316058448948,
+      "boundary_band5_psnr_baseline": 10.68440056245903,
+      "boundary_band5_psnr_translated": 10.701025433451884,
+      "boundary_band5_psnr_delta": 0.016624870992854774,
+      "inner_fg_edge5_psnr_baseline": 9.879045396188014,
+      "inner_fg_edge5_psnr_translated": 9.830204673892945,
+      "inner_fg_edge5_psnr_delta": -0.04884072229506842
+    },
+    {
+      "experiment": "E5",
+      "scenario": "train_saved_principal",
+      "views": 12,
+      "full_psnr_baseline": 13.138043491574054,
+      "full_psnr_translated": 13.139388230399925,
+      "full_psnr_delta": 0.0013447388258710131,
+      "fg_mask_psnr_baseline": 8.201295863463665,
+      "fg_mask_psnr_translated": 8.201461959325803,
+      "fg_mask_psnr_delta": 0.00016609586213582142,
+      "boundary_band5_psnr_baseline": 10.254324120186594,
+      "boundary_band5_psnr_translated": 10.266843992562341,
+      "boundary_band5_psnr_delta": 0.01251987237574855,
+      "inner_fg_edge5_psnr_baseline": 7.885174997702187,
+      "inner_fg_edge5_psnr_translated": 7.883335208018796,
+      "inner_fg_edge5_psnr_delta": -0.0018397896833911946
+    },
+    {
+      "experiment": "E5",
+      "scenario": "true_PIL_pixel_transform",
+      "views": 12,
+      "full_psnr_baseline": 13.138043491574054,
+      "full_psnr_translated": 13.122810289910248,
+      "full_psnr_delta": -0.015233201663806964,
+      "fg_mask_psnr_baseline": 8.201295863463665,
+      "fg_mask_psnr_translated": 8.183902058920562,
+      "fg_mask_psnr_delta": -0.017393804543103315,
+      "boundary_band5_psnr_baseline": 10.254324120186594,
+      "boundary_band5_psnr_translated": 10.206269690700259,
+      "boundary_band5_psnr_delta": -0.048054429486333206,
+      "inner_fg_edge5_psnr_baseline": 7.885174997702187,
+      "inner_fg_edge5_psnr_translated": 7.839331145563388,
+      "inner_fg_edge5_psnr_delta": -0.0458438521387996
+    },
+    {
+      "experiment": "E6",
+      "scenario": "train_saved_principal",
+      "views": 12,
+      "full_psnr_baseline": 13.181992126432052,
+      "full_psnr_translated": 13.184208973647612,
+      "full_psnr_delta": 0.0022168472155589627,
+      "fg_mask_psnr_baseline": 8.204720881803455,
+      "fg_mask_psnr_translated": 8.205459195387068,
+      "fg_mask_psnr_delta": 0.0007383135836126117,
+      "boundary_band5_psnr_baseline": 10.259043163262918,
+      "boundary_band5_psnr_translated": 10.28264887071439,
+      "boundary_band5_psnr_delta": 0.023605707451469875,
+      "inner_fg_edge5_psnr_baseline": 7.969107438723589,
+      "inner_fg_edge5_psnr_translated": 7.97054517455715,
+      "inner_fg_edge5_psnr_delta": 0.0014377358335602164
+    },
+    {
+      "experiment": "E6",
+      "scenario": "true_PIL_pixel_transform",
+      "views": 12,
+      "full_psnr_baseline": 13.181992126432052,
+      "full_psnr_translated": 13.184397254059194,
+      "full_psnr_delta": 0.0024051276271426225,
+      "fg_mask_psnr_baseline": 8.204720881803455,
+      "fg_mask_psnr_translated": 8.203896131855862,
+      "fg_mask_psnr_delta": -0.0008247499475941833,
+      "boundary_band5_psnr_baseline": 10.259043163262918,
+      "boundary_band5_psnr_translated": 10.302049472824125,
+      "boundary_band5_psnr_delta": 0.043006309561205956,
+      "inner_fg_edge5_psnr_baseline": 7.969107438723589,
+      "inner_fg_edge5_psnr_translated": 7.970679315231481,
+      "inner_fg_edge5_psnr_delta": 0.0015718765078917378
+    }
+  ]
+}

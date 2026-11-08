@@ -1,0 +1,71 @@
+{
+  "inventory": [
+    {
+      "experiment": "E5_Standard_VGGT_GGGS_Baseline",
+      "surface_meshes": [],
+      "non_surface_PLY_files": [
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/final_gaussians/point_cloud.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/input.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/point_cloud/iteration_7000/point_cloud.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/gaussian/point_cloud.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/smoke/final_gaussians/point_cloud.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/smoke/input.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/smoke/point_cloud/iteration_200/point_cloud.ply"
+      ],
+      "status": "no_existing_surface_mesh_found"
+    },
+    {
+      "experiment": "E6_2DGS_Standard_VGGT",
+      "surface_meshes": [
+        {
+          "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/train/ours_30000/fuse.ply",
+          "file_bytes": 403849202,
+          "elements": {
+            "vertex": 8413786,
+            "face": 13590516
+          },
+          "header_sha256": "92ea521ab82a929b4e7fd638077234170a395ae282979063c837c62ae0e7e033",
+          "payload_read": false
+        },
+        {
+          "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/train/ours_30000/fuse_post.ply",
+          "file_bytes": 321480745,
+          "elements": {
+            "vertex": 6207866,
+            "face": 11836007
+          },
+          "header_sha256": "f1b64c6665a4f3cda8d2b5e37c7f5d6df86860be63fd12867f4d5baf87cb3fb4",
+          "payload_read": false
+        }
+      ],
+      "non_surface_PLY_files": [
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/input.ply",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/point_cloud/iteration_30000/point_cloud.ply"
+      ],
+      "status": "existing_surface_located"
+    }
+  ],
+  "existing_E6_mesh_metrics": {
+    "iteration": 30000,
+    "meshing_mode": "standard",
+    "raw_mesh": {
+      "path": "experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/train/ours_30000/fuse.ply",
+      "vertices": 8413786,
+      "triangles": 13590516
+    },
+    "post_mesh": {
+      "path": "experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/train/ours_30000/fuse_post.ply",
+      "vertices": 6207866,
+      "triangles": 11836007
+    },
+    "voxel_size": 0.0014196359958213716,
+    "sdf_trunc": 0.007098179979106858,
+    "depth_trunc": 1.4537072597210845,
+    "boundary_shrink_ratio": 0.0,
+    "edge_metrics": null
+  },
+  "scope": "Read-only location and original headers. Vertex/face counts are not geometry accuracy, scan registration or measured metric scale.",
+  "new_meshing": false,
+  "Gaussian_training": false
+}

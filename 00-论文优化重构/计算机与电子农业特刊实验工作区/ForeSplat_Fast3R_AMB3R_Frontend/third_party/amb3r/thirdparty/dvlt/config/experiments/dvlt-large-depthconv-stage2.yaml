@@ -1,0 +1,24 @@
+defaults:
+  - dvlt-large
+  - _self_
+
+model:
+  depth_head_type: conv  # re-asserted because parent dvlt-large overrides the model default to linear.
+  finetune_mode: depth_decoder
+  loss:
+    losses:
+      # ray_decoder and camera_head are frozen under finetune_mode=depth_decoder;
+      # their losses would just be forward-passes with zero gradient.
+      ray:
+        enabled: false
+      cam:
+        enabled: false
+
+trainer:
+  experiment_name: finetune-depth-conv-stage2
+  max_train_steps: 40_000
+  learning_rate: 1e-4
+  lr_warmup_steps: 500
+  lr_param_group_multipliers: {}
+  checkpointing_steps: 5_000
+  validation_steps: 5_000

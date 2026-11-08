@@ -1,0 +1,107 @@
+{
+  "call_id": 135,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    45,
+    44
+  ],
+  "local_reference_frame": 45,
+  "anchor_frame_indices": [
+    45
+  ],
+  "benchmark_early_stop_requested": false,
+  "status": "predicted",
+  "seconds": 0.2251805909909308,
+  "raw_export_seconds": 0.016996438993373886,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        443.29254150390625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        443.29254150390625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        443.29254150390625,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        443.29254150390625,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 2.264235019683838,
+  "confidence_range": [
+    1.0,
+    10.195829391479492
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 131608,
+      "iterations": 100,
+      "pnp_inliers": 107634
+    },
+    {
+      "status": "success",
+      "valid_points": 136282,
+      "iterations": 100,
+      "pnp_inliers": 113653
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.02629747483987124,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.89694845915828,
+        "foreground_reprojection_p90_px": 3.95414973984409,
+        "points": 40786,
+        "rotation_determinant": 1.0000001192092896,
+        "orthogonality_error": 1.3328869116437353e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 1.6170895277963941,
+        "foreground_reprojection_p90_px": 3.046950038273474,
+        "points": 40532,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 2.0677779823763103e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 2,
+      "recorded_views": 2,
+      "actual_success_count": 2,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

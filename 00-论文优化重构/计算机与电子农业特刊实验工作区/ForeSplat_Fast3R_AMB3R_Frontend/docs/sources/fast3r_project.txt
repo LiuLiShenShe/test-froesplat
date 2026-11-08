@@ -1,0 +1,76 @@
+Fast3R: Towards 3D Reconstruction of 1000+ Images in One Forward
+      Pass ⚡️Fast3R: Towards 3D
+                Reconstruction of 1000+ Images in One Forward Pass Jianing "Jed"
+                    Yang 1,2 , Alexander
+                    Sax 1 , Kevin
+                    J. Liang 1 , Mikael
+                    Henaff 1 , Hao
+                    Tang 1 , Ang
+                    Cao 1,2 , Joyce Chai 2 , Franziska
+                    Meier 1 , Matt Feiszli 1 1 Meta FAIR 2 University of Michigan CVPR 2025 Paper Code Model Demo TL;DR: Fast3R dramatically improves 3D
+            reconstruction speed by processing up to 1500 images in a single
+            forward pass. Abstract Multi-view 3D reconstruction remains a core challenge in
+                computer vision, particularly in applications requiring accurate
+                and scalable representations across diverse perspectives.
+                Current leading methods such as DUSt3R employ a fundamentally
+                pairwise approach, processing images in pairs and necessitating
+                costly global alignment procedures to reconstruct from multiple
+                views. In this work, we propose Fast 3 D R econstruction ( Fast3R ),
+                a novel multi-view generalization to DUSt3R that achieves
+                efficient and scalable 3D reconstruction by processing many
+                views in parallel. Fast3R's Transformer-based architecture
+                forwards N images in a single forward pass, bypassing the need
+                for iterative alignment. Through extensive experiments on camera
+                pose estimation and 3D reconstruction, Fast3R demonstrates
+                state-of-the-art performance, with significant improvements in
+                inference speed and reduced error accumulation. These results
+                establish Fast3R as a robust alternative for multi-view
+                applications, offering enhanced scalability without compromising
+                reconstruction accuracy. ⚡️Fast3R Demo Our interactive Gradio demo allows you to upload images or
+                  videos and visualize the 3D reconstruction in lightning ⚡️
+                  speed. Upload a video or images, visualize 3D reconstruction,
+                  playback frame by frame, explore confidence maps, and render
+                  a GIF. And don't forget to give us a feedback! 🤗 Try the Demo Results Showcase Explore our 3D reconstruction results across a variety of
+                  scenes. 3D Reconstruction ❤️ LLM Scalability Fast3R departs from the long-standing two-view architecture
+                design in most existing 3D reconstruction methods and instead
+                processes all views together. As a result,
+                traditional time and memory consuming view selection and global
+                alignment stages are eliminated and all become end-to-end
+                learnable in a single unified images-to-3D model, resulting in
+                dramatic speed and memory improvement. Fast3R at its core uses a big Transformer to fuse information
+                across views and leverages a series of LLM training and
+                inference techniques to enable efficient and scalable
+                processing: FlashAttention 2.0 for memory-efficient
+                  attention computation DeepSpeed ZeRO-2 for distributed training
+                  optimization Positional Embedding Interpolation to
+                  "train short, test long" Tensor Parallelism for accelerated
+                  inference across multiple GPUs Fast3R architecture processes multiple views in parallel,
+                  using a fusion transformer to efficiently combine information
+                  across views. Speed & Memory Comparison of computational efficiency between Fast3R and DUSt3R
+                on a single A100 GPU. Each view has a 512×384 resolution. #
+                        Views Fast3R DUSt3R Time (s) Peak GPU Mem (GiB) Time (s) Peak GPU Mem (GiB) 2 0.065 3.84 0.092 3.52 8 0.122 6.33 8.386 24.59 32 0.509 13.25 129.0 67.61 48 0.84 20.8 OOM OOM 320 15.938 41.90 OOM OOM 800 89.569 55.97 OOM OOM 1000 137.62 63.01 OOM OOM 1500 308.85 78.59 OOM OOM Note: "OOM" indicates Out of Memory. For
+                DUSt3R, at 48 views the N² pairwise reconstructions consume all
+                VRAM during global alignment. Scalability Fast3R's performance scales with increasing model and data size,
+              demonstrating an exciting future for large-scale 3D
+              reconstruction. Model Scaling Data Scaling BibTeX @InProceedings{Yang_2025_Fast3R,
+        title={Fast3R: Towards 3D Reconstruction of 1000+ Images in One Forward Pass},
+        author={Jianing Yang and Alexander Sax and Kevin J. Liang and Mikael Henaff and Hao Tang and Ang Cao and Joyce Chai and Franziska Meier and Matt Feiszli},
+        booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+        month={June},
+        year={2025},
+    } This page was built using the Academic Project Page Template which was
+                adopted from the Nerfies project page.
+                You are free to borrow the source code of this website, we just
+                ask that you link back to this page in the footer. This
+                website is licensed under a Creative
+                  Commons Attribution-ShareAlike 4.0 International License . document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the carousel
+        bulmaCarousel.attach('#results-carousel', {
+          slidesToScroll: 1,
+          slidesToShow: 1,
+          infinite: true,
+          autoplay: true,
+          autoplaySpeed: 3000, 
+          navigation: true
+        });
+      });

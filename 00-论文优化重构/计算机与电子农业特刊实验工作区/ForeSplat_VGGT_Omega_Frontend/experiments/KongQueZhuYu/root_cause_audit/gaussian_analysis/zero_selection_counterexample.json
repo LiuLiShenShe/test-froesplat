@@ -1,0 +1,113 @@
+{
+  "schema": "gggs.zero_selection.counterexample.v1",
+  "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/gggs_community/scene/gaussian_model.py",
+  "source_sha256": "efe57d984977f6e213456609a3a5b9d32bfd0d1924f18956501f180a3791809d",
+  "torch_version": "2.10.0+cu128",
+  "device": "cpu",
+  "source_extraction": "Full densify_and_prune; clone/split exact AST prefix until before sampling/allocation. Only selector device cuda\u2192cpu.",
+  "interpretation": "Q=0 and >=Q select zero absolute gradients, including denom=0 replaced NaNs. This is a synthetic boundary counterexample, NOT evidence that E5 reached Q=0.",
+  "historical_E5_trigger_confirmed": false,
+  "historical_accumulators_available": false,
+  "training_executed": false,
+  "stochastic_operations_executed": false,
+  "results": [
+    {
+      "case": "all_zero_including_unobserved",
+      "accum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "absolute_accum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "denom": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "scale": [
+        0.001,
+        0.1,
+        0.001,
+        0.1
+      ],
+      "records": {
+        "clone_selected": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "quantile_threshold": 0.0,
+        "split_selected": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "raw_opacity_pruned": 0
+      },
+      "exact_source_return_counts": [
+        0,
+        4,
+        0
+      ],
+      "final_synthetic_count": 8
+    },
+    {
+      "case": "one_nonzero_gradient_sanity",
+      "accum": [
+        0.0,
+        0.0,
+        0.0,
+        0.001
+      ],
+      "absolute_accum": [
+        0.0,
+        0.0,
+        0.0,
+        0.001
+      ],
+      "denom": [
+        0.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "scale": [
+        0.001,
+        0.1,
+        0.001,
+        0.1
+      ],
+      "records": {
+        "clone_selected": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "quantile_threshold": 0.0002500000118743628,
+        "split_selected": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "raw_opacity_pruned": 0
+      },
+      "exact_source_return_counts": [
+        0,
+        1,
+        0
+      ],
+      "final_synthetic_count": 5
+    }
+  ]
+}

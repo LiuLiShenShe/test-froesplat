@@ -1,0 +1,94 @@
+{
+  "source": "/data/fj/F2DMAS/03-SAM/KongQueZhuYu",
+  "gpu_physical": 1,
+  "dependency_manager": "uv",
+  "full_usable_views": 208,
+  "invalid_rgb_names": [
+    "crop_0044.png",
+    "crop_0206.png"
+  ],
+  "fast3r": {
+    "name": "crop_0000.png",
+    "original_size_wh": [
+      2160,
+      3840
+    ],
+    "input_size_wh": [
+      288,
+      512
+    ],
+    "resize_size_wh": [
+      288,
+      512
+    ],
+    "resize_scale_xy": [
+      0.13333333333333333,
+      0.13333333333333333
+    ],
+    "padding_ltrb": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "crop_ltrb": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "pixel_transform": [
+      [
+        0.13333333333333333,
+        0.0,
+        -0.43333333333333335
+      ],
+      [
+        0.0,
+        0.13333333333333333,
+        -0.43333333333333335
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "pixel_transform_inverse": [
+      [
+        7.5,
+        0.0,
+        3.25
+      ],
+      [
+        0.0,
+        7.5,
+        3.25
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "pixel_coordinate_convention": "integer pixel centers; resize half-pixel convention",
+    "rgb_interpolation": "Pillow bicubic",
+    "mask_interpolation": "nearest",
+    "exposure": "unchanged",
+    "mask_erosion": 0
+  },
+  "amb3r_long_edge": 518,
+  "amb3r_alignment": 14,
+  "mask_erosion": 0,
+  "exposure": "unchanged",
+  "source_pixel_roundtrip_max_error": 0.0,
+  "model_seeds": {
+    "Fast3R": 0,
+    "Fast3R_FP32": 0,
+    "AMB3R_Base_OFF": 42,
+    "AMB3R_Base_ON": 42,
+    "AMB3R_SfM": 0,
+    "Fast3R_AMB3R_SfM": 0
+  },
+  "seed_notes": "OFF and ON use identical42; each stochastic model sequence is recorded separately. No implicit cross-model RNG equivalence."
+}

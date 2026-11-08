@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "errors": [],
+  "report_sha256": {
+    "01_experiment_provenance.md": "65897eb750fbd83f495a06bc8610631761b27714d02591b1125c5d2b59681170",
+    "02_camera_geometry_audit.md": "d41940a85d32df79b83c1968fc3a035bed003380ba410ea87dbb4cfcf2b06803",
+    "03_frontend_geometry_audit.md": "ab69a81e3fbb8844a3183ee09352ebff94e7394dea2c30e1e4178a59c9d0eac9",
+    "04_gggs_optimization_audit.md": "23a26adb0e62b367685911e38aa1b8c99a72841723c550b8fc67d65035c57d60",
+    "05_render_evaluation_audit.md": "475b26f830f1ea5fd2e79642060d08235cc5b03f26b0eed47cbb8bf866fc37f6",
+    "ROOT_CAUSE_ANALYSIS.md": "6dd25ef4ec369aa72f079a1b8f5ed3526445fcad97f0d3e5e2c47bc946863c99",
+    "evidence_summary.csv": "6a2e1a2dbad5dba7133c4be8e9eb794b8448b501ae6da742cefc44692fae3688",
+    "controlled_verification.csv": "a8d68151d693d0288d23bf0d34dae4d4c7cd8251e12ebc8136cdd95057cfec60"
+  },
+  "python_AST_count": 50,
+  "local_markdown_links_checked": 151,
+  "portable_JSON_checked": 197,
+  "native_JSONL": [
+    {
+      "path": "render_error_analysis/checkpoint_rerender_v1/E5/runtime_checkpoint/multi_view.json",
+      "rows": 208
+    },
+    {
+      "path": "render_error_analysis/checkpoint_rerender_v1/E1/runtime_checkpoint/multi_view.json",
+      "rows": 208
+    },
+    {
+      "path": "render_error_analysis/e3_postprune_diagnostic_v1/runtime_checkpoint/multi_view.json",
+      "rows": 208
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/E5/runtime_checkpoint/multi_view.json",
+      "rows": 208
+    },
+    {
+      "path": "controlled_fixes/prune_effective_render/E1/runtime_checkpoint/multi_view.json",
+      "rows": 208
+    }
+  ],
+  "targeted_inference_controls": [
+    {
+      "name": "Omega_70",
+      "views": 70,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Omega_110",
+      "views": 110,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Standard_70",
+      "views": 70,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Standard_110",
+      "views": 110,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Omega_RAP_baseline_24",
+      "views": 24,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Omega_background_restored_24",
+      "views": 24,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Standard_RAP_baseline_24",
+      "views": 24,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    },
+    {
+      "name": "Standard_background_restored_24",
+      "views": 24,
+      "physical_GPU": "1",
+      "training": false,
+      "status": "complete"
+    }
+  ],
+  "evidence_rows": 24,
+  "scope": "Metadata, shape headers, link validity and script syntax only. No raw checkpoint/prediction payload reread or algorithm work."
+}

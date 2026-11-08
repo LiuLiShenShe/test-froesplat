@@ -1,0 +1,212 @@
+{
+  "call_id": 1050,
+  "phase": "coarse_registration",
+  "frame_indices": [
+    140,
+    97,
+    99,
+    135,
+    205
+  ],
+  "local_reference_frame": 140,
+  "anchor_frame_indices": [
+    140,
+    97,
+    99,
+    135
+  ],
+  "benchmark_early_stop_requested": false,
+  "status": "predicted",
+  "seconds": 0.8459360339911655,
+  "raw_export_seconds": 0.041667732992209494,
+  "raw_compression": "none",
+  "intrinsics_model": [
+    [
+      [
+        469.2357177734375,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        469.2357177734375,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        469.2357177734375,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        469.2357177734375,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        469.2357177734375,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        469.2357177734375,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        469.2357177734375,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        469.2357177734375,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        469.2357177734375,
+        0.0,
+        144.0
+      ],
+      [
+        0.0,
+        469.2357177734375,
+        256.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "confidence_mean": 1.401034951210022,
+  "confidence_range": [
+    1.0,
+    5.343801975250244
+  ],
+  "pnp_status": [
+    {
+      "status": "success",
+      "valid_points": 147448,
+      "iterations": 100,
+      "pnp_inliers": 106078
+    },
+    {
+      "status": "success",
+      "valid_points": 147456,
+      "iterations": 100,
+      "pnp_inliers": 21081
+    },
+    {
+      "status": "success",
+      "valid_points": 147453,
+      "iterations": 100,
+      "pnp_inliers": 24035
+    },
+    {
+      "status": "success",
+      "valid_points": 147455,
+      "iterations": 100,
+      "pnp_inliers": 106687
+    },
+    {
+      "status": "success",
+      "valid_points": 147280,
+      "iterations": 100,
+      "pnp_inliers": 24670
+    }
+  ],
+  "geometry_validation": {
+    "first_camera_distance_to_identity": 0.03462666597165941,
+    "first_camera_note": "Global head predicts first-camera reference; PnP estimates it and is not forcibly fixed to identity",
+    "convention": "C2W validated by inversion followed by model-pixel reprojection; OpenCV solver emits W2C and official code inverts it",
+    "frames": [
+      {
+        "frame_index": 0,
+        "foreground_reprojection_median_px": 1.6144940253768236,
+        "foreground_reprojection_p90_px": 3.1232276231872196,
+        "points": 47749,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.686213727965996e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 1,
+        "foreground_reprojection_median_px": 7.310240827922829,
+        "foreground_reprojection_p90_px": 13.619901707603347,
+        "points": 42864,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.8957785859372935e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 2,
+        "foreground_reprojection_median_px": 6.219304887785265,
+        "foreground_reprojection_p90_px": 19.300585874278372,
+        "points": 42755,
+        "rotation_determinant": 1.0,
+        "orthogonality_error": 1.400468203663227e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 3,
+        "foreground_reprojection_median_px": 3.1609862798524393,
+        "foreground_reprojection_p90_px": 6.940488790441041,
+        "points": 48108,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 5.97180924822486e-08,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      },
+      {
+        "frame_index": 4,
+        "foreground_reprojection_median_px": 7.337954755898638,
+        "foreground_reprojection_p90_px": 16.954456458910396,
+        "points": 27691,
+        "rotation_determinant": 0.9999999403953552,
+        "orthogonality_error": 1.4578409531810905e-07,
+        "positive_depth_fraction": 1.0,
+        "pnp_status": "success"
+      }
+    ],
+    "pnp_observation": {
+      "expected_views": 5,
+      "recorded_views": 5,
+      "actual_success_count": 5,
+      "actual_failure_count": 0,
+      "instrumentation_incomplete_indices": [],
+      "interpretation": "not_called/started indicate incomplete observation, not solver failure"
+    }
+  }
+}

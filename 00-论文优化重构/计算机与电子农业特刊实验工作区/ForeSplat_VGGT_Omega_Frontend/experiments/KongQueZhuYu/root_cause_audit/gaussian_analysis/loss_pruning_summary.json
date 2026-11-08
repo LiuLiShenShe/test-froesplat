@@ -1,0 +1,443 @@
+{
+  "schema": "gggs.loss_pruning_evidence.v1",
+  "experiments": [
+    {
+      "id": "E1",
+      "source_csv": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/metrics/train_metrics.csv",
+      "phases": {
+        "before_regularization": {
+          "csv_samples": 69,
+          "iteration_range": [
+            100,
+            6900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.10195460869565218,
+            "depth_normal_loss": 0.0,
+            "ncc_loss": 0.0,
+            "geo_loss": 0.0,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.10195460869565218,
+          "max_total_loss_recovery_error_csv_rounding": 0.0
+        },
+        "regularization_and_densification": {
+          "csv_samples": 80,
+          "iteration_range": [
+            7000,
+            14900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.0931068875,
+            "depth_normal_loss": 0.004334979375000001,
+            "ncc_loss": 0.305078385,
+            "geo_loss": 0.00066674075,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.40318699999999996,
+          "max_total_loss_recovery_error_csv_rounding": 1.0599999999971743e-06
+        },
+        "after_densification": {
+          "csv_samples": 151,
+          "iteration_range": [
+            15000,
+            30000
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.08818904635761589,
+            "depth_normal_loss": 0.0033077728476821194,
+            "ncc_loss": 0.31040998807947023,
+            "geo_loss": 0.000379772582781457,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.4022865960264901,
+          "max_total_loss_recovery_error_csv_rounding": 1.1100000000263677e-06
+        }
+      },
+      "saved_mask_pruning_events": [],
+      "total_saved_mask_pruned": 0,
+      "regular_densification_event_counts_saved": false
+    },
+    {
+      "id": "E2",
+      "source_csv": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E2_GGGS_EO/metrics/train_metrics.csv",
+      "phases": {
+        "before_regularization": {
+          "csv_samples": 69,
+          "iteration_range": [
+            100,
+            6900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.13408427536231887,
+            "depth_normal_loss": 0.0,
+            "ncc_loss": 0.0,
+            "geo_loss": 0.0,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.13408427536231887,
+          "max_total_loss_recovery_error_csv_rounding": 0.0
+        },
+        "regularization_and_densification": {
+          "csv_samples": 80,
+          "iteration_range": [
+            7000,
+            14900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.10871633749999998,
+            "depth_normal_loss": 0.004114543125,
+            "ncc_loss": 0.30608567999999997,
+            "geo_loss": 0.0006567785000000001,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.4195733375,
+          "max_total_loss_recovery_error_csv_rounding": 1.0100000000234921e-06
+        },
+        "after_densification": {
+          "csv_samples": 151,
+          "iteration_range": [
+            15000,
+            30000
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.09411998013245032,
+            "depth_normal_loss": 0.003414598013245034,
+            "ncc_loss": 0.31095672715231787,
+            "geo_loss": 0.0004741047682119205,
+            "mask_loss": 0.0,
+            "bg_loss": 0.0
+          },
+          "total_loss_mean": 0.4089654304635761,
+          "max_total_loss_recovery_error_csv_rounding": 1.1500000000608246e-06
+        }
+      },
+      "saved_mask_pruning_events": [],
+      "total_saved_mask_pruned": 0,
+      "regular_densification_event_counts_saved": false
+    },
+    {
+      "id": "E3",
+      "source_csv": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E3_GGGS_Foreground/metrics/train_metrics.csv",
+      "phases": {
+        "before_regularization": {
+          "csv_samples": 69,
+          "iteration_range": [
+            100,
+            6900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.1793577826086957,
+            "depth_normal_loss": 0.0,
+            "ncc_loss": 0.0,
+            "geo_loss": 0.0,
+            "mask_loss": 0.009137782608695655,
+            "bg_loss": 0.002683173913043478
+          },
+          "total_loss_mean": 0.191178652173913,
+          "max_total_loss_recovery_error_csv_rounding": 1.0000000000287557e-06
+        },
+        "regularization_and_densification": {
+          "csv_samples": 80,
+          "iteration_range": [
+            7000,
+            14900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.1695577125,
+            "depth_normal_loss": 0.005902589375,
+            "ncc_loss": 0.30040547999999995,
+            "geo_loss": 0.0013793657500000003,
+            "mask_loss": 0.00886425,
+            "bg_loss": 0.0023104374999999996
+          },
+          "total_loss_mean": 0.48841987499999995,
+          "max_total_loss_recovery_error_csv_rounding": 1.4799999998871272e-06
+        },
+        "after_densification": {
+          "csv_samples": 151,
+          "iteration_range": [
+            15000,
+            30000
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.14256183443708606,
+            "depth_normal_loss": 0.004983818874172186,
+            "ncc_loss": 0.3075594079470198,
+            "geo_loss": 0.001029551523178808,
+            "mask_loss": 0.00859580132450331,
+            "bg_loss": 0.002346139072847682
+          },
+          "total_loss_mean": 0.46707661589403965,
+          "max_total_loss_recovery_error_csv_rounding": 1.7199999999828464e-06
+        }
+      },
+      "saved_mask_pruning_events": [
+        {
+          "iteration": 18000,
+          "mode": "mask",
+          "gaussians_before": 1062515,
+          "gaussians_after": 1041963,
+          "removed": 20552,
+          "requested": 20552,
+          "max_remove": 31875,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.8851543068885803,
+          "survival_cue_mean": {
+            "z_M": 0.568729043006897,
+            "z_O": 0.8501075506210327,
+            "z_V": -0.04210472106933594,
+            "z_B": 0.06444357335567474,
+            "z_C": -0.10890424251556396
+          }
+        },
+        {
+          "iteration": 21000,
+          "mode": "mask",
+          "gaussians_before": 1041963,
+          "gaussians_after": 1038782,
+          "removed": 3181,
+          "requested": 3181,
+          "max_remove": 31258,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.8948977589607239,
+          "survival_cue_mean": {
+            "z_M": 0.5889922976493835,
+            "z_O": 0.8492152094841003,
+            "z_V": -0.040950920432806015,
+            "z_B": 0.06356701999902725,
+            "z_C": -0.10919065773487091
+          }
+        },
+        {
+          "iteration": 24000,
+          "mode": "mask",
+          "gaussians_before": 1038782,
+          "gaussians_after": 1037660,
+          "removed": 1122,
+          "requested": 1122,
+          "max_remove": 31163,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.8962206244468689,
+          "survival_cue_mean": {
+            "z_M": 0.5919117331504822,
+            "z_O": 0.8506733775138855,
+            "z_V": -0.04079116880893707,
+            "z_B": 0.06391178071498871,
+            "z_C": -0.10905878245830536
+          }
+        },
+        {
+          "iteration": 27000,
+          "mode": "mask",
+          "gaussians_before": 1037660,
+          "gaussians_after": 1037020,
+          "removed": 640,
+          "requested": 640,
+          "max_remove": 31129,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.8967685699462891,
+          "survival_cue_mean": {
+            "z_M": 0.5928823351860046,
+            "z_O": 0.8533563613891602,
+            "z_V": -0.04073694348335266,
+            "z_B": 0.06454189866781235,
+            "z_C": -0.10890848189592361
+          }
+        },
+        {
+          "iteration": 30000,
+          "mode": "mask",
+          "gaussians_before": 1037020,
+          "gaussians_after": 1036619,
+          "removed": 401,
+          "requested": 401,
+          "max_remove": 31110,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.8971485495567322,
+          "survival_cue_mean": {
+            "z_M": 0.5934509038925171,
+            "z_O": 0.8557957410812378,
+            "z_V": -0.04070599377155304,
+            "z_B": 0.06546833366155624,
+            "z_C": -0.10872200131416321
+          }
+        }
+      ],
+      "total_saved_mask_pruned": 25896,
+      "regular_densification_event_counts_saved": false
+    },
+    {
+      "id": "E4",
+      "source_csv": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E4_ForeSplat_GGGS/metrics/train_metrics.csv",
+      "phases": {
+        "before_regularization": {
+          "csv_samples": 69,
+          "iteration_range": [
+            100,
+            6900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.19373533333333334,
+            "depth_normal_loss": 0.0,
+            "ncc_loss": 0.0,
+            "geo_loss": 0.0,
+            "mask_loss": 0.007842840579710143,
+            "bg_loss": 0.0021717246376811595
+          },
+          "total_loss_mean": 0.20374995652173913,
+          "max_total_loss_recovery_error_csv_rounding": 1.0000000000287557e-06
+        },
+        "regularization_and_densification": {
+          "csv_samples": 80,
+          "iteration_range": [
+            7000,
+            14900
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.17269266249999998,
+            "depth_normal_loss": 0.004900770625,
+            "ncc_loss": 0.30307678499999996,
+            "geo_loss": 0.0012369075,
+            "mask_loss": 0.006919737499999999,
+            "bg_loss": 0.001474575
+          },
+          "total_loss_mean": 0.49030147500000004,
+          "max_total_loss_recovery_error_csv_rounding": 1.580000000001025e-06
+        },
+        "after_densification": {
+          "csv_samples": 151,
+          "iteration_range": [
+            15000,
+            30000
+          ],
+          "weighted_component_means": {
+            "rgb_loss": 0.13947619867549665,
+            "depth_normal_loss": 0.003941222516556291,
+            "ncc_loss": 0.30972170860927145,
+            "geo_loss": 0.0009141826490066225,
+            "mask_loss": 0.006573158940397351,
+            "bg_loss": 0.0014991324503311261
+          },
+          "total_loss_mean": 0.46212565562913915,
+          "max_total_loss_recovery_error_csv_rounding": 1.3999999999847468e-06
+        }
+      },
+      "saved_mask_pruning_events": [
+        {
+          "iteration": 18000,
+          "mode": "mask",
+          "gaussians_before": 820398,
+          "gaussians_after": 815632,
+          "removed": 4766,
+          "requested": 4766,
+          "max_remove": 24611,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.923769474029541,
+          "survival_cue_mean": {
+            "z_M": 0.7042255401611328,
+            "z_O": 0.8590049147605896,
+            "z_V": -0.036390434950590134,
+            "z_B": 0.02031104825437069,
+            "z_C": -0.10768717527389526
+          }
+        },
+        {
+          "iteration": 21000,
+          "mode": "mask",
+          "gaussians_before": 815632,
+          "gaussians_after": 814784,
+          "removed": 848,
+          "requested": 848,
+          "max_remove": 24468,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.9267510175704956,
+          "survival_cue_mean": {
+            "z_M": 0.710769534111023,
+            "z_O": 0.8599245548248291,
+            "z_V": -0.03606778383255005,
+            "z_B": 0.01936517469584942,
+            "z_C": -0.10748667269945145
+          }
+        },
+        {
+          "iteration": 24000,
+          "mode": "mask",
+          "gaussians_before": 814784,
+          "gaussians_after": 814396,
+          "removed": 388,
+          "requested": 388,
+          "max_remove": 24443,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.9273524880409241,
+          "survival_cue_mean": {
+            "z_M": 0.7118154764175415,
+            "z_O": 0.864496111869812,
+            "z_V": -0.036010682582855225,
+            "z_B": 0.019249670207500458,
+            "z_C": -0.10773780196905136
+          }
+        },
+        {
+          "iteration": 27000,
+          "mode": "mask",
+          "gaussians_before": 814396,
+          "gaussians_after": 814255,
+          "removed": 141,
+          "requested": 141,
+          "max_remove": 24431,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.9277294278144836,
+          "survival_cue_mean": {
+            "z_M": 0.7122605443000793,
+            "z_O": 0.8691820502281189,
+            "z_V": -0.03598589450120926,
+            "z_B": 0.01917768456041813,
+            "z_C": -0.10771845281124115
+          }
+        },
+        {
+          "iteration": 30000,
+          "mode": "mask",
+          "gaussians_before": 814255,
+          "gaussians_after": 814161,
+          "removed": 94,
+          "requested": 94,
+          "max_remove": 24427,
+          "survival_mode": "multi_cue",
+          "survival_threshold": 0.45,
+          "survival_mean": 0.927923321723938,
+          "survival_cue_mean": {
+            "z_M": 0.7124142050743103,
+            "z_O": 0.8726576566696167,
+            "z_V": -0.035977426916360855,
+            "z_B": 0.0191353727132082,
+            "z_C": -0.10772177577018738
+          }
+        }
+      ],
+      "total_saved_mask_pruned": 6237,
+      "regular_densification_event_counts_saved": false
+    }
+  ],
+  "csv_semantics": "Raw depth_normal/NCC/geo components are weighted by .05/.6/.02 here; mask_loss/bg_loss in CSV are already weighted. These are sampled instantaneous training losses, not evaluation or EMA.",
+  "e5_exact_component_csv_present": false,
+  "e5_note": "Only 4-decimal EMA stdout fields exist; do not create an artificial E5 component decomposition.",
+  "gradient_or_Q_history_present": false,
+  "no_training": true,
+  "no_gpu": true
+}

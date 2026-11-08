@@ -1,0 +1,10 @@
+vkitti2:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  max_depth_thresh: 500.0
+  window_size_ratio: 8.0
+  dataverse_cfg:
+    target: "optimized_hdf5.OptimizedHDF5Dataset"
+    params:
+      data_root: "${user.data_root}/train/vkitti2"

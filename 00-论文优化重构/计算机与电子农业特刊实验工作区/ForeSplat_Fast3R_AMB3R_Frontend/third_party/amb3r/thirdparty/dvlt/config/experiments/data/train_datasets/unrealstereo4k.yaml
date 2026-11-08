@@ -1,0 +1,11 @@
+unrealstereo4k:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  window_size_ratio: 2.0
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "unrealstereo4k.UnrealStereo4K"
+    params:
+      # format: zip indexed
+      data_root: "${user.data_root}/train/unrealstereo4k"

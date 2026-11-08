@@ -1,0 +1,244 @@
+{
+  "experiment": "E6",
+  "status": "complete",
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "checkpoint_sha256": "3a2e48206f1fa92786bfe870ea51e2adbbe8551bb4e5c29b292432c74c60ba18",
+  "repo": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "renderer_file": "/data/fj/F2DMAS/2d-gaussian-splatting-main/gaussian_renderer/__init__.py",
+  "renderer_sha256": "c27c0f8ba31ae8adf75e56291802ad07b0db1bcea4b94b52c8424098ff65c11a",
+  "python": "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+  "torch": "2.5.1+cu121",
+  "cuda": "12.1",
+  "physical_gpu": 1,
+  "resolution_divisor": 2,
+  "rendered_views": 12,
+  "source_ids": [
+    0,
+    19,
+    38,
+    57,
+    76,
+    95,
+    114,
+    133,
+    152,
+    170,
+    189,
+    209
+  ],
+  "gaussian_count": 119836,
+  "peak_allocated_gib": 0.6489052772521973,
+  "peak_reserved_gib": 1.0078125,
+  "wall_seconds": 236.63816762098577,
+  "camera_count": 208,
+  "native_rgb_background": [
+    0,
+    0,
+    0
+  ],
+  "rgb_for_metrics": "float32 clamp of actual native render, no PNG requantization or exposure",
+  "historical_outputs_changed": false,
+  "original_guard": {
+    "cameras.json": "3cac4d34d93ae408e52cdef59083b2e0fae367afda0792423d5595d57974b14f",
+    "cfg_args": "3d25f8c43667cbaccb363a3febffd1f4415ef4acb26fbada93fc3b8f8ced494b"
+  },
+  "depth_ratio_baseline": 0.0,
+  "two_dgs_readonly_allmap_observer": true,
+  "view_records": [
+    {
+      "source_id": 0,
+      "name": "crop_0000",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 10.731009622017154,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "f8c876d37b456931e67505edc77fb11ab99080d37130521cb7e94a53996e5e4d",
+      "gt_mask_sha256": "ad4141869b7697e52bd20608b884d676bb11f038272feadad51902eee3bf4726",
+      "render_rgb_tensor_sha256": "06c39064d4b8dbc8ea15f23dd6aa962a5651ce14a5c25f04d0893c0759dce4db"
+    },
+    {
+      "source_id": 19,
+      "name": "crop_0019",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.559153698006412,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "d57ba6d8adbfefd5e8bb1d874acaef9341cec0b4fe9f8c75b288a27b6e2ae0a7",
+      "gt_mask_sha256": "c3ac639172bf753c14f7023f510804767f78b50dd3942c6907ba1ed212377139",
+      "render_rgb_tensor_sha256": "0fad2910b9d9d6df068a3194b6d6a498ee33bb742aa78331ef340fb592765fdb"
+    },
+    {
+      "source_id": 38,
+      "name": "crop_0038",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.21083223700407,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "09c7e5a2bb3fae334770e502be24fa33d6fc995f9fee03cc09a59170e216ec3d",
+      "gt_mask_sha256": "e1d23205962d1fc00055a6df3d41364c09bad52a2466b998d666c5973943581a",
+      "render_rgb_tensor_sha256": "3dc3390f1df43c6e5caa3608662a50cc0df4c27496e13d8cf89c75e47aed594c"
+    },
+    {
+      "source_id": 57,
+      "name": "crop_0057",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.972922285000095,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "698689abed513904effe367e6767c3d47d52c6b890d48cb7c6b74440c763c33a",
+      "gt_mask_sha256": "088aa25bfedd4c139d6d8d94ca27ff019fbcc500468ee04236245c6f237b188c",
+      "render_rgb_tensor_sha256": "54c2a44163fd1849cb12d6a9452d0da1c2432baf8eea5b0573c2f6ddd5b3a2ab"
+    },
+    {
+      "source_id": 76,
+      "name": "crop_0076",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.569756339013111,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "6366add695cb47cf73da8ab1880d87a9c9c6ef879414166f7600145afc0e0ea7",
+      "gt_mask_sha256": "3db42fa38a299820add31672b4f00483b49687b5d35a3d1d1c969b3462f0cc4d",
+      "render_rgb_tensor_sha256": "28a83e91da89a5f1cdd34991629721aa4ab1686f7417271ae8489c1486658973"
+    },
+    {
+      "source_id": 95,
+      "name": "crop_0095",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.480503744009184,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "593157fe7a6629f74c9eb7c361899f75f47b769e421acc1cc4ef6690bf71c5ac",
+      "gt_mask_sha256": "4b6e772f1f7d13cfaad1210c7f3ce5234d51d020f5ceaa9bd6fba39c749eeb83",
+      "render_rgb_tensor_sha256": "141652e9ac2d53e0b6595375be937979efedb7f4ad9e23a8c5675407ceda4b8c"
+    },
+    {
+      "source_id": 114,
+      "name": "crop_0114",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 5.454269782989286,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "51faf802d6156b87679fdfc61242b7f4b4caffb3529cf461a13b922e80aaa0fe",
+      "gt_mask_sha256": "2d6b11ce294d7f55bb209aad7dde2e4c14cf03676af60ece1078ae4cd78b6f30",
+      "render_rgb_tensor_sha256": "5e02970adc1c5814e7b8d8d41e3458a6ad642322d15333e2dfcdef93c4b6dc8e"
+    },
+    {
+      "source_id": 133,
+      "name": "crop_0133",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.6834260470059235,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "4ce739920f1b4efc5baf89e654a68e189c967e5b0a9ca81a976a5da841bda626",
+      "gt_mask_sha256": "50f1f4a5cf0ae37bbe760c877de4df05be8649118edeaf7ef5b843d67400114b",
+      "render_rgb_tensor_sha256": "02946fce709f1ac0b7247c087bdb078b6268d8f56672f07a7d026146b0b66b3a"
+    },
+    {
+      "source_id": 152,
+      "name": "crop_0152",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.425979457999347,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "a68b4b9ac1a41d7806913fb5cfc34f57dacd2fc6c489bc3133277765e9e685cf",
+      "gt_mask_sha256": "8297e538becf71be3081df55dbf529edcd40f3ea9596bf2f470c215b69a4e2b2",
+      "render_rgb_tensor_sha256": "7ac8f80f760a921316de204ae6e90dd49c83cc2a6c13871e8c911b7657d73fa2"
+    },
+    {
+      "source_id": 170,
+      "name": "crop_0170",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.185623894009041,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "60e9be0ac56f667b0c3deee4b78156634905f3d136bb347dbf20b83b3fccd9a3",
+      "gt_mask_sha256": "f410fd49db86d43d9b687cc1f0985af99d4dc07a61342a563d97b81039bbf409",
+      "render_rgb_tensor_sha256": "0099c8dd38cfdfa8ef73dffd4a4a3ebd7a2f8bf2fa8ddbce11c0c8daed0b9006"
+    },
+    {
+      "source_id": 189,
+      "name": "crop_0189",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 6.461671942990506,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "fbdab6068558b5f873ddaa4e82f26b9657be0f3366eeb37b7c0dde6117fba677",
+      "gt_mask_sha256": "d31168375dd1073b90262cb51ba7f15f499bdfca0cb694d75924dce520dedeab",
+      "render_rgb_tensor_sha256": "92956239daa5ea5a500ea4a8f6c99625e07dbfd02a7eb43df854cda12cd94c1e"
+    },
+    {
+      "source_id": 209,
+      "name": "crop_0209",
+      "image_size_wh": [
+        1080,
+        1920
+      ],
+      "render_seconds": 4.975409820995992,
+      "gaussian_count": 119836,
+      "native_normal_convention": "world (renderer conversion from camera allmap)",
+      "depth_convention": "actual raster median depth; arbitrary scene units",
+      "alpha_source": "native renderer opacity accumulation",
+      "gt_rgb_tensor_sha256": "3b26313db29503602741c10188dbd691f6dc11ab7342a8c5c7bac5511b07be5b",
+      "gt_mask_sha256": "1d070d9d98d2f45c012bd52c18d01e71786cffcb4c82f6b7af985fd6d0408c9a",
+      "render_rgb_tensor_sha256": "b3ff057a6575ccae9467ecd10e30ae5cc7be5970501ec327757647781da12d10"
+    }
+  ],
+  "checkpoint_kind": "saved iteration30000 PLY",
+  "peak_memory_scope": "after Scene load, actual render and raw export; checkpoint-load transient peak not instrumented",
+  "wall_time_scope": "Scene load, historical guard hashing, native render, CPU raw/PNG export, final checkpoint hashing"
+}

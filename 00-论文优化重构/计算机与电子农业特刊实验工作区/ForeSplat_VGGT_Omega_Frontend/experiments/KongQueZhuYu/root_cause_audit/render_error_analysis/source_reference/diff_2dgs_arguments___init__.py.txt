@@ -1,0 +1,63 @@
+--- official_2dgs_arguments___init__.py
++++ /data/fj/F2DMAS/2d-gaussian-splatting-main/arguments/__init__.py
+@@ -55,6 +55,26 @@
+         self.data_device = "cuda"
+         self.eval = False
+         self.render_items = ['RGB', 'Alpha', 'Normal', 'Depth', 'Edge', 'Curvature']
++        self.view_quality_mode = "none"
++        self.raw_gate_mode = "none"
++        self.mask_gate_mode = "none"
++        self.geo_gate_mode = "none"
++        self.raw_gate_keep_ratio = 1.0
++        self.mask_gate_keep_ratio = 1.0
++        self.geo_gate_keep_ratio = 1.0
++        self.raw_gate_list = ""
++        self.mask_gate_list = ""
++        self.geo_gate_list = ""
++        self.mask_mode = "none"
++        self.mask_dir = ""
++        self.mask_pattern = "mask_{stem}.png"
++        self.mask_threshold = 0.5
++        self.init_pcd_mode = "none"
++        self.init_pcd_min_observations = 3
++        self.init_pcd_foreground_threshold = 0.5
++        self.init_pcd_dilate_mask_px = 2
++        self.init_pcd_max_cameras = 0
++        self.init_pcd_chunk_size = 200000
+         super().__init__(parser, "Loading Parameters", sentinel)
+ 
+     def extract(self, args):
+@@ -92,6 +112,33 @@
+         self.densify_from_iter = 500
+         self.densify_until_iter = 15_000
+         self.densify_grad_threshold = 0.0002
++        self.use_mask_loss = False
++        self.use_bg_opacity_loss = False
++        self.use_foreground_rgb_loss = False
++        self.lambda_mask = 0.0
++        self.lambda_bg = 0.0
++        self.lambda_fg_rgb = 1.0
++        self.foreground_bg_rgb_weight = 0.0
++        self.foreground_rgb_crop_padding = 8
++        self.mask_loss_type = "l1"
++        self.mask_ignore_boundary_px = 0
++        self.mask_loss_start_iter = 0
++        self.mask_loss_warmup_iters = 0
++        self.view_weight_mode = "none"
++        self.view_weight_list = ""
++        self.view_weight_min = 0.5
++        self.view_weight_max = 1.0
++        self.view_weight_default = 1.0
++        self.pruning_mode = "none"
++        self.pruning_start_iter = 15_000
++        self.pruning_interval = 1_000
++        self.pruning_opacity_threshold = 0.01
++        self.pruning_brightness_threshold = 0.03
++        self.pruning_mask_threshold = 0.2
++        self.pruning_mask_max_views = 12
++        self.pruning_max_remove_ratio = 0.05
++        self.pruning_mask_score_weight = 1.0
++        self.save_pruning_report = False
+         super().__init__(parser, "Optimization Parameters")
+ 
+ def get_combined_args(parser : ArgumentParser):

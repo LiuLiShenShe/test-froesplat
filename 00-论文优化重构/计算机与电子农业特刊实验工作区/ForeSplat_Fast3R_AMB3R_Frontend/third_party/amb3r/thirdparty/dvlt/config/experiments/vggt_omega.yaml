@@ -1,0 +1,23 @@
+defaults:
+  - model: vggt_omega
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Eval-only baseline. Wrapper at `dvlt/model/vggt_omega/model.py` raises in
+# `train_step`; only `python -m dvlt.scripts.test --config-name vggt_omega.yaml`
+# is supported.
+#
+# VGGT-Omega HF card: https://huggingface.co/facebook/VGGT-Omega
+# Released checkpoints:
+#   - VGGT-Omega-1B-512                (resolution 512, no text alignment)
+#   - VGGT-Omega-1B-256-Text-Alignment (resolution 256, text alignment)
+
+data:
+  image_size: 512
+  patch_size: 16
+
+trainer:
+  experiment_name: vggt-omega-1B
+  ckpt_dir: facebook/VGGT-Omega

@@ -1,0 +1,32 @@
+{
+  "recorded_unix": 1794124347.9188926,
+  "script_sha256": {
+    "scripts/analyze_gaussians.py": "10b516e3cc879a775e41ae48fc724685b2afb89c1d7715caf67a3484d1f46f43",
+    "scripts/build_corrected_interface.py": "ebfacb73547e6ec737f0a57c493d381e31ac9122fb53f3358ad67c0dc1a35c15",
+    "scripts/compare_interface_matches.py": "5a1af399069d3a6b31f8aad41ed80f7e86dd584a063bc9b4ce6ed197ba10f047",
+    "scripts/descriptive_analysis.py": "c5430bc897864924ea64af160bc039fda432e4ba13b8fb16c4d91620ec261af0",
+    "scripts/evaluate_frontends.py": "ef716b37b8e2fbed31b307c0989dda75087f64d38886f650baf039e76851c2a0",
+    "scripts/render_evaluate.py": "3395cdf08b2bd82b17c61714835248e4e40bbddbd49df4ca897b184fe623527a",
+    "scripts/run_all.py": "fcae5c265a6df81beb24a8572a0f56e8cf7c5c47a3222bf425f327534b85666f",
+    "scripts/run_frontends.py": "7c240472107596bf6b732471e81532e163ceeb1277a4d6a97a7971c5822ced50",
+    "scripts/summarize.py": "e0110a4fa857cf514fccade5dbbb49c2b5c59fdb177f14ad179dcdaf434be41b",
+    "scripts/train_observed.py": "eaba51f915d357e45bab7f29c09091666fdb615fb9cde071d51c1c8cf333f7b3",
+    "scripts/validate_interface.py": "2c88442a0bedd0d4ac45dac6203107ab71bc8db90aa547d184f6e2ed30558b1f",
+    "scripts/verify_deliverables.py": "13e1039a602453f4fde6f4fa22695327a1b35f23105cad03dab54f39bb44b642",
+    "scripts/visualize_gaussian_means.py": "ae09a9429858edff819741d8ea6ba3b88c223ecadb9a68a969b1500fd0552375",
+    "scripts/write_geometry_findings.py": "86f366cdc411890692993f1afd7315d7848dfd3e2ced4b068bb3d56688db9670"
+  },
+  "extra_manual_command": "uv run --no-project --python '/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/.venv/bin/python' python '/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/scripts/write_geometry_findings.py'",
+  "source_identity_note": "Camera interface tests preserve exact Omega pose/observation bytes; standard pose difference is only 1.11e-16. Source E1-E6 and original RGB/Mask files were not edited.",
+  "extra_manual_cwd": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend",
+  "extra_manual_environment": {
+    "CUDA_VISIBLE_DEVICES": "1"
+  },
+  "pending_after_runner": [
+    "descriptive_analysis.py",
+    "visualize_gaussian_means.py",
+    "direct native visual review",
+    "final nine decisions",
+    "verify_deliverables.py"
+  ]
+}

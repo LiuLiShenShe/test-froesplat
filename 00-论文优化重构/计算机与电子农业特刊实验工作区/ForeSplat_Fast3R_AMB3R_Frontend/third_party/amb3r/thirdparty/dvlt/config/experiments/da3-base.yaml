@@ -1,0 +1,96 @@
+defaults:
+  - model: da3
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Mirrors upstream DA3 config:
+# https://github.com/ByteDance-Seed/Depth-Anything-3/blob/main/src/depth_anything_3/configs/da3-base.yaml
+model:
+  da3_cfg:
+    use_ray_pose: True
+
+    # Camera input conditioning at test time. Off by default; flip to True
+    # to feed GT extrinsics + intrinsics from the batch into upstream `cam_enc`.
+    use_cam_enc_at_test: False
+
+    # Reference view selection strategy (for num_views >= 3)
+    # Options: saddle_balanced (default), saddle_sim_range, middle (for video), first
+    ref_view_strategy: first
+
+    net:
+      __object__:
+        path: depth_anything_3.model.dinov2.dinov2
+        name: DinoV2
+        args: as_params
+
+      name: vitb
+      out_layers: [5, 7, 9, 11]
+      alt_start: 4
+      qknorm_start: 4
+      rope_start: 4
+      cat_token: True
+
+    head:
+      __object__:
+        path: depth_anything_3.model.dualdpt
+        name: DualDPT
+        args: as_params
+
+      dim_in: 1536
+      output_dim: 2
+      features: 128
+      out_channels: [96, 192, 384, 768]
+      head_names: ["depth", "ray"]
+
+    cam_dec:
+      __object__:
+        path: depth_anything_3.model.cam_dec
+        name: CameraDec
+        args: as_params
+
+      dim_in: 1536
+
+    cam_enc:
+      __object__:
+        path: depth_anything_3.model.cam_enc
+        name: CameraEnc
+        args: as_params
+
+      dim_out: 768
+
+data:
+  tokens_per_batch: 36288  # 14 * 36 * 72 (0.3888 aspect ratio)
+  images_per_batch: 72
+  images_per_element: [2, 18]
+  image_size: 504
+  patch_size: 14
+  train_num_workers: 16
+  train_prefetch_factor: 8
+  train_config:
+    load_data_fields:
+      - images
+      - extrinsics_c2w
+      - intrinsics
+      - depths
+      - world_points
+      - point_masks
+
+trainer:
+  experiment_name: da3-base
+  ckpt_dir: depth-anything/DA3-BASE
+  max_train_steps: 200_000
+  validation_steps: 10_000
+  # optimizer
+  adam_weight_decay: 0.05
+  # memory optimizations
+  allow_tf32: True
+  gradient_checkpointing: False
+  set_grads_to_none: True
+  cudnn_deterministic: False
+  cudnn_benchmark: False
+  # learning rate & scheduler
+  learning_rate: 2e-4
+  lr_scheduler: cosine
+  lr_warmup_steps: 8000

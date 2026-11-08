@@ -1,0 +1,179 @@
+{
+  "experiment": "E1",
+  "status": "complete",
+  "source_ids": [
+    0,
+    95,
+    189
+  ],
+  "single_factor": "remove native effective-opacity<0.05 Gaussian rows",
+  "new_training": false,
+  "all208_runtime_camera_arrays_exactly_equal": true,
+  "GT_and_masks_exactly_equal": true,
+  "retained_parameter_selection": {
+    "threshold": 0.05,
+    "before_count": 600458,
+    "after_count": 434858,
+    "removed_count": 165600,
+    "removed_fraction": 0.27578948069640175,
+    "raw_opacity_ge_threshold_effective_below_count": 104434,
+    "effective_formula": "native get_opacity_with_3D_filter: sigmoid(raw_opacity) * prod(scale/hypot(scale,filter_3D))",
+    "selected_fields": [
+      {
+        "name": "_xyz",
+        "shape": [
+          434858,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "5d73ac6a045738aaf2a6c63b4fcca0d304e44d707908414744dbc1e504b0acaf"
+      },
+      {
+        "name": "_features_dc",
+        "shape": [
+          434858,
+          1,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e8e75ac38834501d901cd0d3e702a6f818c460e451e1c9b9b41ec9cf080119b8"
+      },
+      {
+        "name": "_features_rest",
+        "shape": [
+          434858,
+          15,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "104034701352142e46cf32ecda43b14ffd498a56c9361e0732c57fb9203c5a22"
+      },
+      {
+        "name": "_opacity",
+        "shape": [
+          434858,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "d484b67bf93aaa5f2a39ad4ec6b37f3bb824405f262407bf9662b67bd38ea256"
+      },
+      {
+        "name": "_scaling",
+        "shape": [
+          434858,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "aa1f0119542fb191279a74642062b739202c8c191bb5061419ca4b09c7aaf583"
+      },
+      {
+        "name": "_rotation",
+        "shape": [
+          434858,
+          4
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "3ea16bd6b5a71bd67c9e758308d8e85fd416fb8b57a00748e61c9352608a8386"
+      },
+      {
+        "name": "_sg_axis",
+        "shape": [
+          434858,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_sharpness",
+        "shape": [
+          434858,
+          0
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "_sg_color",
+        "shape": [
+          434858,
+          0,
+          3
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "filter_3D",
+        "shape": [
+          434858,
+          1
+        ],
+        "dtype": "torch.float32",
+        "retained_values_sha256": "6da4245414c80ffc775c37fe48b5b0e338267abcf758d23df6796cdc83c77a66"
+      }
+    ],
+    "optimizer_used": false,
+    "remaining_gaussian_parameters_bit_identical": true
+  },
+  "checkpoint_sha256": "19f61faedca7935b75fcedcbdd9d81ec9a1281ec8c484f4179b25c3abe30bab8",
+  "summaries": [
+    {
+      "experiment": "E1",
+      "condition": "baseline",
+      "views": 3,
+      "full_psnr": 18.132728944806065,
+      "fg_mask_psnr": 13.790990739367793,
+      "boundary_band5_psnr": 11.07091113913018,
+      "inner_fg_edge5_psnr": 10.511286025541473,
+      "foreground_alpha_mean": 0.9954548279444376,
+      "background_alpha_mean": 0.9072445034980774,
+      "background_alpha_gt05_fraction": 0.9271266510667303,
+      "alpha_mask05_iou": 0.35649946155495565,
+      "alpha_mask05_precision": 0.35665359613802794,
+      "alpha_mask05_recall": 0.9982962886562472,
+      "background_rgb_mean_abs_error": 0.007135955927272637,
+      "foreground_gradient_retention": 0.34358107050259906,
+      "inner_edge_gradient_retention": 0.2083002577225367,
+      "foreground_gradient_mae": 0.028471453736225765
+    },
+    {
+      "experiment": "E1",
+      "condition": "effective_pruned",
+      "views": 3,
+      "full_psnr": 18.130301617107744,
+      "fg_mask_psnr": 13.783547603557787,
+      "boundary_band5_psnr": 11.077737943825381,
+      "inner_fg_edge5_psnr": 10.47944045839019,
+      "foreground_alpha_mean": 0.9953390955924988,
+      "background_alpha_mean": 0.9071860313415527,
+      "background_alpha_gt05_fraction": 0.9270195162037087,
+      "alpha_mask05_iou": 0.35652297410769607,
+      "alpha_mask05_precision": 0.3566779608637505,
+      "alpha_mask05_recall": 0.9982849998642539,
+      "background_rgb_mean_abs_error": 0.007085390854626894,
+      "foreground_gradient_retention": 0.34492866198221844,
+      "inner_edge_gradient_retention": 0.20906583964824677,
+      "foreground_gradient_mae": 0.028490000093976658
+    }
+  ],
+  "deltas_effective_pruned_minus_baseline": {
+    "full_psnr": -0.0024273276983208802,
+    "fg_mask_psnr": -0.00744313581000533,
+    "boundary_band5_psnr": 0.006826804695201361,
+    "inner_fg_edge5_psnr": -0.03184556715128295,
+    "foreground_alpha_mean": -0.00011573235193884646,
+    "background_alpha_mean": -5.84721565246582e-05,
+    "background_alpha_gt05_fraction": -0.00010713486302160735,
+    "alpha_mask05_iou": 2.3512552740412307e-05,
+    "alpha_mask05_precision": 2.4364725722536562e-05,
+    "alpha_mask05_recall": -1.128879199330246e-05,
+    "background_rgb_mean_abs_error": -5.05650726457434e-05,
+    "foreground_gradient_retention": 0.001347591479619381,
+    "inner_edge_gradient_retention": 0.0007655819257100516,
+    "foreground_gradient_mae": 1.854635775089264e-05
+  },
+  "metrics_scope": "CPU same-mask float32 RGB, no LPIPS/new GPU model job; baseline subset is exactly same three source IDs",
+  "limitation": "Three existing training views test this deletion rule only. Results do not establish retraining or generalization gains."
+}

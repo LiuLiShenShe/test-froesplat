@@ -1,0 +1,40 @@
+[
+  {
+    "method": "AMB3R_Base_ON",
+    "geometry_channel": "official pts3d_by_unprojection in world coordinates; not a local prediction head",
+    "confidence_control": "native_depth_confidence",
+    "confidence_field": "depth_conf",
+    "views": 208,
+    "foreground_coverage": 1.0,
+    "edge_coverage": 1.0,
+    "normalization_extent": 1.20701165869832,
+    "depth_neighbor_jump_ratio": 0.003986400013179424,
+    "self_reprojection_p50_px": 0.5993193165527925,
+    "adjacent_depth_agreement_fraction": 0.7483852025836759,
+    "adjacent_point_distance_p50_normalized": 0.0263943150639534,
+    "projection_overlap_fraction": 0.5874806195896801,
+    "depth_metric_view_median_p10_m": 0.16139330640435218,
+    "depth_metric_view_median_p50_m": 0.19789748638868332,
+    "depth_metric_view_median_p90_m": 0.2150960274040699,
+    "interpretation": "Saved depth-channel consistency only. Self-projection is algebraic, not GT accuracy. Native depth confidence and same-world-confidence isolation are separate controls. No scale fit or output changes."
+  },
+  {
+    "method": "AMB3R_Base_ON",
+    "geometry_channel": "official pts3d_by_unprojection in world coordinates; not a local prediction head",
+    "confidence_control": "same_world_confidence_geometry_control",
+    "confidence_field": "world_conf",
+    "views": 208,
+    "foreground_coverage": 0.9481712590962934,
+    "edge_coverage": 0.9063178269461272,
+    "normalization_extent": 1.2073075823485848,
+    "depth_neighbor_jump_ratio": 0.002561430651759266,
+    "self_reprojection_p50_px": 0.6027506245542278,
+    "adjacent_depth_agreement_fraction": 0.747754643194047,
+    "adjacent_point_distance_p50_normalized": 0.02639830205589533,
+    "projection_overlap_fraction": 0.5599395145560342,
+    "depth_metric_view_median_p10_m": 0.16139330640435218,
+    "depth_metric_view_median_p50_m": 0.19789748638868332,
+    "depth_metric_view_median_p90_m": 0.2150960274040699,
+    "interpretation": "Saved depth-channel consistency only. Self-projection is algebraic, not GT accuracy. Native depth confidence and same-world-confidence isolation are separate controls. No scale fit or output changes."
+  }
+]

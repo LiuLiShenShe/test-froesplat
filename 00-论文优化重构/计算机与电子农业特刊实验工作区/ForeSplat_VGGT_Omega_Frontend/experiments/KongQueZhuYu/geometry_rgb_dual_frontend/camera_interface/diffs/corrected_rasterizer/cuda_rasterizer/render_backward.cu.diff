@@ -1,0 +1,38 @@
+--- 
++++ 
+@@ -737,7 +737,7 @@
+         const float* __restrict__ dL_dalphas,
+         const float* __restrict__ dL_dpixel_normals,
+         const float focal_x,
+-        const float focal_y,
++        const float focal_y, const float* ray_view, const float* ray_proj,
+         float3* __restrict__ dL_dmean2D,
+         float4* __restrict__ dL_dconic2D,
+         float* __restrict__ dL_dcolors,
+@@ -752,7 +752,7 @@
+     const uint2 pix                  = {pix_min.x + block.thread_index().x, pix_min.y + block.thread_index().y};
+     const uint32_t pix_id            = W * pix.y + pix.x;
+     const float2 pixf                = {static_cast<float>(pix.x), static_cast<float>(pix.y)};
+-    const float2 pixnf               = {(pixf.x - static_cast<float>(W - 1) / 2.f) / focal_x, (pixf.y - static_cast<float>(H - 1) / 2.f) / focal_y};
++    const float2 pixnf               = {(pixf.x - foresplatPrincipal(ray_view,ray_proj,W,H).x) / focal_x, (pixf.y - foresplatPrincipal(ray_view,ray_proj,W,H).y) / focal_y};
+ 
+     const bool inside              = pix.x < W && pix.y < H;
+     const int block_id             = block.group_index().y * horizontal_blocks + block.group_index().x;
+@@ -1186,7 +1186,7 @@
+     const float* dL_dalphas,
+     const float* dL_dpixel_normals,
+     const float focal_x,
+-    const float focal_y,
++    const float focal_y, const float* ray_view, const float* ray_proj,
+     float3* dL_dmean2D,
+     float4* dL_dconic2D,
+     float* dL_dcolors,
+@@ -1199,7 +1199,7 @@
+         depths, ray_planes, normals, alphas, normalmap, mdepth,             \
+         normal_length, n_contrib, max_contributors, dL_dpixels,             \
+         dL_dpixel_mdepth, dL_dalphas, dL_dpixel_normals,                    \
+-        focal_x, focal_y, dL_dmean2D, dL_dconic2D, dL_dcolors,              \
++        focal_x, focal_y, ray_view, ray_proj, dL_dmean2D, dL_dconic2D, dL_dcolors,              \
+         dL_dray_planes, dL_dnormals)
+ 
+     if (require_depth)

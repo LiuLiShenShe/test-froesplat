@@ -1,0 +1,421 @@
+{
+  "scope": "12 representative training views, actual checkpoint re-render, float32 RGB native black-background composition",
+  "source_ids": [
+    0,
+    19,
+    38,
+    57,
+    76,
+    95,
+    114,
+    133,
+    152,
+    170,
+    189,
+    209
+  ],
+  "ssim": "same scikit-image function for all: channel_axis2, win7, gaussianFalse, sampleCovTrue, data_range1; regional SSIM is mean of full map over selected valid pixels",
+  "foreground": "exact external binary mask, nearest interpolation; old bbox PSNR saved separately",
+  "boundary": "5 actual-render-pixel dilation XOR erosion, inner boundary reported separately; evaluation only",
+  "gradients": "Rec709 RGB grayscale, reflect-mode Sobel /8; energy retention can also reflect noise so gradient MAE saved",
+  "lpips": "same cached AlexNet LPIPS full native resolution [-1,1] for all; no input resize",
+  "background": [
+    0,
+    0,
+    0
+  ],
+  "metric_png_requantization": false,
+  "skimage_version": "0.26.0",
+  "lpips_version": null,
+  "summaries": [
+    {
+      "experiment": "E1",
+      "views": 12,
+      "full_psnr": 17.500320464294866,
+      "fg_mask_psnr": 13.03085070141068,
+      "boundary_band5_psnr": 10.68440056245903,
+      "inner_fg_edge5_psnr": 9.879045396188014,
+      "legacy_fg_bbox_psnr": 14.888486845781784,
+      "ssim": 0.7809654722611109,
+      "fg_mask_ssim_map": 0.3952149773637454,
+      "boundary_ssim_map": 0.17609512992203236,
+      "lpips_alex": 0.24520710483193398,
+      "foreground_pixels": 661850.1666666666,
+      "boundary_pixels": 43359.75,
+      "bbox_pixels": 1144268.1666666667,
+      "gt_fg_gradient_mean": 0.03387313817317287,
+      "render_fg_gradient_mean": 0.013945259347868463,
+      "fg_gradient_retention": 0.41855449974536896,
+      "gt_edge_gradient_mean": 0.06869996059685946,
+      "render_edge_gradient_mean": 0.015831145613143843,
+      "edge_gradient_retention": 0.2314937673509121,
+      "fg_gradient_mae": 0.027051893373330433,
+      "foreground_alpha_mean": 0.995298316081365,
+      "background_alpha_mean": 0.8942683786153793,
+      "background_alpha_gt01_fraction": 0.9436351986165419,
+      "background_alpha_gt05_fraction": 0.9193984431405662,
+      "background_alpha_gt09_fraction": 0.7935148268097484,
+      "alpha_mask05_iou": 0.3373353196812278,
+      "alpha_mask05_precision": 0.33761432625057775,
+      "alpha_mask05_recall": 0.9978183671502173,
+      "background_rgb_mean_abs_error": 0.009757366380654275
+    },
+    {
+      "experiment": "E5",
+      "views": 12,
+      "full_psnr": 13.138043491574054,
+      "fg_mask_psnr": 8.201295863463665,
+      "boundary_band5_psnr": 10.254324120186594,
+      "inner_fg_edge5_psnr": 7.885174997702187,
+      "legacy_fg_bbox_psnr": 10.503297554372871,
+      "ssim": 0.734551802277565,
+      "fg_mask_ssim_map": 0.24550117179751396,
+      "boundary_ssim_map": 0.1461768690496683,
+      "lpips_alex": 0.3413110040128231,
+      "foreground_pixels": 661850.1666666666,
+      "boundary_pixels": 43359.75,
+      "bbox_pixels": 1144268.1666666667,
+      "gt_fg_gradient_mean": 0.03387313817317287,
+      "render_fg_gradient_mean": 0.008317548607010394,
+      "fg_gradient_retention": 0.25209387205541134,
+      "gt_edge_gradient_mean": 0.06869996059685946,
+      "render_edge_gradient_mean": 0.007908834755653515,
+      "edge_gradient_retention": 0.11471783416345716,
+      "fg_gradient_mae": 0.029048470004151266,
+      "foreground_alpha_mean": 0.9685727109511694,
+      "background_alpha_mean": 0.954890047510465,
+      "background_alpha_gt01_fraction": 0.9710587989265546,
+      "background_alpha_gt05_fraction": 0.9554957205896139,
+      "background_alpha_gt09_fraction": 0.9382314104611225,
+      "alpha_mask05_iou": 0.32041705331535353,
+      "alpha_mask05_precision": 0.32316335655956874,
+      "alpha_mask05_recall": 0.9724964070737111,
+      "background_rgb_mean_abs_error": 0.007326830028129431
+    },
+    {
+      "experiment": "E6",
+      "views": 12,
+      "full_psnr": 13.181992126432052,
+      "fg_mask_psnr": 8.204720881803455,
+      "boundary_band5_psnr": 10.259043163262918,
+      "inner_fg_edge5_psnr": 7.969107438723589,
+      "legacy_fg_bbox_psnr": 10.56053392859234,
+      "ssim": 0.7020996113618215,
+      "fg_mask_ssim_map": 0.1528416030535785,
+      "boundary_ssim_map": 0.1094724250336488,
+      "lpips_alex": 0.38350071509679157,
+      "foreground_pixels": 661850.1666666666,
+      "boundary_pixels": 43359.75,
+      "bbox_pixels": 1144268.1666666667,
+      "gt_fg_gradient_mean": 0.03387313817317287,
+      "render_fg_gradient_mean": 0.0029130286707020523,
+      "fg_gradient_retention": 0.08821647508428516,
+      "gt_edge_gradient_mean": 0.06869996059685946,
+      "render_edge_gradient_mean": 0.004155480198524704,
+      "edge_gradient_retention": 0.06018499856058194,
+      "fg_gradient_mae": 0.032547124195843935,
+      "foreground_alpha_mean": 0.9988433370987574,
+      "background_alpha_mean": 0.9934758047262827,
+      "background_alpha_gt01_fraction": 0.9989899524936287,
+      "background_alpha_gt05_fraction": 0.9953668870786988,
+      "background_alpha_gt09_fraction": 0.9867794313070389,
+      "alpha_mask05_iou": 0.3201678257500704,
+      "alpha_mask05_precision": 0.3201915470102547,
+      "alpha_mask05_recall": 0.9998296014377531,
+      "background_rgb_mean_abs_error": 0.005850107571556388
+    }
+  ],
+  "input_parity": [
+    {
+      "source_id": 0,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "f8c876d37b456931e67505edc77fb11ab99080d37130521cb7e94a53996e5e4d"
+    },
+    {
+      "source_id": 19,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "d57ba6d8adbfefd5e8bb1d874acaef9341cec0b4fe9f8c75b288a27b6e2ae0a7"
+    },
+    {
+      "source_id": 38,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "09c7e5a2bb3fae334770e502be24fa33d6fc995f9fee03cc09a59170e216ec3d"
+    },
+    {
+      "source_id": 57,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "698689abed513904effe367e6767c3d47d52c6b890d48cb7c6b74440c763c33a"
+    },
+    {
+      "source_id": 76,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "6366add695cb47cf73da8ab1880d87a9c9c6ef879414166f7600145afc0e0ea7"
+    },
+    {
+      "source_id": 95,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "593157fe7a6629f74c9eb7c361899f75f47b769e421acc1cc4ef6690bf71c5ac"
+    },
+    {
+      "source_id": 114,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "51faf802d6156b87679fdfc61242b7f4b4caffb3529cf461a13b922e80aaa0fe"
+    },
+    {
+      "source_id": 133,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "4ce739920f1b4efc5baf89e654a68e189c967e5b0a9ca81a976a5da841bda626"
+    },
+    {
+      "source_id": 152,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "a68b4b9ac1a41d7806913fb5cfc34f57dacd2fc6c489bc3133277765e9e685cf"
+    },
+    {
+      "source_id": 170,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "60e9be0ac56f667b0c3deee4b78156634905f3d136bb347dbf20b83b3fccd9a3"
+    },
+    {
+      "source_id": 189,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "fbdab6068558b5f873ddaa4e82f26b9657be0f3366eeb37b7c0dde6117fba677"
+    },
+    {
+      "source_id": 209,
+      "gt_identical": true,
+      "mask_identical": true,
+      "shape": [
+        1920,
+        1080,
+        3
+      ],
+      "gt_sha256": "3b26313db29503602741c10188dbd691f6dc11ab7342a8c5c7bac5511b07be5b"
+    }
+  ],
+  "leafedge_crop_records": [
+    {
+      "source_id": 0,
+      "x0": 204,
+      "y0": 536,
+      "x1": 524,
+      "y1": 856,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 19,
+      "x0": 760,
+      "y0": 691,
+      "x1": 1080,
+      "y1": 1011,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 38,
+      "x0": 0,
+      "y0": 840,
+      "x1": 320,
+      "y1": 1160,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 57,
+      "x0": 0,
+      "y0": 514,
+      "x1": 320,
+      "y1": 834,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 76,
+      "x0": 0,
+      "y0": 421,
+      "x1": 320,
+      "y1": 741,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 95,
+      "x0": 0,
+      "y0": 234,
+      "x1": 320,
+      "y1": 554,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 114,
+      "x0": 643,
+      "y0": 511,
+      "x1": 963,
+      "y1": 831,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 133,
+      "x0": 0,
+      "y0": 182,
+      "x1": 320,
+      "y1": 502,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 152,
+      "x0": 0,
+      "y0": 692,
+      "x1": 320,
+      "y1": 1012,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 170,
+      "x0": 0,
+      "y0": 349,
+      "x1": 320,
+      "y1": 669,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 189,
+      "x0": 0,
+      "y0": 984,
+      "x1": 320,
+      "y1": 1304,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    },
+    {
+      "source_id": 209,
+      "x0": 90,
+      "y0": 377,
+      "x1": 410,
+      "y1": 697,
+      "selection": "GT foreground inner 5px boundary in upper60% of foreground bbox; strongest15px-mean GT Sobel",
+      "interpretation": "leaf-edge candidate crop, no leaf instance annotation"
+    }
+  ],
+  "historical_comparison_scope": "Previous saved per-view float metrics on the same12 source IDs, separate from old all208 aggregate; previous fixed-view PNGs are not this new evidence.",
+  "historical_same12_max_abs_difference": {
+    "E1": {
+      "full_psnr": 3.552713678800501e-15,
+      "ssim": 0.0,
+      "lpips_alex": 0.0,
+      "legacy_fg_bbox_psnr": 0.0
+    },
+    "E5": {
+      "full_psnr": 0.0,
+      "ssim": 0.0,
+      "lpips_alex": 0.0,
+      "legacy_fg_bbox_psnr": 1.7763568394002505e-15
+    },
+    "E6": {
+      "full_psnr": 3.552713678800501e-15,
+      "ssim": 0.0,
+      "lpips_alex": 0.0001437664031982422,
+      "legacy_fg_bbox_psnr": 3.552713678800501e-15
+    }
+  },
+  "physical_gpu": 1,
+  "peak_allocated_gib": 0.5173797607421875,
+  "peak_reserved_gib": 0.552734375,
+  "wall_seconds_including_cpu_metrics_visualizations": 178.01996742701158,
+  "shared_depth_numeric_range": [
+    0.21343383073806763,
+    1.4365907335281385
+  ],
+  "wall_time_scope": "Recorded178.020s through metrics, primary RGB/error/alpha/normal montages and old-metric comparison; final shared-depth image export not included in that timer",
+  "visualization_complete": true,
+  "actual_render_shapes": {
+    "E1": [
+      1920,
+      1080,
+      3
+    ],
+    "E5": [
+      1920,
+      1080,
+      3
+    ],
+    "E6": [
+      1920,
+      1080,
+      3
+    ]
+  },
+  "native_alpha_scope": "GGGS render()[mask]=rendered_alpha;2DGS render()[rend_alpha]=allmap[1:2], actual raster opacity accumulation"
+}

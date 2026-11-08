@@ -1,0 +1,26 @@
+{
+  "source_PLY": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/Standard_VGGT_Dataset/sparse/0/points3D.ply",
+  "points_in_full_PLY": 1252383,
+  "actual_read_points": 512,
+  "source_color_code": "run_standard_vggt_frontend.py:215-235,296; F.interpolate RGB then red/green/blue fields",
+  "results": [
+    {
+      "source_id": 0,
+      "points_checked": 256,
+      "RGB_MAE_255": 0.0,
+      "RGB_max_abs_255": 0,
+      "RGB_equal_fraction": 1.0,
+      "BGR_alternative_MAE_255": 16.520833333333332
+    },
+    {
+      "source_id": 209,
+      "points_checked": 256,
+      "RGB_MAE_255": 0.0,
+      "RGB_max_abs_255": 0,
+      "RGB_equal_fraction": 1.0,
+      "BGR_alternative_MAE_255": 13.408854166666666
+    }
+  ],
+  "channel_swap_detected": false,
+  "limitations": "Two source frames, 256 actual initialized points each; same preprocessing/current float input reused from count control. Not exhaustive color validation or past-environment equivalence."
+}

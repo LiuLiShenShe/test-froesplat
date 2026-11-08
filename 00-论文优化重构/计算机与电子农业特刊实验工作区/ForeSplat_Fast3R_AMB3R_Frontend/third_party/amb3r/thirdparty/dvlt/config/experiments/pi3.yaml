@@ -1,0 +1,17 @@
+defaults:
+  - model: pi3
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Eval-only baseline. Wrapper at `dvlt/model/pi3/model.py` raises in
+# `train_step`; only `python -m dvlt.scripts.test --config-name pi3.yaml`
+# is supported.
+#
+# Pi3 HF card: https://huggingface.co/yyfz233/Pi3
+# For the engineering update Pi3X, use `pi3x.yaml` instead.
+
+trainer:
+  experiment_name: pi3
+  ckpt_dir: yyfz233/Pi3

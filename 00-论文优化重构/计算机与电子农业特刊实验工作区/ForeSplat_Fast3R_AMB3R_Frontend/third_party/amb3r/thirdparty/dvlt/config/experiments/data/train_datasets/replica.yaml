@@ -1,0 +1,12 @@
+replica:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "pose"
+  view_sampling: "random"
+  window_size_ratio: 4.0
+  max_depth_thresh: 100.0
+  dataverse_cfg:
+    target: "processed.light3r_preproc.OmniData"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/replica"
+      split: "train"

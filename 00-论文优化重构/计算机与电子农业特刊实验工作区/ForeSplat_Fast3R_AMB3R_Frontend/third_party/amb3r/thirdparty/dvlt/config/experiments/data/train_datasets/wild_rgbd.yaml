@@ -1,0 +1,8 @@
+wild_rgbd:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  depth_filter_background: true
+  depth_filter_percentile: 95
+  dataverse_cfg:
+    target: "optimized_hdf5.OptimizedHDF5Dataset"
+    params:
+      data_root: "${user.data_root}/train/wild_rgbd"

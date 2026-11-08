@@ -1,0 +1,11 @@
+parallel_domain_4d:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random"
+  window_size_ratio: 2.0
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "parallel_domain_4d.ParallelDomain4D"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/parallel_domain_4d"

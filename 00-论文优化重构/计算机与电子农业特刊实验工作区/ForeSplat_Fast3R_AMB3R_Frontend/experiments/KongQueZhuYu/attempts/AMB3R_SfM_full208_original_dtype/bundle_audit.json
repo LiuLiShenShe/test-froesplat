@@ -1,0 +1,34 @@
+{
+  "schema": "foresplat.bundle.audit.v2",
+  "path": "experiments/KongQueZhuYu/AMB3R_SfM",
+  "method": "AMB3R_SfM",
+  "frames": 208,
+  "finite_camera_count": 208,
+  "local_map_count": 0,
+  "pixel_transform_inverse_max_error": 0.0,
+  "required_artifact_counts": {
+    "raw_predictions": 208,
+    "pointmaps": 208,
+    "confidence": 208,
+    "rgb": 208,
+    "mask": 208,
+    "camera_auxiliary_json": 0,
+    "cameras": 208,
+    "ply_files_checked": 422,
+    "official_local_prediction_calls": 1051
+  },
+  "expected_export_filter_point_counts": {
+    "raw": 31353504,
+    "confidence": 31353504,
+    "mask": 9723466,
+    "mask_confidence": 9723466,
+    "mask_confidence_q85": 4504518
+  },
+  "issues": [],
+  "warnings": [],
+  "exemptions": [],
+  "passed": true,
+  "array_comparison": "NPY headers and stored ZIP member CRC/size fingerprints; full array payload checksums are not recomputed",
+  "raw_value_evidence": "Separate evaluate.py and confidence_control_audit.json read actual raw values; this audit does not repeat that geometric/confidence value pass",
+  "scope": "Actual artifact existence/count, strict JSON, NPY header/stored-CRC agreement, masks/order, pixel matrices, camera inverses, PLY payload length and export-metric counts; not geometric/metric accuracy."
+}

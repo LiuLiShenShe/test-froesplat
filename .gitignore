@@ -41,6 +41,7 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+.venv-*/
 *.egg-info/
 build/
 dist/
@@ -73,9 +74,25 @@ fuse.ply.vis
 *.jpeg
 *.png
 *.jpg
+*.JPG
+*.JPEG
+*.PNG
 
 # ---------- 例外：00-论文优化重构 下的图片需纳入版本控制 ----------
 # 用户要求上传该目录图片；单文件最大 25.5MB，未超 GitHub 100MB 限制
-!00-论文优化重构/**/*.png
-!00-论文优化重构/**/*.jpg
-!00-论文优化重构/**/*.jpeg
+
+# HF 模型缓存权重（超大数据，禁止入库）
+hf_cache/
+
+# 超 GitHub 100MiB 上限的单个大文件
+**/E2_Omega_RawDepth_NoFusion/dataset/sparse/0/points3D.txt
+
+
+# ---------- COLMAP 输出产物（可再生成，不入库） ----------
+**/points3D.txt
+**/points3D.bin
+**/sparse/
+**/colmap_text/
+**/database.db
+**/distorted/
+**/*.colmap/

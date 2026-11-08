@@ -1,0 +1,818 @@
+                                             Fast3R: Towards 3D Reconstruction of 1000+ Images in One Forward Pass
+
+                                                  Jianing Yang♣♦ Alexander Sax♣ Kevin J. Liang♣ Mikael Henaff♣ Hao Tang♣
+                                                             Ang Cao♣♦ Joyce Chai♦ Franziska Meier♣ Matt Feiszli♣
+
+                                                                               ♣
+                                                                                Meta FAIR ♦ University of Michigan
+                                                                               https://fast3r-3d.github.io
+arXiv:2501.13928v2 [cs.CV] 19 Mar 2025
+
+
+
+
+                                                                                                                                                                251.1
+
+
+
+
+                                                                                       Fast3R                      3D Reconstruction
+                                                                                                                                                        65.49
+
+
+
+                                                                                                                                                 0.78
+
+                                                                                                                                                DUSt3R Spann3R Fast3R
+                                                                                                                                                3D Reconstruction FPS
+                                            1000+ Unordered, Unposed Images           1 Forward Pass
+
+                                                                                                                     Camera Poses
+
+                                                  Figure 1. Fast3R is a method towards 3D reconstructing 1000+ unordered, unposed images in a single forward pass.
+
+
+                                                                 Abstract                                    1. Introduction
+                                                                                                             3D reconstruction from multiple views has long been a
+                                         Multi-view 3D reconstruction remains a core challenge in            foundational task across applications in autonomous navi-
+                                         computer vision, particularly in applications requiring ac-         gation, augmented reality, and robotics [31, 53]. Establish-
+                                         curate and scalable representations across diverse perspec-         ing correspondences across images, known as multi-view
+                                         tives. Current leading methods such as DUSt3R employ                matching, is central to these applications and enables an
+                                         a fundamentally pairwise approach, processing images in             accurate scene representation. Traditional reconstruction
+                                         pairs and necessitating costly global alignment procedures          pipelines, such as those based on Structure-from-Motion
+                                         to reconstruct from multiple views. In this work, we pro-           (SfM) [44] and Multi-View Stereo (MVS) [17], funda-
+                                         pose Fast 3D Reconstruction (Fast3R), a novel multi-view            mentally rely on image pairs to reconstruct 3D geometry.
+                                         generalization to DUSt3R that achieves efficient and scal-          While effective in some settings, these methods require
+                                         able 3D reconstruction by processing many views in paral-           extensive engineering to manage the sequential stages of
+                                         lel. Fast3R’s Transformer-based architecture forwards N             feature extraction, correspondence matching, triangulation,
+                                         images in a single forward pass, bypassing the need for it-         and global alignment, limiting scalability and speed.
+                                         erative alignment. Through extensive experiments on cam-               This traditional “pipeline” paradigm has recently been
+                                         era pose estimation and 3D reconstruction, Fast3R demon-            challenged by DUSt3R [61], which directly predicts 3D
+                                         strates state-of-the-art performance, with significant im-          structure from RGB images. It achieves this with a design
+                                         provements in inference speed and reduced error accumula-           that “cast[s] the pairwise reconstruction problem as a re-
+                                         tion. These results establish Fast3R as a robust alternative        gression of pointmaps, relaxing the hard constraints of usual
+                                         for multi-view applications, offering enhanced scalability          projective camera models” [61], yielding impressive robust-
+                                         without compromising reconstruction accuracy.                       ness across challenging viewpoints. This represents a rad-
+                                                                                                             ical shift in 3D reconstruction, as an end-to-end learnable
+solution is less prone to pipeline error accumulation, while      2. Related Work
+also being dramatically simpler.
+                                                                  Multi-view 3D reconstruction: Almost all modern 3D re-
+    On the other hand, a fundamental limitation of DUSt3R         construction approaches are based on the traditional multi-
+is its restriction to two image inputs. While image pairs         view geometry (MVG) pipeline [20]. MVG-based methods
+are an important use case, often one is interested in re-         first identify corresponding pixels between image pairs, and
+constructing from more than two views, as when scanning           then use camera models and projective multiview geometry
+of objects [39] or scenes [4, 6, 19, 55, 68], e.g. for asset      to lift these correspondences to 3D points. The process hap-
+generation or mapping. To process more than two images,           pens in sequential stages: feature extraction, finding pair-
+DUSt3R computes O(N 2 ) pairs of pointmaps and performs           wise image correspondences, triangulation to 3D and pair-
+a global alignment optimization procedure. This process           wise relative camera pose, and global bundle alignment.
+can be computationally expensive, scaling poorly as the col-      However, any pipeline approach is prone to accumulating
+lection of images grows. For instance, it will lead to OOM        errors, which are especially common in hand-crafted com-
+with only 48 views on an A100 GPU.                                ponents. Moreover, the sequential nature prevents paral-
+                                                                  lelization, which limits speed and scalability.
+   Moreover, such a process is still fundamentally pairwise,          MVG approaches have existed since the early days of
+which limits the model’s context, both affecting learning         computer vision, and are still in use for a reason: they can be
+during training and ultimate accuracy during inference. In        highly accurate when they do not catastrophically fail. The
+this sense, DUSt3R suffers from the same pair-wise bottle-        latest multi-view geometry pipelines like COLMAP [44] or
+neck as traditional SfM and MVS methods.                          OrbSLAM2 [30] incorporate nearly 60 years of compound-
+   We propose Fast3R, a novel multi-view reconstruc-              ing engineering improvements, but these approaches still
+tion framework designed to overcome these limitations.            catastrophically fail >40% of the time on static scenes like
+Building on DUSt3R’s foundations, Fast3R leverages a              ETH-3D [52]), which can actually be considered an easy
+Transformer-based architecture [56] that processes multiple       case due to dense image coverage of the scene.
+images in parallel, allowing N images to be reconstructed             Much recent work has successfully addressed the robust-
+in a single forward pass. By eliminating the need for se-         ness and speed by replacing increasingly large components
+quential or pairwise processing, each frame can simultane-        of MVG pipelines with end-to-end learned versions that are
+ously attend to all other frames in the input set during recon-   faster and reduce the rate of catastrophic failures [48, 58,
+struction, significantly reducing error accumulation. Per-        73]. For example, [13, 18, 24, 42, 51, 69] improve feature
+haps surprisingly, Fast3R also takes significantly less time.     extraction and correspondences, [27, 50, 59, 72] learn to es-
+                                                                  timate camera pose, and [52] introduce a bundle adjustment
+Our contributions are threefold.                                  layer. [61] contains an excellent and comprehensive sur-
+1. We introduce Fast3R, a Transformer-based model for             vey of such efforts. Overall, the trend is towards replacing
+   multi-view pointmap estimation that obviates the need          increasingly large components with end-to-end solutions.
+   for global postprocessing; resulting in significant im-        Pointmap representation: DUSt3R [61] takes this evolu-
+   provements in speed, computation overhead and scala-           tion the furthest by proposing pointmap regression to re-
+   bility.                                                        place everything in the MVG pipeline up to global pairwise
+2. We show empirically that the model performance im-             alignment. Rather than first attempting to solve for cam-
+   proves by scaling along the view axis. For camera              era parameters in order to triangulate corresponding pixels,
+   pose localization and reconstruction tasks, the model          DUSt3R trains a model to directly predict 3D pointmaps
+   improves when trained on progressively larger sets of          for pairs of images in a shared coordinate frame. Other
+   views. Per-view accuracy further improves when more            MVG component tasks such as relative camera pose esti-
+   views are used during inference, and the model can             mation and depth estimation can be recovered from the re-
+   generalize to significantly more views than seen during        sulting pointmap representation. However, DUSt3R’s pair-
+   training.                                                      wise assumption is a limitation, as it requires inference
+3. We demonstrate state-of-the-art performance in camera          on O(N 2 ) image pairs and then a global alignment opti-
+   pose estimation with significant inference time improve-       mization, which is per-scene and does not improve with
+   ments. On CO3Dv2 [39], Fast3R gets 99.7% accuracy              more data. Moreover, this process quickly becomes slow
+   within 15-degrees for pose estimation, over a 14x error        or crashes due to exceeded system memory, even for rela-
+   reduction compared to DUSt3R with global alignment.            tively modest numbers of images.
+                                                                      DUSt3R has inspired several follow-ups. MASt3R [24]
+   Fast3R offers a scalable and accurate alternative for          adds a local feature head to each decoder’s output, while
+real-world applications, setting a new standard for efficient     MonST3R [70] does a data-driven exploration of dynamic
+multi-view 3D reconstruction.                                     scenes, but both are still fundamentally pairwise meth-
+                                                                                 Global
+                  ViT                                                            Head
+                Encoder        …                                   …
+                                         Fixed                                      Local
+                                       Idx. Emb.
+                                                                                    Head
+                     Shared
+                     Weights
+                                                                                 Global
+                  ViT                                                            Head
+                Encoder
+
+
+
+
+                                                     Transformer
+                               …        Random
+                                                                   …                Local
+                                                                                    Head
+
+
+
+
+                                                        Fusion
+                                       Idx. Emb.
+                                                                       Shared
+
+    … Many Views … Shared  …                                       …   Weights
+                   Weights
+                                                                                    …                          …                      RGB Point Map
+                                                                                 Global
+                  ViT                                                            Head
+                Encoder        …                                   …
+                                        Random                                      Local
+                                       Idx. Emb.
+                                                                                    Head
+                     Shared
+                     Weights
+                                                                                 Global
+                                                                                 Head
+                  ViT
+                Encoder        …        Random                     …                 Local                                 Per-View Point Map    Confidence Point Map
+                                       Idx. Emb.                                     Head
+
+                      Per-View Tokenization        Global Fusion       Decode XYZ and Confidence
+
+
+Figure 2. Model architecture of Fast3R. Built upon a novel Transformer-based architecture which supports bidirectional information
+flow, Fast3R is able to process dense input views simultaneously.
+
+
+ods. MASt3R in particular does not make any changes                                          Fast3R predicts two pointmaps: local pointmap XL and
+to the global alignment methodology. Concurrently with                                    global pointmap XG , and corresponding confidence maps
+our work, Spann3R [57] treats images as an ordered se-                                    ΣL and ΣG (of shape Σ ∈ RN ×H×W ). Overall, Fast3R
+quence (e.g. from a video) and incrementally reconstructs a                               maps N RGB images to N local and global pointmaps:
+scene using a pairwise sliding window network, along with
+a learned spatial memory system. This extends DUSt3R to                                                  Fast3R : I → (XL , ΣL , XG , ΣG )
+handle more images, but Spann3R’s incremental pairwise                                    The global pointmap XG is in the coordinate frame of the
+processing cannot fix reconstructions from earlier frames,                                first camera and the XL is in the coordinate frame of the
+which can cause errors to accumulate. Crucially, Fast3R’s                                 viewing camera, as shown in Figure 2
+transformer architecture uses all-to-all attention, allowing
+the model to reason simultaneously and jointly over all                                   3.2. Training Objective
+frames without any assumption of image order. Fast3R re-                                  This section describes the loss, using the notation in Sec-
+moves sequential dependencies, enabling parallelized infer-                               tion 3.1 above. Fast3R’s predictions of (X̂L , ΣˆL , X̂G , ΣˆG )
+ence across many devices in a single forward pass.                                        are trained using generalized versions of the pointmap loss
+                                                                                          in DUST3R [61].
+3. Model                                                                                     Our total loss is the combination of pointmap losses for
+Fast3R is a transformer-based model that predicts a 3D                                    the local and global pointmaps:
+pointmap from a set of unordered and unposed images. The                                                            Ltotal = LXG + LXL                            (1)
+model architecture is designed to be scalable to over 1000
+images during inference, though during training we use im-                                which are confidence-weighted versions of the normalized
+age masking to train it with far fewer. In this section, we                               3D pointwise regression loss.
+detail our implementation of Fast3R, and discuss the design                               Normalized 3D pointwise regression loss: The normal-
+choices that enable its scalability.                                                      ized regression loss for X is a multi-view version of that in
+                                                                                          DUSt3R [66] or monocular depth estimation [14, 36, 66]. It
+3.1. Problem definition                                                                   is the L2 loss between the normalized predicted pointmaps
+Taking a set of (N ) unordered and unposed RGB images                                     and normalized target pointmaps, rescaled by the mean Eu-
+I ∈ RN ×H×W ×3 as inputs1 , Fast3R reconstructs the 3D                                    clidean distance to the origin:
+structures of the scene by predicting the corresponding
+                                                                                                                   1      1                      1 X
+pointmap X, where X ∈ RN ×H×W ×3 . A pointmap is a set                                       ℓregr (X̂, X) =          X̂ − X ,         z=            ∥x∥2 (2)
+of 3D locations indexed by pixels in an image I, enabling                                                          ẑ     z 2                   |X|
+                                                                                                                                                   x∈X
+the derivation of camera poses, depths, and 3D structures.
+                                                                                          Note that the predictions and targets are independently nor-
+  1 We assume all images are resized to the same H × W for simplicity.                    malized by the mean euclidean distance to the origin.
+Figure 3. Qualitative examples of Fast3R’s output. The text on the yellow sign says “Caution, cleaning in progress” and is legible if
+zoomed in.
+Pointmap loss: As in [61], we use a confidence-adjusted                 Before passing image patch features H to the fu-
+version of the loss above, using the confidence score Σ̂ pre-        sion transformer, we add position embeddings with one-
+dicted by the model. The total loss for a pointmap is                dimensional image index positional embeddings.
+                                                                        Index embeddings help the fusion transformer determine
+                    1 X
+ LX (Σ̂, X̂, X) =           Σ̂+ · ℓregr (X̂, X) + α log(Σ̂+ )        which patches come from the same image and are the mech-
+                   |X|                                               anism for identifying I1 , which importantly defines the
+                                                           (3)
+                                                                     global coordinate frame. This is critical for allowing the
+Since the log term requires the confidence scores to be pos-
+                                                                     model to implicitly reason about camera pose jointly for all
+itive, we enforce Σ̂+ = 1 + exp(Σ̂). Our intuition is that
+                                                                     images from an otherwise permutationally invariant set of
+the confidence weighting helps the model deal with label
+                                                                     tokens.
+noise. Like DUSt3R, we train on real-world scans typically
+containing systematic errors in the underlying pointmap la-          Fusion Transformer: Most of the computation in Fast3R
+bels. For example, glass or thin structures are often not re-        happens in the fusion transformer. We use a 24-layer trans-
+constructed properly in the ground-truth laser scans [4, 68],        former similar to ViT-L [11]. This fusion transformer takes
+and errors in camera registration will cause misalignments           the concatenated encoded image patches from all views and
+between the images and pointmap labels [66].                         performs all-to-all self-attention. This operation provides
+                                                                     Fast3R with full context from all views, beyond the infor-
+3.3. Model architecture                                              mation provided in pairs alone.
+The Fast3R meta-architecture is inspired by DUSt3R, and              Pointmap Decoding Heads: Finally, Fast3R uses two sep-
+has three components: image encoding, fusion transformer,            arate DPT [37] decoding heads to map these tokens to lo-
+and pointmap decoding, as shown in Figure 2. We em-                  cal and global pointmaps (XL , XG ), and confidence maps
+phasize that Fast3R makes no assumptions on the ordering             (ΣL , ΣG ).
+of images in I, and all output pointmaps and confidence              Image index positional embedding generalization: We
+maps (XL , ΣL , XG , ΣG ) are predicted simultaneously, not          would like Fast3R to be able to handle many views at infer-
+sequentially.                                                        ence, more than were used to train a model. A naı̈ve way to
+Image Encoder: Fast3R encodes each image Ii ∈ I to a                 embed views during testing would be to embed them in the
+set of patch features Hi , using a feature extractor F. This is      same way as training: i.e. use the same Spherical Harmonic
+done independently per image, yielding a sequence of im-             frequencies [49] to embed raw indices SH({1, ..., N }) dur-
+                                  HW/P 2                             ing training, and SH({1, ..., Ntest }) during inference. In
+age patch features Hi = {hi,j }j=1        for each image:
+                                                                     LLMs this causes poor performance, and in preliminary ex-
+                  Hi = F(Ii ), i ∈ 1, ..., N                (4)      periments, we also found that the resulting model did not
+                                                                     work well when the number of input images exceeded that
+We follow DUSt3R’s design and use CroCo ViT [63] as our              used during training (Sec. 5.3). We therefore adopt Posi-
+encoder, though we found DINOv2 [33] works similarly.                tion Interpolation [5], a solution from LLMs, where during
+training we randomly draw N indexes from a larger pool                  3D reconstruction, we include comparisons to task-specific
+N ′ of possible samples. [5] draws samples using a regular              methods.
+grid since the LLM inputs form a regular ordered sequence.              Architecture Details In our experiments, we use the fol-
+Our images are unordered, so we draw N ⊂ {1, ..., N ′ }                 lowing components for the meta-architecture:
+uniformly at random. To the transformer, the strategy looks             1. The Image Encoder uses a ViT-Large [63] architecture,
+indistinguishable from masking out images, and N ′ ≫ N                      initialized with DUSt3R pretrained weights [61]. The
+controls the masking ratio.2 This strategy enables Fast3R                   ViT-L uses 16x16 patch size, and has 24 layers, 16 heads,
+to handle N = 1000 images during inference, even if only                    embedding dimension size 1024, and MLP ratio 4.0.
+trained with N = 20 images.                                             2. The Fusion Transformer is a ViT-Large model initialized
+                                                                            from scratch. We use a pool size of N ′ = 1000 for image
+3.4. Memory-Efficient Implementation                                        index embeddings.
+With a standard transformer architecture and a single-pass              3. The Pointmap Decoding Heads include two heads:
+inference procedure, Fast3R is able to leverage many of the                 global and local, both of which are DPT heads follow-
+recent advances designed to improve scalability at train and                ing [37]. We initialize the global head with DUSt3R
+inference time [2, 12, 22, 54].                                             pretrained weights, and initialize the local head from
+    For example, model size and throughput can be in-                       scratch.
+creased by sharding the model and/or data minibatch across              Training Details Our models are trained on images with
+multiple machines, such as through model parallelism [21,               512 resolution (512 on the longest side) using AdamW [29]
+45], data parallelism [25], and tensor parallelism [32, 46].            for 174K steps, with a learning rate of 0.0001 and cosine
+During training, optimizer weights, states, and gradients               annealing schedule. Unlike DUSt3R, we do not use staged
+can also be sharded [35]. Systems-level advances have                   training. We implement multi-view dataloaders that can
+also been proposed, such as FlashAttention [7, 8], which                load N images in each sample. We train with batch size
+uses highly optimized GPU kernels leveraging the hard-                  128, with each sample consisting of a tuple of N = 20
+ware topology to compute attention in a time and memory-                views. This process takes 6.13 days on 128 Nvidia A100-
+efficient way. These are implemented in libraries such as               80GB GPUs. We additionally make use of several strategies
+FAIRScale [15], DeepSpeed [35] and HuggingFace [64],                    to enable efficient training. First, we use the FlashAtten-
+and require significant engineering effort.                             tion [7, 8] to improve time and memory efficiency. Even
+    The Fast3R meta-architecture is explicitly designed to              so, a naı̈ve implementation runs out of memory even with
+take advantage of these efforts. We leverage two different              batch size 1 when N > 16, so we use DeepSpeed ZeRO
+forms of parallelism at training and inference time, as well            stage 2 training [35], whereby optimizer states, moment es-
+as FlashAttention, described in more detail in Sec. 4. More             timates, and gradients are partitioned across different ma-
+broadly, we believe that our approach will continue to ben-             chines. This enables us to train with up to N = 28 views
+efit in the longer term as transformer-based scaling infras-            per data sample at max, with a batch size of one per GPU.
+tructure continues to mature.
+                                                                        4.1. Inference Efficiency
+4. Experiments                                                          At inference time, we aim to handle 1000+ views compared
+                                                                        to 20 during training, which requires additional optimiza-
+Training Data We train on a mix of real-world object-
+                                                                        tions. We observe the memory bottleneck at inference is
+centric and scene scan data: CO3D [39], ScanNet++ [68],
+                                                                        in the DPT heads producing the pointmaps: with 320 views
+ARKitScenes [4], Habitat [43], BlendedMVS [67], and
+                                                                        on a single A100 GPU, over 60% of VRAM is consumed by
+MegaDepth [26]. This is a subset of the datasets in DUSt3R,
+                                                                        activations from the DPT heads, largely due to each needing
+specifically 6 of the 9 datasets.
+                                                                        to upsample 1024 tokens into a high-resolution 512 × 512
+Baselines DUSt3R [61] is the closest approach to ours,                  image. To address this, we implement a simple version of
+and competitive on visual odometry and reconstruction                   tensor parallelism, putting the model on GPU 0 and then
+benchmarks. That paper contains extensive comparisons                   copying the DPT heads to each of the K − 1 other GPUs.
+against other methods, and we adopt it as our main base-                When processing a batch of N ≈ 1000 images, we pass
+line. We additionally consider DUSt3R’s follow-up work,                 the entire batch through the ViT encoder and global fusion
+MASt3R [24], as well as a concurrent work Spann3R [57],                 decoder, and then split the outputs across K machines for
+which also seeks to replace DUSt3R’s expensive global                   parallel DPT head inference.
+alignment stage by sequentially processing frames with an
+                                                                            Table 2 shows the inference time and memory usage as
+external spatial memory. For camera pose estimation and
+                                                                        we increase the number of views. Fast3R is able to process
+   2 Patches H from the first image I are always embedded with p ,
+               1                        1                           1
+                                                                        up to 1500 views in a single pass, whereas DUSt3R runs out
+since that image provides the coordinate frame for the global head.     of memory past 32. Fast3R also has a significantly faster
+                                                                       CO3Dv2 [39]                          RealEstate10K [75]
+              Methods                                                                                                            FPS
+                                             RRA@15↑        RRA@5↑      RTA@15↑ RTA@5↑          mAA(30)↑        mAA(30)↑
+              Colmap+SG [9, 41]                   36.1        24.4          27.3      17.2        25.3             45.2          0.056
+              PixSfM [28]                         33.7        26.1          32.9      17.6        30.1             49.4             -
+              RelPose [71]                        57.1         -             -         -           -                -            0.02
+              PosReg [59]                         53.2         -            49.1       -          45.0              -            0.015
+              PoseDiff [59]                       80.5        59.5          79.8      61.7        66.5             48.0          0.015
+              RelPose++ [27]                     (85.5)        -             -         -           -                -            0.02
+              DUSt3R [60]                         96.2         -            86.8       -          76.7             67.7          0.78
+              MASt3R [23]                         94.6        93.2          91.9      86.2        81.8             76.4           0.23
+              Fast3R-no-outdoor (Ours)            99.7        97.4          87.1      76.1        82.5              -            251.1
+              Fast3R (Ours)                       96.2        90.2          81.6      68.2        75.0             72.7          251.1
+
+
+Table 1. Multi-view pose regression on the CO3D [39] and RealEstate10K [75] datasets. Parentheses denote methods that do not report
+results on the 10 views set; we report their best for comparison (8 views). Fast3R does not assume known camera intrinsics.
+
+                         Fast3R                            DUSt3R                                                 Acc↓                 Comp↓
+                                                                                             Method Views
+   # Views      Time (s)     Peak GPU            Time (s)      Peak GPU                                          Med.                    Med.
+                             Mem (GiB)                         Mem (GiB)
+                                                                                     DUSt3R [61] all/5            1.159                  0.914
+     2          0.065             3.84             0.092             3.52           DUSt3R† [61] all/5            1.297                  1.002
+     8          0.122             6.33             8.386            24.59            Spann3R [57] all/5           2.268                  1.295
+     32          0.509            13.25            129.0            67.61           Fast3R (Ours) all/5           1.706                  0.857
+     48           0.84             20.8            OOM              OOM
+    320         15.938            41.90            OOM              OOM            Table 4. Quantitative results on object-centric DTU [1] dataset.
+    800         89.569            55.97            OOM              OOM            Using a skip=5 on trajectories of 49 frames.
+    1000        137.62            63.01            OOM              OOM
+    1500        308.85            78.59            OOM              OOM
+                                                                                   global pointmaps. We begin by initializing a set of ran-
+Table 2. System performance metrics for different view counts                      dom focal length guesses based on the image resolution,
+on Fast3R and DUSt3R on a single A100. Time is measured in                         then use RANSAC-PnP to estimate the camera’s rotation
+seconds (s), and memory is measured in gibibytes (GiB). Each                       and translation based on the guessed focal lengths and the
+view is 512x384 in resolution. For DUSt3R, at 48 views the                         global pointmap. The count of outliers from RANSAC-PnP
+N 2 pairwise reconstructions eventually consume all VRAM at its                    is used to score each guessed focal length (lower is better),
+global alignment stage. Note that Fast3R’s reported fastest FPS of
+                                                                                   and the best-scoring focal length is selected to compute the
+251.1 uses 108 views in 224x224 resolution.
+                                                                                   intrinsic and extrinsic camera matrices.
+                            7 scenes [47]                  NRGBD [3]                   During RANSAC-PnP, we only use points with the top
+        Method FPS
+                           Acc↓       Comp↓           Acc↓       Comp↓
+                                                                                   15% confidence scores predicted by Fast3R, ensuring effi-
+                                                                                   cient PnP processing and reducing outliers. If all images
+  F-Recon [65] <0.1        7.62           2.31        20.59          6.31
+ DUSt3R† [61] 0.78         1.23           0.91        2.51           1.03
+                                                                                   are known to originate from the same physical camera, we
+  Spann3R [57] 65.4        1.48           0.85        3.15           1.10          use the focal length estimated from the first view as the fo-
+ Fast3R (Ours) 251.1       1.58           0.93        3.40           1.01          cal length for all cameras, as this initial estimate has been
+                                                                                   empirically found to be more reliable. Otherwise, we in-
+Table 3. Quantitative reconstruction results on scene datasets:
+The numbers indicate median distance to GT points on 7-
+                                                                                   dependently estimate the focal length for each input. It
+Scenes [47] and NRGBD [3] datasets. These datasets contain                         is worth noting that the camera pose estimation process is
+video trajectories of 500-1500 frames, and we evaluate using the                   parallelized using multi-threading, ensuring minimal wall-
+same frame skip as other baselines. For 7-Scenes this is skip=20,                  clock time. Even for hundreds of views, the process com-
+and NRGBD uses skip=40. DUSt3R† indicates using DUSt3R’s                           pletes in just a few seconds on standard CPUs.
+final weights on 224 × 224 images, to fit within GPU memory.                           We report Relative Rotation Accuracy (RRA) and Rela-
+Distances are scaled 100× to remove the leading 0.00.                              tive Translation Accuracy (RTA) at a threshold of 15◦ , mean
+                                                                                   Average Accuracy (mAA) at threshold 30◦ , and model
+inference time, with gains that increase with more views.                          frames per second (FPS) in Table 1. On CO3D, Fast3R
+                                                                                   surpasses all other methods across the RRA and mAA met-
+4.2. Camera Pose Estimation                                                        rics, achieving near-perfect RRA, while remaining compet-
+We evaluate camera pose estimation on unseen trajectories                          itive on RTA. Importantly, it is also orders of magnitude
+from 41 object categories from CO3D [39]. Following [61],                          faster: 320× faster than DUSt3R and 1000× faster than
+we sample 10 random views from each trajectory.                                    MASt3R. Fast3R-no-outdoor is the same Fast3R model but
+   Inspired by DUSt3R [61], we estimate the focal length,                          trained without the BlendedMVS and MegaDepth datasets.
+camera rotation, and camera translation from the predicted                         We find these datasets help the model generalize to more di-
+Figure 4. Pose accuracy with more views: Fast3R improves with
+the context from more views. Fast3R saturates the orientation por-
+tion of the benchmark, even using 3-5 views.
+                                                                     Figure 7. Increasing # views during training: reconstruction on
+                                                                     7scenes and NRGBD. Accuracy and Completion (lower is better)
+                                                                     get better as we train with more views. Normal Consistency (high
+                                                                     is better) also gets better as we train with more views.
+
+
+                                                                     5. Ablation Studies
+Figure 5. DTU reconstruction quality vs. test number of views.       5.1. Scaling the number of views
+Accuracy and Completion (lower is better) get better as we infer-    Fast3R is able to use all-to-all attention during training,
+ence with more views.                                                which lets it learn from the global context. We hypoth-
+                                                                     esize that the additional context provided by more views
+                                                                     during training allows the model to learn higher-order cor-
+                                                                     respondences between multiple frames, ultimately increas-
+                                                                     ing model performance and increasing potential for scaling.
+                                                                         Figures 6 and 7 show that training on increasingly
+                                                                     more views consistently improves RRA and RTA for vi-
+                                                                     sual odometry, and reconstruction accuracy—even when
+Figure 6. Increasing # views during training: camera pose es-        the number of views used during evaluation is held constant
+timation on CO3D. Estimates of both orientation (RRA@5) and          and the model is ultimately evaluated on fewer views than
+translation (RTA@5) improve with more views.
+                                                                     were seen during training. We further evaluate the model’s
+verse scenes (e.g., drone shots and large outdoor landmarks)         ability to reason about additional views by increasing the
+but slightly hurt pose estimation performance on CO3D.               number of images that Fast3R sees during inference. Fig-
+   Figure 4 and Figure 5 shows that Fast3R’s predictions             ure 4 and Figure 5 indicate that as the model uses more
+improve with more views, indicating that the model is able           views, the average per-view performance improves. This
+to use the additional context from multiple images.                  behavior holds for all evaluated metrics in both camera pose
+                                                                     estimation and reconstruction. As shown in Figure 5, the
+4.3. 3D Reconstruction                                               model has a better per-view accuracy using 50 images than
+                                                                     it does with 20, even though it was trained with 20. Many
+We evaluate Fast3R’s 3D reconstruction on scene-level
+                                                                     applications (e.g. reconstruction, odometry) require infer-
+benchmarks: 7-Scenes [47] and Neural RGB-D [3], and the
+                                                                     ence on many views, which is a major motivation for Fast3R
+object-level benchmark DTU [1].
+                                                                     removing the pairwise constraint.
+   We found that local pointmap head learns more accurate
+pointmaps than the global pointmap head (ablation in Sec.            5.2. Model scaling and data scaling
+5.4). Therefore we use the local pointmaps for detail and the        The Transformer architecture’s scalability is a key advan-
+global pointmaps for the high-level structure. Specifically,         tage of Fast3R. Although full experiments are in the Ap-
+we independently align each image’s local pointmap to the            pendix A and B, our results show that increasing model size
+global pointmap using ICP and use aligned local pointmaps            and data consistently boosts performance, promising better
+for evaluation.                                                      outcomes with more computational investment.
+   Fast3R is competitive with other pointmap reconstruc-             5.3. Training without position interpolation
+tion methods like DUSt3r and MASt3R, while being signif-             In Section 3.3, we introduced a randomized version of [5]
+icantly faster, as shown in Table 3 and Table 4. We believe          to enable inference on more views than seen training. With-
+that Fast3R will continue to improve with better reconstruc-         out this technique, model accuracy quickly degrades for
+tion data, more compute, and better training recipes. We             pointmap corresponding to image indexes outside the train-
+show supportive scaling experiments in Figure 5.1.                   ing range, as shown in Figure 8 (top). A version of
+                                                                              rectly in a single forward pass. By replacing the whole
+                                                                              SfM pipeline with a generic architecture trained end-to-
+                                                                              end, Fast3R and similar approaches should benefit from the
+               No rand. emb.
+                                                                              usual scaling rules for transformers: consistent improve-
+                                                                              ment with better data and increased parameters. Since
+                                                                              Fast3R uses global attention, it avoids two potentially ar-
+                                                                              tificial scaling limits due to bottlenecks in existing systems.
+                                                                              First, the bottleneck of image pair reconstruction restricts
+                                                                              the information available to the model. Second, pairwise
+                                                                              global optimization can only make up for this so much and
+                                                                              does not improve with more data.
+Figure 8. Effect of sampling image index PE during training.                      With our efficient implementation, Fast3R can operate
+If we train the model without sampling index embeddings, regres-              at > 250 FPS, and process 1500 images in one forward
+sion loss spikes (orange) when testing with more views than seen              pass, far exceeding other methods while achieving compet-
+at training (top). Our embedding strategy performs comparably                 itive results on 3D reconstruction and camera pose estima-
+even with 6× the number of views during training.
+                                                                              tion benchmarks. We demonstrate that Fast3R can be fine-
+                               7-Scenes [47]   NRGBD [3]           DTU        tuned to reconstruct videos by changing the data and with-
+      Pointmap Type                                                           out modifying the pointmap regression objective and archi-
+                               Acc↓ Comp↓ Acc↓ Comp↓ Acc↓ Comp↓
+                                                                              tecture. In contrast with pipeline approaches bottlenecked
+local aligned to global 2.84          1.37     4.39    1.28    3.91    1.41   by custom and slow operations, Fast3R inherits the benefits
+                 global 4.81          1.64     4.85    1.32     3.88   1.41
+                     ∆ +1.97          +0.27    +0.46   +0.04   -0.03   0.00   of future engineering improvements to efficiently serve and
+                                                                              train large transformer-based models. For example, pack-
+Table 5. Ablation on the effect of local head on 3D reconstruc-               ages like Deepspeed-Inference [38], FlashAttention [7, 8]
+tion. Red/green indicate an increase/decrease in error compared               provide fused kernels, model parallelism, and data paral-
+to using the local pointmap aligned to the global pointmap.                   lelism. These speed up inference and reduce memory re-
+                                                                              quirements, allowing more images per device, and the num-
+Fast3R trained on N = 4 views still produces high-quality                     ber of images scales with the number of devices.
+pointmaps for views in slot 5 to 24 (Figure 8 bottom).
+                                                                              Limitations: A current limiting factor for scaling may be
+5.4. Inference without local head                                             data accuracy and quantity. Synthetic data [34, 40] could be
+In Table 5, we perform an ablation experiment on the ef-                      a solution as, broadly speaking, models trained for geome-
+fect of using local vs. global pointmaps for 3D reconstruc-                   try estimation seem to generalize well from simulation data.
+tion (also see the visualization in Figure 14 in appendix).                   Fast3R can successfully use simulated data to train for 4D
+Specifically, we compare doing 3D reconstruction directly                     reconstruction, showing generalization results on DAVIS.
+with the predicted global pointmaps to reconstruction with                    Similarly, DepthAnythingV2 [66] showed the potential of
+the predicted local pointmaps aligned to the global coordi-                   this approach to scale for monocular depth estimation.
+nate system using ICP (Sec. 4.3). Qualitative and quan-                           The architecture of Fast3R allows for parallel processing
+titative results show that the local head produces more ac-                   of many views, and its positional embedding design enables
+curate pointmaps (fewer floaters, less smearing, less distor-                 “train short, test long” in terms of context length of views.
+tion) compared to the global head. We attribute this behav-                   However, we observed that for scenes with very large recon-
+ior to the local head being more invariant during training                    struction areas, when the number of views becomes extreme
+than the global head. That is, the local head is supervised                   (e.g., more than 300), the point map of some views (partic-
+such that the 3D XYZ locations of pixels in an image do                       ularly those with a low confidence score) begins to exhibit
+not change, no matter which view is selected as the anchor                    drifting behavior. One current way to address this issue is
+view I1 ; whereas for the global head, the XYZ locations                      to drop frames with low confidence scores. In dense recon-
+for pixels in a view is dependent on which view is selected                   struction, this approach typically does not hurt reconstruc-
+as the anchor view. Conceptually, the global head needs to                    tion quality too much. However, to fundamentally address
+learn both 2D-to-3D geometry and the rigid transformation                     this problem, we hypothesize that future work could explore
+of 3D points in the global coordinate system; whereas the                     the following avenues: (1) incorporating more data contain-
+local head only needs to learn 2D-to-3D geometry.                             ing large scenes to improve generalization to such cases; (2)
+                                                                              designing better positional embeddings inspired by state-of-
+6. Conclusion                                                                 the-art long-context language models [76], which can han-
+We introduce Fast3R, a transformer that predicts 3D loca-                     dle very long context lengths and exploit the temporal struc-
+tions for all pixels in a common frame of reference, di-                      ture of ordered image sequences (e.g., video).
+References                                                            [13] Mihai Dusmanu, Ignacio Rocco, Tomás Pajdla, Marc Polle-
+                                                                           feys, Josef Sivic, Akihiko Torii, and Torsten Sattler. D2-net:
+ [1] Henrik Aanæs, Rasmus Ramsbøl Jensen, George Vogiatzis,                A trainable cnn for joint description and detection of local
+     Engin Tola, and Anders Bjorholm Dahl. Large-scale data for            features. 2019 IEEE/CVF Conference on Computer Vision
+     multiple-view stereopsis. International Journal of Computer           and Pattern Recognition (CVPR), pages 8084–8093, 2019. 2
+     Vision, 120:153–168, 2016. 6, 7
+                                                                      [14] Ainaz Eftekhar, Alexander Sax, Jitendra Malik, and Amir
+ [2] Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ah-
+                                                                           Zamir. Omnidata: A scalable pipeline for making multi-
+     mad, Ilge Akkaya, Florencia Leoni Aleman, Diogo Almeida,
+                                                                           task mid-level vision datasets from 3d scans. In Proceedings
+     Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al.
+                                                                           of the IEEE/CVF International Conference on Computer Vi-
+     Gpt-4 technical report, 2024. 5
+                                                                           sion, pages 10786–10796, 2021. 3
+ [3] Dejan Azinović, Ricardo Martin-Brualla, Dan B Goldman,
+                                                                      [15] FairScale authors. Fairscale: A general purpose modular
+     Matthias Nießner, and Justus Thies. Neural rgb-d surface
+                                                                           pytorch library for high performance and large scale train-
+     reconstruction. In Proceedings of the IEEE/CVF Conference
+                                                                           ing. https://github.com/facebookresearch/
+     on Computer Vision and Pattern Recognition, pages 6290–
+                                                                           fairscale, 2021. 5
+     6301, 2022. 6, 7, 8
+                                                                      [16] Zhiwen Fan, Wenyan Cong, Kairun Wen, Kevin Wang, Jian
+ [4] Gilad Baruch, Zhuoyuan Chen, Afshin Dehghan, Tal Dimry,
+                                                                           Zhang, Xinghao Ding, Danfei Xu, Boris Ivanovic, Marco
+     Yuri Feigin, Peter Fu, Thomas Gebauer, Brandon Joffe,
+                                                                           Pavone, Georgios Pavlakos, Zhangyang Wang, and Yue
+     Daniel Kurz, Arik Schwartz, and Elad Shulman. Ark-
+                                                                           Wang. Instantsplat: Unbounded sparse-view pose-free gaus-
+     itscenes: A diverse real-world dataset for 3d indoor scene
+                                                                           sian splatting in 40 seconds, 2024. 12
+     understanding using mobile rgb-d data. arXiv preprint
+     arXiv:2111.08897, 2021. 2, 4, 5                                  [17] Silvano Galliani, Katrin Lasinger, and Konrad Schindler.
+ [5] Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuan-                Massively parallel multiview stereopsis by surface normal
+     dong Tian. Extending context window of large language                 diffusion. In Proceedings of the IEEE international confer-
+     models via positional interpolation. In Proceedings of the In-        ence on computer vision, pages 873–881, 2015. 1
+     ternational Conference on Learning Representations (ICLR),       [18] Pierre Gleize, Weiyao Wang, and Matt Feiszli. Silk: Sim-
+     2024. 4, 5, 7                                                         ple learned keypoints. In Proceedings of the IEEE/CVF In-
+ [6] Angela Dai, Angel X. Chang, Manolis Savva, Maciej Hal-                ternational Conference on Computer Vision (ICCV), pages
+     ber, Thomas Funkhouser, and Matthias Nießner. Scannet:                10932–10942, 2023. 2
+     Richly-annotated 3d reconstructions of indoor scenes. In         [19] Kristen Grauman, Andrew Westbury, Lorenzo Torresani,
+     Proc. Computer Vision and Pattern Recognition (CVPR),                 Kris Kitani, Jitendra Malik, Triantafyllos Afouras, Kumar
+     IEEE, 2017. 2                                                         Ashutosh, Vijay Baiyya, Siddhant Bansal, Bikram Boote,
+ [7] Tri Dao. FlashAttention-2: Faster attention with better par-          et al. Ego-exo4d: Understanding skilled human activity from
+     allelism and work partitioning. In International Conference           first-and third-person perspectives. In Proceedings of the
+     on Learning Representations (ICLR), 2024. 5, 8                        IEEE conference on computer vision and pattern recogni-
+ [8] Tri Dao, Daniel Y. Fu, Stefano Ermon, Atri Rudra, and                 tion, 2024. 2
+     Christopher Ré. FlashAttention: Fast and memory-efficient       [20] Richard Hartley and Andrew Zisserman. Multiple View Ge-
+     exact attention with IO-awareness. In Advances in Neural              ometry in Computer Vision. Cambridge University Press,
+     Information Processing Systems (NeurIPS), 2022. 5, 8                  New York, NY, USA, 2 edition, 2003. 2
+ [9] Daniel DeTone, Tomasz Malisiewicz, and Andrew Rabi-              [21] Yanping Huang, Youlong Cheng, Ankur Bapna, Orhan Firat,
+     novich. Superpoint: Self-supervised interest point detection          Dehao Chen, Mia Chen, HyoukJoong Lee, Jiquan Ngiam,
+     and description. 2018 IEEE/CVF Conference on Computer                 Quoc V Le, Yonghui Wu, and zhifeng Chen. Gpipe: Efficient
+     Vision and Pattern Recognition Workshops (CVPRW), pages               training of giant neural networks using pipeline parallelism.
+     337–33712, 2017. 6                                                    In Advances in Neural Information Processing Systems. Cur-
+[10] Carl Doersch, Ankush Gupta, Larisa Markeeva, Adrià Re-               ran Associates, Inc., 2019. 5
+     casens, Lucas Smaira, Yusuf Aytar, João Carreira, Andrew        [22] Albert Q. Jiang, Alexandre Sablayrolles, Antoine Roux,
+     Zisserman, and Yi Yang. Tap-vid: A benchmark for tracking             Arthur Mensch, Blanche Savary, Chris Bamford, Deven-
+     any point in a video, 2022. 16                                        dra Singh Chaplot, Diego de las Casas, Emma Bou Hanna,
+[11] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,                Florian Bressand, Gianna Lengyel, Guillaume Bour, Guil-
+     Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,                   laume Lample, Lélio Renard Lavaud, Lucile Saulnier,
+     Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-              Marie-Anne Lachaux, Pierre Stock, Sandeep Subramanian,
+     vain Gelly, Jakob Uszkoreit, and Neil Houlsby. An image is            Sophia Yang, Szymon Antoniak, Teven Le Scao, Théophile
+     worth 16x16 words: Transformers for image recognition at              Gervet, Thibaut Lavril, Thomas Wang, Timothée Lacroix,
+     scale. In International Conference on Learning Representa-            and William El Sayed. Mixtral of experts, 2024. 5
+     tions, 2021. 4, 12                                               [23] Vincent Leroy, Yohann Cabon, and Jérôme Revaud. Ground-
+[12] Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Ab-                  ing image matching in 3d with mast3r. arXiv preprint
+     hishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil                   arXiv:2406.09756, 2024. 6
+     Mathur, Alan Schelten, Amy Yang, Angela Fan, et al. The          [24] Vincent Leroy, Yohann Cabon, and Jerome Revaud. Ground-
+     llama 3 herd of models, 2024. 5                                       ing image matching in 3d with mast3r, 2024. 2, 5
+[25] Shen Li, Yanli Zhao, Rohan Varma, Omkar Salpekar,               [37] René Ranftl, Alexey Bochkovskiy, and Vladlen Koltun.
+     Pieter Noordhuis, Teng Li, Adam Paszke, Jeff Smith, Brian            Vision transformers for dense prediction. arXiv preprint
+     Vaughan, Pritam Damania, and Soumith Chintala. Pytorch               arXiv:2103.13413, 2021. 4, 5
+     distributed: Experiences on accelerating data parallel train-   [38] Jeff Rasley, Samyam Rajbhandari, Olatunji Ruwase, and
+     ing. CoRR, abs/2006.15704, 2020. 5                                   Yuxiong He. Deepspeed: System optimizations enable train-
+[26] Zhengqi Li and Noah Snavely. Megadepth: Learning single-             ing deep learning models with over 100 billion parame-
+     view depth prediction from internet photos. In Computer              ters. In Proceedings of the 26th ACM SIGKDD International
+     Vision and Pattern Recognition (CVPR), 2018. 5                       Conference on Knowledge Discovery & Data Mining, pages
+[27] Amy Lin, Jason Y Zhang, Deva Ramanan, and Shubham Tul-               3505–3506, 2020. 8
+     siani. Relpose++: Recovering 6d poses from sparse-view          [39] Jeremy Reizenstein, Roman Shapovalov, Philipp Henzler,
+     observations. arXiv preprint arXiv:2305.04926, 2023. 2, 6            Luca Sbordone, Patrick Labatut, and David Novotny. Com-
+[28] Philipp Lindenberger, Paul-Edouard Sarlin, Viktor Larsson,           mon objects in 3d: Large-scale learning and evaluation
+     and Marc Pollefeys. Pixel-perfect structure-from-motion              of real-life 3d category reconstruction. In Proceedings of
+     with featuremetric refinement. 2021 IEEE/CVF Interna-                the IEEE/CVF international conference on computer vision,
+     tional Conference on Computer Vision (ICCV), pages 5967–             pages 10901–10911, 2021. 2, 5, 6
+     5977, 2021. 6                                                   [40] Mike Roberts, Jason Ramapuram, Anurag Ranjan, Atulit
+[29] Ilya Loshchilov and Frank Hutter. Fixing weight decay reg-           Kumar, Miguel Angel Bautista, Nathan Paczan, Russ Webb,
+     ularization in adam. CoRR, abs/1711.05101, 2017. 5                   and Joshua M. Susskind. Hypersim: A photorealistic syn-
+                                                                          thetic dataset for holistic indoor scene understanding. In
+[30] Raúl Mur-Artal and Juan D. Tardós. ORB-SLAM2: an
+                                                                          International Conference on Computer Vision (ICCV) 2021,
+     open-source SLAM system for monocular, stereo and RGB-
+                                                                          2021. 8
+     D cameras. IEEE Transactions on Robotics, 33(5):1255–
+                                                                     [41] Paul-Edouard Sarlin, Daniel DeTone, Tomasz Malisiewicz,
+     1262, 2017. 2
+                                                                          and Andrew Rabinovich. Superglue: Learning feature
+[31] Raul Mur-Artal, Jose Maria Martinez Montiel, and Juan D              matching with graph neural networks. 2020 IEEE/CVF
+     Tardos. Orb-slam: a versatile and accurate monocular slam            Conference on Computer Vision and Pattern Recognition
+     system. IEEE transactions on robotics, 31(5):1147–1163,              (CVPR), pages 4937–4946, 2019. 6
+     2015. 1                                                         [42] Paul-Edouard Sarlin, Daniel DeTone, Tomasz Malisiewicz,
+[32] Deepak Narayanan, Mohammad Shoeybi, Jared Casper,                    and Andrew Rabinovich. SuperGlue: Learning feature
+     Patrick LeGresley, Mostofa Patwary, Vijay Korthikanti,               matching with graph neural networks. In CVPR, 2020. 2
+     Dmitri Vainbrand, Prethvi Kashinkunti, Julie Bernauer,          [43] Manolis Savva, Abhishek Kadian, Oleksandr Maksymets,
+     Bryan Catanzaro, Amar Phanishayee, and Matei Zaharia. Ef-            Yili Zhao, Erik Wijmans, Bhavana Jain, Julian Straub, Jia
+     ficient large-scale language model training on GPU clusters.         Liu, Vladlen Koltun, Jitendra Malik, Devi Parikh, and Dhruv
+     CoRR, abs/2104.04473, 2021. 5                                        Batra. Habitat: A platform for embodied AI research. CoRR,
+[33] Maxime Oquab, Timothée Darcet, Theo Moutakanni, Huy V.              abs/1904.01201, 2019. 5
+     Vo, Marc Szafraniec, Vasil Khalidov, Pierre Fernandez,          [44] Johannes Lutz Schönberger and Jan-Michael Frahm.
+     Daniel Haziza, Francisco Massa, Alaaeldin El-Nouby, Rus-             Structure-from-motion revisited. In Conference on Com-
+     sell Howes, Po-Yao Huang, Hu Xu, Vasu Sharma, Shang-                 puter Vision and Pattern Recognition (CVPR), 2016. 1, 2
+     Wen Li, Wojciech Galuba, Mike Rabbat, Mido Assran, Nico-        [45] Noam Shazeer, Youlong Cheng, Niki Parmar, Dustin Tran,
+     las Ballas, Gabriel Synnaeve, Ishan Misra, Herve Jegou,              Ashish Vaswani, Penporn Koanantakool, Peter Hawkins,
+     Julien Mairal, Patrick Labatut, Armand Joulin, and Piotr Bo-         HyoukJoong Lee, Mingsheng Hong, Cliff Young, Ryan Sep-
+     janowski. Dinov2: Learning robust visual features without            assi, and Blake A. Hechtman. Mesh-tensorflow: Deep learn-
+     supervision, 2023. 4                                                 ing for supercomputers. CoRR, abs/1811.02084, 2018. 5
+[34] Alexander Raistrick, Lahav Lipson, Zeyu Ma, Lingjie Mei,        [46] Mohammad Shoeybi, Mostofa Patwary, Raul Puri, Patrick
+     Mingzhe Wang, Yiming Zuo, Karhan Kayan, Hongyu Wen,                  LeGresley, Jared Casper, and Bryan Catanzaro. Megatron-
+     Beining Han, Yihan Wang, Alejandro Newell, Hei Law,                  lm: Training multi-billion parameter language models using
+     Ankit Goyal, Kaiyu Yang, and Jia Deng. Infinite photore-             model parallelism. CoRR, abs/1909.08053, 2019. 5
+     alistic worlds using procedural generation. In Proceedings      [47] Jamie Shotton, Ben Glocker, Christopher Zach, Shahram
+     of the IEEE/CVF Conference on Computer Vision and Pat-               Izadi, Antonio Criminisi, and Andrew Fitzgibbon. Scene co-
+     tern Recognition, pages 12630–12641, 2023. 8                         ordinate regression forests for camera relocalization in rgb-d
+[35] Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and                images. In Proceedings of the IEEE conference on computer
+     Yuxiong He. Zero: Memory optimization towards training               vision and pattern recognition, pages 2930–2937, 2013. 6,
+     A trillion parameter models. CoRR, abs/1910.02054, 2019.             7, 8
+     5                                                               [48] Cameron Smith, David Charatan, Ayush Kumar Tewari,
+[36] René Ranftl, Katrin Lasinger, David Hafner, Konrad                  and Vincent Sitzmann. Flowmap: High-quality camera
+     Schindler, and Vladlen Koltun. Towards robust monocular              poses, intrinsics, and depth via gradient descent. ArXiv,
+     depth estimation: Mixing datasets for zero-shot cross-dataset        abs/2404.15259, 2024. 2
+     transfer. In IEEE Transactions on Pattern Analysis and Ma-      [49] Matthew Tancik, Pratul P. Srinivasan, Ben Mildenhall, Sara
+     chine Intelligence (TPAMI), 2020. 3                                  Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ra-
+     mamoorthi, Jonathan T. Barron, and Ren Ng. Fourier fea-              by cross-view completion. Advances in Neural Information
+     tures let networks learn high frequency functions in low di-         Processing Systems, 35:3502–3516, 2022. 4, 5
+     mensional domains. In Advances in Neural Information Pro-       [64] Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chau-
+     cessing Systems, pages 7537–7547, 2020. 4                            mond, Clement Delangue, Anthony Moi, Pierric Cistac, Tim
+[50] Hao Tang, Weiyao Wang, and Matt Feiszli. Aden: Adaptive              Rault, Rémi Louf, Morgan Funtowicz, and Jamie Brew. Hug-
+     density representations for sparse-view camera pose estima-          gingface’s transformers: State-of-the-art natural language
+     tion. arXiv preprint arXiv:2408.09042, 2024. 2                       processing. CoRR, abs/1910.03771, 2019. 5
+[51] Zachary Teed and Jia Deng. Droid-slam: Deep visual slam         [65] Guangkai Xu, Wei Yin, Hao Chen, Chunhua Shen, Kai
+     for monocular, stereo, and rgb-d cameras. In Neural Infor-           Cheng, and Feng Zhao. Frozenrecon: Pose-free 3d scene
+     mation Processing Systems, 2021. 2                                   reconstruction with frozen depth models. In Proceedings
+[52] Zachary Teed and Jia Deng. DROID-SLAM: Deep Visual                   of the IEEE/CVF International Conference on Computer Vi-
+     SLAM for Monocular, Stereo, and RGB-D Cameras. Ad-                   sion, pages 9310–9320, 2023. 6
+     vances in neural information processing systems, 2021. 2        [66] Lihe Yang, Bingyi Kang, Zilong Huang, Xiaogang Xu, Jiashi
+[53] Sebastian Thrun. Probabilistic robotics. Communications of           Feng, and Hengshuang Zhao. Depth anything: Unleashing
+     the ACM, 45(3):52–57, 2002. 1                                        the power of large-scale unlabeled data. In CVPR, 2024. 3,
+[54] Hugo Touvron, Louis Martin, Kevin Stone, Peter Albert,               4, 8
+     Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov,             [67] Yao Yao, Zixin Luo, Shiwei Li, Jingyang Zhang, Yufan
+     Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, et al.              Ren, Lei Zhou, Tian Fang, and Long Quan. Blendedmvs:
+     Llama 2: Open foundation and fine-tuned chat models, 2023.           A large-scale dataset for generalized multi-view stereo net-
+     5                                                                    works. Computer Vision and Pattern Recognition (CVPR),
+[55] Vadim Tschernezki, Ahmad Darkhalil, Zhifan Zhu, David                2020. 5
+     Fouhey, Iro Larina, Diane Larlus, Dima Damen, and Andrea        [68] Chandan Yeshwanth, Yueh-Cheng Liu, Matthias Nießner,
+     Vedaldi. EPIC Fields: Marrying 3D Geometry and Video                 and Angela Dai. Scannet++: A high-fidelity dataset of 3d in-
+     Understanding. In Proceedings of the Neural Information              door scenes. In Proceedings of the IEEE/CVF International
+     Processing Systems (NeurIPS), 2023. 2                                Conference on Computer Vision, pages 12–22, 2023. 2, 4, 5
+[56] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-         [69] Kwang Moo Yi, Eduard Trulls, Vincent Lepetit, and Pas-
+     reit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, and Illia          cal V. Fua. Lift: Learned invariant feature transform. In
+     Polosukhin. Attention is all you need. Advances in Neural            European Conference on Computer Vision, 2016. 2
+     Information Processing Systems, 2017. 2                         [70] Junyi Zhang, Charles Herrmann, Junhwa Hur, Varun Jam-
+[57] Hengyi Wang and Lourdes Agapito. 3d reconstruction with              pani, Trevor Darrell, Forrester Cole, Deqing Sun, and Ming-
+     spatial memory. arXiv preprint arXiv:2408.16061, 2024. 3,            Hsuan Yang. Monst3r: A simple approach for estimat-
+     5, 6                                                                 ing geometry in the presence of motion. arXiv preprint
+[58] Jianyuan Wang, Nikita Karaev, Christian Rupprecht, and               arxiv:2410.03825, 2024. 2, 12
+     David Novotny. Vggsfm: Visual geometry grounded deep            [71] Jason Y. Zhang, Deva Ramanan, and Shubham Tulsiani. Rel-
+     structure from motion. 2024 IEEE/CVF Conference on Com-              pose: Predicting probabilistic relative rotation for single ob-
+     puter Vision and Pattern Recognition (CVPR), pages 21686–            jects in the wild. ArXiv, abs/2208.05963, 2022. 6
+     21697, 2023. 2                                                  [72] Jason Y. Zhang, Amy Lin, Moneish Kumar, Tzu-Hsuan
+[59] Jianyuan Wang, C. Rupprecht, and David Novotný. Posed-              Yang, Deva Ramanan, and Shubham Tulsiani.                Cam-
+     iffusion: Solving pose estimation via diffusion-aided bundle         eras as rays: Pose estimation via ray diffusion. ArXiv,
+     adjustment. 2023 IEEE/CVF International Conference on                abs/2402.14817, 2024. 2
+     Computer Vision (ICCV), pages 9739–9749, 2023. 2, 6             [73] Wang Zhao, Shaohui Liu, Hengkai Guo, Wenping Wang, and
+[60] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris                      Y. Liu. Particlesfm: Exploiting dense point trajectories for
+     Chidlovskii, and Jérôme Revaud. Dust3r: Geometric 3d               localizing moving cameras in the wild. In European Confer-
+     vision made easy. 2024 IEEE/CVF Conference on Com-                   ence on Computer Vision, 2022. 2
+     puter Vision and Pattern Recognition (CVPR), pages 20697–       [74] Yang Zheng, Adam W Harley, Bokui Shen, Gordon Wet-
+     20709, 2023. 6                                                       zstein, and Leonidas J Guibas. Pointodyssey: A large-scale
+[61] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris                      synthetic dataset for long-term point tracking. In Proceed-
+     Chidlovskii, and Jerome Revaud. Dust3r: Geometric 3d vi-             ings of the IEEE/CVF International Conference on Com-
+     sion made easy. In CVPR, 2024. 1, 2, 3, 4, 5, 6                      puter Vision, pages 19855–19865, 2023. 12
+[62] Wenshan Wang, Delong Zhu, Xiangwei Wang, Yaoyu Hu,              [75] Tinghui Zhou, Richard Tucker, John Flynn, Graham Fyffe,
+     Yuheng Qiu, Chen Wang, Yafei Hu, Ashish Kapoor, and Se-              and Noah Snavely. Stereo magnification: learning view syn-
+     bastian Scherer. Tartanair: A dataset to push the limits of          thesis using multiplane images. ACM Trans. Graph., 37(4),
+     visual slam. In 2020 IEEE/RSJ International Conference on            2018. 6
+     Intelligent Robots and Systems (IROS), 2020. 12                 [76] Dawei Zhu, Nan Yang, Liang Wang, Yifan Song, Wenhao
+[63] Philippe Weinzaepfel, Vincent Leroy, Thomas Lucas, Ro-               Wu, Furu Wei, and Sujian Li. Pose: Efficient context win-
+     main Brégier, Yohann Cabon, Vaibhav Arora, Leonid Ants-             dow extension of llms via positional skip-wise training. In
+     feld, Boris Chidlovskii, Gabriela Csurka, and Jérôme Re-           The Twelfth International Conference on Learning Represen-
+     vaud. Croco: Self-supervised pre-training for 3d vision tasks        tations. 8
+    Fast3R: Towards 3D Reconstruction of 1000+ Images in One Forward Pass
+                                              Supplementary Material
+A. Model Scaling Effect                                           Method              RPE Rotation (↓)    RPE Translation (↓)
+
+We investigate the effect of scaling model size by trying         Fast3R                    27.9                 7.64
+three model sizes for the Fusion Transformer: ViT-base,           Fast3R w/ GS-BA           11.0                 1.80
+ViT-large, and ViT-huge, according to the settings in the
+                                                                 Table 6. Pose estimation can further improve with Bundle Ad-
+original ViT paper [11]. The results are shown in Figure 9.
+                                                                 justment. We show an example on the ”Family” scene from Tanks
+This experiment demonstrates that larger model size contin-
+                                                                 and Temples, using InstantSplat [16].
+ually benefits 3D tasks including camera pose estimations
+and 3D reconstruction. Note that the Fusion Transformer
+                                                                                      ScanNet   ETH3D       DTU       T&T
+size used in the main text for all experiments is a ViT-base.     Methods
+                                                                                    rel ↓ τ ↑ rel ↓ τ ↑ rel ↓ τ ↑ rel ↓ τ ↑
+                                                                  COLMAP-DENSE      38.0 22.5 89.8 23.2 20.8 69.3 25.7 76.4
+B. Data Scaling Effect                                            DUSt3R 224        5.86 50.84 4.71 61.74 2.76 77.32 5.54 56.38
+                                                                  DUSt3R 512        4.93 60.20 2.91 76.91 3.52 69.33 3.17 76.68
+We study the effect of scaling the data using 4 different         Fast3R            6.27 50.27 4.68 62.68 3.92 62.60 4.43 63.95
+scales of data, 12.5%, 25%, 50%, and 100%, to train the
+model. The results are shown in Figure 10. The training          Table 7. Multi-view depth evaluation. DUSt3R and Fast3R
+settings for all models are kept the same except for how         perform on par, while significantly outperforming COLMAP-
+much data they have access to. The results demonstrate           DENSE.
+that Fast3R continually benefits from more data, suggest-
+ing Fast3R could achieve better results in the future given
+more data.                                                       E. Multi-view Depth Evaluation
+                                                                 We compare Fast3R (using the local pointmap prediction)
+C. Gaussian Splatting
+                                                                 with DUSt3R and COLMAP on multi-view depth estima-
+We qualitatively demonstrate the potential of using Fast3R’s     tion tasks and show results in Table 7.
+output for downstream novel view synthesis tasks. A visu-
+alization of the Gaussian Splatting generated by adopting        F. More Visualizations
+the pipeline of InstantSplat [16] is shown in Figure 11.
+                                                                 We show more visualizations of Fast3R’s performance on
+D. Bundle Adjustment (via Gaussian Splat-                        indoor scenes in Figure 15. Fast3R learns the regularity of
+                                                                 indoor rooms (square-like shapes) and demonstrates “loop
+   ting)                                                         closure” capabilities.
+While not necessary, using bundle adjustment at inference
+time can also improve Fast3R’s performance. We show
+                                                                 F.1. 4D Reconstruction: Qualitative Results
+an example of bundle adjustment using Gaussian Splatting         Because Fast3R can handle multiple frames naturally, one
+(GS-BA).                                                         may wonder how well Fast3R can handle dynamic scenes.
+   Specifically, we use InstantSplat [16] to optimize a set      We qualitatively test Fast3R’s 4D reconstruction ability,
+of Gaussians per scene, using initializations from a point       showing examples of dynamic aligned pointmaps at multi-
+cloud, and update the locations and poses in order to mini-      ple time steps in Figure 16. Fast3R can be trained to achieve
+mize reprojection error. We show an example of the Gaus-         such results by finetuning a 16 static views checkpoint on
+sian reconstruction in Figure 11 shows an example recon-         the PointOdyssey [74] and TartanAir [62] datasets, consist-
+struction on CO3D.                                               ing of 110 dynamic and 150 static scenes, respectively. We
+   We can compare against ground-truth trajectories from         freeze the ViT encoder, use 224x224 image resolution, and
+COLMAP. We found that GS-BA significantly reduces both           swap in a newly-initialized global DPT head. We fine-tune
+the pose and translation error. Table 6 quantifies this, show-   the model with 15 epochs with a frame length of 16, batch
+ing over a 2.5x reduction in translation error and a 4x reduc-   size per GPU of 1, and use the same learning rate sched-
+tion in rotational error on the “Family” scene from Tanks        ule as Fast3R. The process takes 45 hours to finetune on 2
+and Temples, which we found to be representative. We             Nvidia Quadro RTX A6000 GPUs.
+show a visualization of the original reconstruction and the         We see that our approach produces qualitatively reason-
+poses pre- and post-bundle-adjustment. There are only 8          able reconstructions with minimal changes. MonST3R [70]
+scenes in the evaluation set in InstantSplat.                    is a concurrent work also tackling dynamic scene recon-
+                          CO3D Cam. Pose                                                 7-Scenes 3D Recon.                                              NRGBD 3D Recon.
+                                                                         8                                                               8
+mAA@30 ( )
+
+
+
+
+                                                          Acc Med. ( )
+
+
+
+
+                                                                                                                          Acc Med. ( )
+             45                                                          7                                                               7
+             40                                                          6
+                                                                                                                                         6
+                                                                         5
+             35                                                                                                                          5
+                                                                         4
+                  Base           Large           Huge                        Base                Large            Huge                       Base              Large             Huge
+                               Model Size                                                      Model Size                                                   Model Size
+
+Figure 9. Model scaling effect. Increasing the size of the Fusion Transformer leads to better camera pose estimation (↑) and 3D recon-
+struction (↓). All models are trained for 60k steps (equivalent to 60 epochs; the main paper uses 100 epochs).
+
+
+                          CO3D Cam. Pose                                                 7-Scenes 3D Recon.                                              NRGBD 3D Recon.
+             40
+                                                                       12                                                               20
+mAA@30 ( )
+
+
+
+
+                                                        Acc Med. ( )
+
+
+
+
+                                                                                                                         Acc Med. ( )
+             30
+                                                                       10
+             20                                                                                                                         15
+                                                                        8
+             10                                                         6                                                               10
+                     20   40        60      80   100                                20    40        60      80     100                              20    40      60        80    100
+                          Data Percentage                                                 Data Percentage                                                 Data Percentage
+
+Figure 10. Data scaling effect. More training data leads to better camera pose estimation (↑) and 3D reconstruction (↓). All models are
+trained for 60k steps (equivalent to 60 epochs; the main paper uses 100 epochs).
+
+
+
+
+Figure 11. Visualization of Gaussians from unseen poses. The frames are ordered temporally along the direction of the arrows. The
+middle frames show poses very different from those used for reconstruction, as is evidenced by the large areas with no Gausisans. The
+scene is fit from 7 images from CO3D.
+
+
+struction that builds atop DUSt3R. However, like DUSt3R,                                             tial for real-time applications.
+it assumes a pairwise architecture and also uses a separate
+model to predict optical flow. We show that the same Fast3R
+architecture trained end-to-end with the same many-view
+pointmap regression (just swapping the data to dynamic
+scenes), can also work for 4D reconstruction. Importantly,
+our method remains significantly faster, opening the poten-
+Figure 12. Bundle adjustment further improves pose. Left: reconstruction from Fast3R. Middle: Original poses pre-GS-BA. Right:
+Poses after GS-BA.
+
+
+
+
+                 Spann3R                                                              Fast3R
+      Figure 13. Large-scale reconstruction: Spann3R vs. Fast3R on the Lighthouse scene from Tanks & Temples dataset.
+           Reconstruction using Global Point Map                         Reconstruction using Local (aligned to Global) Point Map
+
+Figure 14. Effect of using local vs. global pointmap. Global point maps provide good anchors for locations of points while local point
+maps use those anchors (by aligning using ICP on the anchor points to the global point map) to provide more accurate point locations. Best
+viewed when zoomed in.
+
+
+
+
+Figure 15. Visualizations of results on NRGBD scenes. Fast3R learns the regularity of indoor rooms (square-like shapes) and demon-
+strates loop closure capabilities.
+Figure 16. Qualitative 4D reconstruction results on unseen dynamic scenes in DAVIS. Results are obtained with one forward pass. The
+tracks are visualized using ground-truth track annotations from TAP-Vid-DAVIS [10].
+

@@ -1,0 +1,761 @@
+{
+  "schema": "gggs.final_gaussian_properties.v1",
+  "experiments": [
+    {
+      "id": "E1",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/checkpoints/final_gaussians/point_cloud.ply",
+        "file_bytes": 151316972,
+        "mtime_ns": 1793940216529327882,
+        "header_sha256": "06f47ccea3ec2aa21ad2ab9dcc79c3e6dc401fdaf05847435e68dd63eef59360",
+        "vertex_count": 600458
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E1_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 1.008220799782202,
+      "scale_dimensions": 3,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0009943997720256448,
+          "0.01": 0.007002288014627993,
+          "0.1": 0.04876596406102181,
+          "0.5": 0.9993677735328674,
+          "0.9": 0.9999999403953552,
+          "0.99": 1.0,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.2111653632018715e-05,
+          "0.01": 0.00013250390387838706,
+          "0.1": 0.0005002583959139884,
+          "0.5": 0.0015102597535587847,
+          "0.9": 0.004534946056082845,
+          "0.99": 0.012794606015086175,
+          "1": 0.232553169131279
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.2012898002734223e-05,
+          "0.01": 0.00013142349761779447,
+          "0.1": 0.0004961794043745728,
+          "0.5": 0.0014979454439791704,
+          "0.9": 0.004497969152255631,
+          "0.99": 0.01269028174964263,
+          "1": 0.2306569842454308
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.0,
+          "0.1": 0.0,
+          "0.5": 0.3587138056755066,
+          "0.9": 0.5775309979915619,
+          "0.99": 0.8102953511476519,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 61166,
+      "raw_alpha_ge05_dc_brightness_lt003": 75653,
+      "raw_alpha_ge09_dc_brightness_lt003": 74671,
+      "max_sigma_over_extent_gt001": 10466,
+      "max_sigma_over_extent_gt01": 42,
+      "near_black_large_scale_raw_alpha_ge05": 8544,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 2.92710542678833,
+      "filtered_alpha": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0004624424909707159,
+          "0.01": 0.0020044697215780612,
+          "0.1": 0.0037639755522832275,
+          "0.5": 0.19351380318403244,
+          "0.9": 0.9016643881797791,
+          "0.99": 0.9881454741954805,
+          "1": 0.9996219277381897
+        }
+      },
+      "filter_3D_over_extent": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 4.671506109987626e-05,
+          "0.01": 5.738268004695595e-05,
+          "0.1": 6.772171163388372e-05,
+          "0.5": 9.52435966541783e-05,
+          "0.9": 0.0001267560022948925,
+          "0.99": 0.00016723336480965956,
+          "1": 0.00030537186192350216
+        }
+      },
+      "filter_to_max_sigma": {
+        "finite_count": 600458,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0005473565480574227,
+          "0.01": 0.008345570469507594,
+          "0.1": 0.022156110521252336,
+          "0.5": 0.06068349904572574,
+          "0.9": 0.18328021430103236,
+          "0.99": 0.7418905790053102,
+          "1": 5.606444861358166
+        }
+      },
+      "raw_ge005_filtered_lt005": 104434,
+      "filtered_alpha_lt005": 165600,
+      "filtered_alpha_ge05_dc_brightness_lt003": 56381,
+      "filtered_alpha_ge09_dc_brightness_lt003": 16785,
+      "gg_gs_filter_rule": "effective_alpha=raw_alpha/prod(sqrt(sigma_i^2+filter_3D^2)/sigma_i); same official GaussianModel determinant correction"
+    },
+    {
+      "id": "E2",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E2_GGGS_EO/checkpoints/final_gaussians/point_cloud.ply",
+        "file_bytes": 153071900,
+        "mtime_ns": 1793942863177970680,
+        "header_sha256": "a10ff107c98d3aab54bbf6a939dd6151393895fd484755feb89e5056fd70c608",
+        "vertex_count": 607422
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E2_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 1.008220799782202,
+      "scale_dimensions": 3,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0012384015135467052,
+          "0.01": 0.007179857175797224,
+          "0.1": 0.04352448433637621,
+          "0.5": 0.9993926882743835,
+          "0.9": 0.9999999403953552,
+          "0.99": 1.0,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.5101858480193187e-05,
+          "0.01": 0.00011065291851991788,
+          "0.1": 0.0004508296144194901,
+          "0.5": 0.0014178241253830492,
+          "0.9": 0.004648103611543775,
+          "0.99": 0.019124200716614734,
+          "1": 1.1045953035354614
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.4978721410484215e-05,
+          "0.01": 0.00010975068015242432,
+          "0.1": 0.0004471536537600487,
+          "0.5": 0.001406263514588601,
+          "0.9": 0.004610204047117326,
+          "0.99": 0.018968266396354832,
+          "1": 1.0955886882854218
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.0,
+          "0.1": 0.0,
+          "0.5": 0.2998911887407303,
+          "0.9": 0.46763411760330204,
+          "0.99": 0.6479931890964515,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 67335,
+      "raw_alpha_ge05_dc_brightness_lt003": 76435,
+      "raw_alpha_ge09_dc_brightness_lt003": 75440,
+      "max_sigma_over_extent_gt001": 18715,
+      "max_sigma_over_extent_gt01": 216,
+      "near_black_large_scale_raw_alpha_ge05": 16948,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 3.1616032123565674,
+      "filtered_alpha": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0006365175941027701,
+          "0.01": 0.0021565841627307234,
+          "0.1": 0.0038284957874566315,
+          "0.5": 0.23057539761066437,
+          "0.9": 0.9143540024757385,
+          "0.99": 0.9887472587823869,
+          "1": 0.999860942363739
+        }
+      },
+      "filter_3D_over_extent": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 4.668309142395031e-05,
+          "0.01": 5.6370913160955316e-05,
+          "0.1": 6.825796000858617e-05,
+          "0.5": 9.598478075484966e-05,
+          "0.9": 0.00012690187783331955,
+          "0.99": 0.00016873655789913456,
+          "1": 0.0003553629957181539
+        }
+      },
+      "filter_to_max_sigma": {
+        "finite_count": 607422,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.00025064311655226295,
+          "0.01": 0.0057315935441940346,
+          "0.1": 0.021694542965446425,
+          "0.5": 0.06520400844832856,
+          "0.9": 0.20722816649462808,
+          "0.99": 0.8885295114646559,
+          "1": 5.184555730801509
+        }
+      },
+      "raw_ge005_filtered_lt005": 78085,
+      "filtered_alpha_lt005": 145420,
+      "filtered_alpha_ge05_dc_brightness_lt003": 59655,
+      "filtered_alpha_ge09_dc_brightness_lt003": 21153,
+      "gg_gs_filter_rule": "effective_alpha=raw_alpha/prod(sqrt(sigma_i^2+filter_3D^2)/sigma_i); same official GaussianModel determinant correction"
+    },
+    {
+      "id": "E3",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E3_GGGS_Foreground/checkpoints/final_gaussians/point_cloud.ply",
+        "file_bytes": 261229545,
+        "mtime_ns": 1793946002486662472,
+        "header_sha256": "f1f94977f99c1147d42bb82b6508251f50d2297c98aa37bbb32b249d3a2d760f",
+        "vertex_count": 1036619
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E3_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 1.008220799782202,
+      "scale_dimensions": 3,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0012365862494334579,
+          "0.01": 0.008553268108516933,
+          "0.1": 0.055321660637855534,
+          "0.5": 0.998272180557251,
+          "0.9": 0.9999961853027344,
+          "0.99": 0.9999999403953552,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.2655736099986825e-05,
+          "0.01": 0.00010576393760857173,
+          "0.1": 0.00038201718125492335,
+          "0.5": 0.0010849084937945008,
+          "0.9": 0.0025716000702232125,
+          "0.99": 0.0056921808235347255,
+          "1": 0.04098440706729889
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.2552544147790589e-05,
+          "0.01": 0.00010490156286343139,
+          "0.1": 0.0003789023012989293,
+          "0.5": 0.001076062400248899,
+          "0.9": 0.0025506318365766064,
+          "0.99": 0.0056457680944138056,
+          "1": 0.04065022966809694
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.0871761430799961,
+          "0.1": 0.23299882411956788,
+          "0.5": 0.4268902540206909,
+          "0.9": 0.7650353312492371,
+          "0.99": 1.0,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 84977,
+      "raw_alpha_ge05_dc_brightness_lt003": 2058,
+      "raw_alpha_ge09_dc_brightness_lt003": 1921,
+      "max_sigma_over_extent_gt001": 1625,
+      "max_sigma_over_extent_gt01": 0,
+      "near_black_large_scale_raw_alpha_ge05": 15,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 4.322391510009766,
+      "filtered_alpha": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0003307756851427257,
+          "0.01": 0.0017154132528230549,
+          "0.1": 0.0036255020182579755,
+          "0.5": 0.1020255908370018,
+          "0.9": 0.8041575431823731,
+          "0.99": 0.9798280763626098,
+          "1": 0.999541163444519
+        }
+      },
+      "filter_3D_over_extent": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 4.668706778770544e-05,
+          "0.01": 5.415046599490271e-05,
+          "0.1": 6.385684122147356e-05,
+          "0.5": 9.131258220910467e-05,
+          "0.9": 0.00011727309928869006,
+          "0.99": 0.00016072577966370978,
+          "1": 0.00019288102202198973
+        }
+      },
+      "filter_to_max_sigma": {
+        "finite_count": 1036619,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.002363386014501136,
+          "0.01": 0.017975308828188218,
+          "0.1": 0.03574202593027298,
+          "0.5": 0.08148340403239697,
+          "0.9": 0.2306249508915099,
+          "0.99": 0.8627147923045795,
+          "1": 5.560660774326993
+        }
+      },
+      "raw_ge005_filtered_lt005": 285659,
+      "filtered_alpha_lt005": 370636,
+      "filtered_alpha_ge05_dc_brightness_lt003": 825,
+      "filtered_alpha_ge09_dc_brightness_lt003": 482,
+      "gg_gs_filter_rule": "effective_alpha=raw_alpha/prod(sqrt(sigma_i^2+filter_3D^2)/sigma_i); same official GaussianModel determinant correction"
+    },
+    {
+      "id": "E4",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E4_ForeSplat_GGGS/checkpoints/final_gaussians/point_cloud.ply",
+        "file_bytes": 205170128,
+        "mtime_ns": 1793948476160655258,
+        "header_sha256": "f665e11864624f6a29c71394d017317d05d553b4a6850b59c47ca69f6aea62d2",
+        "vertex_count": 814161
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E4_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 1.008220799782202,
+      "scale_dimensions": 3,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0012814659858122468,
+          "0.01": 0.010045695304870607,
+          "0.1": 0.058598168194293976,
+          "0.5": 0.9990063309669495,
+          "0.9": 0.9999988675117493,
+          "0.99": 0.9999999403953552,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.239001994690625e-05,
+          "0.01": 0.00010134970798389987,
+          "0.1": 0.000403645564801991,
+          "0.5": 0.001109052449464798,
+          "0.9": 0.0025415264535695314,
+          "0.99": 0.005551036540418864,
+          "1": 0.046735309064388275
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.2288994582915537e-05,
+          "0.01": 0.000100523325848657,
+          "0.1": 0.00040035433199670883,
+          "0.5": 0.0011000094916752143,
+          "0.9": 0.0025208034332544595,
+          "0.99": 0.005505774669217309,
+          "1": 0.046354240137164535
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.00044982233666814893,
+          "0.1": 0.07484742254018784,
+          "0.5": 0.18078839778900146,
+          "0.9": 0.35682177543640137,
+          "0.99": 0.6522792816162115,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 58969,
+      "raw_alpha_ge05_dc_brightness_lt003": 19107,
+      "raw_alpha_ge09_dc_brightness_lt003": 17361,
+      "max_sigma_over_extent_gt001": 1146,
+      "max_sigma_over_extent_gt01": 0,
+      "near_black_large_scale_raw_alpha_ge05": 84,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 3.621917724609375,
+      "filtered_alpha": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.00027706605033017695,
+          "0.01": 0.001901570218615234,
+          "0.1": 0.003757799044251442,
+          "0.5": 0.13338126242160797,
+          "0.9": 0.8176355361938477,
+          "0.99": 0.9822593688964845,
+          "1": 0.999663233757019
+        }
+      },
+      "filter_3D_over_extent": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 4.668679716403789e-05,
+          "0.01": 5.5724053712779386e-05,
+          "0.1": 6.707129038132818e-05,
+          "0.5": 9.330063418730574e-05,
+          "0.9": 0.00011666695278980793,
+          "0.99": 0.00016243362226756288,
+          "1": 0.00018482270076498338
+        }
+      },
+      "filter_to_max_sigma": {
+        "finite_count": 814161,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.003508456272256269,
+          "0.01": 0.018926012790369123,
+          "0.1": 0.03711585538214122,
+          "0.5": 0.08115387667969853,
+          "0.9": 0.22074316656508136,
+          "0.99": 0.9019709382490984,
+          "1": 5.0157301459817125
+        }
+      },
+      "raw_ge005_filtered_lt005": 172118,
+      "filtered_alpha_lt005": 231087,
+      "filtered_alpha_ge05_dc_brightness_lt003": 7433,
+      "filtered_alpha_ge09_dc_brightness_lt003": 3037,
+      "gg_gs_filter_rule": "effective_alpha=raw_alpha/prod(sqrt(sigma_i^2+filter_3D^2)/sigma_i); same official GaussianModel determinant correction"
+    },
+    {
+      "id": "E5",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/final_gaussians/point_cloud.ply",
+        "file_bytes": 1298599137,
+        "mtime_ns": 1794039047366820165,
+        "header_sha256": "62fc97c9efbc3267ccaad8ed276de3bc2b702207b20a19d9f64298cfcf527b1c",
+        "vertex_count": 5153165
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E5_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 2.524666269103854,
+      "scale_dimensions": 3,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0012857700930908322,
+          "0.01": 0.018634712174534798,
+          "0.1": 0.05966037213802338,
+          "0.5": 0.9726362824440002,
+          "0.9": 0.9999999403953552,
+          "0.99": 1.0,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 4.649471065931721e-06,
+          "0.01": 1.7022688989527524e-05,
+          "0.1": 5.300591510604136e-05,
+          "0.5": 0.00026712732505984604,
+          "0.9": 0.0018164036097005043,
+          "0.99": 0.008000081256032028,
+          "1": 0.3019658923149109
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.8416180874401585e-06,
+          "0.01": 6.742550173005571e-06,
+          "0.1": 2.0995216577617654e-05,
+          "0.5": 0.00010580698460183592,
+          "0.9": 0.0007194628580930216,
+          "0.99": 0.003168767830399899,
+          "1": 0.11960626083941603
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.0,
+          "0.1": 0.0,
+          "0.5": 0.33359622955322266,
+          "0.9": 1.0,
+          "0.99": 1.0,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 290993,
+      "raw_alpha_ge05_dc_brightness_lt003": 929078,
+      "raw_alpha_ge09_dc_brightness_lt003": 880683,
+      "max_sigma_over_extent_gt001": 3384,
+      "max_sigma_over_extent_gt01": 2,
+      "near_black_large_scale_raw_alpha_ge05": 3261,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 24.848701238632202,
+      "filtered_alpha": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 2.7425543521530926e-05,
+          "0.01": 0.0012644506618380547,
+          "0.1": 0.0027372431941330433,
+          "0.5": 0.01623852550983429,
+          "0.9": 0.4293963789939883,
+          "0.99": 0.9668526148796083,
+          "1": 0.9999407529830933
+        }
+      },
+      "filter_3D_over_extent": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 1.0107894671057914e-05,
+          "0.01": 1.1633714089404258e-05,
+          "0.1": 1.806380974125738e-05,
+          "0.5": 3.4539856188305024e-05,
+          "0.9": 4.960004755610083e-05,
+          "0.99": 5.6811143036174256e-05,
+          "1": 0.0001308596342022967
+        }
+      },
+      "filter_to_max_sigma": {
+        "finite_count": 5153165,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.00034096909073755906,
+          "0.01": 0.009971722707727662,
+          "0.1": 0.04217482868019548,
+          "0.5": 0.3144415367202313,
+          "0.9": 1.5823161653544644,
+          "0.99": 3.569772634001228,
+          "1": 21.063718493508386
+        }
+      },
+      "raw_ge005_filtered_lt005": 3055537,
+      "filtered_alpha_lt005": 3346530,
+      "filtered_alpha_ge05_dc_brightness_lt003": 366276,
+      "filtered_alpha_ge09_dc_brightness_lt003": 118818,
+      "gg_gs_filter_rule": "effective_alpha=raw_alpha/prod(sqrt(sigma_i^2+filter_3D^2)/sigma_i); same official GaussianModel determinant correction"
+    },
+    {
+      "id": "E6",
+      "source": {
+        "path": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E6_2DGS_Standard_VGGT/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+        "file_bytes": 29241492,
+        "mtime_ns": 1794046839219843707,
+        "header_sha256": "dd6b7ae9a9ef02f8bcbb9c6380dc3eb91055d612036b8d4030e596696c20a22d",
+        "vertex_count": 119836
+      },
+      "cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/root_cause_audit/gaussian_analysis/E6_final_scalar_cache.npy",
+      "cache_columns": [
+        "x",
+        "y",
+        "z",
+        "dc_rgb_0",
+        "dc_rgb_1",
+        "dc_rgb_2",
+        "raw_alpha",
+        "sigma_0",
+        "sigma_1",
+        "sigma_2",
+        "filter_3D",
+        "filtered_alpha"
+      ],
+      "extent": 2.524666269103854,
+      "scale_dimensions": 2,
+      "sh3_capacity": true,
+      "dc_color_interpretation": "clamped SH DC-only RGB proxy; full SH3 directional color and composited alpha require actual renderer",
+      "raw_alpha": {
+        "finite_count": 119836,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0008164498140104115,
+          "0.01": 0.0023432408226653936,
+          "0.1": 0.003881883225403726,
+          "0.5": 0.970640629529953,
+          "0.9": 0.9999992847442627,
+          "0.99": 0.9999999403953552,
+          "1": 1.0
+        }
+      },
+      "max_sigma": {
+        "finite_count": 119836,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.00014150042261462659,
+          "0.01": 0.0014360008179210126,
+          "0.1": 0.00492591573856771,
+          "0.5": 0.012420626822859049,
+          "0.9": 0.027118069119751453,
+          "0.99": 0.08943080082535683,
+          "1": 2.89690899848938
+        }
+      },
+      "max_sigma_over_extent": {
+        "finite_count": 119836,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 5.604717912472964e-05,
+          "0.01": 0.000568788372346231,
+          "0.1": 0.001951115598465295,
+          "0.5": 0.004919710369191817,
+          "0.9": 0.010741249032244242,
+          "0.99": 0.03542282079805378,
+          "1": 1.1474423506745925
+        }
+      },
+      "dc_brightness": {
+        "finite_count": 119836,
+        "nonfinite_count": 0,
+        "quantiles": {
+          "0": 0.0,
+          "0.01": 0.0,
+          "0.1": 0.0,
+          "0.5": 0.0,
+          "0.9": 0.3843540847301483,
+          "0.99": 0.8778244674205775,
+          "1": 1.0
+        }
+      },
+      "raw_alpha_below_prune_005": 34191,
+      "raw_alpha_ge05_dc_brightness_lt003": 55904,
+      "raw_alpha_ge09_dc_brightness_lt003": 51232,
+      "max_sigma_over_extent_gt001": 13985,
+      "max_sigma_over_extent_gt01": 188,
+      "near_black_large_scale_raw_alpha_ge05": 10088,
+      "numerical_notes": "Saved params only; no historical densification gradient state inferred; extent normalizes own scene gauge.",
+      "processing_seconds": 0.2543811798095703
+    }
+  ],
+  "no_gpu": true,
+  "no_training": true
+}

@@ -1,0 +1,20 @@
+losses:
+  pmap:
+    loss_class: dvlt.model_components.loss.PointLoss
+    weight: 1.0
+    kwargs:
+      grad_loss: null
+  depth:
+    loss_class: dvlt.model_components.loss.DepthLoss
+    weight: 1.0
+    kwargs:
+      grad_loss: edge
+  ray:
+    loss_class: dvlt.model_components.loss.RayLoss
+    weight: 1.0
+    kwargs: {}
+  cam:
+    loss_class: dvlt.model_components.loss.CameraLoss
+    weight: 1.0
+    kwargs: {}
+normalize: false

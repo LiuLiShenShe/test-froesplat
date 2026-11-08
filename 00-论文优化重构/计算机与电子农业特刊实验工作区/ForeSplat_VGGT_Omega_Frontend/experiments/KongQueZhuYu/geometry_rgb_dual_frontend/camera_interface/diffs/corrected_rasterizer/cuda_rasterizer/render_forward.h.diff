@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -64,7 +64,7 @@
+     const float4* ray_planes,
+     const float3* normals,
+     const float focal_x,
+-    const float focal_y,
++    const float focal_y, const float* ray_view, const float* ray_proj,
+     uint32_t* n_contrib,
+     uint32_t* max_contributor,
+     const float* bg_color,

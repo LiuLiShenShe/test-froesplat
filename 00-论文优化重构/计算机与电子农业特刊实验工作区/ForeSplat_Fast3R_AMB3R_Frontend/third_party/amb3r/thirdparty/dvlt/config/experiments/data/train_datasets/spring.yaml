@@ -1,0 +1,11 @@
+spring:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random_ordered"
+  window_size_ratio: 10.0
+  dataverse_cfg:
+    target: "spring.Spring"
+    params:
+      # indexed zip
+      data_root: "${user.data_root}/train/spring"
+      split: "train"

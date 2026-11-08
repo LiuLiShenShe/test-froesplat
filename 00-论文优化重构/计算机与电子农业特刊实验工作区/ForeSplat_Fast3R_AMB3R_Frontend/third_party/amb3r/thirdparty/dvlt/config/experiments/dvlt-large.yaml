@@ -1,0 +1,80 @@
+defaults:
+  - model: dvlt
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Full DVLT training recipe (matches `runs_todo.sh:290-295` "vit-b-final").
+# All model-side knobs (num_steps=16 / min_steps=8 / inference_steps=12 /
+# k_sampler Beta(2, 1) / drop_path=0.1 / sync_stochastic_depth=True /
+# loss confs disabled, etc.) are the canonical defaults
+# in `DVLTModel.__init__` and `DVLTModelConfig`. This file only overrides
+# what differs for the 16-node launch (image size, batch sizes, training
+# schedule, callbacks).
+
+model:
+  img_size: 504
+  depth_head_type: linear  # stage 1 trains the linear depth head; stage 2 (default "conv") finetunes it.
+  loss:
+    losses:
+      pmap:
+        loss_class: dvlt.model_components.loss.PointLoss
+        weight: 1.0
+        kwargs:
+          grad_loss: null
+          disable_conf: true
+      depth:
+        loss_class: dvlt.model_components.loss.DepthLoss
+        weight: 1.0
+        kwargs:
+          grad_loss: edge
+          disable_conf: true
+      ray:
+        loss_class: dvlt.model_components.loss.RayLoss
+        weight: 1.0
+        kwargs: {}
+      cam:
+        loss_class: dvlt.model_components.loss.CameraLoss
+        weight: 1.0
+        kwargs: {}
+    normalize: true
+
+data:
+  tokens_per_batch: 20736
+  images_per_batch: 36
+  images_per_element: [2, 18]
+  image_size: 504
+  patch_size: 14
+  train_num_workers: 16
+  train_prefetch_factor: 8
+  pin_memory: True
+  train_config:
+    load_data_fields:
+      - images
+      - extrinsics_c2w
+      - intrinsics
+      - depths
+      - world_points
+      - point_masks
+
+trainer:
+  experiment_name: dvlt-large
+  max_train_steps: 200_000
+  validation_steps: 100_000
+  checkpointing_steps: 5_000
+  checkpoints_total_limit: -1
+  adam_weight_decay: 0.05
+  gradient_checkpointing: True
+  set_grads_to_none: True
+  cudnn_deterministic: False
+  cudnn_benchmark: False
+  learning_rate: 3e-4
+  lr_scheduler: cosine
+  lr_warmup_steps: 0
+  lr_param_group_multipliers:
+    patch_embed: 0.1
+  callbacks:
+    depth_vis:
+      _target_: dvlt.callbacks.visualization.DepthVisualizationCallback
+      log_train_every_n_steps: 500

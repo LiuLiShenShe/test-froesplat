@@ -1,0 +1,7 @@
+{
+  "shared_coordinate_system": "1080x1920 actual GGGS training pixels, integer centers; observed original RGB correspondences transformed with half-pixel resize",
+  "fixed_pairs": "Same near-frame RAP image-only RANSAC correspondences as foreground geometry audit",
+  "confidence": "Original frontend p20 threshold, unchanged within interface pair",
+  "edge": "Same 3px inner boundary on shared Omega384x688 original mask; no model-selected mask tuning",
+  "interpretation": "Real source depth projected through target runtime full P to independently observed target RGB. Combines frontend residual and interface shift; not same-view self-projection or absolute 3D GT"
+}

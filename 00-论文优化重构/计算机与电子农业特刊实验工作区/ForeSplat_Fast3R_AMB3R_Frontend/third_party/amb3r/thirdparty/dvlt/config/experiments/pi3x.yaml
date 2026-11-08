@@ -1,0 +1,23 @@
+defaults:
+  - model: pi3
+  - data: mixed_all
+  - user: default
+  - trainer: default
+  - _self_
+
+# Eval-only Pi3X baseline (engineering update over Pi3 with conv heads,
+# optional camera/intrinsics conditioning, smoother conf). Wrapper at
+# `dvlt/model/pi3/model.py` raises in `train_step`; only
+# `python -m dvlt.scripts.test --config-name pi3x.yaml` is supported.
+#
+# Pi3X HF card: https://huggingface.co/yyfz233/Pi3X
+# Flip `model.use_cam_cond_at_test=true` to feed the batch's GT extrinsics
+# (c2w) and intrinsics into Pi3X's `poses` / `intrinsics` arguments.
+
+model:
+  use_pi3x: true
+  use_cam_cond_at_test: false
+
+trainer:
+  experiment_name: pi3x
+  ckpt_dir: yyfz233/Pi3X

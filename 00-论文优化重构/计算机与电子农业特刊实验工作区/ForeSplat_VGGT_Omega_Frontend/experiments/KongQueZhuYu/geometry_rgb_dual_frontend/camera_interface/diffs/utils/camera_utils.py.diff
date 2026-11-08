@@ -1,0 +1,15 @@
+--- 
++++ 
+@@ -51,7 +51,11 @@
+     return Camera(colmap_id=cam_info.uid, R=cam_info.R, T=cam_info.T, 
+                   FoVx=cam_info.FovX, FoVy=cam_info.FovY, 
+                   image=gt_image, gt_alpha_mask=loaded_mask,
+-                  image_name=cam_info.image_name, uid=id, data_device=args.data_device)
++                  image_name=cam_info.image_name, uid=id, data_device=args.data_device, intrinsics=(
++                      fov2focal(cam_info.FovX, orig_w)*resolution[0]/orig_w,
++                      fov2focal(cam_info.FovY, orig_h)*resolution[1]/orig_h,
++                      (cam_info.cx+0.5)*resolution[0]/orig_w-0.5,
++                      (cam_info.cy+0.5)*resolution[1]/orig_h-0.5))
+ 
+ def cameraList_from_camInfos(cam_infos, resolution_scale, args):
+     camera_list = []

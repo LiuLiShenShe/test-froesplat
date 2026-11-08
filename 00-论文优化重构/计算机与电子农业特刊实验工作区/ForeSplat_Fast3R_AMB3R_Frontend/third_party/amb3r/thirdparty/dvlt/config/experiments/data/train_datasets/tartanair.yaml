@@ -1,0 +1,12 @@
+tartanair:
+  _target_: dvlt.data.datasets.parser.dataverse.DataverseTrainDataset
+  view_ranking: "index"
+  view_sampling: "random"
+  window_size_ratio: 3.0
+  max_depth_thresh: 500.0
+  dataverse_cfg:
+    target: "processed.light3r_preproc.TartanAir"
+    params:
+      # format: indexed tar
+      data_root: "${user.data_root}/train/tartanair"
+      split: "train"

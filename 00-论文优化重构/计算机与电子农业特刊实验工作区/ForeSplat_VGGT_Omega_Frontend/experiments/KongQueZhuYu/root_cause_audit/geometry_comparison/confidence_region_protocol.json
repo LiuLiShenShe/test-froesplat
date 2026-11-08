@@ -1,0 +1,35 @@
+{
+  "source_ids": [
+    0,
+    18,
+    25,
+    37,
+    50,
+    57,
+    68,
+    73,
+    75,
+    76,
+    95,
+    100,
+    113,
+    132,
+    151,
+    170,
+    189,
+    209
+  ],
+  "original_source_offsets": [
+    1,
+    5,
+    15
+  ],
+  "query_reference": "At most6000 seeded actual Omega foreground pixels per source, mapped to original coordinates; same original queries before model/tail eligibility",
+  "tail_selection": "Each model/source native foreground confidence q25 and q75; ties retained and fractions explicitly reported. Selection differs by model; use low/high comparison within a model, never infer cross-model probability calibration.",
+  "target_filter": "Mask,finite positive depth only; no target confidence-tail threshold, isolating source confidence selection",
+  "purpose": "Do low-confidence source pixels predict weaker internal multiview support in fixed18views? Not absolute GT geometry accuracy.",
+  "scope": "Supplementary18 source views with real saved target views at source-ID offsets±1/5/15; not a full208 confidence-tail evaluation",
+  "no_model_inference": true,
+  "no_gpu": true,
+  "no_new_fusion": true
+}

@@ -1,0 +1,16 @@
+--- official_surfel_cuda_rasterizer_rasterizer_impl.h
++++ /data/fj/F2DMAS/2d-gaussian-splatting-main/submodules/diff-surfel-rasterization/cuda_rasterizer/rasterizer_impl.h
+@@ -11,6 +11,8 @@
+ 
+ #pragma once
+ 
++#include <cstddef>
++#include <cstdint>
+ #include <iostream>
+ #include <vector>
+ #include "rasterizer.h"
+@@ -71,4 +73,4 @@
+ 		T::fromChunk(size, P);
+ 		return ((size_t)size) + 128;
+ 	}
+-};+};

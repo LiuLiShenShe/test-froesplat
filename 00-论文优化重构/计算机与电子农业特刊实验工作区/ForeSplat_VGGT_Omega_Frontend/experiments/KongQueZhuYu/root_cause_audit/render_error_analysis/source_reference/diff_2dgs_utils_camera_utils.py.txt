@@ -1,0 +1,33 @@
+--- official_2dgs_utils_camera_utils.py
++++ /data/fj/F2DMAS/2d-gaussian-splatting-main/utils/camera_utils.py
+@@ -13,6 +13,7 @@
+ import numpy as np
+ from utils.general_utils import PILtoTorch
+ from utils.graphics_utils import fov2focal
++from utils.plant_aware_utils import enabled, load_mask_tensor
+ 
+ WARNED = False
+ 
+@@ -48,6 +49,17 @@
+         loaded_mask = None
+         gt_image = resized_image_rgb
+ 
++    if enabled(getattr(args, "mask_dir", "")) and getattr(args, "mask_mode", "none") in ("preprocess", "alpha"):
++        loaded_mask = load_mask_tensor(
++            args.mask_dir,
++            cam_info.image_name,
++            resolution,
++            pattern=getattr(args, "mask_pattern", "mask_{stem}.png"),
++            threshold=getattr(args, "mask_threshold", 0.5),
++        )
++        if args.mask_mode == "preprocess":
++            gt_image = gt_image * loaded_mask
++
+     return Camera(colmap_id=cam_info.uid, R=cam_info.R, T=cam_info.T, 
+                   FoVx=cam_info.FovX, FoVy=cam_info.FovY, 
+                   image=gt_image, gt_alpha_mask=loaded_mask,
+@@ -81,4 +93,4 @@
+         'fy' : fov2focal(camera.FovY, camera.height),
+         'fx' : fov2focal(camera.FovX, camera.width)
+     }
+-    return camera_entry+    return camera_entry

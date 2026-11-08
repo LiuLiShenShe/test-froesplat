@@ -1,0 +1,15 @@
+defaults:
+  - dvlt-large
+  - _self_
+
+data:
+  tokens_per_batch: 21600  # 15 * 36 * 72 (0.41 aspect ratio)
+  images_per_batch: 40
+  images_per_element: [2, 10]
+  train_num_workers: 12
+  train_prefetch_factor: 6
+
+trainer:
+  max_train_steps: 100_000
+  validation_steps: 10_000
+  checkpointing_steps: 10_000

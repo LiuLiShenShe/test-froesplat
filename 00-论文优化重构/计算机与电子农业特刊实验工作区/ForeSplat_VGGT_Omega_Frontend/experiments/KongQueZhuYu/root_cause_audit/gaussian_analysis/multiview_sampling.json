@@ -1,0 +1,95 @@
+{
+  "schema": "gggs.multiview_sampling.v1",
+  "experiments": [
+    {
+      "id": "E1",
+      "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/checkpoints/multi_view.json",
+      "views": 208,
+      "empty_neighbor_views": 0,
+      "empty_neighbor_fraction": 0.0,
+      "neighbors_count_distribution": {
+        "7": 3,
+        "8": 205
+      },
+      "source_index_gap_median": 3.0,
+      "source_index_gap_p90": 17.0
+    },
+    {
+      "id": "E2",
+      "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E2_GGGS_EO/checkpoints/multi_view.json",
+      "views": 208,
+      "empty_neighbor_views": 0,
+      "empty_neighbor_fraction": 0.0,
+      "neighbors_count_distribution": {
+        "7": 3,
+        "8": 205
+      },
+      "source_index_gap_median": 3.0,
+      "source_index_gap_p90": 17.0
+    },
+    {
+      "id": "E3",
+      "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E3_GGGS_Foreground/checkpoints/multi_view.json",
+      "views": 208,
+      "empty_neighbor_views": 0,
+      "empty_neighbor_fraction": 0.0,
+      "neighbors_count_distribution": {
+        "7": 3,
+        "8": 205
+      },
+      "source_index_gap_median": 3.0,
+      "source_index_gap_p90": 17.0
+    },
+    {
+      "id": "E4",
+      "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E4_ForeSplat_GGGS/checkpoints/multi_view.json",
+      "views": 208,
+      "empty_neighbor_views": 0,
+      "empty_neighbor_fraction": 0.0,
+      "neighbors_count_distribution": {
+        "7": 3,
+        "8": 205
+      },
+      "source_index_gap_median": 3.0,
+      "source_index_gap_p90": 17.0
+    },
+    {
+      "id": "E5",
+      "source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_Standard_VGGT_Frontend/experiments/KongQueZhuYu/standard_vggt_comparison/E5_Standard_VGGT_GGGS_Baseline/checkpoints/multi_view.json",
+      "views": 208,
+      "empty_neighbor_views": 3,
+      "empty_neighbor_fraction": 0.014423076923076924,
+      "neighbors_count_distribution": {
+        "0": 3,
+        "1": 1,
+        "5": 1,
+        "6": 2,
+        "8": 201
+      },
+      "source_index_gap_median": 10.0,
+      "source_index_gap_p90": 106.0
+    }
+  ],
+  "primary_training_camera_selection": {
+    "with_replacement": false,
+    "source_lines": "train_foresplat.py:188-192",
+    "mechanism": "When empty, stack=getTrainCameras().copy(); pop randint from remaining stack. Every complete208 cycle visits every camera exactly once.",
+    "iterations": 30000,
+    "views": 208,
+    "complete_cycles": 144,
+    "partial_last_cycle": 48,
+    "per_camera_primary_visits": "Each of208 cameras visited144 or145 times; exactly48 cameras145. Identities/order not saved, cannot recover last48 from10-step stdout/100-step CSV.",
+    "primary_view_order_saved": false
+  },
+  "neighbors_selection": {
+    "max_num": 8,
+    "max_angle_deg": 30,
+    "min_distance_native_units": 0.01,
+    "max_distance_native_units": 1.5,
+    "reference": "scene/__init__.py:103-114",
+    "distance_thresholds_extent_scaled": false,
+    "note": "Graph is saved actual training selection. Distance bounds are native-world absolute units, while position LR and clone/split size threshold scale with extent. This mechanism can depend on gauge; graph counts alone do not prove image overlap or causal blur."
+  },
+  "training_executed": false,
+  "no_gpu": true
+}
