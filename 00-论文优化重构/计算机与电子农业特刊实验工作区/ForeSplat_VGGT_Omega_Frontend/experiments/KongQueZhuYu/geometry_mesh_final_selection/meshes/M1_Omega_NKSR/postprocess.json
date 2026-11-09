@@ -1,0 +1,69 @@
+{
+  "rule": "Remove components with <50 triangles only; all larger components retained",
+  "raw_vertices": 4122044,
+  "raw_faces": 8126459,
+  "raw_components": 1198,
+  "deleted_vertices": 7928,
+  "deleted_faces": 8691,
+  "kept_components": 526,
+  "deleted_component_area": 0.0012112395853917464,
+  "scale": {
+    "frontend": "omega",
+    "original_foreground_points": 13640966,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.16619672958507234,
+      -0.16238293114012978,
+      0.484509584087271
+    ],
+    "robust_bbox_max": [
+      0.18686351745547902,
+      0.2937200431430193,
+      0.8355673078246961
+    ],
+    "diagonal": 0.6752206947257855,
+    "origin": [
+      0.010333393935203342,
+      0.06566855600144476,
+      0.6600384459559836
+    ],
+    "sampling_voxel": 0.0006593952096931499,
+    "nksr_voxel": 0.0013187904193862998,
+    "tsdf_voxel": 0.0013187904193862998,
+    "tsdf_sdf_trunc": 0.006593952096931499,
+    "transform": [
+      [
+        -0.9999999289387856,
+        0.00040212553686750876,
+        -0.00016901345993920513,
+        -0.0001223361263513602
+      ],
+      [
+        -0.0004021216251680368,
+        -0.9999998973672466,
+        -2.3142784517571213e-05,
+        4.6913954638617576e-05
+      ],
+      [
+        -0.0001690227610073378,
+        -2.3074820534280546e-05,
+        0.9999999708988607,
+        0.0001495619906209963
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+    "extent_sample": "deterministic stride approximately 4000 original observations per frame; no clipping"
+  },
+  "raw_is_preserved": true,
+  "removed_geometry_archive": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/meshes/M1_Omega_NKSR/components_and_removals.npz"
+}

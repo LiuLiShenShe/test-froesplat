@@ -1,0 +1,81 @@
+diff --git a/package/csrc/sparse_solve/solve_cuda.cu b/package/csrc/sparse_solve/solve_cuda.cu
+index ac3b0da..e63d597 100644
+--- a/package/csrc/sparse_solve/solve_cuda.cu
++++ b/package/csrc/sparse_solve/solve_cuda.cu
+@@ -176,7 +176,10 @@ std::pair<torch::Tensor, int> solve_pcg_cuda(
+     const float* d_inv_diag_A = inv_diag_A.data_ptr<float>();
+ 
+     cusparseHandle_t cusparseHandle = at::cuda::getCurrentCUDASparseHandle();
+-    cublasHandle_t cublasHandle = at::cuda::getCurrentCUDABlasHandle();
++    // Mathematically equivalent ATen vector operations avoid a reproduced
++    // libcublas Sdot SIGFPE in this CUDA runtime. Sparse matvec and PCG
++    // equations, float32 state, convergence tolerance and iteration limit remain.
++    cudaSetDevice(b.get_device());
+ 
+     // Create sparse tensors and vectors
+     std::map<BlockInds, cusparseSpMatDescr_t> matA_map;
+@@ -241,7 +244,7 @@ std::pair<torch::Tensor, int> solve_pcg_cuda(
+     symblk_matmul(cusparseHandle, d_Ax, N, n_block, matA_map, vecx, vecAx, buffer, block_ptr);
+ 
+     // d_r = alpham1 * d_Ax + d_r
+-    cublasSafeCall(cublasSaxpy(cublasHandle, N, &neg_one, d_Ax, 1, d_r, 1));
++    d_r_tensor.add_(Ax_tensor, -1.0);
+ 
+     int iters = 0;
+     float rho = 0.0;
+@@ -259,16 +262,16 @@ std::pair<torch::Tensor, int> solve_pcg_cuda(
+         rho1 = rho;
+ 
+         // [rho = cublas.dotc(r, z)]
+-        cublasSafeCall(cublasSdot(cublasHandle, N, d_r, 1, d_z, 1, &rho));
++        rho = (d_r_tensor * d_z_tensor).sum().item<float>();
+ 
+         if (iters == 0) {
+             // [p = z]
+-            cublasSafeCall(cublasScopy(cublasHandle, N, d_z, 1, d_p, 1));
++            d_p_tensor.copy_(d_z_tensor);
+         } else {
+             float betap = rho / rho1;
+             // [p = z + beta * p]
+-            cublasSafeCall(cublasSscal(cublasHandle, N, &betap, d_p, 1));
+-            cublasSafeCall(cublasSaxpy(cublasHandle, N, &one, d_z, 1, d_p, 1));
++            d_p_tensor.mul_(betap);
++            d_p_tensor.add_(d_z_tensor);
+         }
+ 
+         // [q = matvec(p)], where q --> Ax
+@@ -276,28 +279,28 @@ std::pair<torch::Tensor, int> solve_pcg_cuda(
+ 
+         float alpha, neg_alpha, dot;
+         // [alpha = rho / cublas.dotc(p, q)]
+-        cublasSafeCall(cublasSdot(cublasHandle, N, d_p, 1, d_Ax, 1, &dot));
++        dot = (d_p_tensor * Ax_tensor).sum().item<float>();
+         alpha = rho / dot;
+ 
+         // [x = x + alpha * p]
+-        cublasSafeCall(cublasSaxpy(cublasHandle, N, &alpha, d_p, 1, d_x, 1));
++        x_tensor.add_(d_p_tensor, alpha);
+ 
+         if ((iters + 1) % sqrt_n == 0 && res_fix) {
+             // [r = b - matvec(x)]
+             symblk_matmul(cusparseHandle, d_Ax, N, n_block, matA_map, vecx, vecAx, buffer, block_ptr);
+-            cublasSafeCall(cublasScopy(cublasHandle, N, d_b, 1, d_r, 1));
+-            cublasSafeCall(cublasSaxpy(cublasHandle, N, &neg_one, d_Ax, 1, d_r, 1));
++            d_r_tensor.copy_(b);
++            d_r_tensor.add_(Ax_tensor, -1.0);
+         } else {
+             // [r = r - alpha * q]
+             neg_alpha = -alpha;
+-            cublasSafeCall(cublasSaxpy(cublasHandle, N, &neg_alpha, d_Ax, 1, d_r, 1));
++            d_r_tensor.add_(Ax_tensor, neg_alpha);
+         }
+ 
+         iters++;
+ 
+         // [resid = cublas.nrm2(r)]
+         float resid;
+-        cublasSafeCall(cublasSnrm2(cublasHandle, N, d_r, 1, &resid));
++        resid = d_r_tensor.norm().item<float>();
+ 
+ //        cudaDeviceSynchronize();
+ //        printf("iteration = %3d, residual = %e\n", iters, sqrt(resid));

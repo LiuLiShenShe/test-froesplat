@@ -1,0 +1,40 @@
+{
+  "source": "/data/fj/F2DMAS/2d-gaussian-splatting-main",
+  "isolated": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/camera_interface/2dgs_corrected",
+  "changed": [
+    {
+      "path": "train.py",
+      "before_sha256": "e9ecc56a33c799818c814e6d135b9b140044d92de69c2d276bcc940933c8ce1a",
+      "after_sha256": "ebc9f6e9def7e70733af913d07e00f350ae2e3fdd5cbdcf3e9abc37ccd347196"
+    },
+    {
+      "path": "scene/dataset_readers.py",
+      "before_sha256": "40b9a02005577700a3fdfb0ce61c7876712b1a32862b00313c03560c1b17c7ac",
+      "after_sha256": "e5c8f8c6f193198effcc9fb7decf05dc01834d6ffd225abeef63a8e2ed501ecd"
+    },
+    {
+      "path": "scene/cameras.py",
+      "before_sha256": "5244fb5dcb97a811f5ac2feaaefe69e8e74fb9d425e5c9653825e21b2ca610d9",
+      "after_sha256": "f5f798b2f24085e85a02a2836125776119db20b131cd76f658664b41f52bf1ce"
+    },
+    {
+      "path": "utils/camera_utils.py",
+      "before_sha256": "702a86b5fe8043d17048a26ef4f1ce90da6ed970887fffb35cd3892bdd8c0c0c",
+      "after_sha256": "1225fb628995402fc5a70257542322b2db4105b490cf9ee3fa78ddecf9e0226e"
+    },
+    {
+      "path": "utils/point_utils.py",
+      "before_sha256": "3bfbd7a496b7f55d30aebccb1abc6df407a2dd4896283f68f5c8a67513317703",
+      "after_sha256": "38d59dcbce98b1f8c7e935b7abc6795b214862bc63e9fac51421e700fdf416af"
+    },
+    {
+      "path": "gaussian_renderer/__init__.py",
+      "before_sha256": "c27c0f8ba31ae8adf75e56291802ad07b0db1bcea4b94b52c8424098ff65c11a",
+      "after_sha256": "a9d7276facdb6fc62b49452caefd5710c31a1fc38cc81c905251f204f1f9adf8"
+    }
+  ],
+  "cuda_numerical_changes": false,
+  "cuda_note": "Both surfel forward and backward use full projective splat-to-pixel homography with W-1/H-1 pixel centers, preserving noncentral P; validated before training.",
+  "optimizer_gaussian_model_unchanged": true,
+  "official_training_loop": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/source_reference/2DGS_official_train.py"
+}

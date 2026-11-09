@@ -1,0 +1,43 @@
+diff --git a/package/csrc/vdbops/PythonBindings.cpp b/package/csrc/vdbops/PythonBindings.cpp
+index f99bf9c..14ba967 100644
+--- a/package/csrc/vdbops/PythonBindings.cpp
++++ b/package/csrc/vdbops/PythonBindings.cpp
+@@ -8,16 +8,36 @@ using IndexGridDevice = SparseFeatureIndexGrid<fvdb::PytorchDeviceBuffer>;
+ 
+ 
+ namespace pybind11 {namespace detail {
++// Compatibility with PyTorch's pybind11 3: NanoVDB coordinates/vectors have
++// three-scalar constructors rather than std::array aggregate constructors.
++template <typename VecT, typename ScalarT>
++struct nanovdb_vec_caster {
++    PYBIND11_TYPE_CASTER(VecT, const_name("Sequence[3]"));
++    bool load(handle src, bool convert) {
++        if (!isinstance<sequence>(src)) return false;
++        auto seq = reinterpret_borrow<sequence>(src);
++        if (seq.size() != 3) return false;
++        make_caster<ScalarT> x, y, z;
++        if (!x.load(seq[0], convert) || !y.load(seq[1], convert) || !z.load(seq[2], convert)) return false;
++        this->value = VecT(cast_op<ScalarT>(x), cast_op<ScalarT>(y), cast_op<ScalarT>(z));
++        return true;
++    }
++    static handle cast(const VecT &src, return_value_policy, handle) {
++        list out(3);
++        for (size_t i = 0; i < 3; ++i) out[i] = pybind11::cast(src[i]);
++        return out.release();
++    }
++};
+ template <>
+ struct type_caster<nanovdb::Coord>
+- : array_caster<nanovdb::Coord, int32_t, false, 3> { };
++ : nanovdb_vec_caster<nanovdb::Coord, int32_t> { };
+ }}
+ 
+ 
+ namespace pybind11 {namespace detail {
+ template <typename ScalarT>
+ struct type_caster<nanovdb::Vec3<ScalarT>>
+- : array_caster<nanovdb::Vec3<ScalarT>, ScalarT, false, 3> { };
++ : nanovdb_vec_caster<nanovdb::Vec3<ScalarT>, ScalarT> { };
+ }}
+ 
+ 

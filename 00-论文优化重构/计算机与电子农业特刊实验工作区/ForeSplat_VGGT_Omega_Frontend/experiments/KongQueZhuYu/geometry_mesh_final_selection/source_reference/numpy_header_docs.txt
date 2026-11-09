@@ -1,0 +1,107 @@
+### read_array_header_1_0(fp, max_header_size=10000)
+
+Source: https://numpy.org/doc/2.4/reference/generated/numpy.lib.format.read_array_header_1_0.html
+
+Reads an array header from a file-like object using the 1.0 file format version. This function leaves the file object positioned just after the header and returns the shape, Fortran order flag, and dtype of the array.
+
+```APIDOC
+## read_array_header_1_0(fp, max_header_size=10000)
+
+### Description
+Reads an array header from a file-like object using the 1.0 file format version. This will leave the file object located just after the header.
+
+### Method
+Function call
+
+### Signature
+`read_array_header_1_0(fp, max_header_size=10000)`
+
+### Parameters
+- **fp** (filelike object) - Required - A file object or something with a `read()` method like a file.
+- **max_header_size** (int, optional) - Maximum allowed size of the header. Large headers may not be safe to load securely and thus require explicitly passing a larger value. See `ast.literal_eval` for details.
+
+### Returns
+- **shape** (tuple of int) - The shape of the array.
+- **fortran_order** (bool) - The array data will be written out directly if it is either C-contiguous or Fortran-contiguous. Otherwise, it will be made contiguous before writing it out.
+- **dtype** (dtype) - The dtype of the file's data.
+
+### Raises
+- **ValueError** - If the data is invalid.
+```
+
+--------------------------------
+
+### read_magic(fp)
+
+Source: https://numpy.org/doc/2.4/reference/generated/numpy.lib.format.read_magic.html
+
+Reads the magic string from a file-like object to determine the version of the NumPy .npy file format. Returns the major and minor version numbers as integers.
+
+```APIDOC
+## read_magic(fp)
+
+### Description
+Reads the magic string from a file-like object to determine the version of the NumPy .npy file format. Returns the major and minor version numbers as integers.
+
+### Method
+Function call
+
+### Endpoint
+`numpy.lib.format.read_magic(fp)`
+
+### Parameters
+- **fp** (filelike object) - Required - The file-like object to read the magic string from.
+
+### Returns
+- **major** (int) - The major version number of the file format.
+- **minor** (int) - The minor version number of the file format.
+
+```
+
+--------------------------------
+
+### read_array_header_1_0(fp[, max_header_size])
+
+Source: https://numpy.org/doc/2.4/reference/generated/numpy.lib.format.html
+
+Read an array header from a filelike object using the 1.0 file format version. This function parses the header of a .npy file in version 1.0 format.
+
+```APIDOC
+## read_array_header_1_0(fp[, max_header_size])
+
+### Description
+Read an array header from a filelike object using the 1.0 file format version.
+
+### Method
+Function
+
+### Signature
+`read_array_header_1_0(fp, max_header_size=10000)`
+
+### Parameters
+- **fp** (file-like) - The file-like object to read from.
+- **max_header_size** (int, optional) - Maximum allowed header size.
+
+### Returns
+- **tuple** - A tuple (shape, fortran_order, dtype) parsed from the header.
+```
+
+--------------------------------
+
+### numpy.lib.format.read_array_header_1_0
+
+Source: https://numpy.org/doc/2.4/reference/generated/numpy.lib.format.read_array_header_1_0.html
+
+Read an array header from a filelike object using the 1.0 file format version.
+
+This will leave the file object located just after the header.
+
+--------------------------------
+
+### numpy.lib.format.read_array_header_1_0 > Returns
+
+Source: https://numpy.org/doc/2.4/reference/generated/numpy.lib.format.read_array_header_1_0.html
+
+**shape**tuple of int
+
+The shape of the array.

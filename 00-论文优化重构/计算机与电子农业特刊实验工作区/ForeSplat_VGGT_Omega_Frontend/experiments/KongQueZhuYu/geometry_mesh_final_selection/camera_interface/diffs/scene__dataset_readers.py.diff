@@ -1,0 +1,22 @@
+--- E6/scene/dataset_readers.py
++++ E11/scene/dataset_readers.py
+@@ -34,6 +34,8 @@
+     image_name: str
+     width: int
+     height: int
++    cx: float = None
++    cy: float = None
+ 
+ class SceneInfo(NamedTuple):
+     point_cloud: BasicPointCloud
+@@ -114,7 +116,9 @@
+         image = Image.open(image_path)
+ 
+         cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image,
+-                              image_path=image_path, image_name=image_name, width=width, height=height)
++                              image_path=image_path, image_name=image_name, width=width, height=height,
++                              cx=float(intr.params[1] if intr.model == "SIMPLE_PINHOLE" else intr.params[2]),
++                              cy=float(intr.params[2] if intr.model == "SIMPLE_PINHOLE" else intr.params[3]))
+         cam_infos.append(cam_info)
+     sys.stdout.write('\n')
+     return cam_infos

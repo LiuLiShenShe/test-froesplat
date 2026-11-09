@@ -1,0 +1,24 @@
+{
+  "status": "optional_resource_limited",
+  "successful_mesh": false,
+  "main_experiments_affected": false,
+  "input_points": 18217854,
+  "attempts": [
+    {
+      "allocator": "native default",
+      "requested_gib": 11.68,
+      "allocated_gib": 22.15,
+      "reserved_unused_gib": 12.65,
+      "path": "meshes/supplementary/E11_2DGS_NKSR/failed_attempts/attempt01_oom"
+    },
+    {
+      "allocator": "expandable_segments:True",
+      "requested_gib": 11.55,
+      "allocated_gib": 34.54,
+      "reserved_unused_mib": 359.89,
+      "path": "meshes/supplementary/E11_2DGS_NKSR/failed_attempts/attempt02_allocator_oom"
+    }
+  ],
+  "protocol": "Same input density, weights, voxel and solver/extraction parameters as other NKSR inputs",
+  "reason": "E11 NKSR supplementary condition (better Mesh potential) not established; M5 TSDF is a completed primary. Under identical parameters this optional attempt did not fit available GPU1 memory; exclude from numeric mesh ranking and do not fabricate an empty/successful mesh"
+}

@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "views": 208,
+  "summary": {
+    "width": 1080.0,
+    "height": 1920.0,
+    "full_psnr": 22.261471765286952,
+    "fg_mask_psnr": 17.59254995546233,
+    "boundary_band5_psnr": 13.176672046318096,
+    "inner_fg_edge5_psnr": 12.73668268873195,
+    "ssim": 0.8632166551855894,
+    "fg_mask_ssim_map": 0.6003513569728687,
+    "lpips_alex": 0.13734949192103857,
+    "fg_gradient_retention": 0.6728601401241926,
+    "fg_gradient_ratio_abs_error": 0.32782583139263666,
+    "edge_gradient_retention": 0.5744442468365798,
+    "fg_gradient_mae": 0.023433312151330307,
+    "foreground_alpha_mean": 0.999447978173311,
+    "background_alpha_mean": 0.9931412817767034,
+    "background_alpha_gt05_fraction": 0.9957586881427539,
+    "alpha_mask05_iou": 0.3109698756848155,
+    "gaussian_count": 248629.0
+  },
+  "elapsed_seconds": 438.345664024353,
+  "physical_gpu": 1,
+  "metric_source_sha256": "e3c143f467d7a2645a03b6288a2f7a068e454c6f0298a8314366182f09e9b59a",
+  "torch": "2.10.0+cu128",
+  "lpips": "Alex full1080x1920",
+  "evaluation": "Same E10 audit region/gradient functions and skimage win7/sample covariance; float RGB clip[0,1], no PNG or resizing"
+}

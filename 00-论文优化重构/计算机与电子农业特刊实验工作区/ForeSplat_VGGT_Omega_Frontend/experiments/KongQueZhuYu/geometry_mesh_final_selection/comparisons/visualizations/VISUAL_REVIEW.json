@@ -1,0 +1,145 @@
+{
+  "method": "Direct own model vision of bounded real native-pixel montage; no external vision API",
+  "reviewed": [
+    {
+      "file": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/comparisons/visualizations/photo_preview_native.png",
+      "pixels": 497664,
+      "source_ids": [
+        0,
+        53,
+        105
+      ],
+      "observations": [
+        "E11 has retained texture in some local regions",
+        "E11 view53 has a conspicuous black band across the leaf/stem region",
+        "E8/E10 retain the region without this band, with residual blurred veins/edges",
+        "This observation does not by itself establish 3D surface accuracy"
+      ]
+    }
+  ],
+  "additional_reviews": [
+    {
+      "image": "tsdf_preview_native.png",
+      "pixels": [
+        900,
+        1032
+      ],
+      "source_ids": [
+        0,
+        53,
+        105
+      ],
+      "columns": [
+        "GT",
+        "M4 raw",
+        "M4 post",
+        "M5 raw",
+        "M5 post"
+      ],
+      "review": "Direct own-model vision on a bounded genuine montage",
+      "observations": [
+        "M4 preserves more of the upper leaves at view53; M5 upper foliage shows strong missing/strip-like regions and floating specks",
+        "Both have residual soft vein/leaf-edge appearance; M5 sometimes preserves local vein contrast at view105",
+        "Raw and post differ mainly in small fragments; post does not restore missing M5 upper leaf structure",
+        "Pot and blue reference tag are in original RAP foreground; their independent components are not automatically false plant geometry"
+      ],
+      "limitations": "RGB vertex colours are derived from input observations and are not an independent geometric ground truth; 180x320 nearest display cannot establish serration accuracy"
+    },
+    {
+      "image": "main_mesh_preview_raw.png",
+      "pixels": [
+        1080,
+        688
+      ],
+      "source_ids": [
+        53,
+        105
+      ],
+      "columns": [
+        "GT",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "review": "Direct own-model vision; same native arrays/nearest overview",
+      "observations": [
+        "Direct NKSR meshes M1/M2 have granular and partly perforated surface appearance, especially pot and leaf overlap; colour-source differences prevent ranking surface precision from texture alone",
+        "M2 has more recognizable vein/leaf outline at105 than M1",
+        "M3 contains broad extra surface/floaters beyond plant, with red/green ghosts at105 and upper noise at53",
+        "M4 keeps recognizable upper leaf/stem structure at53 and smoother surfaces, but texture is soft; M5 upper leaf losses/strip regions remain"
+      ],
+      "limits": "Nearest observation colours differ across direct/Gaussian inputs; judge structure jointly with silhouette/depth/normal, not apparent texture sharpness"
+    },
+    {
+      "image": "main_mesh_edge_preview_raw.png",
+      "pixels": [
+        1152,
+        432
+      ],
+      "source_ids": [
+        53,
+        105
+      ],
+      "review": "Direct own-model vision; native192 edge windows",
+      "legend": "Grey overlap with RAP, red missing RAP, blue outside RAP",
+      "observations": [
+        "Common edge windows show missing and false-positive regions; NKSR is not an automatic serration recovery guarantee",
+        "Silhouette evidence is relative to RAP prediction, not laser surface truth"
+      ]
+    },
+    {
+      "image": "main_mesh_true_boundary_preview_raw.png",
+      "pixels": [
+        1152,
+        432
+      ],
+      "source_ids": [
+        53,
+        105
+      ],
+      "review": "Direct own-model vision, native192 GT/RAP-selected common outer-edge crops",
+      "observations": [
+        "All methods have local missing/red or extra/blue geometry; no method consistently restores real fine serrations",
+        "M1/M2 expand visible right leaf boundaries at53; M3 is locally closer at some53 edges but fails other/global regions",
+        "At105 M3 strongly fills exterior region; TSDF M4/M5 have fine exterior specks/porous fragments, with M4 substantially fewer thanM5",
+        "GT/RAP contour is a2D reference, not a validated3D leaf thickness"
+      ],
+      "roi_source": "leaf_boundary_roi_protocol.json"
+    },
+    {
+      "image": "mesh_depth_raw_2.png",
+      "pixels": [
+        1080,
+        688
+      ],
+      "source_ids": [
+        53,
+        79
+      ],
+      "review": "Direct own-model vision; common depth display origin from original frontend, own-camera gauge",
+      "observations": [
+        "M3 broad exterior depth surface at79 and spikes at53 confirm geometry beyond merely RGB artifacts",
+        "M5 broad upper blue-depth plane at53 and extensive exterior specks at79",
+        "M4 retains more plausible distinct leaf depth patches; direct M2 has actual pot holes. No independent GT depth is available"
+      ]
+    },
+    {
+      "image": "mesh_normal_raw_2.png",
+      "pixels": [
+        1080,
+        688
+      ],
+      "source_ids": [
+        53,
+        79
+      ],
+      "review": "Direct own-model vision; primitive world normals transformed to corresponding camera",
+      "observations": [
+        "Normal maps provide real surface orientation evidence; surface discontinuities/noise remain across methods",
+        "Normal signs follow geometric winding, not an independently annotated true leaf side; cannot certify thickness or absence of double-layer surfaces"
+      ]
+    }
+  ]
+}

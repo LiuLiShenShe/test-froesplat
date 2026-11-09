@@ -1,0 +1,72 @@
+[
+  {
+    "stage": "NKSR installation",
+    "issue": "Official NanoVDB array_caster incompatible with PyTorch2.10 bundled pybind11 array aggregate loading",
+    "resolution": "Isolated custom 3-scalar sequence/list caster; no CUDA/kernel/reconstruction mathematics changed",
+    "patch": "camera_interface/nksr_pybind_compat.patch",
+    "failed_logs": [
+      "logs/nksr_build.log",
+      "logs/nksr_build_compat.log"
+    ],
+    "active_log": "logs/nksr_build_compat_v2.log",
+    "timestamp": "2026-11-08T12:50:17.352438+00:00"
+  },
+  {
+    "stage": "post-training source audit",
+    "issue": "Broad adapter string replacement also reached unused MiniCam constructor",
+    "resolution": "MiniCam now derives K from supplied W2C/full projection; builder limits replacement to Camera and reproduces MiniCam adapter explicitly",
+    "scope": "No change to the verified Camera class used by all208 training/render/mesh views"
+  },
+  {
+    "stage": "native output export",
+    "issue": "Large full-float ZIP level6 serialization dominated wall time",
+    "resolution": "Lossless level1 ZIP with atomic archive publication; preserve completed arrays and resume only export from30K checkpoint",
+    "interrupted_incomplete_archive": [
+      "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e11_2dgs_surface/rendered/crop_0056.npz"
+    ],
+    "no_training_repeated": true
+  },
+  {
+    "stage": "Native M5 TSDF runtime verification",
+    "issue": "Local Open3D0.20 legacy ScalableTSDFVolume generated zero voxels/triangles after208real frames and also for a known constant-depth plane",
+    "reference": "camera_interface/tsdf_empty_validation_o3d_0.20.0.json",
+    "camera_and_mesh_array_roundtrip": "camera_interface/open3d_array_interop.json",
+    "resolution": "Existing E6 Open3D0.19 passed with real view283473faces and known-plane342860faces; native worker already targetsE6, early fusion now reruns inE6 with identical inputs/parameters"
+  },
+  {
+    "stage": "Mesh worker lifecycle",
+    "issue": "Observed minutes of file-backed runtime page faults at interpreter teardown after complete artifact publication",
+    "resolution": "Fresh mesh workers exit successfully after main returns, CUDA synchronize, monitor shutdown, file closures and output-lock release; failures still raise without success exit",
+    "scope": "Process lifecycle only; no reconstruction/geometry/metric changes",
+    "files": [
+      "scripts/extract_nksr.py",
+      "scripts/extract_native_tsdf.py",
+      "scripts/evaluate_meshes.py"
+    ]
+  },
+  {
+    "stage": "NKSR PCG CUDA runtime compatibility",
+    "issue": "SIGFPE inside libcublas Sdot on original M1, 2x2 SPD and independent private-handle direct dot; not OOM",
+    "superseded_patch": "camera_interface/nksr_cublas_context.patch",
+    "resolution": "Preserve official sparse matvec and float32 PCG equations; replace cuBLAS Level1 vector operations with equivalent ATen tensor operations, pending known-solution/full model validation",
+    "patch": "camera_interface/nksr_aten_vector_compat.patch",
+    "unchanged": "Weights, inputs, normals, density, voxel, solver tolerance/iterations, extraction parameters",
+    "validation": "Diagonal SPD N2/10000/1000000 exact max error0; unequal-block257 SPD 17iterations max error1.1599e-5, relative residual5.8807e-6 vs independent CPU double solve",
+    "status": "Small/large solver validation passed; full reconstruction resuming"
+  },
+  {
+    "stage": "Mesh depth/reprojection array serialization",
+    "resolution": "Fresh evaluation workers use existing tested lossless ZIP level1 writer with atomic publication, instead of NumPy default level6",
+    "scope": "Exact array values/dtypes and all geometry metrics preserved; completed older archives retained",
+    "note": "M1 active evaluator loaded earlier version; later evaluators use level1. Serialization time is not reconstruction quality evidence"
+  },
+  {
+    "stage": "Supplementary E11 surface NKSR",
+    "issue": "Actual CUDA OOM for unchanged18,217,854 sampled points at a11.68GiB allocation, with22.15GiB allocated/12.65GiB reserved unused",
+    "action": "Official PyTorch2.10 documented PYTORCH_ALLOC_CONF=expandable_segments:True enabled before imports, same18,217,854 points / official weights / voxel / PCG / extraction parameters",
+    "failed_attempt": "meshes/supplementary/E11_2DGS_NKSR/failed_attempts/attempt01_oom",
+    "status": "Optional resource-limited after two real attempts; primary M1-M5 unaffected",
+    "docs": "source_reference/pytorch_memory_docs.txt",
+    "final_record": "meshes/supplementary/E11_2DGS_NKSR/RESOURCE_LIMIT.json"
+  }
+]

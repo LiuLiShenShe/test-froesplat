@@ -1,0 +1,86 @@
+### cublasSetPointerMode()
+
+Source: https://docs.nvidia.com/cuda/cublas
+
+Documentation for the cublasSetPointerMode() function, which sets the pointer mode used by the cuBLAS library.
+
+```APIDOC
+## cublasSetPointerMode()
+
+### Description
+Sets the pointer mode used by the cuBLAS library. The default is for values to be passed by reference on the host. See the section on the cublasPointerMode_t type for more details.
+
+### Signature
+```c
+cublasStatus_t
+cublasSetPointerMode(cublasHandle_t handle, cublasPointerMode_t mode)
+```
+
+### Parameters
+- **handle** (cublasHandle_t) - Required - The cuBLAS handle.
+- **mode** (cublasPointerMode_t) - Required - The pointer mode to set. Must be either `CUBLAS_POINTER_MODE_HOST` or `CUBLAS_POINTER_MODE_DEVICE`.
+
+### Return Values
+- `CUBLAS_STATUS_SUCCESS` - The pointer mode was set successfully.
+- `CUBLAS_STATUS_NOT_INITIALIZED` - The library was not initialized.
+- `CUBLAS_STATUS_INVALID_VALUE` - `mode` is not `CUBLAS_POINTER_MODE_HOST` or `CUBLAS_POINTER_MODE_DEVICE`.
+```
+
+--------------------------------
+
+### 2.4.8. cublasSetWorkspace()
+
+Source: https://docs.nvidia.com/cuda/cublas
+
+This function sets the cuBLAS library workspace to a user-owned device buffer, which will be used to execute all subsequent calls to the cuBLAS library functions (on the currently set stream). If the cuBLAS library workspace is not set, all kernels will use the default workspace pool allocated during the cuBLAS context creation. In particular, this routine can be used to change the workspace between kernel launches. The workspace pointer has to be aligned to at least 256 bytes, otherwise `CUBLAS_STATUS_INVALID_VALUE` error is returned. The cublasSetStream() function unconditionally resets the cuBLAS library workspace back to the default workspace pool. Calling this function, including with `workspaceSizeInBytes` equal to 0, will prevent the cuBLAS library from utilizing the default workspace. Too small value of `workspaceSizeInBytes` may cause some routines to fail with `CUBLAS_STATUS_ALLOC_FAILED` error returned or cause large regressions in performance. Workspace size equal to or larger than 16KiB is enough to prevent `CUBLAS_STATUS_ALLOC_FAILED` error, while a larger workspace can provide performance benefits for some routines.
+Note
+If the stream set by cublasSetStream() is `cudaStreamPerThread` and there are multiple threads using the same cuBLAS library handle, then users must manually manage synchronization to avoid possible race conditions in the user provided workspace. Alternatively, users may rely on the default workspace pool which safely guards against race conditions.
+Warning
+cuBLAS functions may invoke more than one CUDA kernel, and rely on workspace being intact between the invocations. Hence, if cuBLAS handle is configured with user-provided workspace and is being used from multiple threads, it is user’s responsibility to serialize cuBLAS calls between threads, as otherwise the kernels from different cuBLAS invocations might interleave and invalidate the assumptions each of them makes regarding workspace intactness. The default workspace pool managed by cuBLAS is thread safe.
+The table below shows the recommended size of user-provided workspace. This is based on the cuBLAS default workspace pool size which is GPU architecture dependent.
+GPU Architecture | Recommended workspace size  
+---|---  
+NVIDIA Hopper Architecture and newer (sm90+) | 32 MiB  
+Other | 4 MiB  
+Note
+If the cuBLAS library is configured to utilize fixed-point emulation, which can be done by setting the corresponding math mode in cublasSetMathMode() or calling APIs with CUBLAS_COMPUTE_64F_EMULATED_FIXEDPOINT, it can be beneficial to provide more workspace than recommended for the GPU architecture. See Fixed-Point Workspace Requirements for more details.
+The possible error values returned by this function and their meanings are listed below.
+Return Value | Meaning  
+---|---  
+`CUBLAS_STATUS_SUCCESS` | The stream was set successfully  
+`CUBLAS_STATUS_NOT_INITIALIZED` | The library was not initialized  
+`CUBLAS_STATUS_INVALID_VALUE` | The `workspace` pointer wasn’t aligned to at least 256 bytes
+
+--------------------------------
+
+### 2.1.5. Scalar Parameters
+
+Source: https://docs.nvidia.com/cuda/cublas
+
+For the functions of the second category, when the pointer mode is set to `CUBLAS_POINTER_MODE_HOST`, these functions block the CPU, until the GPU has completed its computation and the results have been copied back to the Host. When the pointer mode is set to `CUBLAS_POINTER_MODE_DEVICE`, these functions return immediately. In this case, similar to matrix and vector results, the scalar result is ready only when execution of the routine on the GPU has completed. This requires proper synchronization in order to read the result from the host.
+
+--------------------------------
+
+### 2.1.12. CUDA Graphs Support
+
+Source: https://docs.nvidia.com/cuda/cublas
+
+cuBLAS routines can be captured in CUDA Graph stream capture without restrictions in most situations.
+The exception are routines that output results into host buffers (e.g. cublas<t>dot() while pointer mode `CUBLAS_POINTER_MODE_HOST` is configured), as it enforces synchronization.
+For input coefficients (such as `alpha`, `beta`) behavior depends on the pointer mode setting:
+  * In the case of `CUBLAS(LT)_POINTER_MODE_HOST`, coefficient values are captured in the graph.
+  * In the case of pointer modes with device pointers, coefficient value is accessed using the device pointer at the time of graph execution.
+
+--------------------------------
+
+### 2. Using the cuBLAS API > 2.1. General Description > 2.1.2. cuBLAS Context
+
+Source: https://docs.nvidia.com/cuda/cublas
+
+The application must initialize a handle to the cuBLAS library context by calling the cublasCreate() function. Then, the handle is explicitly passed to every subsequent library function call. Once the application finishes using the library, it must call the function cublasDestroy() to release the resources associated with the cuBLAS library context.
+
+This approach allows the user to explicitly control the library setup when using multiple host threads and multiple GPUs. For example, the application can use `cudaSetDevice()` to associate different devices with different host threads and in each of those host threads it can initialize a unique handle to the cuBLAS library context, which will use the particular device associated with that host thread. Then, the cuBLAS library function calls made with different handles will automatically dispatch the computation to different devices.
+
+The device associated with a particular cuBLAS context is assumed to remain unchanged between the corresponding cublasCreate() and cublasDestroy() calls. In order for the cuBLAS library to use a different device in the same host thread, the application must set the new device to be used by calling `cudaSetDevice()` and then create another cuBLAS context, which will be associated with the new device, by calling cublasCreate(). When multiple devices are available, applications must ensure that the device associated with a given cuBLAS context is current (e.g. by calling `cudaSetDevice()`) before invoking cuBLAS functions with this context.
+
+A cuBLAS library context is tightly coupled with the CUDA context that is current at the time of the cublasCreate() call. An application that uses multiple CUDA contexts is required to create a cuBLAS context per CUDA context and make sure the former never outlives the latter. Starting from version 12.8, cuBLAS detects if the underlying CUDA context is tied to a graphics context and follows the shared memory size limits that are set in such case.

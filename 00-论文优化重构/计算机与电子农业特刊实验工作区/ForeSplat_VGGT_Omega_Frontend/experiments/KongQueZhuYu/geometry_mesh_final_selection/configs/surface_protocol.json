@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "normal_method": "masked central or one-sided world-point finite differences; orient toward source camera",
+  "normal_depth_jump_relative_max": 0.05,
+  "surface_alpha_min": 0.5,
+  "confidence": "Direct maps retain the already exported original per-frontend p20 valid mask; no new common numerical confidence threshold",
+  "spatial_selection": "One original oriented observation per spatial voxel AND normal hemisphere; earliest frame/pixel; no averaging across opposite thin surfaces",
+  "sampling_divisor": 1024,
+  "reconstruction_divisor": 512,
+  "tsdf_sdf_voxels": 5,
+  "extent": "0.5% and 99.5% XYZ quantiles of deterministic strided samples of about 4000 original observations per frame; only defines scale, no clipping",
+  "coordinate_policy": "Existing frontend world gauge; Omega applies only its previously saved rigid export transform; no scan or Sim(3) fitting",
+  "mesh_processing": "Raw preserved. Post removes only components with fewer than 50 triangles; no largest-component-only selection",
+  "nksr_config": "official ks pretrained, solver max2000 tol1e-5, voxel_size explicit, detail_level None, MISE1, trim=True"
+}

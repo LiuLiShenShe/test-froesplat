@@ -1,0 +1,118 @@
+{
+  "status": "complete",
+  "experiment": "M2_Standard_NKSR",
+  "input": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/standard_direct",
+  "input_points": 5737117,
+  "scale": {
+    "frontend": "standard",
+    "original_foreground_points": 7794589,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.24880186252295972,
+      -0.3970067222416401,
+      0.664764198064804
+    ],
+    "robust_bbox_max": [
+      0.23266781732439995,
+      0.20705938354134557,
+      1.10746643781662
+    ],
+    "diagonal": 0.8903337496969407,
+    "origin": [
+      -0.008067022599279883,
+      -0.09497366935014726,
+      0.886115317940712
+    ],
+    "sampling_voxel": 0.0008694665524384186,
+    "nksr_voxel": 0.0017389331048768373,
+    "tsdf_voxel": 0.0017389331048768373,
+    "tsdf_sdf_trunc": 0.008694665524384186,
+    "transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning"
+  },
+  "protocol": {
+    "version": 1,
+    "normal_method": "masked central or one-sided world-point finite differences; orient toward source camera",
+    "normal_depth_jump_relative_max": 0.05,
+    "surface_alpha_min": 0.5,
+    "confidence": "Direct maps retain the already exported original per-frontend p20 valid mask; no new common numerical confidence threshold",
+    "spatial_selection": "One original oriented observation per spatial voxel AND normal hemisphere; earliest frame/pixel; no averaging across opposite thin surfaces",
+    "sampling_divisor": 1024,
+    "reconstruction_divisor": 512,
+    "tsdf_sdf_voxels": 5,
+    "extent": "0.5% and 99.5% XYZ quantiles of a deterministic strided sample (about 4000 per frame) from full original foreground observations after existing rigid COLMAP transform; scale definition only, no clipping",
+    "coordinate_policy": "Existing frontend world gauge; Omega applies only its previously saved rigid export transform; no scan or Sim(3) fitting",
+    "mesh_processing": "Raw preserved. Post removes only components with fewer than 50 triangles; no largest-component-only selection",
+    "nksr_config": "official ks pretrained, solver max2000 tol1e-5, voxel_size explicit, detail_level None, MISE1, trim=True"
+  },
+  "config": {
+    "url": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/weights/nksr_ks.pth",
+    "feature": "normal",
+    "geometry": "kernel",
+    "voxel_size": 0.1,
+    "kernel_dim": 4,
+    "tree_depth": 4,
+    "adaptive_depth": 2,
+    "unet": {
+      "f_maps": 32
+    },
+    "udf": {
+      "enabled": true
+    },
+    "interpolator": {
+      "n_hidden": 2,
+      "hidden_dim": 16
+    },
+    "solver": {
+      "pos_weight": 10000.0,
+      "normal_weight": 10000.0
+    },
+    "density_range": [
+      1.0,
+      20.0
+    ]
+  },
+  "weight_sha256": "c2edb6437d6485c2ed48a756523849628f0c34e232c601113ff657db8714e955",
+  "nksr_commit": "e40336845e67761343a756788e5a98b827d4a143",
+  "elapsed_seconds": 71.94992017745972,
+  "peak_allocated_gib": 12.672006607055664,
+  "peak_reserved_gib": 19.37109375,
+  "nvidia_smi_peak_process_mib": 20154.0,
+  "nvidia_smi_samples": 31,
+  "physical_gpu": 1,
+  "raw_vertices": 3961597,
+  "raw_faces": 7855184,
+  "post_vertices": 3957897,
+  "post_faces": 7851387,
+  "raw_components": 573,
+  "post_components": 282
+}

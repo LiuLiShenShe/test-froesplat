@@ -1,0 +1,150 @@
+--- /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/gggs_community/mesh_extract.py
++++ /data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/scripts/extract_native_tsdf.py
+@@ -1,105 +1,47 @@
++"""Native GGGS VoxelBlockGrid / official 2DGS bounded ScalableTSDFVolume."""
+ import os
+-from argparse import ArgumentParser
+-
++os.environ['CUDA_VISIBLE_DEVICES']='1';os.environ.setdefault('OMP_NUM_THREADS','8')
++import argparse,json,time,hashlib
+ import numpy as np
+ import open3d as o3d
+-import open3d.core as o3c
+-import torch
++from surface_protocol import ROOT,PROTOCOL,scale_for,write
++from mesh_artifacts import save_meshes
+ 
+-from arguments import ModelParams, PipelineParams, get_combined_args
+-from gaussian_renderer import render
+-from scene import GaussianModel, Scene
+-from utils.general_utils import safe_state
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--experiment',choices=['M4_E10_GGGS_TSDF','M5_E11_2DGS_TSDF'],required=True);p.add_argument('--alpha-filter',action='store_true');a=p.parse_args()
++    exp='E10' if a.experiment.startswith('M4') else 'E11';inp=ROOT/'surface_inputs'/f'{exp.lower()}_{"gggs" if exp=="E10" else "2dgs"}_surface'
++    out=ROOT/'meshes'/a.experiment
++    if a.alpha_filter:out=out/'supplementary_alpha_filtered'
++    if (out/'complete.json').exists():return
++    scale=scale_for('standard');index=json.loads((inp/'render_index.json').read_text());start=time.time();counts=[]
++    if exp=='E10':
++        volume=o3d.t.geometry.VoxelBlockGrid(attr_names=('tsdf','weight','color'),attr_dtypes=(o3d.core.float32,)*3,attr_channels=(1,1,3),
++            voxel_size=scale['tsdf_voxel'],block_resolution=16,block_count=50000,device=o3d.core.Device('CPU:0'))
++    else:
++        volume=o3d.pipelines.integration.ScalableTSDFVolume(voxel_length=scale['tsdf_voxel'],sdf_trunc=scale['tsdf_sdf_trunc'],color_type=o3d.pipelines.integration.TSDFVolumeColorType.RGB8)
++    for row in index:
++        c=row['camera']
++        with np.load(row['path']) as d:
++            depth=d['depth_surface'].copy();mask=d['foreground_mask'];alpha=d['alpha'];rgb=np.clip(d['render_raw'],0,1)
++        valid=mask&np.isfinite(depth)&(depth>0)
++        if a.alpha_filter:valid &= alpha>=PROTOCOL['surface_alpha_min']
++        counts.append(dict(source_id=row['source_id'],integrated_pixels=int((valid&(depth<=scale['tsdf_depth_trunc'])).sum()),depth_truncated_pixels=int((valid&(depth>scale['tsdf_depth_trunc'])).sum())))
++        depth[~valid]=0;depth=np.ascontiguousarray(depth,dtype=np.float32)
++        K=np.array([[c['Fx'],0,c['Cx']],[0,c['Fy'],c['Cy']],[0,0,1]],dtype=np.float64);E=np.asarray(c['world_view_transform'],dtype=np.float64).T
++        if exp=='E10':
++            dep=o3d.t.geometry.Image(depth);col=o3d.t.geometry.Image(np.ascontiguousarray(rgb,dtype=np.float32));k=o3d.core.Tensor(K);e=o3d.core.Tensor(E)
++            blocks=volume.compute_unique_block_coordinates(dep,k,e,1.,scale['tsdf_depth_trunc'],float(PROTOCOL['tsdf_sdf_voxels']))
++            volume.integrate(blocks,dep,col,k,e,1.,scale['tsdf_depth_trunc'],float(PROTOCOL['tsdf_sdf_voxels']))
++        else:
++            col=o3d.geometry.Image(np.ascontiguousarray((rgb*255).astype(np.uint8)));dep=o3d.geometry.Image(depth)
++            rgbd=o3d.geometry.RGBDImage.create_from_color_and_depth(col,dep,depth_scale=1.,depth_trunc=scale['tsdf_depth_trunc'],convert_rgb_to_intensity=False)
++            k=o3d.camera.PinholeCameraIntrinsic(c['width'],c['height'],c['Fx'],c['Fy'],c['Cx'],c['Cy']);volume.integrate(rgbd,k,E)
++        print(a.experiment,row['source_id'],'TSDF integrated',flush=True)
++    mesh=volume.extract_triangle_mesh();mesh=mesh.to_legacy() if exp=='E10' else mesh;stats=save_meshes(mesh,out,scale)
++    write(out/'complete.json',dict(status='complete',experiment=a.experiment,input=str(inp),scale=scale,protocol=PROTOCOL,elapsed_seconds=time.time()-start,open3d_version=o3d.__version__,
++        fusion='GGGS native Open3D VoxelBlockGrid CPU' if exp=='E10' else '2DGS native bounded Open3D ScalableTSDFVolume',
++        depth='GGGS median' if exp=='E10' else '2DGS expected, unchanged depth_ratio=0',mask='Original RAP mask',alpha_filter=a.alpha_filter,
++        comparison_note='Main TSDF preserves native mask/depth integration; alpha-filtered supplement matches NKSR surface validity to isolate this adapter difference',frames=counts,**stats))
++    print(a.experiment,stats,flush=True)
+ 
+-
+-def post_process_mesh(mesh, cluster_to_keep=1):
+-    """
+-    Post-process a mesh to filter out floaters and disconnected parts
+-    """
+-    import copy
+-
+-    print("post processing the mesh to have {} clusterscluster_to_kep".format(cluster_to_keep))
+-    mesh_0 = copy.deepcopy(mesh)
+-    with o3d.utility.VerbosityContextManager(o3d.utility.VerbosityLevel.Debug) as cm:
+-        triangle_clusters, cluster_n_triangles, cluster_area = mesh_0.cluster_connected_triangles()
+-
+-    triangle_clusters = np.asarray(triangle_clusters)
+-    cluster_n_triangles = np.asarray(cluster_n_triangles)
+-    cluster_area = np.asarray(cluster_area)
+-    n_cluster = np.sort(cluster_n_triangles.copy())[-cluster_to_keep]
+-    n_cluster = max(n_cluster, 50)  # filter meshes smaller than 50
+-    triangles_to_remove = cluster_n_triangles[triangle_clusters] < n_cluster
+-    mesh_0.remove_triangles_by_mask(triangles_to_remove)
+-    mesh_0.remove_unreferenced_vertices()
+-    mesh_0.remove_degenerate_triangles()
+-    print("num vertices raw {}".format(len(mesh.vertices)))
+-    print("num vertices post {}".format(len(mesh_0.vertices)))
+-    return mesh_0
+-
+-
+-def extract_mesh(dataset, pipe, iteration, num_cluster=1):
+-    gaussians = GaussianModel(dataset.sh_degree, dataset.sg_degree)
+-    scene = Scene(dataset, gaussians, load_iteration=iteration, shuffle=False)
+-
+-    kernel_size = dataset.kernel_size
+-
+-    bg_color = [1, 1, 1]
+-    background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
+-    viewpoint_cam_list = scene.getTrainCameras()
+-
+-    depth_list = []
+-    color_list = []
+-    for viewpoint_cam in viewpoint_cam_list:
+-        # Rendering offscreen from that camera
+-        render_pkg = render(viewpoint_cam, gaussians, pipe, background, kernel_size)
+-        rendered_img = torch.clamp(render_pkg["render"], min=0, max=1.0).cpu().numpy().transpose(1, 2, 0)
+-        color_list.append(np.ascontiguousarray(rendered_img))
+-        depth = render_pkg["median_depth"].clone()
+-        if viewpoint_cam.gt_mask is not None:
+-            depth[(viewpoint_cam.gt_mask < 0.5)] = 0
+-        depth_list.append(depth[0].cpu().numpy())
+-
+-    torch.cuda.empty_cache()
+-    voxel_size = 0.002
+-    o3d_device = o3d.core.Device("CPU:0")
+-    vbg = o3d.t.geometry.VoxelBlockGrid(
+-        attr_names=("tsdf", "weight", "color"),
+-        attr_dtypes=(o3c.float32, o3c.float32, o3c.float32),
+-        attr_channels=((1), (1), (3)),
+-        voxel_size=voxel_size,
+-        block_resolution=16,
+-        block_count=50000,
+-        device=o3d_device,
+-    )
+-    for color, depth, viewpoint_cam in zip(color_list, depth_list, viewpoint_cam_list):
+-        depth = o3d.t.geometry.Image(depth)
+-        depth = depth.to(o3d_device)
+-        color = o3d.t.geometry.Image(color)
+-        color = color.to(o3d_device)
+-        intrinsic = np.array([[viewpoint_cam.Fx, 0, viewpoint_cam.Cx], [0, viewpoint_cam.Fy, viewpoint_cam.Cy], [0, 0, 1]], dtype=np.float64)
+-        intrinsic = o3d.core.Tensor(intrinsic)
+-        extrinsic = o3d.core.Tensor((viewpoint_cam.world_view_transform.T).cpu().numpy().astype(np.float64))
+-        frustum_block_coords = vbg.compute_unique_block_coordinates(depth, intrinsic, extrinsic, 1.0, 8.0)
+-        vbg.integrate(frustum_block_coords, depth, color, intrinsic, extrinsic, 1.0, 8.0)
+-
+-    mesh = vbg.extract_triangle_mesh()
+-    mesh.compute_vertex_normals()
+-    o3d.io.write_triangle_mesh(os.path.join(dataset.model_path, "recon.ply"), mesh.to_legacy())
+-    mesh = post_process_mesh(mesh.to_legacy(), num_cluster)
+-    o3d.io.write_triangle_mesh(os.path.join(dataset.model_path, "recon_post.ply"), mesh)
+-    print("done!")
+-
+-
+-if __name__ == "__main__":
+-    parser = ArgumentParser(description="Testing script parameters")
+-    model = ModelParams(parser, sentinel=True)
+-    pipeline = PipelineParams(parser)
+-    parser.add_argument("--iteration", default=-1, type=int)
+-    parser.add_argument("--num_cluster", default=1, type=int)
+-    parser.add_argument("--quiet", action="store_true")
+-    args = get_combined_args(parser)
+-    
+-    # Initialize system state (RNG)
+-    safe_state(args.quiet)
+-    with torch.no_grad():
+-        extract_mesh(model.extract(args), pipeline.extract(args), args.iteration, args.num_cluster)
++if __name__=='__main__':main()

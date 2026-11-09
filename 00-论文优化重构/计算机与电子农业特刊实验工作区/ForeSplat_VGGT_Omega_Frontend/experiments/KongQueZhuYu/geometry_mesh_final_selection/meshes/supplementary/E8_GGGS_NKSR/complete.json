@@ -1,0 +1,121 @@
+{
+  "status": "complete",
+  "experiment": "E8_GGGS_NKSR",
+  "input": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e8_gggs_surface",
+  "input_points": 6721643,
+  "scale": {
+    "frontend": "omega",
+    "original_foreground_points": 13640966,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.16619672958507234,
+      -0.16238293114012978,
+      0.484509584087271
+    ],
+    "robust_bbox_max": [
+      0.18686351745547902,
+      0.2937200431430193,
+      0.8355673078246961
+    ],
+    "diagonal": 0.6752206947257855,
+    "origin": [
+      0.010333393935203342,
+      0.06566855600144476,
+      0.6600384459559836
+    ],
+    "sampling_voxel": 0.0006593952096931499,
+    "nksr_voxel": 0.0013187904193862998,
+    "tsdf_voxel": 0.0013187904193862998,
+    "tsdf_sdf_trunc": 0.006593952096931499,
+    "transform": [
+      [
+        -0.9999999289387856,
+        0.00040212553686750876,
+        -0.00016901345993920513,
+        -0.0001223361263513602
+      ],
+      [
+        -0.0004021216251680368,
+        -0.9999998973672466,
+        -2.3142784517571213e-05,
+        4.6913954638617576e-05
+      ],
+      [
+        -0.0001690227610073378,
+        -2.3074820534280546e-05,
+        0.9999999708988607,
+        0.0001495619906209963
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+    "max_original_foreground_camera_depth": 1.777031660079956,
+    "tsdf_depth_trunc": 2.221289575099945,
+    "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+  },
+  "protocol": {
+    "version": 1,
+    "normal_method": "masked central or one-sided world-point finite differences; orient toward source camera",
+    "normal_depth_jump_relative_max": 0.05,
+    "surface_alpha_min": 0.5,
+    "confidence": "Direct maps retain the already exported original per-frontend p20 valid mask; no new common numerical confidence threshold",
+    "spatial_selection": "One original oriented observation per spatial voxel AND normal hemisphere; earliest frame/pixel; no averaging across opposite thin surfaces",
+    "sampling_divisor": 1024,
+    "reconstruction_divisor": 512,
+    "tsdf_sdf_voxels": 5,
+    "extent": "0.5% and 99.5% XYZ quantiles of a deterministic strided sample (about 4000 per frame) from full original foreground observations after existing rigid COLMAP transform; scale definition only, no clipping",
+    "coordinate_policy": "Existing frontend world gauge; Omega applies only its previously saved rigid export transform; no scan or Sim(3) fitting",
+    "mesh_processing": "Raw preserved. Post removes only components with fewer than 50 triangles; no largest-component-only selection",
+    "nksr_config": "official ks pretrained, solver max2000 tol1e-5, voxel_size explicit, detail_level None, MISE1, trim=True"
+  },
+  "config": {
+    "url": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/weights/nksr_ks.pth",
+    "feature": "normal",
+    "geometry": "kernel",
+    "voxel_size": 0.1,
+    "kernel_dim": 4,
+    "tree_depth": 4,
+    "adaptive_depth": 2,
+    "unet": {
+      "f_maps": 32
+    },
+    "udf": {
+      "enabled": true
+    },
+    "interpolator": {
+      "n_hidden": 2,
+      "hidden_dim": 16
+    },
+    "solver": {
+      "pos_weight": 10000.0,
+      "normal_weight": 10000.0
+    },
+    "density_range": [
+      1.0,
+      20.0
+    ]
+  },
+  "weight_sha256": "c2edb6437d6485c2ed48a756523849628f0c34e232c601113ff657db8714e955",
+  "nksr_commit": "e40336845e67761343a756788e5a98b827d4a143",
+  "elapsed_seconds": 84.68122482299805,
+  "peak_allocated_gib": 14.321191310882568,
+  "peak_reserved_gib": 19.92578125,
+  "nvidia_smi_peak_process_mib": 20722.0,
+  "nvidia_smi_samples": 32,
+  "physical_gpu": 1,
+  "raw_vertices": 4666500,
+  "raw_faces": 9209914,
+  "post_vertices": 4661772,
+  "post_faces": 9204826,
+  "raw_components": 924,
+  "post_components": 581
+}

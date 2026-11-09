@@ -1,0 +1,34 @@
+diff --git a/package/csrc/sparse_solve/solve_cuda.cu b/package/csrc/sparse_solve/solve_cuda.cu
+index ac3b0da..9f87e4c 100644
+--- a/package/csrc/sparse_solve/solve_cuda.cu
++++ b/package/csrc/sparse_solve/solve_cuda.cu
+@@ -12,6 +12,18 @@
+ void cusparseSafeCall(cusparseStatus_t err);
+ void cublasSafeCall(cublasStatus_t err);
+ 
++// PCG returns scalars to host memory. Own its cuBLAS state and default
++// workspace instead of inheriting PyTorch's mutable pooled handle state.
++struct PCGCublasContext {
++    cublasHandle_t handle = nullptr;
++    explicit PCGCublasContext(cudaStream_t stream) {
++        cublasSafeCall(cublasCreate(&handle));
++        cublasSafeCall(cublasSetStream(handle, stream));
++        cublasSafeCall(cublasSetPointerMode(handle, CUBLAS_POINTER_MODE_HOST));
++    }
++    ~PCGCublasContext() { if (handle) cublasDestroy(handle); }
++};
++
+ typedef std::pair<int, int> BlockInds;
+ #define THREADS 256
+ 
+@@ -176,7 +188,9 @@ std::pair<torch::Tensor, int> solve_pcg_cuda(
+     const float* d_inv_diag_A = inv_diag_A.data_ptr<float>();
+ 
+     cusparseHandle_t cusparseHandle = at::cuda::getCurrentCUDASparseHandle();
+-    cublasHandle_t cublasHandle = at::cuda::getCurrentCUDABlasHandle();
++    cudaSetDevice(b.get_device());
++    PCGCublasContext pcg_blas(at::cuda::getCurrentCUDAStream());
++    cublasHandle_t cublasHandle = pcg_blas.handle;
+ 
+     // Create sparse tensors and vectors
+     std::map<BlockInds, cusparseSpMatDescr_t> matA_map;
