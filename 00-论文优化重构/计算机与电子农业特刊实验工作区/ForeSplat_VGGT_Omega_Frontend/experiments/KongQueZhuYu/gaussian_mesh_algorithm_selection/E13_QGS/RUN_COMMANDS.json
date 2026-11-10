@@ -1,0 +1,50 @@
+{
+  "queue_stage": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/run_e13.py"
+  ],
+  "smoke": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/train_qgs.py",
+    "--smoke",
+    "--iterations",
+    "5"
+  ],
+  "cwd": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/adapted",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "formal_gpu_launch_status": "Parent-launched native7K resume is running; actual queue_status.json/STATUS.json are authoritative. No competing independent GPU job.",
+  "native_http_viewer": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/native_qgs_viewer.py",
+    "--iteration",
+    "30000",
+    "--port",
+    "8767",
+    "--width",
+    "540"
+  ],
+  "native_http_smoke": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/smoke_native_viewer.py"
+  ],
+  "native_shared_free_views": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/render_qgs_free.py",
+    "--protocol",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/shared_free_views.json"
+  ],
+  "actual_model_status": "Actual partial7K native PLY/checkpoint exist and pass bitwise audit; terminal30000 native model remains absent",
+  "queue_stage_resume": [
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/.venv/bin/python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/scripts/run_e13.py",
+    "--resume",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/checkpoints/chkpnt7000.pth",
+    "--allocator",
+    "expandable_segments:True",
+    "--checkpoint-every",
+    "1000"
+  ]
+}

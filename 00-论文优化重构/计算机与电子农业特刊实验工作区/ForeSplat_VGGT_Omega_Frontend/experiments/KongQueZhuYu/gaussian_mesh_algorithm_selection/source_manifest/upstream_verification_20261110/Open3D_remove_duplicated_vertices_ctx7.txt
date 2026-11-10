@@ -1,0 +1,76 @@
+### Cluster connected triangles with cluster_connected_triangles
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+Runs the connected components algorithm on the mesh. Returns triangle_clusters, cluster_n_triangles, and cluster_area, which are converted to numpy arrays for further processing.
+
+```python
+print("Cluster connected triangles")
+with o3d.utility.VerbosityContextManager(
+        o3d.utility.VerbosityLevel.Debug) as cm:
+    triangle_clusters, cluster_n_triangles, cluster_area = (
+        mesh.cluster_connected_triangles())
+triangle_clusters = np.asarray(triangle_clusters)
+cluster_n_triangles = np.asarray(cluster_n_triangles)
+cluster_area = np.asarray(cluster_area)
+```
+
+--------------------------------
+
+### Connected components
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+## Connected components
+The result of various reconstruction methods. Open3D implements a connected components algorithm `cluster_connected_triangles` that assigns each triangle to a cluster of connected triangles. It returns for each triangle the index of the cluster in `triangle_clusters`, and per cluster the number of triangles in `cluster_n_triangles` and the surface area of the cluster in `cluster_area`.
+
+This is useful in for instance [RGBD Integration](../pipelines/rgbd_integration.ipynb), which is not always a single triangle mesh, but a number of meshes. Some of the smaller parts are due to noise and we most likely want to remove them.
+
+The code below shows the application of `cluster_connected_triangles` and how it can be used to remove spurious triangles.
+
+--------------------------------
+
+### Keep only the largest cluster
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+Retains only the largest connected component by selecting triangles whose cluster index matches the argmax of cluster_n_triangles. Visualizes the resulting mesh.
+
+```python
+print("Show largest cluster")
+mesh_1 = copy.deepcopy(mesh)
+largest_cluster_idx = cluster_n_triangles.argmax()
+triangles_to_remove = triangle_clusters != largest_cluster_idx
+mesh_1.remove_triangles_by_mask(triangles_to_remove)
+o3d.visualization.draw_geometries([mesh_1])
+```
+
+--------------------------------
+
+### Connected components
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+```python
+print("Show mesh with small clusters removed")
+mesh_0 = copy.deepcopy(mesh)
+triangles_to_remove = cluster_n_triangles[triangle_clusters] < 100
+mesh_0.remove_triangles_by_mask(triangles_to_remove)
+o3d.visualization.draw_geometries([mesh_0])
+```
+
+--------------------------------
+
+### Remove small clusters (fewer than 100 triangles)
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+Removes clusters with fewer than 100 triangles using remove_triangles_by_mask, then visualizes the cleaned mesh. This filters out noise-induced small components.
+
+```python
+print("Show mesh with small clusters removed")
+mesh_0 = copy.deepcopy(mesh)
+triangles_to_remove = cluster_n_triangles[triangle_clusters] < 100
+mesh_0.remove_triangles_by_mask(triangles_to_remove)
+o3d.visualization.draw_geometries([mesh_0])
+```

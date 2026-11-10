@@ -1,0 +1,762 @@
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_depth_stages.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_depth_stages.py
+new file mode 100644
+index 00000000..818c055e
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_depth_stages.py
+@@ -0,0 +1,48 @@
++"""P3 actual depth-stage support audit; proxy gaps are not labelled physical leaf holes."""
++import csv,json,time
++from pathlib import Path
++import numpy as np
++from scipy import ndimage
++ROOT=Path(__file__).resolve().parents[1]
++def main():
++    start=time.time()
++    doc=json.loads((ROOT/"stereo/camera_data.json").read_text())
++    rows=[]
++    for i,pair in enumerate(doc["pairs"]):
++        folder=ROOT/"stereo"/f"{i:03}";model=folder/"out_DLNR_Middlebury"
++        if not (model/"complete.json").exists():continue
++        mask=np.load(folder/"left_mask.npy").astype(bool)
++        z=np.load(model/"depth.npy");consistent=np.load(model/"occlusion_mask.npy").astype(bool)
++        good=mask&np.isfinite(z)&(z>0)
++        supported=good&consistent
++        interior=mask&(ndimage.distance_transform_edt(mask)>5)
++        native=supported&(z>=4*doc["baseline"])&(z<=20*doc["baseline"])
++        shared=supported&(z>=4*doc["baseline"])&(z<=1.5692457556724548)
++        n=int(mask.sum());inner=int(interior.sum())
++        rows.append(dict(source_id=pair["left"]["source_id"],foreground_pixels=n,foreground_interior_gt5px_pixels=inner,
++             valid_depth_fraction=float(good.sum()/max(n,1)),stereo_consistent_foreground_fraction=float(supported.sum()/max(n,1)),
++             stereo_interior_missing_fraction=float((interior&~supported).sum()/max(inner,1)),
++             native_range_supported_fraction=float(native.sum()/max(n,1)),
++             shared_range_supported_fraction=float(shared.sum()/max(n,1)),
++             native_range_interior_missing_fraction=float((interior&~native).sum()/max(inner,1)),
++             shared_range_interior_missing_fraction=float((interior&~shared).sum()/max(inner,1)),
++             depth_fg_p05=float(np.quantile(z[good],.05)) if good.any() else None,
++             depth_fg_median=float(np.median(z[good])) if good.any() else None,
++             depth_fg_p95=float(np.quantile(z[good],.95)) if good.any() else None))
++    if rows:
++        with (ROOT/"DEPTH_STAGE_SUPPORT.csv").open("w",newline="") as f:
++            w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
++    summary=dict(status="complete" if len(rows)==208 else "partial",views=len(rows),wall_seconds=time.time()-start,
++       meaning="Actual stereo/fusion-input support under RAP; >5px interior proxy missing area, not confirmed3D holes",
++       native_depth_range=[4*doc["baseline"],20*doc["baseline"]],
++       shared_depth_range=[4*doc["baseline"],1.5692457556724548],
++       foreground_scope="Existing RAP includes plant,pot,reference marker; no new plant-only segmentation")
++    if rows:
++        for name in ["valid_depth_fraction","stereo_consistent_foreground_fraction","stereo_interior_missing_fraction",
++                     "native_range_supported_fraction","shared_range_supported_fraction",
++                     "native_range_interior_missing_fraction","shared_range_interior_missing_fraction"]:
++            summary[name+"_mean_views"]=float(np.mean([r[name] for r in rows]))
++    (ROOT/"DEPTH_STAGE_SUPPORT.json").write_text(json.dumps(summary,indent=2)+"\n")
++    print(summary,flush=True)
++if __name__=="__main__":main()
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_stereo_geometry.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_stereo_geometry.py
+new file mode 100644
+index 00000000..19516543
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/audit_stereo_geometry.py
+@@ -0,0 +1,55 @@
++"""CPU camera/sign/padding audit; synthetic values are validation, never experiment geometry."""
++import json,sys
++from pathlib import Path
++import numpy as np
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/"official"))
++from gs2mesh_utils.stereo_utils import Stereo
++from core.utils.utils import InputPadder
++from render_e10_stereo import write
++import torch
++
++def main():
++    doc=json.loads((ROOT/"stereo/camera_data.json").read_text())
++    records=[]
++    for pair in doc["pairs"]:
++        l,r=pair["left"],pair["right"]
++        KL=np.array(l["intrinsic"]);KR=np.array(r["intrinsic"])
++        CL=np.array(l["extrinsic"]);ER=np.linalg.inv(np.array(r["extrinsic"]))
++        u,v=np.meshgrid(np.linspace(64,l["width"]-64,7),np.linspace(64,l["height"]-64,7))
++        uv=np.column_stack([u.ravel(),v.ravel()])
++        depth=np.resize(np.array([.35,.8,1.2]),len(uv))
++        pc=np.column_stack([(uv[:,0]-l["cx"])*depth/l["fx"],(uv[:,1]-l["cy"])*depth/l["fy"],depth])
++        world=pc@CL[:3,:3].T+CL[:3,3]
++        pr=world@ER[:3,:3].T+ER[:3,3]
++        ur=pr[:,:2]/pr[:,2,None]*[r["fx"],r["fy"]]+[r["cx"],r["cy"]]
++        d=uv[:,0]-ur[:,0]
++        estimated_depth=l["fx"]*doc["baseline"]/d
++        assert np.all(d>0)
++        rec=dict(source_id=l["source_id"],vertical_rectification_max_px=float(np.max(np.abs(uv[:,1]-ur[:,1]))),
++                 disparity_formula_max_px=float(np.max(np.abs(d-l["fx"]*doc["baseline"]/depth))),
++                 depth_roundtrip_max=float(np.max(np.abs(estimated_depth-depth))),
++                 world_roundtrip_max=float(np.max(np.abs(world-(pr@np.asarray(r['extrinsic'])[:3,:3].T+np.asarray(r['extrinsic'])[:3,3])))))
++        records.append(rec)
++    shape=(1,3,1920,1080)
++    x=torch.arange(1080,dtype=torch.float32).reshape(1,1,1,1080).expand(1,3,1920,1080)
++    pad=InputPadder(shape,divis_by=32)
++    padded,=pad.pad(x)
++    assert torch.equal(pad.unpad(padded),x)
++    assert torch.equal(pad.unpad(torch.flip(torch.flip(padded,[3]),[3])),x)
++    # Native consistency mask: constant disparity plane, left boundary occluded.
++    d=np.full((64,80),7,dtype=np.float32)
++    mask=Stereo.get_occlusion_mask(None,d,d,3)
++    assert mask[:,7:].all() and not mask[:,:7].any()
++    doc=dict(status="passed",views=208,checks="rectified positive-X stereo, DLNR negative horizontal flow -> positive disparity, Z=fx*B/disparity; native occlusion and original padding roundtrip",
++             vertical_rectification_max_px=max(r["vertical_rectification_max_px"] for r in records),
++             disparity_formula_max_px=max(r["disparity_formula_max_px"] for r in records),
++             depth_roundtrip_max=max(r["depth_roundtrip_max"] for r in records),
++             original_shape=list(shape),padded_shape=list(padded.shape),native_consistency_constant_plane_pass=True,records=records,
++             note="Synthetic CPU validation only; no synthetic plant artifact or mesh is exported")
++    assert doc["vertical_rectification_max_px"]<1e-7 and doc["disparity_formula_max_px"]<1e-7 and doc["depth_roundtrip_max"]<1e-10
++    write(ROOT/"CAMERA_STEREO_VALIDATION.json",doc)
++    print({k:v for k,v in doc.items() if k!="records"})
++
++if __name__=="__main__":main()
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/build_p3_views.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/build_p3_views.py
+new file mode 100644
+index 00000000..3989ea8a
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/build_p3_views.py
+@@ -0,0 +1,101 @@
++"""Fixed eight source cameras, actual stereo and mesh images; no generated illustrations."""
++import os
++os.environ["MPLBACKEND"]="Agg"
++os.environ["OMP_NUM_THREADS"]="8"
++import argparse,json,sys
++from pathlib import Path
++import numpy as np
++from PIL import Image
++from scipy import ndimage
++import matplotlib.pyplot as plt
++ROOT=Path(__file__).resolve().parents[1]
++HISTORY=ROOT.parents[1]/"geometry_mesh_final_selection"
++REPS=[0,26,53,79,105,131,157,183]
++sys.path.insert(0,str(HISTORY/"scripts"))
++from surface_protocol import write
++
++def image(path,array):
++    array=np.clip(array,0,1)
++    Image.fromarray((array*255).astype(np.uint8)).save(path)
++
++def stereo_panels():
++    doc=json.loads((ROOT/"stereo/camera_data.json").read_text())
++    views=ROOT/"visualizations/stereo";views.mkdir(parents=True,exist_ok=True)
++    for i,pair in enumerate(doc["pairs"]):
++        sid=pair["left"]["source_id"]
++        if sid not in REPS:continue
++        folder=ROOT/"stereo"/f"{i:03}";model=folder/"out_DLNR_Middlebury"
++        if not (model/"complete.json").exists():continue
++        mask=np.load(folder/"left_mask.npy").astype(bool)
++        depth=np.load(model/"depth.npy");confidence=np.load(model/"confidence.npy");consistent=np.load(model/"occlusion_mask.npy")
++        fig,axes=plt.subplots(1,5,figsize=(15,6))
++        for ax,path,title in zip(axes[:2],[folder/"left.png",folder/"right.png"],["GGGS left","GGGS novel right"]):
++            ax.imshow(Image.open(path));ax.set_title(title);ax.axis("off")
++        shown=np.ma.masked_where(~mask|(depth<=0)|~np.isfinite(depth),depth)
++        axes[2].imshow(shown,cmap="viridis",vmin=.15,vmax=1.57);axes[2].set_title("Native DLNR depth");axes[2].axis("off")
++        axes[3].imshow(confidence,cmap="gray",vmin=0,vmax=1);axes[3].set_title("LR consistency score");axes[3].axis("off")
++        axes[4].imshow(mask&consistent,cmap="gray");axes[4].set_title("RAP & native consistency");axes[4].axis("off")
++        fig.suptitle("P3 E10 GGGS -> GS2Mesh, source "+str(sid))
++        fig.tight_layout();fig.savefig(views/f"source_{sid:04d}.png",dpi=120);plt.close(fig)
++
++def mesh_panels():
++    import open3d as o3d
++    from evaluate_meshes import cast
++    cameras=json.loads((HISTORY/"surface_inputs/e10_gggs_surface/camera_runtime.json").read_text())["records"]
++    index={r["source_id"]:r for r in json.loads((HISTORY/"surface_inputs/e10_gggs_surface/render_index.json").read_text())}
++    light=np.array([.2,-.3,-1.]);light/=np.linalg.norm(light)
++    for route in ["meshes","meshes_shared_depth_range"]:
++        directory=ROOT/route
++        if not (directory/"complete.json").exists():continue
++        for stage in ["raw","post"]:
++            mesh=o3d.io.read_triangle_mesh(str(directory/(stage+".ply")))
++            if not len(mesh.vertices):continue
++            v=np.asarray(mesh.vertices);f=np.asarray(mesh.triangles);colors=np.asarray(mesh.vertex_colors)
++            scene=o3d.t.geometry.RaycastingScene(nthreads=8)
++            scene.add_triangles(o3d.t.geometry.TriangleMesh.from_legacy(mesh))
++            for c in cameras:
++                sid=c["source_id"]
++                if sid not in REPS:continue
++                out=ROOT/"visualizations"/route/stage/f"source_{sid:04d}";out.mkdir(parents=True,exist_ok=True)
++                depth,normal,rgb=cast(scene,c,v,f,colors);hit=np.isfinite(depth)&(depth>0)
++                E=np.asarray(c["world_view_transform"]).T
++                ncam=normal@E[:3,:3].T
++                intensity=.25+.65*np.abs(ncam@light)
++                gray=np.repeat(intensity[...,None],3,-1);gray[~hit]=0
++                normal_color=(ncam+1)/2;normal_color[~hit]=0;rgb[~hit]=0
++                # Primitive ID transitions display actual visible triangle edges at pixel resolution.
++                h,w=hit.shape;C=np.linalg.inv(E);ids=np.full((h,w),np.iinfo(np.uint32).max,dtype=np.uint32)
++                for start in range(0,h,192):
++                    yy,xx=np.mgrid[start:min(start+192,h),:w]
++                    dirs=np.stack([(xx-c["Cx"])/c["Fx"],(yy-c["Cy"])/c["Fy"],np.ones_like(xx)],-1)@C[:3,:3].T
++                    rays=np.concatenate([np.broadcast_to(C[:3,3],dirs.shape),dirs],-1).astype(np.float32)
++                    ids[start:start+len(yy)]=scene.cast_rays(o3d.core.Tensor(rays),nthreads=8)["primitive_ids"].numpy()
++                edges=np.zeros_like(hit)
++                edges[:,1:] |= ids[:,1:]!=ids[:,:-1]
++                edges[1:,:] |= ids[1:,:]!=ids[:-1,:]
++                wire=gray.copy();wire[edges&hit]=[1,1,1]
++                with np.load(index[sid]["path"]) as data:fg=data["foreground_mask"];gt=data["gt_rgb"]
++                missing=fg&~hit
++                internal=missing&(ndimage.distance_transform_edt(fg)>5)
++                holes=gray.copy();holes[internal]=[1,0,1]
++                image(out/"gray.png",gray);image(out/"normal.png",normal_color);image(out/"vertex_color.png",rgb)
++                image(out/"wireframe.png",wire);image(out/"projected_interior_missing.png",holes)
++                fig,axes=plt.subplots(1,6,figsize=(18,6))
++                for ax,array,title in zip(axes,[gt,gray,normal_color,rgb,wire,holes],
++                    ["GT","Gray surface","Camera normal","Vertex color","Visible triangles","Interior missing >5px"]):
++                    ax.imshow(np.clip(array,0,1));ax.set_title(title);ax.axis("off")
++                fig.suptitle(f"P3 {route} {stage}, source {sid}")
++                fig.tight_layout();fig.savefig(out/"comparison.png",dpi=100);plt.close(fig)
++    write(ROOT/"visualizations/protocol.json",dict(source_ids=REPS,camera="Exact E10 full1080x1920 corrected K and W2C",
++      display="Depth panel fixed .15–1.57 E10 world units; mesh same full-source views; no geometry rotation/rescale",
++      normal="Camera coordinates",wireframe="Native visible triangle primitive ID transitions at pixel resolution",
++      texture="TSDF vertex RGB, no UV texture OBJ is claimed",hole_overlay="Missing rays inside RAP with >5px distance to RAP boundary; proxy missing area, not confirmed3D holes"))
++
++def main():
++    parser=argparse.ArgumentParser();parser.add_argument("--stereo-only",action="store_true");a=parser.parse_args()
++    stereo_panels()
++    if not a.stereo_only:mesh_panels()
++if __name__=="__main__":
++    main()
++    sys.stdout.flush();sys.stderr.flush();os._exit(0)
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/evaluate_p3.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/evaluate_p3.py
+new file mode 100644
+index 00000000..a56ef943
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/evaluate_p3.py
+@@ -0,0 +1,30 @@
++"""Reuse historical full-resolution208 mesh evaluation without changing historical code."""
++import os
++os.environ["CUDA_VISIBLE_DEVICES"]="1"
++os.environ["OMP_NUM_THREADS"]="8"
++import argparse,hashlib,sys
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++HISTORY=ROOT.parents[1]/"geometry_mesh_final_selection"
++sys.path.insert(0,str(HISTORY/"scripts"))
++import evaluate_meshes as official_protocol
++from surface_protocol import write
++
++def main():
++    parser=argparse.ArgumentParser()
++    parser.add_argument("--shared-depth-range",action="store_true")
++    a=parser.parse_args()
++    folder=ROOT/("meshes_shared_depth_range" if a.shared_depth_range else "meshes")
++    method="P3_GS2Mesh_shared_depth_range" if a.shared_depth_range else "P3_GS2Mesh"
++    official_protocol.METHOD_INPUT[method]="e10_gggs_surface"
++    sys.argv=[__file__,"--mesh-dir",str(folder),"--method",method]
++    official_protocol.main()
++    write(folder/"evaluation/provenance.json",dict(source_script=str(Path(official_protocol.__file__).resolve()),
++       source_sha256=hashlib.sha256(Path(official_protocol.__file__).read_bytes()).hexdigest(),
++       source_input="Same208 E10 camera and RAP mask; native GGGS median depth is reference proxy, not3D truth",
++       original_script_modified=False,method_registered_in_memory_only=True))
++
++if __name__=="__main__":
++    main()
++    sys.stdout.flush();sys.stderr.flush();os._exit(0)
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/index_p3.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/index_p3.py
+new file mode 100644
+index 00000000..9bbff26f
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/index_p3.py
+@@ -0,0 +1,40 @@
++"""Index only actually existing P3 outputs, with resolved paths and real sizes."""
++import csv,json
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++BASE=ROOT.parents[3]
++
++def main():
++    rows=[]
++    def add(path,kind,stage,number="",faces=""):
++        p=Path(path)
++        if not p.is_file():return
++        real=p.resolve()
++        rows.append(dict(experiment_id="P3",method="E10 GGGS -> GS2Mesh DLNR",artifact_type=kind,stage=stage,
++          format=p.suffix.lstrip("."),absolute_path=str(real),relative_path=str(real.relative_to(BASE)),
++          file_size_bytes=real.stat().st_size,vertices_or_gaussians=number,faces=faces,
++          coordinate_system="Original E10 standard VGGT world gauge; scalar depths in camera-axis units",
++          source_checkpoint=str((BASE/"experiments/KongQueZhuYu/geometry_rgb_dual_frontend/E10_Standard_Corrected_Interface/checkpoints/point_cloud/iteration_30000/point_cloud.ply").resolve()),
++          viewer="Blender / MeshLab / Open3D" if kind=="Mesh PLY" else "NumPy / image viewer",status="exists"))
++    for route in ["meshes","meshes_shared_depth_range"]:
++        directory=ROOT/route;complete=directory/"complete.json"
++        if complete.exists():
++            stats=json.loads(complete.read_text())
++            for stage in ["raw","post"]:
++                add(directory/(stage+".ply"),"Mesh PLY",route+"/"+stage,stats[stage+"_vertices"],stats[stage+"_faces"])
++    for folder in sorted((ROOT/"stereo").glob("[0-9][0-9][0-9]")):
++        sid=json.loads((folder/"render_complete.json").read_text())["source_id"] if (folder/"render_complete.json").exists() else None
++        if sid is None:continue
++        for n in ["left.png","right.png"]:add(folder/n,"Stereo RGB","source_"+str(sid)+"/"+n.removesuffix(".png"))
++        add(folder/"gggs_aux.npz","Depth Map","source_"+str(sid)+"/GGGS auxiliary depth and alpha")
++        model=folder/"out_DLNR_Middlebury"
++        for n,kind in [("depth_raw.npy","Depth Map"),("depth.npy","Depth Map"),("confidence.npy","Stereo Confidence"),
++                       ("occlusion_mask.npy","Stereo Consistency"),("disparity_LR.npy","Stereo Disparity"),("disparity_RL.npy","Stereo Disparity")]:
++            add(model/n,kind,"source_"+str(sid)+"/"+n.removesuffix(".npy"))
++    if rows:
++        with (ROOT/"ARTIFACTS_P3.csv").open("w",newline="") as f:
++            w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
++    print("P3 real artifact index",len(rows),"rows")
++
++if __name__=="__main__":main()
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/render_e10_stereo.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/render_e10_stereo.py
+new file mode 100644
+index 00000000..8439e88d
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/render_e10_stereo.py
+@@ -0,0 +1,137 @@
++"""GGGS renderer adapter for official GS2Mesh; E10 checkpoint is read-only."""
++import os
++os.environ["CUDA_VISIBLE_DEVICES"] = "1"
++os.environ["MPLBACKEND"] = "Agg"
++import argparse, hashlib, json, sys, time
++from pathlib import Path
++import numpy as np
++import torch
++from PIL import Image
++
++ROOT = Path(__file__).resolve().parents[1]
++BASE = ROOT.parents[3]
++DUAL = ROOT.parents[1] / "geometry_rgb_dual_frontend"
++HISTORY = ROOT.parents[1] / "geometry_mesh_final_selection"
++sys.path.append(str(HISTORY/'scripts'))
++from surface_protocol import save_npz_fast
++
++def write(path, data):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".partial")
++    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
++    tmp.replace(path)
++
++def prepare():
++    refs = json.loads((HISTORY / "surface_inputs/e10_gggs_surface/camera_runtime.json").read_text())["records"]
++    assert len(refs) == 208
++    centers = np.asarray([r["camera_center"] for r in refs])
++    radius = float(np.median(np.linalg.norm(centers - centers.mean(0), axis=1)))
++    baseline = radius * .07  # native GS2Mesh custom default, 7% camera radius
++    pairs = []
++    for c in refs:
++        E = np.asarray(c["world_view_transform"], dtype=np.float64).T
++        C = np.linalg.inv(E)
++        R = C.copy()
++        R[:3, 3] += baseline * C[:3, 0]
++        K = np.array([[c["Fx"], 0, c["Cx"]], [0, c["Fy"], c["Cy"]], [0, 0, 1]])
++        # Rectified stereo must have unchanged rotation and y/z in left camera coordinates.
++        translation_left = (R[:3, 3] - C[:3, 3]) @ E[:3, :3].T
++        assert np.max(np.abs(translation_left - [baseline, 0, 0])) < 1e-7
++        assert np.max(np.abs(R[:3, :3] - C[:3, :3])) == 0
++        d = dict(source_id=c["source_id"], name=c["name"], width=c["width"], height=c["height"],
++                 fx=c["Fx"], fy=c["Fy"], cx=c["Cx"], cy=c["Cy"], intrinsic=K.tolist())
++        pairs.append(dict(left=dict(d, extrinsic=C.tolist()), right=dict(d, extrinsic=R.tolist())))
++    assert sorted(p["left"]["source_id"] for p in pairs) == [i for i in range(210) if i not in [44, 206]]
++    write(ROOT / "stereo/camera_data.json", dict(pairs=pairs, baseline=baseline, camera_radius=radius,
++          baseline_percentage=7, coordinate_system="Existing E10 standard VGGT world gauge; OpenCV c2w",
++          stereo_model="DLNR_Middlebury", rendering_resolution=[1080, 1920], camera_source=str(HISTORY / "surface_inputs/e10_gggs_surface/camera_runtime.json")))
++    return pairs, baseline
++
++def main():
++    parser=argparse.ArgumentParser()
++    parser.add_argument("--prepare-only", action="store_true")
++    parser.add_argument("--limit", type=int, default=None)
++    a=parser.parse_args()
++    pairs, baseline=prepare()
++    if a.prepare_only:
++        print("208 stereo camera pairs prepared; baseline", baseline, flush=True)
++        return
++    repo=DUAL / "camera_interface/gggs_corrected"
++    sys.path.insert(0,str(repo))
++    from utils.cuda_preload import preload_cuda_ext_deps
++    preload_cuda_ext_deps()
++    from scene import GaussianModel, Scene
++    from scene.cameras import Camera
++    import gaussian_renderer as native
++    torch.set_num_threads(8)
++    torch.manual_seed(0); np.random.seed(0)
++    checkpoint=DUAL/"E10_Standard_Corrected_Interface/checkpoints"
++    runtime=ROOT/"runtime_checkpoint"
++    linked=runtime/"point_cloud/iteration_30000/point_cloud.ply"
++    linked.parent.mkdir(parents=True,exist_ok=True)
++    original=checkpoint/"point_cloud/iteration_30000/point_cloud.ply"
++    if not linked.exists(): linked.symlink_to(original)
++    ns=argparse.Namespace(sh_degree=3,sg_degree=0,source_path=str(DUAL/"Standard_VGGT_Original_RGB/COLMAP_Corrected"),
++       model_path=str(runtime),images="images",dataset="",resolution=2,white_background=False,data_device="cpu",eval=False,
++       use_decoupled_appearance=0,disable_filter3D=False,kernel_size=0.,multi_view_num=8,multi_view_max_angle=30,
++       multi_view_min_dis=.01,multi_view_max_dis=1.5)
++    pipe=argparse.Namespace(convert_SHs_python=False,compute_cov3D_python=False,debug=False)
++    gaussians=GaussianModel(3,0)
++    start=time.time()
++    scene=Scene(ns,gaussians,load_iteration=30000,shuffle=False)
++    cameras={c.image_name:c for c in scene.getTrainCameras()}
++    assert len(cameras)==208 and len(gaussians.get_xyz)==576396
++    background=torch.zeros(3,device="cuda")
++    torch.cuda.reset_peak_memory_stats()
++    records=[]
++    for i,pair in enumerate(pairs):
++        if a.limit is not None and i>=a.limit: break
++        left=cameras[pair["left"]["name"]]
++        dst=ROOT/"stereo"/f"{i:03}"
++        dst.mkdir(parents=True,exist_ok=True)
++        if (dst/"render_complete.json").exists():
++            records.append(json.loads((dst/"render_complete.json").read_text()))
++            continue
++        E=np.linalg.inv(np.asarray(pair["right"]["extrinsic"]))
++        right=Camera(left.colmap_id,E[:3,:3].T,E[:3,3],left.FoVx,left.FoVy,left.original_image,
++          None,left.image_name+"_right",left.uid,data_device="cpu",intrinsics=(left.Fx,left.Fy,left.Cx,left.Cy))
++        assert np.max(np.abs(right.world_view_transform.cpu().numpy().T - E))<1e-6
++        for key in ["Fx","Fy","Cx","Cy"]:
++            assert abs(getattr(left,key)-getattr(right,key))<1e-8
++        assert np.max(np.abs(left.projection_matrix.cpu().numpy() - right.projection_matrix.cpu().numpy()))<1e-7
++        with torch.no_grad():
++            outputs={}
++            parity={}
++            for name,view in [("left",left),("right",right)]:
++                pkg=native.render(view,gaussians,pipe,background,0.)
++                rgb=pkg["render"].permute(1,2,0).cpu().numpy().astype(np.float32)
++                if name=="left" and pair['left']['source_id'] in [0,26,53,79,105,131,157,183]:
++                    cached=HISTORY/'surface_inputs/e10_gggs_surface/rendered'/(left.image_name+'.npz')
++                    with np.load(cached) as old:
++                        delta=np.abs(rgb-old['render_raw'])
++                    parity=dict(reference_render_max_abs=float(delta.max()),reference_render_mean_abs=float(delta.mean()),reference_render_path=str(cached))
++                    assert parity['reference_render_max_abs']<1e-4, 'E10 native rendered left parity failed'
++                Image.fromarray(np.clip(rgb*255,0,255).astype(np.uint8)).save(dst/(name+".png"),compress_level=1)
++                outputs[name+"_alpha"]=pkg["mask"].cpu().numpy().squeeze().astype(np.float32)
++                outputs[name+"_median_depth"]=pkg["median_depth"].cpu().numpy().squeeze().astype(np.float32)
++                del pkg
++            save_npz_fast(dst/"gggs_aux.npz",**outputs)
++        fg=np.asarray(Image.open(Path(ns.source_path)/"masks"/(left.image_name+".png")).convert("L")
++                      .resize((left.image_width,left.image_height),Image.Resampling.NEAREST))>127
++        np.save(dst/"left_mask.npy",fg)
++        Image.fromarray(fg.astype(np.uint8)*255).save(dst/"left_mask.png")
++        rec=dict(source_id=pair["left"]["source_id"],name=left.image_name,path=str(dst),baseline=baseline,
++                 left_mask_sha256=hashlib.sha256(fg.tobytes()).hexdigest(),**parity)
++        write(dst/"render_complete.json",rec)
++        records.append(rec)
++        print("E10 stereo rendered",i,rec["source_id"],flush=True)
++    done=a.limit is None or a.limit>=208
++    write(ROOT/("render_complete.json" if done else "render_smoke.json"),
++         dict(status="complete" if done else "partial",views=len(records),model_count=len(gaussians.get_xyz),checkpoint=str(original.resolve()),
++              wall_seconds=time.time()-start,peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
++              peak_reserved_gib=torch.cuda.max_memory_reserved()/2**30,physical_gpu=1,
++              renderer=str(repo),records=records))
++
++if __name__=="__main__": main()
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_p3_driver.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_p3_driver.py
+new file mode 100644
+index 00000000..14a5fbc8
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_p3_driver.py
+@@ -0,0 +1,72 @@
++"""Sequential, resumable P3 execution. Start only when GPU stage order permits."""
++import os
++os.environ["CUDA_VISIBLE_DEVICES"]="1"
++os.environ["OMP_NUM_THREADS"]="8"
++os.environ["MPLBACKEND"]="Agg"
++import argparse,json,subprocess,sys,time,threading
++from pathlib import Path
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/"scripts"))
++from render_e10_stereo import write
++
++def run(stage,args):
++    log=ROOT/"logs"/(stage+".log")
++    command=[str(ROOT/".venv/bin/python"),*args]
++    record=dict(stage=stage,command=command,cwd=str(ROOT),started_unix=time.time(),physical_gpu=1)
++    with (ROOT/"actual_commands.jsonl").open("a") as f:f.write(json.dumps(record,ensure_ascii=False)+"\n")
++    write(ROOT/"STATUS.json",dict(status="running",stage=stage,pid=os.getpid(),command=command))
++    with log.open("a") as f:
++        p=subprocess.Popen(command,cwd=ROOT,env=os.environ.copy(),stdout=f,stderr=subprocess.STDOUT)
++        write(ROOT/"CHILD_PROCESS.json",dict(stage=stage,pid=p.pid,parent_pid=os.getpid(),log=str(log)))
++        stop=threading.Event()
++        samples=[]
++        def observe():
++            with (ROOT/"logs"/(stage+"_gpu_observations.jsonl")).open("a") as observation:
++                while not stop.is_set():
++                    try:
++                        apps=subprocess.check_output(["nvidia-smi","--query-compute-apps=pid,used_gpu_memory","--format=csv,noheader,nounits"],text=True,timeout=10)
++                        memory=max([float(line.split(',')[1]) for line in apps.splitlines() if line.split(',')[0].strip()==str(p.pid)] or [0.])
++                        gpu=subprocess.check_output(["nvidia-smi","--id=1","--query-gpu=memory.used,utilization.gpu,temperature.gpu,power.draw","--format=csv,noheader,nounits"],text=True,timeout=10).strip()
++                        sample=dict(unix=time.time(),pid=p.pid,child_gpu_memory_mib=memory,physical_gpu1_aggregate=gpu,aggregate_includes_other_processes=True)
++                        samples.append(sample);observation.write(json.dumps(sample)+"\n");observation.flush()
++                    except Exception as e:
++                        observation.write(json.dumps(dict(unix=time.time(),observation_error=str(e)))+"\n");observation.flush()
++                    stop.wait(2)
++        monitor=threading.Thread(target=observe,daemon=True);monitor.start()
++        code=p.wait()
++        stop.set();monitor.join(timeout=12)
++    record.update(returncode=code,ended_unix=time.time(),elapsed_seconds=time.time()-record["started_unix"])
++    record.update(peak_child_gpu_memory_mib_sampled=max([s["child_gpu_memory_mib"] for s in samples] or [0]),observations=len(samples))
++    with (ROOT/"actual_commands.jsonl").open("a") as f:f.write(json.dumps(record,ensure_ascii=False)+"\n")
++    if code:
++        write(ROOT/"STATUS.json",dict(status="failed",stage=stage,returncode=code,log=str(log)))
++        raise RuntimeError(stage+" failed; inspect "+str(log))
++    print(stage,"complete",flush=True)
++
++def main():
++    parser=argparse.ArgumentParser()
++    parser.add_argument("--smoke-only",action="store_true")
++    parser.add_argument("--extraction-only",action="store_true")
++    a=parser.parse_args()
++    if a.smoke_only:
++        run("render_smoke",["scripts/render_e10_stereo.py","--limit","1"])
++        run("stereo_smoke",["scripts/run_stereo_fusion.py","--stage","stereo","--limit","1"])
++        write(ROOT/"STATUS.json",dict(status="smoke_complete",formal_views_remaining=207))
++        return
++    if not (ROOT/"render_complete.json").exists():run("render",["scripts/render_e10_stereo.py"])
++    if not (ROOT/"stereo_complete.json").exists():run("stereo",["scripts/run_stereo_fusion.py","--stage","stereo"])
++    print("STEREO_GPU_COMPLETE; remaining stages use CPU",flush=True)
++    if not (ROOT/"fusion_complete.json").exists():run("fusion",["scripts/run_stereo_fusion.py","--stage","fusion"])
++    if not (ROOT/"fusion_shared_depth_range_complete.json").exists():
++        run("fusion_shared_depth_range",["scripts/run_stereo_fusion.py","--stage","fusion","--shared-depth-range"])
++    run("artifact_index",["scripts/index_p3.py"])
++    write(ROOT/"STATUS.json",dict(status="model_extraction_complete",views=208,evaluation_status="pending"))
++    if a.extraction_only:return
++    if not (ROOT/"meshes/evaluation/complete.json").exists():run("evaluation",["scripts/evaluate_p3.py"])
++    if not (ROOT/"meshes_shared_depth_range/evaluation/complete.json").exists():
++        run("evaluation_shared_depth_range",["scripts/evaluate_p3.py","--shared-depth-range"])
++    if not (ROOT/"visualizations/protocol.json").exists():run("visualizations",["scripts/build_p3_views.py"])
++    write(ROOT/"STATUS.json",dict(status="complete",views=208,mesh_routes=2,raw_post_preserved=True))
++
++if __name__=="__main__":main()
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_stereo_fusion.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_stereo_fusion.py
+new file mode 100644
+index 00000000..58b677f7
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/run_stereo_fusion.py
+@@ -0,0 +1,170 @@
++"""Use the official GS2Mesh DLNR model and TSDF, with E10 GGGS stereo images.
++Adapter fixes repeated padding of LR/RL inference and exposes consistency confidence.
++No Gaussian training or replacement stereo estimator is performed.
++"""
++import os
++os.environ["CUDA_VISIBLE_DEVICES"] = "1"
++os.environ["MPLBACKEND"] = "Agg"
++import argparse, hashlib, json, shutil, sys, time, subprocess
++from pathlib import Path
++import numpy as np
++from PIL import Image
++
++ROOT=Path(__file__).resolve().parents[1]
++OFFICIAL=ROOT/"official"
++HISTORY=ROOT.parents[1]/"geometry_mesh_final_selection"
++sys.path.insert(0,str(OFFICIAL))
++from render_e10_stereo import write
++
++class CachedRenderer:
++    def __init__(self):
++        doc=json.loads((ROOT/"stereo/camera_data.json").read_text())
++        self.cameras=doc["pairs"]
++        for p in self.cameras:
++            for c in p.values():
++                for k in ["intrinsic","extrinsic"]: c[k]=np.asarray(c[k])
++        self.left_cameras=[p["left"] for p in self.cameras]
++        self.baseline=doc["baseline"]
++        self.output_dir_root=str(ROOT/"meshes")
++        Path(self.output_dir_root).mkdir(parents=True,exist_ok=True)
++    def __len__(self): return len(self.cameras)
++    def render_folder_name(self,i): return str(ROOT/"stereo"/f"{i:03}")
++    def render_image_pair(self,i,visualize=False):
++        out=Path(self.render_folder_name(i))
++        assert (out/"render_complete.json").exists()
++        assert (out/"left.png").exists() and (out/"right.png").exists()
++
++def parent_free_view_tasks():
++    """Parent-authorized16 GGGS audit views, separate from P3 algorithm timing."""
++    selection=ROOT.parent
++    base=ROOT.parents[3]
++    script=selection/'scripts/render_gggs_free.py'
++    if not script.exists():return
++    tasks=[('E10',base/'experiments/KongQueZhuYu/geometry_rgb_dual_frontend/E10_Standard_Corrected_Interface/checkpoints/point_cloud/iteration_30000/point_cloud.ply'),
++           ('P2',selection/'P2_GGGS_Cleaning/cleaned_gaussians.ply')]
++    for experiment,ply in tasks:
++        out=selection/'comparison/visualizations'/(experiment+'_free')
++        if (out/'complete.json').exists():continue
++        command=['uv','run','--no-project','--python',str(base/'.venv/bin/python'),'python',str(script),'--ply',str(ply),'--out',str(out)]
++        record=dict(stage=experiment+'_shared_free_views',command=command,cwd=str(base),started_unix=time.time(),
++                    source_experiment=experiment,separate_from_P3_algorithm=True,physical_gpu=1)
++        log=selection/'logs'/(experiment+'_shared_free_views.log');log.parent.mkdir(parents=True,exist_ok=True)
++        with (selection/'additional_visual_commands.jsonl').open('a') as f:f.write(json.dumps(record,ensure_ascii=False)+'\n')
++        print('Parent audit free views before DLNR',experiment,flush=True)
++        with log.open('a') as f:
++            code=subprocess.call(command,cwd=base,env=os.environ.copy(),stdout=f,stderr=subprocess.STDOUT)
++        record.update(returncode=code,ended_unix=time.time(),elapsed_seconds=time.time()-record['started_unix'])
++        with (selection/'additional_visual_commands.jsonl').open('a') as f:f.write(json.dumps(record,ensure_ascii=False)+'\n')
++        if code or not (out/'complete.json').exists():raise RuntimeError('Parent '+experiment+' free view audit failed; '+str(log))
++
++def run_stereo(a,renderer):
++    parent_free_view_tasks()
++    import torch
++    from gs2mesh_utils.stereo_utils import Stereo
++    args=argparse.Namespace(stereo_model="DLNR_Middlebury",stereo_warm=False,stereo_occlusion_threshold=3,stereo_shading_eps=1e-4)
++    torch.set_num_threads(8);torch.manual_seed(0);np.random.seed(0)
++    start=time.time();stereo=Stereo(str(OFFICIAL),renderer,args,device="cuda")
++    torch.cuda.reset_peak_memory_stats()
++    records=[]
++    for i,c in enumerate(renderer.left_cameras):
++        if a.limit is not None and i>=a.limit: break
++        renderer.render_image_pair(i)
++        folder=Path(renderer.render_folder_name(i));out=folder/"out_DLNR_Middlebury"
++        out.mkdir(parents=True,exist_ok=True)
++        if (out/"complete.json").exists():
++            records.append(json.loads((out/"complete.json").read_text()));continue
++        t=time.time()
++        image1=stereo.load_image(str(folder/"left.png"));image2=stereo.load_image(str(folder/"right.png"))
++        padder=stereo.input_padder(image1.shape,divis_by=32)
++        left,right=padder.pad(image1,image2)  # pad exactly once; both directions unpad identically
++        disparities={}
++        with torch.no_grad():
++            for direction in ["LR","RL"]:
++                x,y=(left,right) if direction=="LR" else (torch.flip(right,dims=[3]),torch.flip(left,dims=[3]))
++                _,flow=stereo.model(x,y,iters=stereo.model_args.valid_iters,test_mode=True,flow_init=None)
++                if direction=="RL":flow=torch.flip(flow,dims=[3])
++                disparities[direction]=-padder.unpad(flow).cpu().numpy().squeeze().astype(np.float32)
++                np.save(out/("disparity_"+direction+".npy"),disparities[direction])
++        d=disparities["LR"];r=disparities["RL"]
++        assert d.shape==r.shape==(c["height"],c["width"])
++        valid=np.isfinite(d)&(d>0)
++        dsafe=np.where(valid,d,0)
++        rsafe=np.where(np.isfinite(r),r,0)
++        occlusion=stereo.get_occlusion_mask(dsafe,rsafe,args.stereo_occlusion_threshold)&valid
++        yy,xx=np.mgrid[:d.shape[0],:d.shape[1]]
++        projected=(xx-dsafe).astype(np.int32)
++        clipped=np.clip(projected,0,d.shape[1]-1)
++        residual=np.abs(xx-np.clip(clipped+rsafe[yy,clipped],0,d.shape[1]-1))
++        confidence=np.exp(-residual/args.stereo_occlusion_threshold).astype(np.float32)
++        confidence[(projected<0)|(projected>=d.shape[1])|~valid]=0
++        with np.errstate(invalid="ignore",divide="ignore"):
++            raw_depth=c["fx"]*renderer.baseline/d
++        depth=np.where(np.isfinite(raw_depth)&(raw_depth>0),raw_depth,0).astype(np.float32)
++        np.save(out/"depth_raw.npy",raw_depth.astype(np.float32))
++        np.save(out/"depth.npy",depth)
++        np.save(out/"occlusion_mask.npy",occlusion)
++        np.save(out/"confidence.npy",confidence)
++        np.save(out/"consistency_residual_px.npy",residual.astype(np.float32))
++        Image.fromarray(occlusion.astype(np.uint8)*255).save(out/"occlusion_mask.png")
++        Image.fromarray((confidence*255).astype(np.uint8)).save(out/"confidence.png")
++        mask=np.load(folder/"left_mask.npy").astype(bool)
++        rec=dict(source_id=c["source_id"],name=c["name"],elapsed_seconds=time.time()-t,shape=list(d.shape),
++                 fg_pixels=int(mask.sum()),fg_valid_depth_pixels=int((mask&(depth>0)).sum()),
++                 fg_stereo_consistent_pixels=int((mask&occlusion).sum()),path=str(out),
++                 confidence="exp(-native left-right reprojection residual/3px); consistency score, not calibrated network probability")
++        write(out/"complete.json",rec);records.append(rec)
++        print("native DLNR stereo",i,c["source_id"],rec["elapsed_seconds"],flush=True)
++        del image1,image2,left,right,flow
++        torch.cuda.empty_cache()
++    done=a.limit is None or a.limit>=208
++    write(ROOT/("stereo_complete.json" if done else "stereo_smoke.json"),
++       dict(status="complete" if done else "partial",views=len(records),wall_seconds=time.time()-start,
++            peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,peak_reserved_gib=torch.cuda.max_memory_reserved()/2**30,
++            native_model=str(OFFICIAL/"third_party/DLNR/pretrained/DLNR_Middlebury.pth"),
++            weight_sha256=hashlib.sha256((OFFICIAL/"third_party/DLNR/pretrained/DLNR_Middlebury.pth").read_bytes()).hexdigest(),
++            native_valid_iters=10,physical_gpu=1,records=records))
++
++def run_fusion(a,renderer):
++    from gs2mesh_utils.tsdf_utils import TSDF
++    sys.path.insert(0,str(HISTORY/"scripts"))
++    from mesh_artifacts import save_meshes
++    scale=json.loads((HISTORY/"configs/standard_spatial_scale.json").read_text())
++    assert (ROOT/"stereo_complete.json").exists()
++    if a.shared_depth_range:
++        renderer.output_dir_root=str(ROOT/"meshes_shared_depth_range")
++        Path(renderer.output_dir_root).mkdir(parents=True,exist_ok=True)
++    mesh_out=Path(renderer.output_dir_root)
++    args=argparse.Namespace(TSDF_valid=None,TSDF_skip=None,TSDF_voxel=scale["diagonal"],TSDF_sdf_trunc=scale["tsdf_sdf_trunc"],
++       TSDF_dilate=1,TSDF_use_mask=True,TSDF_invert_mask=False,TSDF_erode_mask=False,
++       TSDF_use_occlusion_mask=True,TSDF_min_depth_baselines=4,TSDF_max_depth_baselines=scale["tsdf_depth_trunc"]/renderer.baseline if a.shared_depth_range else 20,
++       TSDF_scale=1.,TSDF_cleaning_threshold=50)
++    start=time.time()
++    stereo=argparse.Namespace(model_name="DLNR_Middlebury")
++    tsdf=TSDF(renderer,stereo,args,"gs2mesh_E10")
++    tsdf.run(visualize=False)
++    tsdf.save_mesh()
++    stats=save_meshes(tsdf.mesh,mesh_out,scale)
++    summary=dict(status="complete",source_experiment="E10",algorithm="Official GS2Mesh DLNR stereo -> native ScalableTSDF",
++      wall_seconds=time.time()-start,parameters=vars(args),scale=scale,views=208,depth_trunc=args.TSDF_max_depth_baselines*renderer.baseline,
++      mask="Existing RAP without erosion; native stereo consistency mask",
++      official_commit="560f3e8a2349aaad24fe9444ef1ca2770aeec5ab",coordinate_system="Unchanged E10 standard VGGT world gauge",**stats)
++    write(mesh_out/"complete.json",summary)
++    write(ROOT/("fusion_shared_depth_range_complete.json" if a.shared_depth_range else "fusion_complete.json"),summary)
++    print("P3 fusion complete",stats,flush=True)
++
++def main():
++    p=argparse.ArgumentParser()
++    p.add_argument("--stage",choices=["stereo","fusion","all"],default="all")
++    p.add_argument("--limit",type=int,default=None)
++    p.add_argument("--shared-depth-range",action="store_true",help="Supplementary fusion using historical maximum depth; native main retains20 baselines")
++    a=p.parse_args()
++    renderer=CachedRenderer()
++    if a.stage in ["stereo","all"]:run_stereo(a,renderer)
++    if a.stage in ["fusion","all"]:run_fusion(a,renderer)
++
++if __name__=="__main__":
++    main()
++    # Historical native mesh workers can spend minutes faulting pages during
++    # interpreter teardown after publication. Exit only after successful main.
++    sys.stdout.flush();sys.stderr.flush();os._exit(0)
++
+
+diff --git a/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/validate_native_tsdf.py b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/validate_native_tsdf.py
+new file mode 100644
+index 00000000..0e975b88
+--- /dev/null
++++ b/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/scripts/validate_native_tsdf.py
+@@ -0,0 +1,47 @@
++"""Known-plane CPU validation of official GS2Mesh TSDF, without synthetic model exports."""
++import os
++os.environ["OMP_NUM_THREADS"]="8"
++import json,tempfile,sys
++from pathlib import Path
++from argparse import Namespace
++import numpy as np
++from PIL import Image
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/"official"))
++from gs2mesh_utils.tsdf_utils import TSDF
++import open3d as o3d
++
++def main():
++    with tempfile.TemporaryDirectory(prefix="foresplat_p3_native_fusion_validation_") as tmp:
++        folder=Path(tmp);model=folder/"out_DLNR_Middlebury";model.mkdir()
++        h=w=128;z=np.full((h,w),.8,dtype=np.float32)
++        np.save(model/"depth.npy",z);np.save(model/"occlusion_mask.npy",np.ones((h,w),bool))
++        np.save(folder/"left_mask.npy",np.ones((h,w),bool))
++        Image.fromarray(np.full((h,w,3),128,np.uint8)).save(folder/"left.png")
++        camera=dict(width=w,height=h,fx=200.,fy=201.,cx=63.2,cy=62.1,extrinsic=np.eye(4))
++        class Renderer:
++            left_cameras=[camera];baseline=.04
++            def __len__(self):return 1
++            def render_folder_name(self,i):return str(folder)
++        renderer=Renderer()
++        args=Namespace(TSDF_valid=None,TSDF_skip=None,TSDF_voxel=2.,TSDF_sdf_trunc=.02,TSDF_dilate=1,
++             TSDF_use_mask=True,TSDF_invert_mask=False,TSDF_erode_mask=False,TSDF_use_occlusion_mask=True,
++             TSDF_min_depth_baselines=4,TSDF_max_depth_baselines=40,TSDF_scale=1.,TSDF_cleaning_threshold=50)
++        tsdf=TSDF(renderer,Namespace(model_name="DLNR_Middlebury"),args,"validation")
++        tsdf.run(visualize=False)
++        xyz=np.asarray(tsdf.mesh.vertices);tri=np.asarray(tsdf.mesh.triangles)
++        error=float(np.max(np.abs(xyz[:,2]-.8))) if len(xyz) else None
++        passed=bool(len(xyz) and len(tri) and error<.01)
++        doc=dict(status="passed" if passed else "failed",synthetic_validation_only=True,vertices=int(len(xyz)),faces=int(len(tri)),
++          median_depth=float(np.median(xyz[:,2])) if len(xyz) else None,depth_error=error,
++          open3d_version=o3d.__version__,numpy_version=np.__version__,official_TSDF_import_and_camera_integration=True,
++          noncentral_principal_point=[camera["cx"],camera["cy"]],synthetic_mesh_exported=False)
++        (ROOT/("NATIVE_FUSION_CPU_VALIDATION_"+o3d.__version__+".json")).write_text(json.dumps(doc,indent=2)+"\n")
++        (ROOT/"NATIVE_FUSION_CPU_VALIDATION.json").write_text(json.dumps(doc,indent=2)+"\n")
++        print(doc,flush=True)
++        if not passed:raise RuntimeError("Native known-plane TSDF validation failed")
++
++if __name__=="__main__":
++    main()
++    sys.stdout.flush();sys.stderr.flush();os._exit(0)
++

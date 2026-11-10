@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "views": 208,
+  "summary": {
+    "width": 1080.0,
+    "height": 1920.0,
+    "full_psnr": 22.895602263200207,
+    "fg_mask_psnr": 18.298579782991467,
+    "boundary_band5_psnr": 13.296106871304648,
+    "inner_fg_edge5_psnr": 13.177155259671908,
+    "ssim": 0.8585752750245425,
+    "fg_mask_ssim_map": 0.5884904356610675,
+    "lpips_alex": 0.13440697106461114,
+    "fg_gradient_retention": 0.699031647017154,
+    "fg_gradient_ratio_abs_error": 0.30207653170845544,
+    "edge_gradient_retention": 0.5869277180799355,
+    "fg_gradient_mae": 0.023425196763128042,
+    "foreground_alpha_mean": 0.9995190403782405,
+    "background_alpha_mean": 0.999343250806515,
+    "background_alpha_gt05_fraction": 1.0,
+    "alpha_mask05_iou": 0.3101689972474478,
+    "gaussian_count": 532735.0
+  },
+  "elapsed_seconds": 256.83502650260925,
+  "physical_gpu": 1,
+  "torch": "2.5.1+cu121",
+  "metric_source_sha256": "e3c143f467d7a2645a03b6288a2f7a068e454c6f0298a8314366182f09e9b59a",
+  "evaluation": "Same E10/E11 region/gradient code, skimage win7/sample covariance and Alex LPIPS; original1080x1920 float RGB clip[0,1]"
+}

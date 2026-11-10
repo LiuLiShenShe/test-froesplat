@@ -1,0 +1,60 @@
+{
+  "status": "passed_actual_E11_CPU_metric_replay",
+  "source_experiment": "E11",
+  "source_views": [
+    0,
+    53
+  ],
+  "CPU_only": true,
+  "original_files_unchanged": true,
+  "scope": "Actual native2DGS30K float images replayed through the E14 CPU metric function, compared with independently stored historical metrics; no E14 model or performance is claimed.",
+  "LPIPS_not_rerun": "Stored historical LPIPS scalar was supplied only to fill the row; no concurrent GPU inference and no LPIPS equivalence check is claimed.",
+  "elapsed_seconds": 2.1898040771484375,
+  "checks": [
+    {
+      "source_id": 0,
+      "actual_reference_NPZ": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e11_2dgs_surface/rendered/crop_0000.npz",
+      "stored_metric_CSV": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/E11_2DGS_Corrected/per_view_metrics.csv",
+      "absolute_residuals": {
+        "full_psnr": 0.0,
+        "fg_mask_psnr": 0.0,
+        "boundary_band5_psnr": 0.0,
+        "inner_fg_edge5_psnr": 0.0,
+        "ssim": 0.0,
+        "fg_mask_ssim_map": 0.0,
+        "fg_gradient_retention": 0.0,
+        "fg_gradient_ratio_abs_error": 0.0,
+        "edge_gradient_retention": 0.0,
+        "fg_gradient_mae": 0.0,
+        "foreground_alpha_mean": 0.0,
+        "background_alpha_mean": 0.0,
+        "background_alpha_gt05_fraction": 0.0,
+        "alpha_mask05_iou": 0.0
+      },
+      "GT_and_mask_SHA_equal": true
+    },
+    {
+      "source_id": 53,
+      "actual_reference_NPZ": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e11_2dgs_surface/rendered/crop_0053.npz",
+      "stored_metric_CSV": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/E11_2DGS_Corrected/per_view_metrics.csv",
+      "absolute_residuals": {
+        "full_psnr": 0.0,
+        "fg_mask_psnr": 0.0,
+        "boundary_band5_psnr": 0.0,
+        "inner_fg_edge5_psnr": 0.0,
+        "ssim": 0.0,
+        "fg_mask_ssim_map": 0.0,
+        "fg_gradient_retention": 0.0,
+        "fg_gradient_ratio_abs_error": 0.0,
+        "edge_gradient_retention": 0.0,
+        "fg_gradient_mae": 0.0,
+        "foreground_alpha_mean": 0.0,
+        "background_alpha_mean": 0.0,
+        "background_alpha_gt05_fraction": 0.0,
+        "alpha_mask05_iou": 0.0
+      },
+      "GT_and_mask_SHA_equal": true
+    }
+  ],
+  "audit_source_SHA256": "d93c6f829ef61cf7567e6eff098e04f2eada0a9e28b457637ecb2c1a6cdfcd16"
+}

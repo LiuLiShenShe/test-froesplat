@@ -1,0 +1,71 @@
+{
+  "rule": "Remove components with <50 triangles only; all larger components retained",
+  "raw_vertices": 2761864,
+  "raw_faces": 4653025,
+  "raw_components": 88651,
+  "deleted_vertices": 553328,
+  "deleted_faces": 559604,
+  "kept_components": 2186,
+  "deleted_component_area": 0.1744587165104636,
+  "scale": {
+    "frontend": "standard",
+    "original_foreground_points": 7794589,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.24880186252295972,
+      -0.3970067222416401,
+      0.664764198064804
+    ],
+    "robust_bbox_max": [
+      0.23266781732439995,
+      0.20705938354134557,
+      1.10746643781662
+    ],
+    "diagonal": 0.8903337496969407,
+    "origin": [
+      -0.008067022599279883,
+      -0.09497366935014726,
+      0.886115317940712
+    ],
+    "sampling_voxel": 0.0008694665524384186,
+    "nksr_voxel": 0.0017389331048768373,
+    "tsdf_voxel": 0.0017389331048768373,
+    "tsdf_sdf_trunc": 0.008694665524384186,
+    "transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+    "max_original_foreground_camera_depth": 1.2553966045379639,
+    "tsdf_depth_trunc": 1.5692457556724548,
+    "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+  },
+  "raw_is_preserved": true,
+  "removed_geometry_archive": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P4_2DGS_Depth_Mesh/median_mask_alpha_voxel075/components_and_removals.npz"
+}

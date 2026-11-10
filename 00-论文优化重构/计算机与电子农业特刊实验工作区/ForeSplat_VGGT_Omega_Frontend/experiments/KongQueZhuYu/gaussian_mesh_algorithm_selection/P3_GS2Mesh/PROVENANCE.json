@@ -1,0 +1,61 @@
+{
+  "official_repository": "https://github.com/yanivw12/gs2mesh",
+  "official_commit": "560f3e8a2349aaad24fe9444ef1ca2770aeec5ab",
+  "source_sha256": {
+    "gs2mesh_utils/stereo_utils.py": "fb111e5a1ffd8a9af49560297cffa34d171b4919e7779ecb2d6356b9ccce3d8e",
+    "gs2mesh_utils/tsdf_utils.py": "760942439dad03ef545bb9bafcace36b0772c0f435d15491df4c33787dac9112",
+    "gs2mesh_utils/renderer_utils.py": "7896abbd10e4f83f13a0fac4b50ac0cfcb197a74577da4e9d3607e5f2ef81182",
+    "third_party/DLNR/core/dlnr.py": "c50a9cba8c6de4309f948592065fdef72fe58fdc8112026398e7e9b98f483cee"
+  },
+  "stereo_weights_url": "https://github.com/David-Zhao-1997/High-frequency-Stereo-Matching-Network/releases/download/v1.0.0/DLNR_Middlebury.pth",
+  "stereo_weights_sha256": "57e46b8fed66b685f732b730ebffd71998dcabea49f8443ca77e015419f6ae18",
+  "core_changes": false,
+  "adapter_changes": [
+    "Use E10 GGGS renderer rather than GS2Mesh 3DGS loader; no training",
+    "Preserve all208 original K/noncentral principal point, right camera rectified positive-X baseline 7% native median radius",
+    "Fix official Stereo.run repeated padding: pad once from original images for both LR and RL, unpad both with same padding",
+    "Expose continuous left-right reprojection consistency confidence (not learned probability)",
+    "Native stereo architecture, pretrained DLNR Middlebury weights, valid_iters10 and3px occlusion threshold unchanged",
+    "RAP masks reused without segmentation; no10px erosion to protect thin edges",
+    "Native TSDF same integrator, with shared historical scale voxel/truncation and raw/post50-triangle cleanup"
+  ],
+  "environment": {
+    "manager": "uv",
+    "python": "3.12.3",
+    "local_env": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/.venv",
+    "read_only_parent_packages": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/.venv/lib/python3.12/site-packages",
+    "base_environment_modified": false
+  },
+  "search": {
+    "Bocha": "HTTP403 insufficient package quota (2026-11-09)",
+    "Context7_GS2Mesh": "No indexed library; official source used",
+    "Context7_uv": "/astral-sh/uv official documentation retrieved"
+  },
+  "adapter_sha256": {
+    "scripts/index_p3.py": "c3e51b133a7640711db13a679a95f6c204a842172805e47a54b9fb2c0a6d2485",
+    "scripts/run_stereo_fusion.py": "aa2df5bae67797fd4a02af3f2140119f90a21d94962c5ee26edfb0deb2aaca09",
+    "scripts/build_p3_views.py": "49b14be29e15cf524bf338b58ac988c309d3cad37a3e1e5070df775bf28d48ab",
+    "scripts/validate_native_tsdf.py": "5151ced06328bd54083d9e233bf10e48e98a5fb6a0abe3a04ff2af5aebbdd0a2",
+    "scripts/audit_depth_stages.py": "ed0e7a372bceb7fb367731662de20b6612f9d532bd3c78bae95b1de33454921a",
+    "scripts/audit_stereo_geometry.py": "faad0ecc8ab9d29e8227a909c05447cfc34c07a16e349683a401ef15945d4578",
+    "scripts/run_p3_driver.py": "6663389b014867b6b06745f3bd75e0898cba1bf7322ce9495ce11c4b60c698f4",
+    "scripts/render_e10_stereo.py": "5bacd674c8940d6a2f8db971cc2b6484d18f0fb93880e505a87005b8b86812c7",
+    "scripts/evaluate_p3.py": "ff5182b5ff4f799b5a37f13a061f453b1759e6b26e95df1aba3ba2e2c7ba25d7"
+  },
+  "evaluation": "Same208 historical evaluate_meshes.py; in-memory method registration only",
+  "fusion_variants": {
+    "native_depth_range": "4\u201320 stereo baselines",
+    "shared_depth_range": "4 baselines minimum, shared historical TSDF truncation1.5692457556724548 maximum"
+  },
+  "prior": "External pretrained DLNR Middlebury stereo prior; any geometric gain cannot be attributed to GGGS-only geometry",
+  "reference_native_depth_range_audit": "REFERENCE_DEPTH_RANGE_AUDIT.json (E10 median depth, not P3 result)",
+  "fixed_view_left_render_parity": "Eight source views compared to actual cached E10 float RGB; maximum absolute tolerance1e-4",
+  "Open3D_runtime_fix": {
+    "initial": "Open3D0.20 + numpy2.5.4 silently zero mesh on known plane (matches historical M5 issue)",
+    "active": "Open3D0.19.0 + NumPy2.4.2 matches successful historical E6 runtime",
+    "native_algorithm_unchanged": true,
+    "validation": "NATIVE_FUSION_CPU_VALIDATION_0.19.0.json"
+  },
+  "lossless_serialization": "Existing historical ZIP1 save_npz_fast and PNG level1; preserve arrays and RGB pixels",
+  "process_lifecycle_fix": "Successful main flushes and exits0 to avoid historical CPU Open3D teardown page faults; failures do not take success exit"
+}

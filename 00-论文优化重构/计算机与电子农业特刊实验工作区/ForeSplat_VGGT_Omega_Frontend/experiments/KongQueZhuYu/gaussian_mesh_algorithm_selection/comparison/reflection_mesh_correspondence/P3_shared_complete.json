@@ -1,0 +1,35 @@
+{
+  "status": "complete",
+  "method": "P3_shared",
+  "source": "E10",
+  "mesh": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/meshes_shared_depth_range/post.ply",
+  "vertices": 787660,
+  "faces": 1514233,
+  "rows": 24375,
+  "CSV": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_mesh_correspondence/P3_shared_spatial_correspondence.csv",
+  "summary": [
+    {
+      "brightness_candidate": true,
+      "queries": 135,
+      "mesh_hit_fraction": 0.9925925925925926,
+      "mesh_vs_native_relative_depth_median": 0.00208068228629106,
+      "mesh_vs_native_relative_depth_p90": 0.01182120834333771,
+      "mesh_vs_native_relative_depth_finite_queries": 134,
+      "mesh_local_normal_jump3px_deg_median": 6.52595067024231,
+      "mesh_local_normal_jump3px_deg_p90": 22.027203369140626,
+      "mesh_local_normal_jump3px_deg_finite_queries": 134
+    },
+    {
+      "brightness_candidate": false,
+      "queries": 24240,
+      "mesh_hit_fraction": 0.997483498349835,
+      "mesh_vs_native_relative_depth_median": 0.002170100600828853,
+      "mesh_vs_native_relative_depth_p90": 0.00796293971906795,
+      "mesh_vs_native_relative_depth_finite_queries": 24168,
+      "mesh_local_normal_jump3px_deg_median": 6.617665767669678,
+      "mesh_local_normal_jump3px_deg_p90": 22.471352386474635,
+      "mesh_local_normal_jump3px_deg_finite_queries": 24179
+    }
+  ],
+  "interpretation": "Fixed image-only RGB matches, native rendered source points, and actual ray-hit triangle positions in the same saved W2C gauge. Brightness change is only a reflection candidate. A missing ray hit may be an open edge, incomplete surface or occlusion: it is not automatically an internal 3D hole. Local triangle-normal changes include true curvature. Relative depth is mesh-to-native consistency, not scan accuracy."
+}

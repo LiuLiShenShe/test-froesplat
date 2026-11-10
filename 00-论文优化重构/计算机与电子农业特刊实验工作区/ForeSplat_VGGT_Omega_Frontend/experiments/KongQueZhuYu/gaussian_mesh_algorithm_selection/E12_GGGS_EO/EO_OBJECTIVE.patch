@@ -1,0 +1,11 @@
+--- E10/train_foresplat.py
++++ E12/train_foresplat.py
+@@ -215,7 +215,7 @@
+             rgb_loss, Ll1_render = rgb_reconstruction_loss(image_corrected, gt_image, target_mask, fg)
+         else:
+             rgb_loss = (1.0 - opt.lambda_dssim) * Ll1_render + opt.lambda_dssim * (
+-                1.0 - ssim(rendered_image.unsqueeze(0), gt_image.unsqueeze(0))
++                1.0 - ssim(image_corrected.unsqueeze(0), gt_image.unsqueeze(0))
+             )
+ 
+         # ---- GGGS regularisers (unchanged) ------------------------------- #

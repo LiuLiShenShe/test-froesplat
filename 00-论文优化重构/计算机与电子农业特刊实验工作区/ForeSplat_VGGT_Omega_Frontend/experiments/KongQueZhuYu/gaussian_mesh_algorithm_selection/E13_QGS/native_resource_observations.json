@@ -1,0 +1,74 @@
+[
+  {
+    "time": 1794211520.7708397,
+    "iteration": 10700,
+    "primitives": 2230022,
+    "note": "GPU resource snapshot queried externally; native allocated/reserved peaks are recorded by the trainer on completion."
+  },
+  {
+    "time": 1794211543.108887,
+    "iteration": 10700,
+    "primitives": 2230022,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_used_MiB": 3173,
+        "memory_free_MiB": 45362,
+        "utilization_percent": 0
+      },
+      {
+        "index": 1,
+        "memory_used_MiB": 15931,
+        "memory_free_MiB": 32612,
+        "utilization_percent": 100
+      }
+    ],
+    "notes": "Total device memory includes other existing jobs; trainer peak allocated/reserved is the E13-process metric."
+  },
+  {
+    "time": 1794212340.6200268,
+    "iteration": 11300,
+    "primitives": 6085318,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_used_MiB": 3175,
+        "memory_free_MiB": 45360,
+        "utilization_percent": 0
+      },
+      {
+        "index": 1,
+        "memory_used_MiB": 27415,
+        "memory_free_MiB": 21128,
+        "utilization_percent": 100
+      }
+    ],
+    "notes": "Device-level figures cover all active processes; trainer peak allocated/reserved is the E13-process measurement."
+  },
+  {
+    "time": 1794217116.5543132,
+    "iteration": 9500,
+    "primitives": 349529,
+    "run_id": "20261109T084120Z_1535250",
+    "actual_trainer_pid": 1535250,
+    "trainer_process_vram_MiB": 6022,
+    "other_retained_process": {
+      "pid": 1415592,
+      "vram_MiB": 3542
+    },
+    "measure": "Actual nvidia-smi per-process current VRAM snapshot; not a peak measurement or Torch-only allocated count"
+  },
+  {
+    "time": 1794220173.058543,
+    "iteration": 11700,
+    "primitives": 3684690,
+    "run_id": "20261109T084120Z_1535250",
+    "actual_trainer_pid": 1535250,
+    "trainer_process_vram_MiB": 17236,
+    "other_retained_process": {
+      "pid": 1825223,
+      "vram_MiB": 3540
+    },
+    "measure": "Actual nvidia-smi current per-process VRAM; not a peak; unrelated workload retained"
+  }
+]

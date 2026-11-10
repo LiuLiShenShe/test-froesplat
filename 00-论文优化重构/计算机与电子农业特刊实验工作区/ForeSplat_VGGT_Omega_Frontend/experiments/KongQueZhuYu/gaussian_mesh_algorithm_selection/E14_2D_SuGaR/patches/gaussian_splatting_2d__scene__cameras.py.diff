@@ -1,0 +1,41 @@
+--- official/gaussian_splatting_2d/scene/cameras.py
++++ foresplat/gaussian_splatting_2d/scene/cameras.py
+@@ -17,7 +17,7 @@
+ class Camera(nn.Module):
+     def __init__(self, colmap_id, R, T, FoVx, FoVy, image, gt_alpha_mask,
+                  image_name, uid,
+-                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, world_normal_map=None, data_device = "cuda"
++                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, world_normal_map=None, data_device = "cuda", fx=None, fy=None, cx=None, cy=None
+                  ):
+         super(Camera, self).__init__()
+ 
+@@ -55,6 +55,16 @@
+ 
+         self.world_view_transform = torch.tensor(getWorld2View2(R, T, trans, scale)).transpose(0, 1).cuda()
+         self.projection_matrix = getProjectionMatrix(znear=self.znear, zfar=self.zfar, fovX=self.FoVx, fovY=self.FoVy).transpose(0,1).cuda()
++        self.Fx = float(fx if fx is not None else self.image_width/(2*np.tan(FoVx/2)))
++        self.Fy = float(fy if fy is not None else self.image_height/(2*np.tan(FoVy/2)))
++        self.Cx = float(cx if cx is not None else (self.image_width-1)/2)
++        self.Cy = float(cy if cy is not None else (self.image_height-1)/2)
++        p = self.projection_matrix.T.clone()
++        p[0,0] = 2*self.Fx/self.image_width
++        p[1,1] = 2*self.Fy/self.image_height
++        p[0,2] = (2*self.Cx+1)/self.image_width-1
++        p[1,2] = (2*self.Cy+1)/self.image_height-1
++        self.projection_matrix = p.T.contiguous()
+         self.full_proj_transform = (self.world_view_transform.unsqueeze(0).bmm(self.projection_matrix.unsqueeze(0))).squeeze(0)
+         self.camera_center = self.world_view_transform.inverse()[3, :3]
+ 
+@@ -70,6 +80,12 @@
+         self.zfar = zfar
+         self.world_view_transform = world_view_transform
+         self.full_proj_transform = full_proj_transform
++        self.projection_matrix=torch.linalg.solve(world_view_transform,full_proj_transform)
++        p=self.projection_matrix.T
++        self.Fx=float(p[0,0]*width/2)
++        self.Fy=float(p[1,1]*height/2)
++        self.Cx=float((p[0,2]+1)*width/2-.5)
++        self.Cy=float((p[1,2]+1)*height/2-.5)
+         view_inv = torch.inverse(self.world_view_transform)
+         self.camera_center = view_inv[3][:3]
+ 

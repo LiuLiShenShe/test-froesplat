@@ -1,0 +1,56 @@
+{
+  "status": "complete",
+  "views_per_available_stage": 208,
+  "methods": [
+    {
+      "method": "E14_cluster_before",
+      "directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_before_mesh",
+      "status": "complete",
+      "evaluated_stages": [
+        "raw",
+        "post"
+      ],
+      "unavailable_stages": [],
+      "evaluation": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_before_mesh/evaluation"
+    },
+    {
+      "method": "E14_cluster_after",
+      "directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_after_mesh",
+      "status": "complete",
+      "evaluated_stages": [
+        "raw",
+        "post"
+      ],
+      "unavailable_stages": [],
+      "evaluation": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_after_mesh/evaluation"
+    },
+    {
+      "method": "E14_initial",
+      "directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/initial_mesh",
+      "status": "complete",
+      "evaluated_stages": [
+        "raw",
+        "post"
+      ],
+      "unavailable_stages": [],
+      "evaluation": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/initial_mesh/evaluation"
+    },
+    {
+      "method": "E14_refined",
+      "directory": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/refinement/mesh_post",
+      "status": "complete",
+      "evaluated_stages": [
+        "raw",
+        "post"
+      ],
+      "unavailable_stages": [],
+      "evaluation": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/refinement/mesh_post/evaluation"
+    }
+  ],
+  "elapsed_seconds": 369.1917972564697,
+  "metric_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/scripts/evaluate_meshes.py",
+  "metric_source_sha256": "432da32e35d5100868aabe0511eab3c0cd6a9f7035c71459f80d7472703fb5f1",
+  "adaptation": "Only raw/post stage list changes when files are unavailable; all original metric equations preserved",
+  "reference": "7K before/after use the SAME7K pre-pruning median depth;30K/refined use the SAME30K median depth. All same RAP/cameras; no scan",
+  "pruning_attribution": "Same-iteration comparison isolates DBSCAN from later2DGS optimization"
+}

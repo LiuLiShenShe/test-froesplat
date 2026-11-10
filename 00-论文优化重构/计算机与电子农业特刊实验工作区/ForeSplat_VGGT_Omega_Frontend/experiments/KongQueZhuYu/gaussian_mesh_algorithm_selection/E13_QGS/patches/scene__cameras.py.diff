@@ -1,0 +1,80 @@
+--- official/scene/cameras.py
++++ adapted/scene/cameras.py
+@@ -60,7 +60,14 @@
+         self.FoVy = cam_info.FovY
+         self.image_name = cam_info.image_name
+         self.image_path = cam_info.image_path
+-        self.cam_intr = torch.tensor(cam_info.cam_intr * cam_info.downsample,dtype=torch.float32,device="cpu")
++        # Canonical integer pixel centers; exact image resize including half-pixel.
++        sx, sy = resolution[0] / cam_info.width, resolution[1] / cam_info.height
++        intr = np.asarray(cam_info.cam_intr, dtype=np.float64).copy()
++        intr[0] *= sx
++        intr[1] *= sy
++        intr[2] = (intr[2] + 0.5) * sx - 0.5
++        intr[3] = (intr[3] + 0.5) * sy - 0.5
++        self.cam_intr = torch.tensor(intr, dtype=torch.float32, device="cpu")
+         self.use_alpha = cam_info.use_alpha
+         self.image_type = cam_info.image_type
+         self.uid = uid
+@@ -68,10 +75,10 @@
+         self.image_width = resolution[0]
+         self.image_height = resolution[1]
+         self.gt_alpha_mask = gt_alpha_mask
+-        self.Fx = self.cam_intr[0]
+-        self.Fy = self.cam_intr[1]
+-        self.Cx = self.cam_intr[2]
+-        self.Cy = self.cam_intr[3]
++        self.Fx = float(intr[0])
++        self.Fy = float(intr[1])
++        self.Cx = float(intr[2])
++        self.Cy = float(intr[3])
+ 
+         try:
+             self.data_device = torch.device(data_device)
+@@ -104,6 +111,12 @@
+         
+         self.world_view_transform = torch.tensor(getWorld2View2(self.R, self.T, trans, scale)).transpose(0, 1).cuda()
+         self.projection_matrix = getProjectionMatrix(znear=self.znear, zfar=self.zfar, fovX=self.FoVx, fovY=self.FoVy).transpose(0,1).cuda()
++        p = self.projection_matrix.T.clone()
++        p[0,0] = 2 * self.Fx / self.image_width
++        p[1,1] = 2 * self.Fy / self.image_height
++        p[0,2] = (2 * self.Cx + 1) / self.image_width - 1
++        p[1,2] = (2 * self.Cy + 1) / self.image_height - 1
++        self.projection_matrix = p.T.contiguous()
+         self.full_proj_transform = (self.world_view_transform.unsqueeze(0).bmm(self.projection_matrix.unsqueeze(0))).squeeze(0)
+         self.camera_center = self.world_view_transform.inverse()[3, :3]
+         
+@@ -148,25 +161,16 @@
+     
+     def get_rays(self, scale=1.0):
+         W, H = int(self.image_width/scale), int(self.image_height/scale)
+-        ix, iy = torch.meshgrid(
+-            torch.arange(W, device="cuda").float() + 0.5, torch.arange(H, device="cuda").float() + 0.5, indexing='xy')
+-        rays_d = torch.stack(
+-                    [(ix-self.Cx/scale) / self.Fx * scale,
+-                    (iy-self.Cy/scale) / self.Fy * scale,
+-                    torch.ones_like(ix)], -1)
+-        return rays_d  
+-    
++        ix, iy = torch.meshgrid(torch.arange(W,device="cuda").float(),
++                               torch.arange(H,device="cuda").float(),indexing="xy")
++        K = self.get_k(scale)
++        return torch.stack([(ix-K[0,2])/K[0,0],(iy-K[1,2])/K[1,1],torch.ones_like(ix)],-1)
+     def get_k(self, scale=1.0):
+-        K = torch.tensor([[self.Fx / scale, 0, self.Cx / scale],
+-                        [0, self.Fy / scale, self.Cy / scale],
+-                        [0, 0, 1]]).cuda()
+-        return K
+-    
++        cx = (self.Cx + 0.5)/scale - 0.5
++        cy = (self.Cy + 0.5)/scale - 0.5
++        return torch.tensor([[self.Fx/scale,0,cx],[0,self.Fy/scale,cy],[0,0,1]],device="cuda")
+     def get_inv_k(self, scale=1.0):
+-        K_T = torch.tensor([[scale/self.Fx, 0, -self.Cx/self.Fx],
+-                            [0, scale/self.Fy, -self.Cy/self.Fy],
+-                            [0, 0, 1]]).cuda()
+-        return K_T
++        return torch.linalg.inv(self.get_k(scale))
+ 
+ class MiniCam:
+     def __init__(self, width, height, fovy, fovx, znear, zfar, world_view_transform, full_proj_transform):

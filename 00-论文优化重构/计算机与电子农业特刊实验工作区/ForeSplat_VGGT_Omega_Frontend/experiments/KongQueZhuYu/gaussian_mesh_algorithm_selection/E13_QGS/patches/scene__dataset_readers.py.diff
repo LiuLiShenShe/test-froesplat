@@ -1,0 +1,31 @@
+--- official/scene/dataset_readers.py
++++ adapted/scene/dataset_readers.py
+@@ -89,24 +89,24 @@
+             focal_length_x = intr.params[0]
+             FovY = focal2fov(focal_length_x, height)
+             FovX = focal2fov(focal_length_x, width)
+-            params = np.array([intr.params[0],intr.params[0],intr.params[1],intr.params[2]],dtype=np.float32)
++            params = np.array([intr.params[0],intr.params[0],intr.params[1],intr.params[2]],dtype=np.float64)
+         elif intr.model=="PINHOLE":
+             focal_length_x = intr.params[0]
+             focal_length_y = intr.params[1]
+             FovY = focal2fov(focal_length_y, height)
+             FovX = focal2fov(focal_length_x, width)
+-            params = np.array([intr.params[0],intr.params[1],intr.params[2],intr.params[3]],dtype=np.float32)
++            params = np.array([intr.params[0],intr.params[1],intr.params[2],intr.params[3]],dtype=np.float64)
+         elif intr.model=="OPENCV":
+             focal_length_x = intr.params[0]
+             focal_length_y = intr.params[1]
+             FovY = focal2fov(focal_length_y, height)
+             FovX = focal2fov(focal_length_x, width)
+-            params = np.array([intr.params[0],intr.params[1],intr.params[2],intr.params[3]],dtype=np.float32)
++            params = np.array([intr.params[0],intr.params[1],intr.params[2],intr.params[3]],dtype=np.float64)
+         elif intr.model == "SIMPLE_RADIAL":
+             focal_length_x = intr.params[0]
+             FovY = focal2fov(focal_length_x, height)
+             FovX = focal2fov(focal_length_x, width)
+-            params = np.array([intr.params[0],intr.params[0],intr.params[1],intr.params[2]],dtype=np.float32)
++            params = np.array([intr.params[0],intr.params[0],intr.params[1],intr.params[2]],dtype=np.float64)
+         else:
+             assert False, "Colmap camera model not handled: only undistorted datasets (PINHOLE or SIMPLE_PINHOLE cameras) supported!"
+ 

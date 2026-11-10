@@ -1,0 +1,240 @@
+{
+  "status": "complete",
+  "native_render_stages": 4,
+  "views_per_stage": 208,
+  "mesh_results": [
+    {
+      "stage": "cluster_before",
+      "algorithm": "Official bounded Open3D ScalableTSDFVolume; native median depth_ratio1; RAP mask",
+      "scale": {
+        "frontend": "standard",
+        "original_foreground_points": 7794589,
+        "extent_quantiles": [
+          0.005,
+          0.995
+        ],
+        "robust_bbox_min": [
+          -0.24880186252295972,
+          -0.3970067222416401,
+          0.664764198064804
+        ],
+        "robust_bbox_max": [
+          0.23266781732439995,
+          0.20705938354134557,
+          1.10746643781662
+        ],
+        "diagonal": 0.8903337496969407,
+        "origin": [
+          -0.008067022599279883,
+          -0.09497366935014726,
+          0.886115317940712
+        ],
+        "sampling_voxel": 0.0008694665524384186,
+        "nksr_voxel": 0.0017389331048768373,
+        "tsdf_voxel": 0.0017389331048768373,
+        "tsdf_sdf_trunc": 0.008694665524384186,
+        "transform": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "scale_fit_to_scan": false,
+        "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+        "max_original_foreground_camera_depth": 1.2553966045379639,
+        "tsdf_depth_trunc": 1.5692457556724548,
+        "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+      },
+      "views": 208,
+      "post_rule": "Same M1–M5 components<50 triangles removed; no smoothing",
+      "elapsed_seconds": 30.558592796325684,
+      "raw_vertices": 1201727,
+      "raw_faces": 2133288,
+      "post_vertices": 1066227,
+      "post_faces": 1991108,
+      "raw_components": 22328,
+      "post_components": 589,
+      "status": "complete",
+      "raw_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_before_mesh/raw.ply",
+      "post_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_before_mesh/post.ply",
+      "post_status": "complete"
+    },
+    {
+      "stage": "cluster_after",
+      "algorithm": "Official bounded Open3D ScalableTSDFVolume; native median depth_ratio1; RAP mask",
+      "scale": {
+        "frontend": "standard",
+        "original_foreground_points": 7794589,
+        "extent_quantiles": [
+          0.005,
+          0.995
+        ],
+        "robust_bbox_min": [
+          -0.24880186252295972,
+          -0.3970067222416401,
+          0.664764198064804
+        ],
+        "robust_bbox_max": [
+          0.23266781732439995,
+          0.20705938354134557,
+          1.10746643781662
+        ],
+        "diagonal": 0.8903337496969407,
+        "origin": [
+          -0.008067022599279883,
+          -0.09497366935014726,
+          0.886115317940712
+        ],
+        "sampling_voxel": 0.0008694665524384186,
+        "nksr_voxel": 0.0017389331048768373,
+        "tsdf_voxel": 0.0017389331048768373,
+        "tsdf_sdf_trunc": 0.008694665524384186,
+        "transform": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "scale_fit_to_scan": false,
+        "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+        "max_original_foreground_camera_depth": 1.2553966045379639,
+        "tsdf_depth_trunc": 1.5692457556724548,
+        "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+      },
+      "views": 208,
+      "post_rule": "Same M1–M5 components<50 triangles removed; no smoothing",
+      "elapsed_seconds": 27.310306549072266,
+      "raw_vertices": 735143,
+      "raw_faces": 1327699,
+      "post_vertices": 651950,
+      "post_faces": 1237026,
+      "raw_components": 13529,
+      "post_components": 293,
+      "status": "complete",
+      "raw_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_after_mesh/raw.ply",
+      "post_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/cluster_after_mesh/post.ply",
+      "post_status": "complete"
+    },
+    {
+      "stage": "final_30000",
+      "algorithm": "Official bounded Open3D ScalableTSDFVolume; native median depth_ratio1; RAP mask",
+      "scale": {
+        "frontend": "standard",
+        "original_foreground_points": 7794589,
+        "extent_quantiles": [
+          0.005,
+          0.995
+        ],
+        "robust_bbox_min": [
+          -0.24880186252295972,
+          -0.3970067222416401,
+          0.664764198064804
+        ],
+        "robust_bbox_max": [
+          0.23266781732439995,
+          0.20705938354134557,
+          1.10746643781662
+        ],
+        "diagonal": 0.8903337496969407,
+        "origin": [
+          -0.008067022599279883,
+          -0.09497366935014726,
+          0.886115317940712
+        ],
+        "sampling_voxel": 0.0008694665524384186,
+        "nksr_voxel": 0.0017389331048768373,
+        "tsdf_voxel": 0.0017389331048768373,
+        "tsdf_sdf_trunc": 0.008694665524384186,
+        "transform": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "scale_fit_to_scan": false,
+        "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+        "max_original_foreground_camera_depth": 1.2553966045379639,
+        "tsdf_depth_trunc": 1.5692457556724548,
+        "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+      },
+      "views": 208,
+      "post_rule": "Same M1–M5 components<50 triangles removed; no smoothing",
+      "elapsed_seconds": 31.70599937438965,
+      "raw_vertices": 905989,
+      "raw_faces": 1658690,
+      "post_vertices": 836610,
+      "post_faces": 1588063,
+      "raw_components": 11171,
+      "post_components": 295,
+      "status": "complete",
+      "raw_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/initial_mesh/raw.ply",
+      "post_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/initial_mesh/post.ply",
+      "post_status": "complete",
+      "native_largest_cluster_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/initial_mesh/native_largest_cluster.ply"
+    }
+  ],
+  "elapsed_seconds": 117.63888168334961,
+  "open3d": "0.19.0",
+  "reused_cached_depth": true,
+  "attribution": "7K pre/post use identical checkpoint iteration, camera/mask and TSDF scale; later30K adds further optimization/densification; failed Open3D0.20 records retained in recovery_open3d019"
+}

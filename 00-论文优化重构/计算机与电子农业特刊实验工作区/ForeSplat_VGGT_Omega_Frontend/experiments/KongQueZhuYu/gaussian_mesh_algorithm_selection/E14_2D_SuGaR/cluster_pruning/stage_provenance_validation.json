@@ -1,0 +1,42 @@
+{
+  "status": "complete",
+  "iteration": 7000,
+  "before": 83013,
+  "after": 43932,
+  "removed": 39081,
+  "all_PLY_fields_bitwise_partition_source": true,
+  "before_and_after_checkpoint_fields_bitwise_match": true,
+  "nonfinite_native_primitives_before": 0,
+  "nonfinite_native_primitives_after": 0,
+  "numerical_quality_is_separate_from_bitwise_provenance": true,
+  "original_NaN_bits_retained": true,
+  "native_schedule": "Scene.save immediately before DBSCAN; optimizer.step later. Native7K train checkpoint saved after optimizer is a separate state.",
+  "artifacts": [
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/training/point_cloud/iteration_7000/point_cloud.ply",
+      "file_size_bytes": 20256679,
+      "sha256": "3b1b134cdc967ea971091cba3e19635d1b766f2f0ae734c93a7b7e8df15f2ebf"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/after.ply",
+      "file_size_bytes": 10720915,
+      "sha256": "15811d547a5de7ae1433a44936243f38aaa74c3858b9d63bc6105486d5c04611"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/removed.ply",
+      "file_size_bytes": 9537271,
+      "sha256": "c4c73ec05c73c476e9c2518b7391eee01d913c827e755010cdb208bce156ef04"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/before_pruning_checkpoint.pth",
+      "file_size_bytes": 58782162,
+      "sha256": "b7333dc213d887866b5f3fd39bc37a7102d7c62ba70abef185731a8d8e9462d9"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/cluster_pruning/after_pruning_checkpoint.pth",
+      "file_size_bytes": 31112722,
+      "sha256": "368da36071b58ae2eb350d9568c01e80b37eb2de0ce38fa33de459146fe42d0a"
+    }
+  ],
+  "attribution": "Before/after PLY and corresponding TSDF use an exact deletion-only intervention, not an additional optimization step. No claim of unique prior-vs-loss causality."
+}

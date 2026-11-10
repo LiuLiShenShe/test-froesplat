@@ -1,0 +1,27 @@
+{
+  "status": "actual_native_formula_and_current_preset_read",
+  "native_preset": "Mip",
+  "normal_from_iter": 7000,
+  "lambda_normal": 0.015,
+  "wo_image_weight": true,
+  "curvature_clamp_threshold": -1.0,
+  "native_normal_term": "lambda_normal * mean(detach(w) * sum_channels(1 - rendered_normal * depth_normal))",
+  "three_channel_equivalent": "lambda_normal * mean(detach(w) * (3 - dot(rendered_normal, depth_normal)))",
+  "detached_weight": "w = 1 - sigmoid(min(log(max(nan_to_num(render_curvature, nan=0.0001),0.0001)), curvature_clamp_threshold))",
+  "same_step_extra_scalar_over_1minusDot": "2 * lambda_normal * mean(detach(w)); contributes no same-step parameter gradient, but its value can change between iterations.",
+  "mathematical_weight_bounds_for_this_preset": [
+    0.7310585786300049,
+    0.9999000099990001
+  ],
+  "mathematical_extra_scalar_bounds": [
+    0.021931757358900145,
+    0.029997000299970003
+  ],
+  "bounds_are_not_measured_plant_loss": true,
+  "use_alpha_loss": false,
+  "native_source_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/official/train.py",
+  "native_source_SHA256": "dabf257d7b37a3671731d804794d21b6a833f0f9f23101ae518d91d1ea00aeed",
+  "original_native_optimization_unchanged": true,
+  "curvature_threshold_scope": "Clamps detached log-curvature weighting in this loss; does not cap the native primitive curvature itself.",
+  "normal_scope": "Direction magnitudes can include native rasterization/alpha effects; this loss is not a calibrated angle or scan error."
+}

@@ -1,0 +1,163 @@
+### Integrate RGBD Images into ScalableTSDFVolume
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/pipelines/rgbd_integration.ipynb
+
+Creates a ScalableTSDFVolume with voxel_length=4.0/512.0 and sdf_trunc=0.04, then integrates each RGBD image using the inverse camera pose.
+
+```python
+volume = o3d.pipelines.integration.ScalableTSDFVolume(
+    voxel_length=4.0 / 512.0,
+    sdf_trunc=0.04,
+    color_type=o3d.pipelines.integration.TSDFVolumeColorType.RGB8)
+
+for i in range(len(camera_poses)):
+    print("Integrate {:d}-th image into the volume.".format(i))
+    color = o3d.io.read_image(redwood_rgbd.color_paths[i])
+    depth = o3d.io.read_image(redwood_rgbd.depth_paths[i])
+    rgbd = o3d.geometry.RGBDImage.create_from_color_and_depth(
+        color, depth, depth_trunc=4.0, convert_rgb_to_intensity=False)
+    volume.integrate(
+        rgbd,
+        o3d.camera.PinholeCameraIntrinsic(
+            o3d.camera.PinholeCameraIntrinsicParameters.PrimeSenseDefault),
+        np.linalg.inv(camera_poses[i].pose))
+```
+
+--------------------------------
+
+### Integrate RGB frames for a fragment
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/tutorial/reconstruction_system/make_fragments.rst
+
+Integrates RGBD frames into a ScalableTSDFVolume for a given fragment using poses from a pose graph. Returns the extracted triangle mesh with vertex normals. Requires the pose graph file and color/depth file lists.
+
+```python
+def integrate_rgb_frames_for_fragment(color_files, depth_files, fragment_id,
+                                      n_fragments, pose_graph_name, intrinsic,
+                                      config):
+    pose_graph = o3d.io.read_pose_graph(pose_graph_name)
+    volume = o3d.pipelines.integration.ScalableTSDFVolume(
+        voxel_length=config["tsdf_cubic_size"] / 512.0,
+        sdf_trunc=0.04,
+        color_type=o3d.pipelines.integration.TSDFVolumeColorType.RGB8)
+    for i in range(len(pose_graph.nodes)):
+        i_abs = fragment_id * config['n_frames_per_fragment'] + i
+        print(
+            "Fragment %03d / %03d :: integrate rgbd frame %d (%d of %d)." %
+            (fragment_id, n_fragments - 1, i_abs, i + 1, len(pose_graph.nodes)))
+        rgbd = read_rgbd_image(color_files[i_abs], depth_files[i_abs], False,
+                               config)
+        pose = pose_graph.nodes[i].pose
+        volume.integrate(rgbd, intrinsic, np.linalg.inv(pose))
+    mesh = volume.extract_triangle_mesh()
+    mesh.compute_vertex_normals()
+    return mesh
+```
+
+--------------------------------
+
+### Verified Snippets > TSDF integration with VoxelBlockGrid
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/agent_skills/open3d-python/SKILL.md
+
+```python
+import numpy as np
+import open3d as o3d
+
+data = o3d.data.SampleRedwoodRGBDImages()
+intrinsic = o3d.core.Tensor(
+    o3d.io.read_pinhole_camera_intrinsic(data.camera_intrinsic_path).intrinsic_matrix,
+    o3d.core.float64)
+extrinsic = o3d.core.Tensor(np.eye(4), o3d.core.float64)   # use real per-frame poses
+
+vbg = o3d.t.geometry.VoxelBlockGrid(
+    attr_names=("tsdf", "weight", "color"),
+    attr_dtypes=(o3d.core.float32,) * 3,
+    attr_channels=((1,), (1,), (3,)),
+    voxel_size=3.0 / 512, block_resolution=16, block_count=50000)
+
+for depth_path, color_path in zip(data.depth_paths, data.color_paths):
+    depth = o3d.t.io.read_image(depth_path)
+    color = o3d.t.io.read_image(color_path)
+    blocks = vbg.compute_unique_block_coordinates(depth, intrinsic, extrinsic, 1000.0, 3.0)
+    vbg.integrate(blocks, depth, color, intrinsic, intrinsic, extrinsic, 1000.0, 3.0)
+
+# weight_threshold defaults to 3.0: a voxel needs >=3 observations to survive.
+# Lower it when integrating only one or two frames, or you get an empty result.
+pcd = vbg.extract_point_cloud(weight_threshold=1.0)
+mesh = vbg.extract_triangle_mesh(weight_threshold=1.0)
+```
+
+--------------------------------
+
+### Integrate RGBD frames into TSDF volume
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/tutorial/reconstruction_system/integrate_scene.rst
+
+Defines scalable_integrate_rgb_frames, which reads alignment results from pose graphs, computes global poses, and integrates RGBD images into a ScalableTSDFVolume. Requires a dataset with synchronized image and depth subfolders and an optional camera intrinsic JSON; uses PrimeSense factory settings if not provided. Outputs a triangle mesh with vertex normals and optionally visualizes it in debug mode.
+
+```python
+def scalable_integrate_rgb_frames(path_dataset, intrinsic, config):
+    poses = []
+    [color_files, depth_files] = get_rgbd_file_lists(path_dataset)
+    n_files = len(color_files)
+    n_fragments = int(math.ceil(float(n_files) / \
+            config['n_frames_per_fragment']))
+    volume = o3d.pipelines.integration.ScalableTSDFVolume(
+        voxel_length=config["tsdf_cubic_size"] / 512.0,
+        sdf_trunc=0.04,
+        color_type=o3d.pipelines.integration.TSDFVolumeColorType.RGB8)
+
+    pose_graph_fragment = o3d.io.read_pose_graph(
+        join(path_dataset, config["template_refined_posegraph_optimized"]))
+
+    for fragment_id in range(len(pose_graph_fragment.nodes)):
+        pose_graph_rgbd = o3d.io.read_pose_graph(
+            join(path_dataset,
+                 config["template_fragment_posegraph_optimized"] % fragment_id))
+
+        for frame_id in range(len(pose_graph_rgbd.nodes)):
+            frame_id_abs = fragment_id * \
+                    config['n_frames_per_fragment'] + frame_id
+            print(
+                "Fragment %03d / %03d :: integrate rgbd frame %d (%d of %d)." %
+                (fragment_id, n_fragments - 1, frame_id_abs, frame_id + 1,
+                 len(pose_graph_rgbd.nodes)))
+            rgbd = read_rgbd_image(color_files[frame_id_abs],
+                                   depth_files[frame_id_abs], False, config)
+            pose = np.dot(pose_graph_fragment.nodes[fragment_id].pose,
+                          pose_graph_rgbd.nodes[frame_id].pose)
+            volume.integrate(rgbd, intrinsic, np.linalg.inv(pose))
+            poses.append(pose)
+
+    mesh = volume.extract_triangle_mesh()
+    mesh.compute_vertex_normals()
+    if config["debug_mode"]:
+        o3d.visualization.draw_geometries([mesh])
+```
+
+--------------------------------
+
+### TSDF integration
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/agent_skills/open3d-cpp/SKILL.md
+
+Integrates RGB-D frames into a VoxelBlockGrid and extracts a point cloud or mesh. The weight threshold defaults to 3.0.
+
+```cpp
+t::geometry::VoxelBlockGrid vbg(
+        {"tsdf", "weight", "color"},
+        {core::Float32, core::Float32, core::Float32},
+        {{1}, {1}, {3}}, 3.0f / 512, 16, 50000, device);
+
+for (size_t i = 0; i < depth_files.size(); ++i) {
+    auto depth = t::io::CreateImageFromFile(depth_files[i])->To(device);
+    auto color = t::io::CreateImageFromFile(color_files[i])->To(device);
+    auto blocks = vbg.GetUniqueBlockCoordinates(*depth, intrinsic, extrinsics[i],
+                                                1000.0f, 3.0f);
+    vbg.Integrate(blocks, *depth, *color, intrinsic, intrinsic, extrinsics[i],
+                  1000.0f, 3.0f);
+}
+auto pcd = vbg.ExtractPointCloud();            // weight threshold defaults to 3.0
+auto mesh = vbg.ExtractTriangleMesh();
+```

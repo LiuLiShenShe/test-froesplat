@@ -1,0 +1,147 @@
+{
+  "status": "complete",
+  "source_id": 53,
+  "ROI": [
+    328,
+    848,
+    648,
+    1168
+  ],
+  "ROI_foreground_pixels": 100287,
+  "dark_foreground_pixels": 26929,
+  "dark_fraction_of_ROI_foreground": 0.2685193494670296,
+  "selection": "Same GT-only historical leaf_texture ROI, actual RAP foreground, GT Rec709 luminance>.15 and E11 native luminance<.01. These are dark reconstruction errors, not automatically holes or validated specular pixels.",
+  "native_alpha_median": 0.9998555183410645,
+  "native_alpha_gt09_fraction": 1.0,
+  "expected_depth_positive_finite_fraction": 1.0,
+  "median_depth_positive_finite_fraction": 1.0,
+  "E11_expected_vs_median_relative_depth_median": 0.04138338938355446,
+  "E11_median_vs_E10_surface_relative_depth_median": 0.4112442433834076,
+  "source_npz": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e11_2dgs_surface/rendered/crop_0053.npz",
+  "source_camera": {
+    "name": "crop_0053",
+    "source_id": 53,
+    "width": 1080,
+    "height": 1920,
+    "Fx": 1640.50555019305,
+    "Fy": 1638.195508566603,
+    "Cx": 541.3532818532818,
+    "Cy": 961.3532818532818,
+    "world_view_transform": [
+      [
+        -0.2847009301185608,
+        -0.10170581936836243,
+        0.9532058238983154,
+        0.0
+      ],
+      [
+        0.611290693283081,
+        0.746691882610321,
+        0.2622497081756592,
+        0.0
+      ],
+      [
+        -0.7384233474731445,
+        0.6573485732078552,
+        -0.15041206777095795,
+        0.0
+      ],
+      [
+        0.7027260661125183,
+        -0.487120658159256,
+        1.042818307876587,
+        1.0
+      ]
+    ],
+    "projection_matrix": [
+      [
+        3.037973165512085,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.7064536809921265,
+        0.0,
+        0.0
+      ],
+      [
+        0.0034320035483688116,
+        0.00193050189409405,
+        1.000100016593933,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.010001000016927719,
+        0.0
+      ]
+    ],
+    "full_proj_transform": [
+      [
+        -0.8616423606872559,
+        -0.17171610891819,
+        0.9533011317253113,
+        0.9532058238983154
+      ],
+      [
+        1.8579847812652588,
+        1.2747013568878174,
+        0.26227593421936035,
+        0.2622497081756592
+      ],
+      [
+        -2.243826389312744,
+        1.1214444637298584,
+        -0.15042711794376373,
+        -0.15041206777095795
+      ],
+      [
+        2.138441801071167,
+        -0.8292356729507446,
+        1.0329216718673706,
+        1.042818307876587
+      ]
+    ],
+    "camera_center": [
+      -0.8434966802597046,
+      -0.33931964635849,
+      0.995969831943512
+    ]
+  },
+  "Mesh_stages": [
+    {
+      "depth": "expected",
+      "stage": "raw",
+      "source_cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P4_2DGS_Depth_Mesh/expected_mask/unified_evaluation/views/raw_0053.npz",
+      "coverage_on_native_dark_foreground": 0.9997029224999071,
+      "native_vs_mesh_relative_depth_median": 0.020454203709959984
+    },
+    {
+      "depth": "expected",
+      "stage": "post",
+      "source_cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P4_2DGS_Depth_Mesh/expected_mask/unified_evaluation/views/post_0053.npz",
+      "coverage_on_native_dark_foreground": 0.9997029224999071,
+      "native_vs_mesh_relative_depth_median": 0.05024179071187973
+    },
+    {
+      "depth": "median",
+      "stage": "raw",
+      "source_cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P4_2DGS_Depth_Mesh/median_mask/unified_evaluation/views/raw_0053.npz",
+      "coverage_on_native_dark_foreground": 0.9997029224999071,
+      "native_vs_mesh_relative_depth_median": 0.019872207194566727
+    },
+    {
+      "depth": "median",
+      "stage": "post",
+      "source_cache": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P4_2DGS_Depth_Mesh/median_mask/unified_evaluation/views/post_0053.npz",
+      "coverage_on_native_dark_foreground": 0.9997029224999071,
+      "native_vs_mesh_relative_depth_median": 0.2009822577238083
+    }
+  ],
+  "expected_post_farther_gt1percent_common_hit_fraction": 0.11533746889045726,
+  "median_post_farther_gt1percent_common_hit_fraction": 0.2568626722632889,
+  "interpretation": "High alpha and continuous finite source depth can represent the wrong dark surface. Raw/post coverage isolates whether those same pixels are geometrically absent; finite depth and agreement with E10 are consistency evidence, not scan truth. Post removes small components only. No claim of a physical3D hole or proven cause from dark RGB alone."
+}

@@ -1,0 +1,80 @@
+{
+  "status": "complete_actual_available",
+  "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+  "methods": 7,
+  "records": [
+    {
+      "status": "complete",
+      "method": "E10",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "45fcf1fb6b69f7175d25e57a063323c0dbe2d4f3d527ff24fc36829d64fdba3a",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E10_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "E11",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "05ceaa2f5a221277ff5aaaf7935286f17861cc6d90de2a6497e6fb1bb55f4375",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E11_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "E12",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "f47711b2437105232c371d3b87134faaa8d3e563b919d8436ba77825e3e15853",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E12_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "E13",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "b65c8aa12409c53e3a3c6b7f13bc8a31270f376f845e3658da1e886706d57599",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E13_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "E14_30K",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "a2ca5a142df8793730de9ce7bbb2e3c247de5ba034189f04a017365b79131f8b",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E14_30K_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "E14_refined_aux",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "cde9c0ab3e5e726789b99ef8394d43db808ad4abba620ca4167dee9ea79db82c",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/E14_refined_aux_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    },
+    {
+      "status": "complete",
+      "method": "P2",
+      "version": "unit_pixel_normal_then_unit_bilinear_sample_all_valid_support_v2",
+      "legacy_source_sha256": "ae4ce91ed140a53f452d8131baee40be162c12849da39ba7cdb6f982c8ef1da6",
+      "corrected_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_normal_v2/P2_spatial_correspondence.csv",
+      "queries": 24375,
+      "legacy_preserved": true,
+      "native_depth_and_RGB_queries_identical": true
+    }
+  ],
+  "rule": "Rotate native normals to world; normalize valid pixel vectors; bilinearly sample; require all nonzero interpolation-weight support valid; renormalize sampled direction before abs-dot angle. Undefined/zero/nonfinite normals have blank angles and explicit validity counts.",
+  "local_jump": "Mean over available valid3px shifted directions, with actual count0..4; never replace undefined normal by90degrees.",
+  "scope": "Legacy normal angles and original correspondence CSVs preserved. Only normal sampling changes; exact same RGB queries, model files, native depth/alpha/geometry flags. Refined3D axis AUX is separately marked and is not native2D surface-normal truth."
+}

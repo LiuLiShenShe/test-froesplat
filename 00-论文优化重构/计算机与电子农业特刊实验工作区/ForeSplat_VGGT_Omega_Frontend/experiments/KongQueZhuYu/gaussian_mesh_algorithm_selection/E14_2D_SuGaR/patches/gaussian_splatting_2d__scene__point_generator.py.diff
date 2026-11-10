@@ -1,0 +1,21 @@
+--- official/gaussian_splatting_2d/scene/point_generator.py
++++ foresplat/gaussian_splatting_2d/scene/point_generator.py
+@@ -1,5 +1,6 @@
+ import os
+ import numpy as np
++from PIL import Image
+ 
+ 
+ def gaussian_generator(cam_infos, cam_intrinsics, num_points, image_depth_scale_map):
+@@ -23,6 +24,11 @@
+ 
+         valid_mask = (xs >= 0) & (xs < cam_info.width) & (ys >= 0) & (ys < cam_info.height)
+ 
++        # Same native sampling distribution, restricted to the existing RAP foreground.
++        if cam_info.mask_path and os.path.exists(cam_info.mask_path):
++            fg=np.asarray(Image.open(cam_info.mask_path).convert('L'))>127
++            candidates=np.flatnonzero(valid_mask)
++            valid_mask[candidates] &= fg[ys[candidates],xs[candidates]]
+         xs = xs[valid_mask]
+         ys = ys[valid_mask]
+ 

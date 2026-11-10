@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>E11 actual native2DGS</title>
+<style>body{background:#202020;color:#ddd;font:16px sans-serif;margin:24px}label{margin:16px}button{font:inherit}main{display:flex;gap:12px}figure{margin:0;width:24%}img{width:100%;height:auto}small{display:block;margin:16px 0;color:#aaa}</style>
+<h1>E11 actual native2DGS</h1><label>Yaw <input id="yaw" type="range" min="-180" max="180" value="0"><output id="yv">0</output>°</label>
+<label>Pitch <input id="pitch" type="range" min="-80" max="80" value="0"><output id="pv">0</output>°</label><button id="go">Render</button>
+<small id="status">Loading native model view…</small><main><figure><figcaption>RGB</figcaption><img id="rgb"></figure><figure><figcaption>Alpha</figcaption><img id="alpha"></figure><figure><figcaption id="dl">Depth</figcaption><img id="depth"></figure><figure><figcaption id="nl">Normal</figcaption><img id="normal"></figure></main>
+<script>
+for(const [id,out] of [['yaw','yv'],['pitch','pv']])document.getElementById(id).oninput=()=>document.getElementById(out).textContent=document.getElementById(id).value;
+let busy=false;async function show(){if(busy)return;busy=true;document.getElementById('go').disabled=true;document.getElementById('status').textContent='Rendering…';
+try{const r=await fetch('/render',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({yaw:+document.getElementById('yaw').value,pitch:+document.getElementById('pitch').value})});const d=await r.json();if(!r.ok)throw Error(d.error);for(const k of ['rgb','alpha','depth','normal'])document.getElementById(k).src=d[k];document.getElementById('dl').textContent=d.depth_label;document.getElementById('nl').textContent=d.normal_label;document.getElementById('status').textContent=d.model+' — '+d.viewer_note;}catch(e){document.getElementById('status').textContent=e.message;}finally{busy=false;document.getElementById('go').disabled=false;}}
+document.getElementById('go').onclick=show;show();
+</script>

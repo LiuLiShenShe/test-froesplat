@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "views": 208,
+  "iteration": 30000,
+  "native_preset": "Mip",
+  "reconstructed_208_view_means": {
+    "native_normal_scalar_reconstructed_CPU": 0.02777308596369739,
+    "one_minus_dot_scalar_same_detached_weight": 0.0033033234503818676,
+    "extra_three_channel_scalar": 0.024469759512262847,
+    "decomposition_abs_residual": 3.152168714083158e-09,
+    "detached_weight_mean": 0.8156586676262892,
+    "native_rendered_normal_length_FG_mean": 0.8298522468942863,
+    "native_rendered_normal_length_BG_mean": 0.944327034915869,
+    "native_depth_normal_length_FG_mean": 0.9973587925330951,
+    "native_depth_normal_length_BG_mean": 0.9943083719565318
+  },
+  "native_model_path": "/home/test/foresplat_model_files/KongQueZhuYu/E13_QGS/Mip/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "native_render_index_path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/surface_inputs/render_index.json",
+  "native_render_index_SHA256": "a109baeb7977b19f576d37c11ef936d2a62c3fc4d5871932f6fba8b70fb33d65",
+  "CPU_float32": true,
+  "no_CUDA_bitwise_scalar_equivalence_claim": true,
+  "original_models_and_maps_unchanged": true,
+  "scope": "Uniform208 terminal-model forward-map reconstruction, not the stochastic training trace. The original three-channel normal scalar contains an extra detached-weight term; raw direction lengths/alpha differ from an independently normalized geometric angle.",
+  "formula": "lambda_normal*mean(detach(w)*(3-dot(native_normal,depth_normal))); additional same-step term=2*lambda_normal*mean(detach(w))"
+}

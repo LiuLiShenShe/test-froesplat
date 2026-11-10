@@ -1,0 +1,11 @@
+{
+  "status": "loaded",
+  "missing_unused_keys": [
+    "depth_model.encoder.mask_token",
+    "depth_model.encoder.norm.weight",
+    "depth_model.encoder.norm.bias"
+  ],
+  "unexpected_keys": [],
+  "all_inference_weights_loaded": true,
+  "reason": "Official vit_giant2_reg multi_output=True bypasses final encoder.norm; default tensor inference uses masks=None so mask_token is unused; same native strictFalse behavior"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "actual_available_complete",
+  "routes": 50,
+  "rows": 10400,
+  "elapsed_seconds": 288.4057047367096,
+  "definition": "Per-view y < floor(ymin+0.6*(ymax-ymin)) from the unchanged RAP foreground mask. Upper region includes background above this line; interior excludes3px foreground boundary. Lower region includes pot/marker and can also contain leaves.",
+  "limitations": "Image-height proxy rather than a verified leaf semantic mask; no new segmentation or front-end inference. Enclosed missing areas use the whole original foreground topology before partitioning, so the split does not create artificial holes. Pixel areas and consistency proxies, not physical3D accuracy.",
+  "validation": "All208 original mask hashes and whole silhouetteIoU verified for every source raycast route. Same masks for Omega/standard source images; each mesh retains its original camera gauge."
+}

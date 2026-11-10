@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ForeSplat · 原生 QGS 三维查看</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#14191d;color:#ecf1f4;font:15px system-ui,sans-serif}
+main{display:grid;grid-template-columns:310px 1fr;height:100vh}aside{padding:24px;overflow:auto;background:#1d252b}h1{font-size:21px;margin:0 0 12px}p{line-height:1.6;color:#b5c4ce}
+label{display:block;margin:18px 0 7px}select,button{width:100%;border:1px solid #536575;border-radius:6px;background:#26363f;color:#fff;padding:9px}
+input[type=range]{width:100%}small{color:#a5bbc8}#frame{display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;touch-action:none;cursor:grab}
+#frame:active{cursor:grabbing}#image{max-width:100%;max-height:100%;object-fit:contain;user-select:none;pointer-events:none}#busy{position:absolute;left:18px;top:15px;color:#b6c9d4}
+#model{font:11px monospace;overflow-wrap:anywhere;color:#a8beca}#error{color:#ffc78e}footer{font-size:12px;color:#95a9b6;line-height:1.5;margin-top:18px}
+@media(max-width:750px){main{grid-template-columns:230px 1fr}aside{padding:14px}}
+</style>
+<main><aside><h1>原生 QGS 三维查看</h1><p>拖动旋转，滚轮缩放。所有画面由实际二次曲面基元直接渲染。</p>
+<div id="model">正在加载模型信息…</div>
+<label for="source">参考相机 / source ID</label><select id="source"></select>
+<label for="mode">显示</label><select id="mode"><option value="rgb">RGB · 原生 SH 颜色</option><option value="gray">纯灰 · 二次曲面几何</option><option value="normal">Normal · 相机坐标</option><option value="alpha">Alpha · 空间覆盖</option><option value="depth">Depth · 相机 Z</option></select>
+<label>水平旋转 <small id="yawvalue">0°</small></label><input id="yaw" type="range" min="-180" max="180" step="1" value="0">
+<label>垂直旋转 <small id="pitchvalue">0°</small></label><input id="pitch" type="range" min="-85" max="85" step="1" value="0">
+<label>缩放 <small id="zoomvalue">1.00×</small></label><input id="zoom" type="range" min=".25" max="4" step=".05" value="1">
+<label><input id="flip180" type="checkbox"> 视图绕世界 X 轴旋转180°</label>
+<button id="reset">恢复参考相机</button><p id="error"></p>
+<footer>Normal 颜色使用相机坐标，紫红表示非有限法线；Depth 是预测坐标尺度下的相机 Z。180°选项仅调整相机视图，原始几何文件保持不变。普通中心点云无法表示这些弯曲基元。</footer>
+</aside><section id="frame"><span id="busy">加载中…</span><img id="image" draggable="false" alt="实际原生 QGS 三维渲染"></section></main>
+<script>
+const $=id=>document.getElementById(id), ids=['source','mode','yaw','pitch','zoom','flip180'];
+let busy=false,dirty=false,lastURL=null,drag=null;
+function labels(){$('yawvalue').textContent=Math.round(+$('yaw').value)+'°';$('pitchvalue').textContent=Math.round(+$('pitch').value)+'°';$('zoomvalue').textContent=(+$('zoom').value).toFixed(2)+'×';}
+function params(){const p=new URLSearchParams;for(const id of ids)p.set(id,id==='flip180'?($('flip180').checked?'1':'0'):$(id).value);return p;}
+async function update(){dirty=true;labels();if(busy)return;busy=true;while(dirty){dirty=false;$('busy').textContent='原生渲染中…';try{const r=await fetch('/api/render?'+params());if(!r.ok){let j=await r.json();throw new Error(j.message||r.statusText);}const u=URL.createObjectURL(await r.blob());$('image').src=u;if(lastURL)URL.revokeObjectURL(lastURL);lastURL=u;$('error').textContent='';}catch(e){$('error').textContent=e.message;} }busy=false;$('busy').textContent='拖动旋转 · 滚轮缩放';}
+for(const id of ids)$(id).addEventListener('input',update);
+$('reset').onclick=()=>{for(const [id,v] of [['yaw',0],['pitch',0],['zoom',1]])$(id).value=v;$('flip180').checked=false;update();};
+$('frame').onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,yaw:+$('yaw').value,pitch:+$('pitch').value};$('frame').setPointerCapture(e.pointerId);};
+$('frame').onpointermove=e=>{if(!drag)return;$('yaw').value=Math.max(-180,Math.min(180,drag.yaw+(e.clientX-drag.x)*.35));$('pitch').value=Math.max(-85,Math.min(85,drag.pitch+(e.clientY-drag.y)*.35));update();};
+$('frame').onpointerup=()=>drag=null;$('frame').onpointercancel=()=>drag=null;
+$('frame').onwheel=e=>{e.preventDefault();$('zoom').value=Math.max(.25,Math.min(4,+$('zoom').value*Math.exp(-e.deltaY*.001)));update();};
+(async()=>{try{const s=await(await fetch('/api/state')).json();$('model').textContent=s.native_model+'\n'+s.quadratic_primitives.toLocaleString()+' 个二次曲面基元 · iteration '+s.iteration+' · '+s.stage+' · 非有限基元 '+s.native_nonfinite_primitives;for(const id of s.source_ids){const o=new Option(id,id);o.selected=id===s.initial_source_id;$('source').add(o);}await update();}catch(e){$('error').textContent=e.message;$('busy').textContent='加载失败';}})();
+</script></html>
+

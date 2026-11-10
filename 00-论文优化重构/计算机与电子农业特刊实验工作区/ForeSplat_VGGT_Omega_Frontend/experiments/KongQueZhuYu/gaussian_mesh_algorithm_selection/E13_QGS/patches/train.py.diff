@@ -1,0 +1,38 @@
+--- official/train.py
++++ adapted/train.py
+@@ -203,7 +203,7 @@
+                 H, W = render_pkg['surf_depth'].squeeze().shape
+                 device = render_pkg['surf_depth'].device
+                 ix, iy = torch.meshgrid(
+-                    torch.arange(W, device=device).float() + 0.5, torch.arange(H, device=device).float() + 0.5, indexing='xy')
++                    torch.arange(W, device=device).float(), torch.arange(H, device=device).float(), indexing='xy')
+                 pixels = torch.stack([ix, iy], dim=-1)
+ 
+                 nearest_render_pkg = render(nearest_cam, gaussians, pipe, opt, bg, kernel_size=dataset.kernel_size, stop_z_gradient = False, return_depth=True, return_normal=True)
+@@ -246,12 +246,12 @@
+                             ## sample ref frame patch
+                             pixels = pixels.reshape(-1,2)[valid_indices]
+                             offsets = patch_offsets(patch_size, pixels.device)
+-                            ori_pixels_patch = pixels.reshape(-1, 1, 2) / viewpoint_cam.ncc_scale + offsets.float()
++                            ori_pixels_patch = (pixels.reshape(-1, 1, 2) + 0.5) / viewpoint_cam.ncc_scale - 0.5 + offsets.float()
+                             
+                             H, W = gt_image_gray.squeeze().shape
+                             pixels_patch = ori_pixels_patch.clone()
+-                            pixels_patch[:, :, 0] = 2 * pixels_patch[:, :, 0] / W - 1.0
+-                            pixels_patch[:, :, 1] = 2 * pixels_patch[:, :, 1] / H - 1.0
++                            pixels_patch[:, :, 0] = 2 * (pixels_patch[:, :, 0] + 0.5) / W - 1.0
++                            pixels_patch[:, :, 1] = 2 * (pixels_patch[:, :, 1] + 0.5) / H - 1.0
+                             ref_gray_val = F.grid_sample(gt_image_gray.unsqueeze(1), pixels_patch.view(1, -1, 1, 2), align_corners=False)
+                             ref_gray_val = ref_gray_val.reshape(-1, total_patch_size)
+ 
+@@ -274,8 +274,8 @@
+                         
+                         ## compute neareast frame patch
+                         grid = patch_warp(H_ref_to_neareast.reshape(-1,3,3), ori_pixels_patch)
+-                        grid[:, :, 0] = 2 * grid[:, :, 0] / W - 1.0
+-                        grid[:, :, 1] = 2 * grid[:, :, 1] / H - 1.0
++                        grid[:, :, 0] = 2 * (grid[:, :, 0] + 0.5) / W - 1.0
++                        grid[:, :, 1] = 2 * (grid[:, :, 1] + 0.5) / H - 1.0
+                         _, nearest_image_gray = nearest_cam.get_image()
+                         sampled_gray_val = F.grid_sample(nearest_image_gray[None], grid.reshape(1, -1, 1, 2), align_corners=False)
+                         sampled_gray_val = sampled_gray_val.reshape(-1, total_patch_size)

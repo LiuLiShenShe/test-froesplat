@@ -1,0 +1,24 @@
+{
+  "method": "Direct model vision on actual E10 GGGS stereo PNG pair; no external vision API",
+  "views": [
+    0
+  ],
+  "file": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/visualizations/stereo/source_0000_pair.png",
+  "observations": [
+    "Same plant/pot/blue reference marker rendered from left and rectified right cameras",
+    "Visible horizontal parallax and changed rightmost leaf clipping; right image is a newly rendered view",
+    "Leaf stripes are visible but some narrow leaf regions appear smooth; small separated colored fragment remains"
+  ],
+  "scope": "One stereo pair only; not a geometric ranking or Mesh conclusion",
+  "depth_and_confidence_file": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/visualizations/stereo/source_0000.png",
+  "actual_source0_stereo": {
+    "foreground_valid_depth_fraction": 1.0,
+    "foreground_native_range_fraction": 0.15896030225740562,
+    "native_max_depth": 0.7555287380009728,
+    "confidence_scope": "Source0 only; LR consistency score not ground-truth geometry"
+  },
+  "depth_observations": [
+    "Native DLNR provides smooth-looking leaf regions in a single view, while LR consistency has narrow low-confidence gaps near overlapping leaf edges",
+    "RAP removes background from fusion; confidence outside RAP is not trusted"
+  ]
+}

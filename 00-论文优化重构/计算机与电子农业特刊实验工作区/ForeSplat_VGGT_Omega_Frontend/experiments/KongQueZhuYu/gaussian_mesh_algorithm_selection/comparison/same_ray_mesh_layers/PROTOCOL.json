@@ -1,0 +1,45 @@
+{
+  "status": "actual_measurement_protocol",
+  "query_manifest": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/reflection_analysis/RGB_QUERY_MANIFEST.csv",
+  "query_SHA256": "2374a9c62d294ecc0b6ae83a8e2e01fb68a65c4a18dd754af0f6436b37be9c38",
+  "queries": 24375,
+  "source_views": 69,
+  "original_RGB_brightness_queries": 134,
+  "camera_source": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e10_gggs_surface/camera_runtime.json",
+  "ray_parameter": "Non-unit world ray from exact inverse W2C and corrected Fx/Fy/Cx/Cy: t_hit is camera Z; world spacing = delta_t * norm(direction)",
+  "merge_world_epsilon": 8.903337496969406e-07,
+  "near_front_window_world": 0.006955732419507349,
+  "close_pair_world_maximum": 0.0034778662097536745,
+  "same_facing_normal_dot_minimum": 0.9,
+  "maximum_camera_Z": 1.5692457556724548,
+  "normal": "Exact triangle winding normal, signed unit world vector; not interpolated normal color",
+  "scope": "Supplementary fixed image-only leaf-region RGB matches from69 source cameras;195 source/target photographs, alongside separate full208 mesh evaluation. Query-weighted means; missing rays and denominators retained. Legitimate front/back leaf surfaces, curls, touching or occluded leaves can create several layers; counts do not certify erroneous double surfaces, physical thickness or scan accuracy.",
+  "calibration": {
+    "status": "passed_actual_multiple_layer_API",
+    "Open3D": "0.19.0",
+    "nonunit_ray": [
+      0.11,
+      0.07,
+      1
+    ],
+    "expected_camera_Z": [
+      1,
+      1.001738933104877,
+      1.0034778662097537
+    ],
+    "actual_t_hit": [
+      0.9999999403953552,
+      1.0017387866973877,
+      1.003477692604065
+    ],
+    "output_dtypes": {
+      "t_hit": "Float32",
+      "primitive_ids": "UInt32",
+      "geometry_ids": "UInt32",
+      "ray_ids": "UInt32",
+      "primitive_uvs": "Float32",
+      "ray_splits": "UInt32"
+    },
+    "scope": "Actual CPU intersection API and non-unit ray camera-Z parameterization; calibration geometry is explicitly synthetic, not a plant result"
+  }
+}

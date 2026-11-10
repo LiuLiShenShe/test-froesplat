@@ -1,0 +1,5719 @@
+{
+  "status": "passed",
+  "iterations": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900,
+    2000,
+    2100,
+    2200,
+    2300,
+    2400,
+    2500,
+    2600,
+    2700,
+    2800,
+    2900,
+    3000,
+    3100,
+    3200,
+    3300,
+    3400,
+    3500,
+    3600,
+    3700,
+    3800,
+    3900,
+    4000,
+    4100,
+    4200,
+    4300,
+    4400,
+    4500,
+    4600,
+    4700,
+    4800,
+    4900,
+    5000,
+    5100,
+    5200,
+    5300,
+    5400,
+    5500,
+    5600,
+    5700,
+    5800,
+    5900,
+    6000,
+    6100,
+    6200,
+    6300,
+    6400,
+    6500,
+    6600,
+    6700,
+    6800,
+    6900,
+    7000,
+    7100,
+    7200,
+    7300,
+    7400,
+    7500,
+    7600,
+    7700,
+    7800,
+    7900,
+    8000,
+    8100,
+    8200,
+    8300,
+    8400,
+    8500,
+    8600,
+    8700,
+    8800,
+    8900,
+    9000,
+    9100,
+    9200,
+    9300,
+    9400,
+    9500,
+    9600,
+    9700,
+    9800,
+    9900,
+    10000,
+    10100,
+    10200,
+    10300,
+    10400,
+    10500,
+    10600,
+    10700,
+    10800,
+    10900,
+    11000,
+    11100,
+    11200,
+    11300,
+    11400,
+    11500,
+    11600,
+    11700,
+    11800,
+    11900,
+    12000,
+    12100,
+    12200,
+    12300,
+    12400,
+    12500,
+    12600,
+    12700,
+    12800,
+    12900,
+    13000,
+    13100,
+    13200,
+    13300,
+    13400,
+    13500,
+    13600,
+    13700,
+    13800,
+    13900,
+    14000,
+    14100,
+    14200,
+    14300,
+    14400,
+    14500,
+    14600,
+    14700,
+    14800,
+    14900,
+    15000,
+    15100,
+    15200,
+    15300,
+    15400,
+    15500,
+    15600,
+    15700,
+    15800,
+    15900,
+    16000,
+    16100,
+    16200,
+    16300,
+    16400,
+    16500,
+    16600,
+    16700,
+    16800,
+    16900,
+    17000,
+    17100,
+    17200,
+    17300,
+    17400,
+    17500,
+    17600,
+    17700,
+    17800,
+    17900,
+    18000,
+    18100,
+    18200,
+    18300,
+    18400,
+    18500,
+    18600,
+    18700,
+    18800,
+    18900,
+    19000,
+    19100,
+    19200,
+    19300,
+    19400,
+    19500,
+    19600,
+    19700,
+    19800,
+    19900,
+    20000,
+    20100,
+    20200,
+    20300,
+    20400,
+    20500,
+    20600,
+    20700,
+    20800,
+    20900,
+    21000,
+    21100,
+    21200,
+    21300,
+    21400,
+    21500,
+    21600,
+    21700,
+    21800,
+    21900,
+    22000,
+    22100,
+    22200,
+    22300,
+    22400,
+    22500,
+    22600,
+    22700,
+    22800,
+    22900,
+    23000,
+    23100,
+    23200,
+    23300,
+    23400,
+    23500,
+    23600,
+    23700,
+    23800,
+    23900,
+    24000,
+    24100,
+    24200,
+    24300,
+    24400,
+    24500,
+    24600,
+    24700,
+    24800,
+    24900,
+    25000,
+    25100,
+    25200,
+    25300,
+    25400,
+    25500,
+    25600,
+    25700,
+    25800,
+    25900,
+    26000,
+    26100,
+    26200,
+    26300,
+    26400,
+    26500,
+    26600,
+    26700,
+    26800,
+    26900,
+    27000,
+    27100,
+    27200,
+    27300,
+    27400,
+    27500,
+    27600,
+    27700,
+    27800,
+    27900,
+    28000,
+    28100,
+    28200,
+    28300,
+    28400,
+    28500,
+    28600,
+    28700,
+    28800,
+    28900,
+    29000,
+    29100,
+    29200,
+    29300,
+    29400,
+    29500,
+    29600,
+    29700,
+    29800,
+    29900,
+    30000
+  ],
+  "raw_train_metrics_preserved": true,
+  "terminal_multi_view_geometry_NCC_contributions": 0,
+  "monotonic_active_iteration_history": true,
+  "wall_seconds_definition": "Elapsed time within the recorded attempt; resumed rows restart their segment clock. All-attempt and successful-prefix costs are in training_complete.json and training_execution_records.json.",
+  "conditional_logged_variable_uncertainty_iterations": [],
+  "records": [
+    {
+      "iteration": 100,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1606200933456421,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1606200933456421
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 200,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08555638790130615,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08555638790130615
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 300,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07533834874629974,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07533834874629974
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 400,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05087536945939064,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05087536945939064
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 500,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049309805035591125,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.049309805035591125
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 600,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.055914148688316345,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.055914148688316345
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 700,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0891539677977562,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0891539677977562
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 800,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05707603693008423,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05707603693008423
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 900,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0558839850127697,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0558839850127697
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1000,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06049484759569168,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06049484759569168
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1100,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.061340540647506714,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.061340540647506714
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1200,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07150173932313919,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07150173932313919
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1300,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04937330633401871,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04937330633401871
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1400,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.046560030430555344,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.046560030430555344
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1500,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0631251260638237,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0631251260638237
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1600,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.15222615003585815,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15222615003585815
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1700,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.061032734811306,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.061032734811306
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1800,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0606088861823082,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0606088861823082
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 1900,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.052151888608932495,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.052151888608932495
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2000,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1449543535709381,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1449543535709381
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2100,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03948453441262245,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.03948453441262245
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2200,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05542426556348801,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05542426556348801
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2300,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.038907140493392944,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.038907140493392944
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2400,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04868503659963608,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04868503659963608
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2500,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.025555703788995743,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.025555703788995743
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2600,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06373706459999084,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06373706459999084
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2700,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06992655992507935,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06992655992507935
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2800,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.15192708373069763,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15192708373069763
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 2900,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07081592082977295,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07081592082977295
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 3000,
+      "branch_eligible": {
+        "dist_loss": false,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06661440432071686,
+        "dist_loss": 0.0,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06661440432071686
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 3100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06318416446447372,
+        "dist_loss": 0.00021966933854855597,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06340383738279343
+      },
+      "eligible_logged_sum_residual": 3.5797711461782455e-09
+    },
+    {
+      "iteration": 3200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05424182862043381,
+        "dist_loss": 0.0002513257204554975,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05449315533041954
+      },
+      "eligible_logged_sum_residual": 9.89530235528946e-10
+    },
+    {
+      "iteration": 3300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0619046613574028,
+        "dist_loss": 0.0002374442119617015,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06214210391044617
+      },
+      "eligible_logged_sum_residual": -1.6589183360338211e-09
+    },
+    {
+      "iteration": 3400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06314405798912048,
+        "dist_loss": 0.0001233759248862043,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06326743215322495
+      },
+      "eligible_logged_sum_residual": -1.760781742632389e-09
+    },
+    {
+      "iteration": 3500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.058147262781858444,
+        "dist_loss": 0.0004812577099073678,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.058628521859645844
+      },
+      "eligible_logged_sum_residual": 1.367880031466484e-09
+    },
+    {
+      "iteration": 3600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06161458045244217,
+        "dist_loss": 0.0005158996791578829,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.062130481004714966
+      },
+      "eligible_logged_sum_residual": 8.731149137020111e-10
+    },
+    {
+      "iteration": 3700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04064621776342392,
+        "dist_loss": 0.00011543145956238732,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04076164960861206
+      },
+      "eligible_logged_sum_residual": 3.8562575355172157e-10
+    },
+    {
+      "iteration": 3800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06209997832775116,
+        "dist_loss": 0.00043913949048146605,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06253911554813385
+      },
+      "eligible_logged_sum_residual": -2.270098775625229e-09
+    },
+    {
+      "iteration": 3900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049349330365657806,
+        "dist_loss": 0.0003827122855000198,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04973204433917999
+      },
+      "eligible_logged_sum_residual": 1.6880221664905548e-09
+    },
+    {
+      "iteration": 4000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.037515122443437576,
+        "dist_loss": 0.00016289282939396799,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.03767801448702812
+      },
+      "eligible_logged_sum_residual": -7.8580342233181e-10
+    },
+    {
+      "iteration": 4100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.060316167771816254,
+        "dist_loss": 0.0003323197306599468,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06064848601818085
+      },
+      "eligible_logged_sum_residual": -1.4842953532934189e-09
+    },
+    {
+      "iteration": 4200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.039241742342710495,
+        "dist_loss": 0.0001656717504374683,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.03940741345286369
+      },
+      "eligible_logged_sum_residual": -6.402842700481415e-10
+    },
+    {
+      "iteration": 4300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10891758650541306,
+        "dist_loss": 0.0007527519483119249,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10967034101486206
+      },
+      "eligible_logged_sum_residual": 2.561137080192566e-09
+    },
+    {
+      "iteration": 4400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.041453830897808075,
+        "dist_loss": 0.00014080300752539188,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04159463569521904
+      },
+      "eligible_logged_sum_residual": 1.7898855730891228e-09
+    },
+    {
+      "iteration": 4500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.061527855694293976,
+        "dist_loss": 0.0003472620155662298,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0618751160800457
+      },
+      "eligible_logged_sum_residual": -1.6298145055770874e-09
+    },
+    {
+      "iteration": 4600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06700580567121506,
+        "dist_loss": 0.00012716908531729132,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06713297218084335
+      },
+      "eligible_logged_sum_residual": -2.5756889954209328e-09
+    },
+    {
+      "iteration": 4700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07899054139852524,
+        "dist_loss": 0.00014217072748579085,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07913271337747574
+      },
+      "eligible_logged_sum_residual": 1.2514647096395493e-09
+    },
+    {
+      "iteration": 4800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05258060246706009,
+        "dist_loss": 0.00025458805612288415,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.052835188806056976
+      },
+      "eligible_logged_sum_residual": -1.7171259969472885e-09
+    },
+    {
+      "iteration": 4900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.058963533490896225,
+        "dist_loss": 0.000184248507139273,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05914778262376785
+      },
+      "eligible_logged_sum_residual": 6.257323548197746e-10
+    },
+    {
+      "iteration": 5000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.046107880771160126,
+        "dist_loss": 0.00026143898139707744,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.046369317919015884
+      },
+      "eligible_logged_sum_residual": -1.8335413187742233e-09
+    },
+    {
+      "iteration": 5100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05976862460374832,
+        "dist_loss": 0.0009607478277757764,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06072937324643135
+      },
+      "eligible_logged_sum_residual": 8.149072527885437e-10
+    },
+    {
+      "iteration": 5200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03847227990627289,
+        "dist_loss": 0.00012984410568606108,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.03860212489962578
+      },
+      "eligible_logged_sum_residual": 8.87666828930378e-10
+    },
+    {
+      "iteration": 5300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06316453963518143,
+        "dist_loss": 0.0004956699558533728,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06366021186113358
+      },
+      "eligible_logged_sum_residual": 2.270098775625229e-09
+    },
+    {
+      "iteration": 5400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04950539022684097,
+        "dist_loss": 0.0005295739392749965,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.050034962594509125
+      },
+      "eligible_logged_sum_residual": -1.57160684466362e-09
+    },
+    {
+      "iteration": 5500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.054028794169425964,
+        "dist_loss": 0.0001444896770408377,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05417328327894211
+      },
+      "eligible_logged_sum_residual": -5.675246939063072e-10
+    },
+    {
+      "iteration": 5600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06049016863107681,
+        "dist_loss": 0.0001706113398540765,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06066077947616577
+      },
+      "eligible_logged_sum_residual": -4.94765117764473e-10
+    },
+    {
+      "iteration": 5700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0408647283911705,
+        "dist_loss": 0.00013075221795588732,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.040995482355356216
+      },
+      "eligible_logged_sum_residual": 1.7462298274040222e-09
+    },
+    {
+      "iteration": 5800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06215168163180351,
+        "dist_loss": 0.0001056685287039727,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.062257349491119385
+      },
+      "eligible_logged_sum_residual": -6.693881005048752e-10
+    },
+    {
+      "iteration": 5900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0808601900935173,
+        "dist_loss": 0.00013545455294661224,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08099564164876938
+      },
+      "eligible_logged_sum_residual": -2.9976945370435715e-09
+    },
+    {
+      "iteration": 6000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10691840946674347,
+        "dist_loss": 0.0008298094617202878,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10774821788072586
+      },
+      "eligible_logged_sum_residual": -1.0477378964424133e-09
+    },
+    {
+      "iteration": 6100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06456975638866425,
+        "dist_loss": 0.0005892924382351339,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06515904515981674
+      },
+      "eligible_logged_sum_residual": -3.6670826375484467e-09
+    },
+    {
+      "iteration": 6200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04628109559416771,
+        "dist_loss": 0.00048470537876710296,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.046765800565481186
+      },
+      "eligible_logged_sum_residual": -4.0745362639427185e-10
+    },
+    {
+      "iteration": 6300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06826081871986389,
+        "dist_loss": 0.00014305178774520755,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06840386986732483
+      },
+      "eligible_logged_sum_residual": -6.402842700481415e-10
+    },
+    {
+      "iteration": 6400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1368148922920227,
+        "dist_loss": 0.0008605734910815954,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1376754641532898
+      },
+      "eligible_logged_sum_residual": -1.6298145055770874e-09
+    },
+    {
+      "iteration": 6500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04239518195390701,
+        "dist_loss": 0.0001132615507231094,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.04250844195485115
+      },
+      "eligible_logged_sum_residual": -1.5497789718210697e-09
+    },
+    {
+      "iteration": 6600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04696384072303772,
+        "dist_loss": 0.0002762945368885994,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.047240134328603745
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-10
+    },
+    {
+      "iteration": 6700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049249567091464996,
+        "dist_loss": 0.00022280181292444468,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.049472369253635406
+      },
+      "eligible_logged_sum_residual": 3.4924596548080444e-10
+    },
+    {
+      "iteration": 6800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04944863170385361,
+        "dist_loss": 0.00018943480972666293,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.049638066440820694
+      },
+      "eligible_logged_sum_residual": -7.275957614183426e-11
+    },
+    {
+      "iteration": 6900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.029871776700019836,
+        "dist_loss": 0.00015520487795583904,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.030026981607079506
+      },
+      "eligible_logged_sum_residual": 2.9103830456733704e-11
+    },
+    {
+      "iteration": 7000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": false,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07548496127128601,
+        "dist_loss": 0.0009721658425405622,
+        "normal_loss": 0.0,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07645712792873383
+      },
+      "eligible_logged_sum_residual": 8.149072527885437e-10
+    },
+    {
+      "iteration": 7100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06544207036495209,
+        "dist_loss": 0.00017234106780961156,
+        "normal_loss": 0.038879767060279846,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10449417680501938
+      },
+      "eligible_logged_sum_residual": -1.6880221664905548e-09
+    },
+    {
+      "iteration": 7200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05793129652738571,
+        "dist_loss": 0.0022518853656947613,
+        "normal_loss": 0.03684328868985176,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09702646732330322
+      },
+      "eligible_logged_sum_residual": -3.259629011154175e-09
+    },
+    {
+      "iteration": 7300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03792235255241394,
+        "dist_loss": 0.0007969734724611044,
+        "normal_loss": 0.03796411678195,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07668344676494598
+      },
+      "eligible_logged_sum_residual": 3.958120942115784e-09
+    },
+    {
+      "iteration": 7400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049451861530542374,
+        "dist_loss": 0.0003279187949374318,
+        "normal_loss": 0.03638404980301857,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08616383373737335
+      },
+      "eligible_logged_sum_residual": 3.6088749766349792e-09
+    },
+    {
+      "iteration": 7500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.050952062010765076,
+        "dist_loss": 0.0010351402452215552,
+        "normal_loss": 0.036492373794317245,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08847957849502563
+      },
+      "eligible_logged_sum_residual": 2.444721758365631e-09
+    },
+    {
+      "iteration": 7600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06906383484601974,
+        "dist_loss": 0.0027156483847647905,
+        "normal_loss": 0.029828408733010292,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10160788893699646
+      },
+      "eligible_logged_sum_residual": -3.026798367500305e-09
+    },
+    {
+      "iteration": 7700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08620961010456085,
+        "dist_loss": 0.01386534608900547,
+        "normal_loss": 0.0357619933784008,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13583694398403168
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-09
+    },
+    {
+      "iteration": 7800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05175630375742912,
+        "dist_loss": 0.015133283101022243,
+        "normal_loss": 0.032081421464681625,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09897100925445557
+      },
+      "eligible_logged_sum_residual": 9.313225746154785e-10
+    },
+    {
+      "iteration": 7900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.14192268252372742,
+        "dist_loss": 0.0011128837941214442,
+        "normal_loss": 0.029298504814505577,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.17233406007289886
+      },
+      "eligible_logged_sum_residual": -1.1059455573558807e-08
+    },
+    {
+      "iteration": 8000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04491085559129715,
+        "dist_loss": 0.0017532402416691184,
+        "normal_loss": 0.03124447911977768,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07790857553482056
+      },
+      "eligible_logged_sum_residual": 5.820766091346741e-10
+    },
+    {
+      "iteration": 8100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.052048902958631516,
+        "dist_loss": 0.0014358919579535723,
+        "normal_loss": 0.03290393948554993,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0863887369632721
+      },
+      "eligible_logged_sum_residual": 2.561137080192566e-09
+    },
+    {
+      "iteration": 8200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06028423458337784,
+        "dist_loss": 0.03301772475242615,
+        "normal_loss": 0.032487671822309494,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.12578962743282318
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 8300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10406750440597534,
+        "dist_loss": 0.0013357510324567556,
+        "normal_loss": 0.026792392134666443,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13219565153121948
+      },
+      "eligible_logged_sum_residual": 3.958120942115784e-09
+    },
+    {
+      "iteration": 8400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04337545856833458,
+        "dist_loss": 0.00500384671613574,
+        "normal_loss": 0.02693593129515648,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07531523704528809
+      },
+      "eligible_logged_sum_residual": 4.656612873077393e-10
+    },
+    {
+      "iteration": 8500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07799094170331955,
+        "dist_loss": 0.0008278182940557599,
+        "normal_loss": 0.028083432465791702,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10690219700336456
+      },
+      "eligible_logged_sum_residual": 4.540197551250458e-09
+    },
+    {
+      "iteration": 8600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12174879759550095,
+        "dist_loss": 0.002032593125477433,
+        "normal_loss": 0.02660384587943554,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15038523077964783
+      },
+      "eligible_logged_sum_residual": -5.820766091346741e-09
+    },
+    {
+      "iteration": 8700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05825295299291611,
+        "dist_loss": 0.00904732197523117,
+        "normal_loss": 0.032300617545843124,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0996008962392807
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 8800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.048652395606040955,
+        "dist_loss": 0.0002784174575936049,
+        "normal_loss": 0.029761768877506256,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07869258522987366
+      },
+      "eligible_logged_sum_residual": 3.2887328416109085e-09
+    },
+    {
+      "iteration": 8900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04239779710769653,
+        "dist_loss": 0.0013128540012985468,
+        "normal_loss": 0.02844258025288582,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0721532329916954
+      },
+      "eligible_logged_sum_residual": 1.6298145055770874e-09
+    },
+    {
+      "iteration": 9000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05376109480857849,
+        "dist_loss": 0.0024596997536718845,
+        "normal_loss": 0.028377490118145943,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08459828794002533
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 9100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05818463861942291,
+        "dist_loss": 0.001517574884928763,
+        "normal_loss": 0.029440339654684067,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08914255350828171
+      },
+      "eligible_logged_sum_residual": 3.4924596548080444e-10
+    },
+    {
+      "iteration": 9200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0567857064306736,
+        "dist_loss": 0.0030751903541386127,
+        "normal_loss": 0.029603689908981323,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08946458995342255
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 9300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03194970265030861,
+        "dist_loss": 0.015204721130430698,
+        "normal_loss": 0.031154390424489975,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07830881327390671
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-10
+    },
+    {
+      "iteration": 9400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07364808768033981,
+        "dist_loss": 0.001786095672287047,
+        "normal_loss": 0.028469985350966454,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10390417277812958
+      },
+      "eligible_logged_sum_residual": 4.0745362639427185e-09
+    },
+    {
+      "iteration": 9500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04667552933096886,
+        "dist_loss": 0.0030622712802141905,
+        "normal_loss": 0.028190117329359055,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07792791724205017
+      },
+      "eligible_logged_sum_residual": -6.984919309616089e-10
+    },
+    {
+      "iteration": 9600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.045066770166158676,
+        "dist_loss": 0.0012751796748489141,
+        "normal_loss": 0.027527429163455963,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07386937737464905
+      },
+      "eligible_logged_sum_residual": -1.6298145055770874e-09
+    },
+    {
+      "iteration": 9700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05326635390520096,
+        "dist_loss": 0.0011734236031770706,
+        "normal_loss": 0.028603488579392433,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08304326236248016
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 9800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04452824220061302,
+        "dist_loss": 0.006981831509619951,
+        "normal_loss": 0.030938897281885147,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08244897425174713
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 9900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.041415825486183167,
+        "dist_loss": 0.0016090465942397714,
+        "normal_loss": 0.027744553983211517,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07076942920684814
+      },
+      "eligible_logged_sum_residual": 3.14321368932724e-09
+    },
+    {
+      "iteration": 10000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.056252408772706985,
+        "dist_loss": 0.35233765840530396,
+        "normal_loss": 0.02884208783507347,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.4374321699142456
+      },
+      "eligible_logged_sum_residual": 1.4901161193847656e-08
+    },
+    {
+      "iteration": 10100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06353165954351425,
+        "dist_loss": 0.0008294237777590752,
+        "normal_loss": 0.02662644535303116,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09098752588033676
+      },
+      "eligible_logged_sum_residual": -2.7939677238464355e-09
+    },
+    {
+      "iteration": 10200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03601972758769989,
+        "dist_loss": 0.012266142293810844,
+        "normal_loss": 0.030333315953612328,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07861918956041336
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 10300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06875293701887131,
+        "dist_loss": 0.03657545521855354,
+        "normal_loss": 0.03276505693793297,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13809345662593842
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 10400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08206014335155487,
+        "dist_loss": 2.721210479736328,
+        "normal_loss": 0.030085930600762367,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 2.8333566188812256
+      },
+      "eligible_logged_sum_residual": 6.51925802230835e-08
+    },
+    {
+      "iteration": 10500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.16833892464637756,
+        "dist_loss": 296.03961181640625,
+        "normal_loss": 0.030895616859197617,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 296.23883056640625
+      },
+      "eligible_logged_sum_residual": -1.5791505575180054e-05
+    },
+    {
+      "iteration": 10600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.048334937542676926,
+        "dist_loss": 0.0011509739561006427,
+        "normal_loss": 0.02798355370759964,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07746946811676025
+      },
+      "eligible_logged_sum_residual": 2.9103830456733704e-09
+    },
+    {
+      "iteration": 10700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10133076459169388,
+        "dist_loss": 0.0028163869865238667,
+        "normal_loss": 0.025435592979192734,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1295827478170395
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 10800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06473210453987122,
+        "dist_loss": 0.006064126268029213,
+        "normal_loss": 0.0286369938403368,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09943322092294693
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 10900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03742821514606476,
+        "dist_loss": 0.0012522670440375805,
+        "normal_loss": 0.027679579332470894,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06636006385087967
+      },
+      "eligible_logged_sum_residual": 2.3283064365386963e-09
+    },
+    {
+      "iteration": 11000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04291699826717377,
+        "dist_loss": 0.0021342409308999777,
+        "normal_loss": 0.0266182329505682,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07166947424411774
+      },
+      "eligible_logged_sum_residual": 2.0954757928848267e-09
+    },
+    {
+      "iteration": 11100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05665417015552521,
+        "dist_loss": 0.15341395139694214,
+        "normal_loss": 0.027917686849832535,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.23798580467700958
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 11200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06105891987681389,
+        "dist_loss": 0.041648656129837036,
+        "normal_loss": 0.027636440470814705,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13034401834011078
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 11300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.056372448801994324,
+        "dist_loss": 0.051098719239234924,
+        "normal_loss": 0.026347361505031586,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13381853699684143
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 11400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.030866559594869614,
+        "dist_loss": 0.04039478302001953,
+        "normal_loss": 0.028778206557035446,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10003955662250519
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 11500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08305713534355164,
+        "dist_loss": 0.11587464064359665,
+        "normal_loss": 0.028951246291399002,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.22788302600383759
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 11600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03147856518626213,
+        "dist_loss": 0.06362827122211456,
+        "normal_loss": 0.029279908165335655,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1243867501616478
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 11700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07158657163381577,
+        "dist_loss": 0.18237413465976715,
+        "normal_loss": 0.028644461184740067,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2826051712036133
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 11800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05252380296587944,
+        "dist_loss": 0.003769506001845002,
+        "normal_loss": 0.027425719425082207,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08371903002262115
+      },
+      "eligible_logged_sum_residual": 1.6298145055770874e-09
+    },
+    {
+      "iteration": 11900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0738605260848999,
+        "dist_loss": 0.06069633737206459,
+        "normal_loss": 0.02617013081908226,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.16072699427604675
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 12000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04336317628622055,
+        "dist_loss": 26.093170166015625,
+        "normal_loss": 0.026958661153912544,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 26.16349220275879
+      },
+      "eligible_logged_sum_residual": 1.993030309677124e-07
+    },
+    {
+      "iteration": 12100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0345071442425251,
+        "dist_loss": 0.018519749864935875,
+        "normal_loss": 0.02830437570810318,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.081331267952919
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 12200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12685582041740417,
+        "dist_loss": 3.6161880493164062,
+        "normal_loss": 0.03328327462077141,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 3.776327133178711
+      },
+      "eligible_logged_sum_residual": -1.1175870895385742e-08
+    },
+    {
+      "iteration": 12300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03621736168861389,
+        "dist_loss": 0.004129803739488125,
+        "normal_loss": 0.028582099825143814,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0689292699098587
+      },
+      "eligible_logged_sum_residual": 4.6566128730773926e-09
+    },
+    {
+      "iteration": 12400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.060575470328330994,
+        "dist_loss": 0.00635115010663867,
+        "normal_loss": 0.027965886518359184,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09489250928163528
+      },
+      "eligible_logged_sum_residual": 2.3283064365386963e-09
+    },
+    {
+      "iteration": 12500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05537586659193039,
+        "dist_loss": 0.002925444394350052,
+        "normal_loss": 0.027616972103714943,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08591828495264053
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 12600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04279005154967308,
+        "dist_loss": 0.08254808187484741,
+        "normal_loss": 0.027553381398320198,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15289151668548584
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 12700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.032894156873226166,
+        "dist_loss": 0.003324243938550353,
+        "normal_loss": 0.02903359942138195,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06525199860334396
+      },
+      "eligible_logged_sum_residual": -1.6298145055770874e-09
+    },
+    {
+      "iteration": 12800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08022257685661316,
+        "dist_loss": 0.008608108386397362,
+        "normal_loss": 0.027797330170869827,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1166280210018158
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 12900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03586278110742569,
+        "dist_loss": 0.232405424118042,
+        "normal_loss": 0.02950218878686428,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2977703809738159
+      },
+      "eligible_logged_sum_residual": -1.30385160446167e-08
+    },
+    {
+      "iteration": 13000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03181242197751999,
+        "dist_loss": 0.0102818813174963,
+        "normal_loss": 0.02824103645980358,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07033534348011017
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 13100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03334687650203705,
+        "dist_loss": 0.006152809597551823,
+        "normal_loss": 0.029625125229358673,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06912481039762497
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-10
+    },
+    {
+      "iteration": 13200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05856309086084366,
+        "dist_loss": 0.14993663132190704,
+        "normal_loss": 0.026332145556807518,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.23483186960220337
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 13300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04948195815086365,
+        "dist_loss": 0.0773085206747055,
+        "normal_loss": 0.027616428211331367,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15440690517425537
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 13400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04410763084888458,
+        "dist_loss": 0.4146915376186371,
+        "normal_loss": 0.027889123186469078,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.4866883158683777
+      },
+      "eligible_logged_sum_residual": 2.421438694000244e-08
+    },
+    {
+      "iteration": 13500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1401754468679428,
+        "dist_loss": 0.6610978841781616,
+        "normal_loss": 0.026410330086946487,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.827683687210083
+      },
+      "eligible_logged_sum_residual": 2.60770320892334e-08
+    },
+    {
+      "iteration": 13600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07874441891908646,
+        "dist_loss": 0.12421698123216629,
+        "normal_loss": 0.027503497898578644,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.230464905500412
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 13700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1313248872756958,
+        "dist_loss": 18.544843673706055,
+        "normal_loss": 0.026578497141599655,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 18.702747344970703
+      },
+      "eligible_logged_sum_residual": 2.868473529815674e-07
+    },
+    {
+      "iteration": 13800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.035916250199079514,
+        "dist_loss": 0.06622035801410675,
+        "normal_loss": 0.02698594331741333,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1291225552558899
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 13900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05859888345003128,
+        "dist_loss": 0.001987696858122945,
+        "normal_loss": 0.025429798290133476,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08601637929677963
+      },
+      "eligible_logged_sum_residual": 6.984919309616089e-10
+    },
+    {
+      "iteration": 14000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08468487858772278,
+        "dist_loss": 9.463850021362305,
+        "normal_loss": 0.025290023535490036,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 9.57382583618164
+      },
+      "eligible_logged_sum_residual": 9.126961231231689e-07
+    },
+    {
+      "iteration": 14100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06635688990354538,
+        "dist_loss": 430.5869140625,
+        "normal_loss": 0.026964232325553894,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 430.68023681640625
+      },
+      "eligible_logged_sum_residual": 1.6316771507263184e-06
+    },
+    {
+      "iteration": 14200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06379035115242004,
+        "dist_loss": 13.189534187316895,
+        "normal_loss": 0.03129754215478897,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 13.284622192382812
+      },
+      "eligible_logged_sum_residual": 1.1175870895385742e-07
+    },
+    {
+      "iteration": 14300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04268930107355118,
+        "dist_loss": 1.3133186101913452,
+        "normal_loss": 0.030978403985500336,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.3869863748550415
+      },
+      "eligible_logged_sum_residual": 5.960464477539063e-08
+    },
+    {
+      "iteration": 14400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04236263036727905,
+        "dist_loss": 0.003140104468911886,
+        "normal_loss": 0.02468675933778286,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07018949091434479
+      },
+      "eligible_logged_sum_residual": -3.259629011154175e-09
+    },
+    {
+      "iteration": 14500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.059587687253952026,
+        "dist_loss": 0.5073980689048767,
+        "normal_loss": 0.0270796250551939,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.5940653681755066
+      },
+      "eligible_logged_sum_residual": -1.30385160446167e-08
+    },
+    {
+      "iteration": 14600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04055396467447281,
+        "dist_loss": 0.5329195261001587,
+        "normal_loss": 0.027986617758870125,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.6014601588249207
+      },
+      "eligible_logged_sum_residual": 5.029141902923584e-08
+    },
+    {
+      "iteration": 14700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.041373588144779205,
+        "dist_loss": 0.0334901288151741,
+        "normal_loss": 0.026476869359612465,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10134058445692062
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 14800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04332404583692551,
+        "dist_loss": 0.009748084470629692,
+        "normal_loss": 0.026857206597924232,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07992933690547943
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 14900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06244448572397232,
+        "dist_loss": 0.2994862496852875,
+        "normal_loss": 0.0262161772698164,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.38814690709114075
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-09
+    },
+    {
+      "iteration": 15000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.034536123275756836,
+        "dist_loss": 0.03574199229478836,
+        "normal_loss": 0.027046039700508118,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09732415527105331
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 15100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04549510031938553,
+        "dist_loss": 12.66512680053711,
+        "normal_loss": 0.031029051169753075,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 12.741650581359863
+      },
+      "eligible_logged_sum_residual": -3.7066638469696045e-07
+    },
+    {
+      "iteration": 15200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04585256427526474,
+        "dist_loss": 0.2647266983985901,
+        "normal_loss": 0.0274368729442358,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.338016152381897
+      },
+      "eligible_logged_sum_residual": 1.6763806343078613e-08
+    },
+    {
+      "iteration": 15300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.052960414439439774,
+        "dist_loss": 0.15338751673698425,
+        "normal_loss": 0.02473083697259426,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.23107875883579254
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-09
+    },
+    {
+      "iteration": 15400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12452852725982666,
+        "dist_loss": 0.54488605260849,
+        "normal_loss": 0.031463250517845154,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.700877845287323
+      },
+      "eligible_logged_sum_residual": 1.4901161193847656e-08
+    },
+    {
+      "iteration": 15500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07692939043045044,
+        "dist_loss": 0.040758367627859116,
+        "normal_loss": 0.026973038911819458,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1446608006954193
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 15600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.02903369814157486,
+        "dist_loss": 0.020333029329776764,
+        "normal_loss": 0.02738208882510662,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0767488181591034
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 15700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05848056823015213,
+        "dist_loss": 0.023349206894636154,
+        "normal_loss": 0.026216069236397743,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10804583877325058
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-09
+    },
+    {
+      "iteration": 15800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04213125631213188,
+        "dist_loss": 297.107177734375,
+        "normal_loss": 0.02896985411643982,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 297.17828369140625
+      },
+      "eligible_logged_sum_residual": 4.84660267829895e-06
+    },
+    {
+      "iteration": 15900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12732073664665222,
+        "dist_loss": 0.03126487508416176,
+        "normal_loss": 0.02607601135969162,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1846616268157959
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 16000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06660400331020355,
+        "dist_loss": 1646.4866943359375,
+        "normal_loss": 0.029346976429224014,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1646.5826416015625
+      },
+      "eligible_logged_sum_residual": -3.7141144275665283e-06
+    },
+    {
+      "iteration": 16100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.036561861634254456,
+        "dist_loss": 2.0467751026153564,
+        "normal_loss": 0.028317349031567574,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 2.11165452003479
+      },
+      "eligible_logged_sum_residual": 2.0675361156463623e-07
+    },
+    {
+      "iteration": 16200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05727498233318329,
+        "dist_loss": 0.35867631435394287,
+        "normal_loss": 0.02662765420973301,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.4425789713859558
+      },
+      "eligible_logged_sum_residual": 2.0489096641540527e-08
+    },
+    {
+      "iteration": 16300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049637578427791595,
+        "dist_loss": 0.7324883937835693,
+        "normal_loss": 0.026979481801390648,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.8091054558753967
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 16400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.029097873717546463,
+        "dist_loss": 0.0028592299204319715,
+        "normal_loss": 0.026979275047779083,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.058936379849910736
+      },
+      "eligible_logged_sum_residual": 1.1641532182693481e-09
+    },
+    {
+      "iteration": 16500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0464952252805233,
+        "dist_loss": 12.654051780700684,
+        "normal_loss": 0.02836167812347412,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 12.72890853881836
+      },
+      "eligible_logged_sum_residual": -1.4528632164001465e-07
+    },
+    {
+      "iteration": 16600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05363372713327408,
+        "dist_loss": 0.19591161608695984,
+        "normal_loss": 0.025175856426358223,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2747212052345276
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 16700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.045313529670238495,
+        "dist_loss": 0.22406412661075592,
+        "normal_loss": 0.02714630588889122,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.29652395844459534
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 16800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10056807100772858,
+        "dist_loss": 17.206151962280273,
+        "normal_loss": 0.030782682821154594,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 17.33750343322754
+      },
+      "eligible_logged_sum_residual": 7.171183824539185e-07
+    },
+    {
+      "iteration": 16900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03206941857933998,
+        "dist_loss": 0.0017275752034038305,
+        "normal_loss": 0.02693495713174343,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06073194742202759
+      },
+      "eligible_logged_sum_residual": -3.4924596548080444e-09
+    },
+    {
+      "iteration": 17000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.041167423129081726,
+        "dist_loss": 0.06039302423596382,
+        "normal_loss": 0.02507639117538929,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1266368329524994
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-09
+    },
+    {
+      "iteration": 17100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08159103244543076,
+        "dist_loss": 318.6718444824219,
+        "normal_loss": 0.03180389106273651,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 318.7852478027344
+      },
+      "eligible_logged_sum_residual": 8.396804332733154e-06
+    },
+    {
+      "iteration": 17200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10721047222614288,
+        "dist_loss": 273.40838623046875,
+        "normal_loss": 0.03066919557750225,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 273.5462646484375
+      },
+      "eligible_logged_sum_residual": -1.2498348951339722e-06
+    },
+    {
+      "iteration": 17300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.056425727903842926,
+        "dist_loss": 0.007712419610470533,
+        "normal_loss": 0.02534852735698223,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08948667347431183
+      },
+      "eligible_logged_sum_residual": -1.3969838619232178e-09
+    },
+    {
+      "iteration": 17400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.035968806594610214,
+        "dist_loss": 0.12942597270011902,
+        "normal_loss": 0.028392422944307327,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.19378720223903656
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 17500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.13410775363445282,
+        "dist_loss": 63.75498962402344,
+        "normal_loss": 0.029809527099132538,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 63.918907165527344
+      },
+      "eligible_logged_sum_residual": 2.60770320892334e-07
+    },
+    {
+      "iteration": 17600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05595097690820694,
+        "dist_loss": 5.056195259094238,
+        "normal_loss": 0.026261942461133003,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 5.138408184051514
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 17700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.10687775909900665,
+        "dist_loss": 1.143792986869812,
+        "normal_loss": 0.030551254749298096,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.2812221050262451
+      },
+      "eligible_logged_sum_residual": 1.043081283569336e-07
+    },
+    {
+      "iteration": 17800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.034233737736940384,
+        "dist_loss": 116.27191162109375,
+        "normal_loss": 0.027528638020157814,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 116.33367156982422
+      },
+      "eligible_logged_sum_residual": -2.427026629447937e-06
+    },
+    {
+      "iteration": 17900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04008873552083969,
+        "dist_loss": 51.9208984375,
+        "normal_loss": 0.028686393052339554,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 51.98967361450195
+      },
+      "eligible_logged_sum_residual": 4.842877388000488e-08
+    },
+    {
+      "iteration": 18000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05684114992618561,
+        "dist_loss": 0.007224552799016237,
+        "normal_loss": 0.025479234755039215,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08954493701457977
+      },
+      "eligible_logged_sum_residual": -4.656612873077393e-10
+    },
+    {
+      "iteration": 18100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04936046898365021,
+        "dist_loss": 0.011928824707865715,
+        "normal_loss": 0.02528495341539383,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0865742489695549
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 18200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.035751309245824814,
+        "dist_loss": 1.3900792598724365,
+        "normal_loss": 0.02830372005701065,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.4541343450546265
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-08
+    },
+    {
+      "iteration": 18300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05328528583049774,
+        "dist_loss": 0.02717438153922558,
+        "normal_loss": 0.026416579261422157,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10687624663114548
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 18400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08108212053775787,
+        "dist_loss": 6.014576435089111,
+        "normal_loss": 0.030986040830612183,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 6.126644611358643
+      },
+      "eligible_logged_sum_residual": 1.4901161193847656e-08
+    },
+    {
+      "iteration": 18500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04775986075401306,
+        "dist_loss": 0.06966809928417206,
+        "normal_loss": 0.02796231582760811,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.14539027214050293
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 18600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0507780984044075,
+        "dist_loss": 0.027414338663220406,
+        "normal_loss": 0.026638014242053032,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10483045130968094
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 18700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.02819342166185379,
+        "dist_loss": 0.0018476515542715788,
+        "normal_loss": 0.026613324880599976,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.056654397398233414
+      },
+      "eligible_logged_sum_residual": -6.984919309616089e-10
+    },
+    {
+      "iteration": 18800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04337521642446518,
+        "dist_loss": 0.07286204397678375,
+        "normal_loss": 0.02526029944419861,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.14149755239486694
+      },
+      "eligible_logged_sum_residual": -7.450580596923828e-09
+    },
+    {
+      "iteration": 18900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0456329807639122,
+        "dist_loss": 0.1778416931629181,
+        "normal_loss": 0.026684632524847984,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2501593232154846
+      },
+      "eligible_logged_sum_residual": 1.6763806343078613e-08
+    },
+    {
+      "iteration": 19000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03638770431280136,
+        "dist_loss": 0.11438742280006409,
+        "normal_loss": 0.02837088145315647,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.17914602160453796
+      },
+      "eligible_logged_sum_residual": 1.30385160446167e-08
+    },
+    {
+      "iteration": 19100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04135283827781677,
+        "dist_loss": 0.01343222800642252,
+        "normal_loss": 0.028219660744071007,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08300472795963287
+      },
+      "eligible_logged_sum_residual": 9.313225746154785e-10
+    },
+    {
+      "iteration": 19200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.061066173017024994,
+        "dist_loss": 1.5734963417053223,
+        "normal_loss": 0.027830112725496292,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.6623926162719727
+      },
+      "eligible_logged_sum_residual": -1.1175870895385742e-08
+    },
+    {
+      "iteration": 19300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.030418533831834793,
+        "dist_loss": 0.001683144480921328,
+        "normal_loss": 0.02687574364244938,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05897742509841919
+      },
+      "eligible_logged_sum_residual": 3.14321368932724e-09
+    },
+    {
+      "iteration": 19400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08701644092798233,
+        "dist_loss": 0.19657716155052185,
+        "normal_loss": 0.025870593264698982,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.3094641864299774
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-09
+    },
+    {
+      "iteration": 19500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03931600600481033,
+        "dist_loss": 1.896610140800476,
+        "normal_loss": 0.02632872387766838,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.9622548818588257
+      },
+      "eligible_logged_sum_residual": 1.1175870895385742e-08
+    },
+    {
+      "iteration": 19600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.041796743869781494,
+        "dist_loss": 5.549935340881348,
+        "normal_loss": 0.029968665912747383,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 5.621700763702393
+      },
+      "eligible_logged_sum_residual": 1.30385160446167e-08
+    },
+    {
+      "iteration": 19700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03810305893421173,
+        "dist_loss": 1.513505458831787,
+        "normal_loss": 0.028637714684009552,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.5802463293075562
+      },
+      "eligible_logged_sum_residual": 9.685754776000977e-08
+    },
+    {
+      "iteration": 19800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05742776021361351,
+        "dist_loss": 0.014003504067659378,
+        "normal_loss": 0.02732781507074833,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09875907748937607
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 19900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04260522872209549,
+        "dist_loss": 6.032651901245117,
+        "normal_loss": 0.027127699926495552,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 6.1023850440979
+      },
+      "eligible_logged_sum_residual": 2.1420419216156006e-07
+    },
+    {
+      "iteration": 20000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.01990475505590439,
+        "dist_loss": 0.2609637975692749,
+        "normal_loss": 0.027623843401670456,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.30849239230155945
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 20100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.043282024562358856,
+        "dist_loss": 0.2602202892303467,
+        "normal_loss": 0.028422614559531212,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.3319249451160431
+      },
+      "eligible_logged_sum_residual": 1.6763806343078613e-08
+    },
+    {
+      "iteration": 20200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05983615666627884,
+        "dist_loss": 0.011120816692709923,
+        "normal_loss": 0.025941038504242897,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09689801186323166
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 20300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0428183376789093,
+        "dist_loss": 0.007671045605093241,
+        "normal_loss": 0.02731996960937977,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07780935615301132
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 20400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04306267946958542,
+        "dist_loss": 0.3391185700893402,
+        "normal_loss": 0.02696061134338379,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.40914186835289
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 20500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05267726629972458,
+        "dist_loss": 13.089503288269043,
+        "normal_loss": 0.030860871076583862,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 13.173041343688965
+      },
+      "eligible_logged_sum_residual": -8.195638656616211e-08
+    },
+    {
+      "iteration": 20600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0375085175037384,
+        "dist_loss": 0.01888691633939743,
+        "normal_loss": 0.026663755998015404,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08305919170379639
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 20700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.032034847885370255,
+        "dist_loss": 0.00378011679276824,
+        "normal_loss": 0.0269614327698946,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06277639418840408
+      },
+      "eligible_logged_sum_residual": -3.259629011154175e-09
+    },
+    {
+      "iteration": 20800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.09855276346206665,
+        "dist_loss": 0.04469049721956253,
+        "normal_loss": 0.026293441653251648,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.16953669488430023
+      },
+      "eligible_logged_sum_residual": -7.450580596923828e-09
+    },
+    {
+      "iteration": 20900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.051408685743808746,
+        "dist_loss": 0.006292529869824648,
+        "normal_loss": 0.026815827935934067,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08451704680919647
+      },
+      "eligible_logged_sum_residual": 3.259629011154175e-09
+    },
+    {
+      "iteration": 21000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06238367408514023,
+        "dist_loss": 0.004489665850996971,
+        "normal_loss": 0.027161890640854836,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09403523057699203
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 21100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05319720506668091,
+        "dist_loss": 0.006428789347410202,
+        "normal_loss": 0.02598755434155464,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08561354875564575
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 21200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.054314590990543365,
+        "dist_loss": 0.5040320158004761,
+        "normal_loss": 0.027531147003173828,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.5858777761459351
+      },
+      "eligible_logged_sum_residual": 2.2351741790771484e-08
+    },
+    {
+      "iteration": 21300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08557851612567902,
+        "dist_loss": 0.0016975991893559694,
+        "normal_loss": 0.025730326771736145,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.11300644278526306
+      },
+      "eligible_logged_sum_residual": 6.984919309616089e-10
+    },
+    {
+      "iteration": 21400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.043861906975507736,
+        "dist_loss": 0.5205941796302795,
+        "normal_loss": 0.027465777471661568,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.591921865940094
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 21500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.031649596989154816,
+        "dist_loss": 0.005331212189048529,
+        "normal_loss": 0.02673259936273098,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06371340900659561
+      },
+      "eligible_logged_sum_residual": 4.656612873077393e-10
+    },
+    {
+      "iteration": 21600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03059522807598114,
+        "dist_loss": 2.11126971244812,
+        "normal_loss": 0.029069555923342705,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 2.1709346771240234
+      },
+      "eligible_logged_sum_residual": 1.8067657947540283e-07
+    },
+    {
+      "iteration": 21700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04279720410704613,
+        "dist_loss": 1.43428373336792,
+        "normal_loss": 0.027363065630197525,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.5044440031051636
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 21800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.034591034054756165,
+        "dist_loss": 0.7167348265647888,
+        "normal_loss": 0.02791677787899971,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.7792426347732544
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 21900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.13964618742465973,
+        "dist_loss": 346.796142578125,
+        "normal_loss": 0.03412072733044624,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 346.96990966796875
+      },
+      "eligible_logged_sum_residual": 1.7508864402770996e-07
+    },
+    {
+      "iteration": 22000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.02810715138912201,
+        "dist_loss": 0.0016189476009458303,
+        "normal_loss": 0.027428142726421356,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.05715424194931984
+      },
+      "eligible_logged_sum_residual": 2.3283064365386963e-10
+    },
+    {
+      "iteration": 22100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06619317829608917,
+        "dist_loss": 0.030936991795897484,
+        "normal_loss": 0.02668415568768978,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.12381432950496674
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 22200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.028445284813642502,
+        "dist_loss": 0.013573375530540943,
+        "normal_loss": 0.02595360204577446,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06797225773334503
+      },
+      "eligible_logged_sum_residual": -4.6566128730773926e-09
+    },
+    {
+      "iteration": 22300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.021022194996476173,
+        "dist_loss": 0.12149176001548767,
+        "normal_loss": 0.027904724702239037,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.17041867971420288
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 22400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08459145575761795,
+        "dist_loss": 2.0670745372772217,
+        "normal_loss": 0.028670020401477814,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 2.1803359985351562
+      },
+      "eligible_logged_sum_residual": -1.4901161193847656e-08
+    },
+    {
+      "iteration": 22500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03684303164482117,
+        "dist_loss": 0.018346300348639488,
+        "normal_loss": 0.02801489271223545,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0832042247056961
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 22600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.16842153668403625,
+        "dist_loss": 0.7749068140983582,
+        "normal_loss": 0.030731141567230225,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.974059522151947
+      },
+      "eligible_logged_sum_residual": 2.9802322387695312e-08
+    },
+    {
+      "iteration": 22700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04659251123666763,
+        "dist_loss": 0.02714085578918457,
+        "normal_loss": 0.025971584022045135,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09970495104789734
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 22800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.054871078580617905,
+        "dist_loss": 0.2935827076435089,
+        "normal_loss": 0.027609683573246002,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.3760634660720825
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 22900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05009860172867775,
+        "dist_loss": 0.008473595604300499,
+        "normal_loss": 0.025734640657901764,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08430683612823486
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 23000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05799079313874245,
+        "dist_loss": 0.01519978791475296,
+        "normal_loss": 0.027298802509903908,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10048938542604446
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 23100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03791392222046852,
+        "dist_loss": 2.7978169918060303,
+        "normal_loss": 0.02770470455288887,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 2.863435745239258
+      },
+      "eligible_logged_sum_residual": 1.2665987014770508e-07
+    },
+    {
+      "iteration": 23200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.15606242418289185,
+        "dist_loss": 236.65884399414062,
+        "normal_loss": 0.028935682028532028,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 236.84384155273438
+      },
+      "eligible_logged_sum_residual": -5.476176738739014e-07
+    },
+    {
+      "iteration": 23300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.050030454993247986,
+        "dist_loss": 0.016330566257238388,
+        "normal_loss": 0.025937065482139587,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09229809045791626
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 23400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06139266490936279,
+        "dist_loss": 0.00669013662263751,
+        "normal_loss": 0.027663877233862877,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09574668109416962
+      },
+      "eligible_logged_sum_residual": 2.3283064365386963e-09
+    },
+    {
+      "iteration": 23500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04243756830692291,
+        "dist_loss": 0.013316279277205467,
+        "normal_loss": 0.02842736802995205,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08418121933937073
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 23600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.032697368413209915,
+        "dist_loss": 0.0249694362282753,
+        "normal_loss": 0.027697507292032242,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08536431193351746
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 23700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05390513688325882,
+        "dist_loss": 0.0062660155817866325,
+        "normal_loss": 0.02666485495865345,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08683601021766663
+      },
+      "eligible_logged_sum_residual": 2.7939677238464355e-09
+    },
+    {
+      "iteration": 23800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06292194128036499,
+        "dist_loss": 0.10148806869983673,
+        "normal_loss": 0.027782360091805458,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.19219237565994263
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 23900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12070219218730927,
+        "dist_loss": 0.46576201915740967,
+        "normal_loss": 0.026922322809696198,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.6133865714073181
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-08
+    },
+    {
+      "iteration": 24000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04662775993347168,
+        "dist_loss": 0.07289209216833115,
+        "normal_loss": 0.025888031348586082,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.14540788531303406
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 24100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03993137180805206,
+        "dist_loss": 0.016171526163816452,
+        "normal_loss": 0.028154486790299416,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08425738662481308
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 24200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.028436211869120598,
+        "dist_loss": 0.005040348507463932,
+        "normal_loss": 0.02756251022219658,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.061039071530103683
+      },
+      "eligible_logged_sum_residual": 9.313225746154785e-10
+    },
+    {
+      "iteration": 24300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.09445340186357498,
+        "dist_loss": 0.009997746907174587,
+        "normal_loss": 0.026270482689142227,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.13072162866592407
+      },
+      "eligible_logged_sum_residual": -2.7939677238464355e-09
+    },
+    {
+      "iteration": 24400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.06030973047018051,
+        "dist_loss": 0.007437997963279486,
+        "normal_loss": 0.027448659762740135,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09519638866186142
+      },
+      "eligible_logged_sum_residual": 4.656612873077393e-10
+    },
+    {
+      "iteration": 24500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04847421869635582,
+        "dist_loss": 0.22232729196548462,
+        "normal_loss": 0.027419844642281532,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2982213497161865
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-09
+    },
+    {
+      "iteration": 24600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.036860913038253784,
+        "dist_loss": 0.0013736891560256481,
+        "normal_loss": 0.02765645831823349,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06589105725288391
+      },
+      "eligible_logged_sum_residual": -3.259629011154175e-09
+    },
+    {
+      "iteration": 24700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04118800908327103,
+        "dist_loss": 7.933266639709473,
+        "normal_loss": 0.030159976333379745,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 8.00461483001709
+      },
+      "eligible_logged_sum_residual": 2.0489096641540527e-07
+    },
+    {
+      "iteration": 24800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05230190232396126,
+        "dist_loss": 0.01676686853170395,
+        "normal_loss": 0.02580931968986988,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09487809240818024
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 24900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1578637957572937,
+        "dist_loss": 295.774169921875,
+        "normal_loss": 0.035257015377283096,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 295.96728515625
+      },
+      "eligible_logged_sum_residual": -5.576759576797485e-06
+    },
+    {
+      "iteration": 25000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.02486950159072876,
+        "dist_loss": 0.14403535425662994,
+        "normal_loss": 0.02740812674164772,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.19631297886371613
+      },
+      "eligible_logged_sum_residual": -3.725290298461914e-09
+    },
+    {
+      "iteration": 25100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04648716002702713,
+        "dist_loss": 0.01870884746313095,
+        "normal_loss": 0.027546146884560585,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09274215251207352
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 25200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.050282008945941925,
+        "dist_loss": 6.35141658782959,
+        "normal_loss": 0.02855471894145012,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 6.430253505706787
+      },
+      "eligible_logged_sum_residual": 1.8998980522155762e-07
+    },
+    {
+      "iteration": 25300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07219152897596359,
+        "dist_loss": 0.0032998360693454742,
+        "normal_loss": 0.026243453845381737,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10173482447862625
+      },
+      "eligible_logged_sum_residual": 5.587935447692871e-09
+    },
+    {
+      "iteration": 25400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0527653768658638,
+        "dist_loss": 0.002661400940269232,
+        "normal_loss": 0.025375740602612495,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08080251514911652
+      },
+      "eligible_logged_sum_residual": -3.259629011154175e-09
+    },
+    {
+      "iteration": 25500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03110313229262829,
+        "dist_loss": 0.03907347097992897,
+        "normal_loss": 0.027030831202864647,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0972074344754219
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 25600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.035009440034627914,
+        "dist_loss": 0.1267431229352951,
+        "normal_loss": 0.028759535402059555,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.19051210582256317
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 25700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.053609151393175125,
+        "dist_loss": 0.003232632763683796,
+        "normal_loss": 0.02539188042283058,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08223366737365723
+      },
+      "eligible_logged_sum_residual": 2.7939677238464355e-09
+    },
+    {
+      "iteration": 25800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03553794324398041,
+        "dist_loss": 0.04503462091088295,
+        "normal_loss": 0.028699535876512527,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.10927209258079529
+      },
+      "eligible_logged_sum_residual": -7.450580596923828e-09
+    },
+    {
+      "iteration": 25900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.09736526012420654,
+        "dist_loss": 46.68473815917969,
+        "normal_loss": 0.02576250024139881,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 46.807865142822266
+      },
+      "eligible_logged_sum_residual": -7.767230272293091e-07
+    },
+    {
+      "iteration": 26000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1115899309515953,
+        "dist_loss": 0.22859902679920197,
+        "normal_loss": 0.025949927046895027,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.36613887548446655
+      },
+      "eligible_logged_sum_residual": -9.313225746154785e-09
+    },
+    {
+      "iteration": 26100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.055830731987953186,
+        "dist_loss": 0.5200620293617249,
+        "normal_loss": 0.027215663343667984,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.6031084060668945
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-08
+    },
+    {
+      "iteration": 26200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.042047303169965744,
+        "dist_loss": 0.4163874387741089,
+        "normal_loss": 0.027398893609642982,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.48583361506462097
+      },
+      "eligible_logged_sum_residual": -2.0489096641540527e-08
+    },
+    {
+      "iteration": 26300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.025824984535574913,
+        "dist_loss": 3.6593399047851562,
+        "normal_loss": 0.027588190510869026,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 3.7127530574798584
+      },
+      "eligible_logged_sum_residual": -2.2351741790771484e-08
+    },
+    {
+      "iteration": 26400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.039535876363515854,
+        "dist_loss": 1.8233599662780762,
+        "normal_loss": 0.02706063911318779,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.8899564743041992
+      },
+      "eligible_logged_sum_residual": -7.450580596923828e-09
+    },
+    {
+      "iteration": 26500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05234377831220627,
+        "dist_loss": 0.00259496015496552,
+        "normal_loss": 0.027528733015060425,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.0824674665927887
+      },
+      "eligible_logged_sum_residual": -4.889443516731262e-09
+    },
+    {
+      "iteration": 26600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04960392042994499,
+        "dist_loss": 0.032963432371616364,
+        "normal_loss": 0.02694353275001049,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.1095108836889267
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 26700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03892109915614128,
+        "dist_loss": 0.011797118932008743,
+        "normal_loss": 0.027642246335744858,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07836046814918518
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 26800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05428968742489815,
+        "dist_loss": 163.80006408691406,
+        "normal_loss": 0.028977705165743828,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 163.88333129882812
+      },
+      "eligible_logged_sum_residual": -1.8067657947540283e-07
+    },
+    {
+      "iteration": 26900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03791560232639313,
+        "dist_loss": 0.08610553294420242,
+        "normal_loss": 0.02758227288722992,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15160340070724487
+      },
+      "eligible_logged_sum_residual": -7.450580596923828e-09
+    },
+    {
+      "iteration": 27000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03796734660863876,
+        "dist_loss": 0.08528602123260498,
+        "normal_loss": 0.02770695462822914,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.15096032619476318
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 27100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.035899482667446136,
+        "dist_loss": 0.017451263964176178,
+        "normal_loss": 0.027399403974413872,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08075015246868134
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 27200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08420433104038239,
+        "dist_loss": 1.552304983139038,
+        "normal_loss": 0.026629846543073654,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.6631391048431396
+      },
+      "eligible_logged_sum_residual": -5.587935447692871e-08
+    },
+    {
+      "iteration": 27300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03750285133719444,
+        "dist_loss": 23.493412017822266,
+        "normal_loss": 0.027020050212740898,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 23.557933807373047
+      },
+      "eligible_logged_sum_residual": -1.1119991540908813e-06
+    },
+    {
+      "iteration": 27400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.029613088816404343,
+        "dist_loss": 0.5220851898193359,
+        "normal_loss": 0.028514239937067032,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.5802125334739685
+      },
+      "eligible_logged_sum_residual": 1.4901161193847656e-08
+    },
+    {
+      "iteration": 27500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.025869879871606827,
+        "dist_loss": 0.007124514319002628,
+        "normal_loss": 0.027511706575751305,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.060506097972393036
+      },
+      "eligible_logged_sum_residual": -2.7939677238464355e-09
+    },
+    {
+      "iteration": 27600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049157001078128815,
+        "dist_loss": 0.009551823139190674,
+        "normal_loss": 0.027986638247966766,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08669546246528625
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 27700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04395552724599838,
+        "dist_loss": 0.5329961776733398,
+        "normal_loss": 0.027428947389125824,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.6043806076049805
+      },
+      "eligible_logged_sum_residual": -4.470348358154297e-08
+    },
+    {
+      "iteration": 27800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.055632006376981735,
+        "dist_loss": 0.489022433757782,
+        "normal_loss": 0.027790432795882225,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.5724448561668396
+      },
+      "eligible_logged_sum_residual": -1.6763806343078613e-08
+    },
+    {
+      "iteration": 27900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.032376039773225784,
+        "dist_loss": 7.693248748779297,
+        "normal_loss": 0.029511502012610435,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 7.755136013031006
+      },
+      "eligible_logged_sum_residual": -2.775341272354126e-07
+    },
+    {
+      "iteration": 28000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03782093524932861,
+        "dist_loss": 0.4026951193809509,
+        "normal_loss": 0.028454899787902832,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.4689709544181824
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 28100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03629520907998085,
+        "dist_loss": 0.07760795950889587,
+        "normal_loss": 0.027321867644786835,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.14122503995895386
+      },
+      "eligible_logged_sum_residual": 3.725290298461914e-09
+    },
+    {
+      "iteration": 28200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.09277230501174927,
+        "dist_loss": 0.09840621799230576,
+        "normal_loss": 0.02685755304992199,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.21803608536720276
+      },
+      "eligible_logged_sum_residual": 9.313225746154785e-09
+    },
+    {
+      "iteration": 28300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.1528187245130539,
+        "dist_loss": 0.30125218629837036,
+        "normal_loss": 0.024306220933794975,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.4783771336078644
+      },
+      "eligible_logged_sum_residual": 1.862645149230957e-09
+    },
+    {
+      "iteration": 28400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.059960030019283295,
+        "dist_loss": 0.2312742918729782,
+        "normal_loss": 0.026753941550850868,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.31798824667930603
+      },
+      "eligible_logged_sum_residual": -1.6763806343078613e-08
+    },
+    {
+      "iteration": 28500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.038994528353214264,
+        "dist_loss": 5.912257194519043,
+        "normal_loss": 0.028307612985372543,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 5.979558944702148
+      },
+      "eligible_logged_sum_residual": -3.91155481338501e-07
+    },
+    {
+      "iteration": 28600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.05368514358997345,
+        "dist_loss": 1.641021981656975e+33,
+        "normal_loss": 0.028538133949041367,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.641021981656975e+33
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 28700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.09262813627719879,
+        "dist_loss": 0.9097611308097839,
+        "normal_loss": 0.026725873351097107,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.0291152000427246
+      },
+      "eligible_logged_sum_residual": 5.960464477539063e-08
+    },
+    {
+      "iteration": 28800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.08195102959871292,
+        "dist_loss": 109.08918762207031,
+        "normal_loss": 0.028744038194417953,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 109.19988250732422
+      },
+      "eligible_logged_sum_residual": -1.825392246246338e-07
+    },
+    {
+      "iteration": 28900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.059482403099536896,
+        "dist_loss": 0.30071544647216797,
+        "normal_loss": 0.026752067729830742,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.38694989681243896
+      },
+      "eligible_logged_sum_residual": -2.0489096641540527e-08
+    },
+    {
+      "iteration": 29000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.04595853388309479,
+        "dist_loss": 1.0103310346603394,
+        "normal_loss": 0.028025778010487556,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.084315299987793
+      },
+      "eligible_logged_sum_residual": -4.6566128730773926e-08
+    },
+    {
+      "iteration": 29100,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.046018943190574646,
+        "dist_loss": 0.012230545282363892,
+        "normal_loss": 0.02842637151479721,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.08667585998773575
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 29200,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03923565521836281,
+        "dist_loss": 0.009988350793719292,
+        "normal_loss": 0.028242327272892,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.07746633142232895
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 29300,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.0602816641330719,
+        "dist_loss": 0.0060243746265769005,
+        "normal_loss": 0.026455342769622803,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.09276138246059418
+      },
+      "eligible_logged_sum_residual": 9.313225746154785e-10
+    },
+    {
+      "iteration": 29400,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.12872916460037231,
+        "dist_loss": 1.641021981656975e+33,
+        "normal_loss": 0.025734923779964447,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.641021981656975e+33
+      },
+      "eligible_logged_sum_residual": 0.0
+    },
+    {
+      "iteration": 29500,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.028847526758909225,
+        "dist_loss": 0.009536773897707462,
+        "normal_loss": 0.028240226209163666,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.06662452220916748
+      },
+      "eligible_logged_sum_residual": -4.6566128730773926e-09
+    },
+    {
+      "iteration": 29600,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.07008980959653854,
+        "dist_loss": 1.184802532196045,
+        "normal_loss": 0.02604333683848381,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 1.2809356451034546
+      },
+      "eligible_logged_sum_residual": -3.3527612686157227e-08
+    },
+    {
+      "iteration": 29700,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.11128116399049759,
+        "dist_loss": 0.11006084084510803,
+        "normal_loss": 0.027886951342225075,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.24922895431518555
+      },
+      "eligible_logged_sum_residual": -1.862645149230957e-09
+    },
+    {
+      "iteration": 29800,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.043418459594249725,
+        "dist_loss": 0.17351704835891724,
+        "normal_loss": 0.027867048978805542,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 0.2448025643825531
+      },
+      "eligible_logged_sum_residual": 7.450580596923828e-09
+    },
+    {
+      "iteration": 29900,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.03907211124897003,
+        "dist_loss": 5.218040943145752,
+        "normal_loss": 0.029686804860830307,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 5.286799907684326
+      },
+      "eligible_logged_sum_residual": 4.842877388000488e-08
+    },
+    {
+      "iteration": 30000,
+      "branch_eligible": {
+        "dist_loss": true,
+        "normal_loss": true,
+        "geo_loss": false,
+        "ncc_loss": false
+      },
+      "native_logged_values": {
+        "image_loss": 0.049636371433734894,
+        "dist_loss": 167.79782104492188,
+        "normal_loss": 0.02835199236869812,
+        "geo_loss": 0.0,
+        "ncc_loss": 0.0,
+        "total_loss": 167.8758087158203
+      },
+      "eligible_logged_sum_residual": -6.92903995513916e-07
+    }
+  ],
+  "actual_native_branch_thresholds": {
+    "dist_from_iter": 3000,
+    "normal_from_iter": 7000,
+    "multi_view_weight_from_iter": 30000,
+    "multi_view_weight_until_iter": 30000
+  },
+  "interpretation": "Eligibility uses the actual native preset thresholds. Conditional Python loss variables can be stale; actual total is authoritative. Original CSV and training are unchanged."
+}

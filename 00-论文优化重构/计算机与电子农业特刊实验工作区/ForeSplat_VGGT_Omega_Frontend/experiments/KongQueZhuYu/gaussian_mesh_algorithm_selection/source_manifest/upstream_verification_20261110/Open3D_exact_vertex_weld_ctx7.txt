@@ -1,0 +1,84 @@
+### Hash set
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/core/hashmap.ipynb
+
+Hash set is a simplified hash map where we do not care about the values. It preserves most of the operations in a hash map, and could be useful for removing duplicates.
+
+--------------------------------
+
+### Connected components
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+## Connected components
+The result of various reconstruction methods. Open3D implements a connected components algorithm `cluster_connected_triangles` that assigns each triangle to a cluster of connected triangles. It returns for each triangle the index of the cluster in `triangle_clusters`, and per cluster the number of triangles in `cluster_n_triangles` and the surface area of the cluster in `cluster_area`.
+
+This is useful in for instance [RGBD Integration](../pipelines/rgbd_integration.ipynb), which is not always a single triangle mesh, but a number of meshes. Some of the smaller parts are due to noise and we most likely want to remove them.
+
+The code below shows the application of `cluster_connected_triangles` and how it can be used to remove spurious triangles.
+
+--------------------------------
+
+### Vertex clustering mesh simplification with simplify_vertex_clustering
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+Loads the Stanford Bunny mesh, computes vertex normals, and simplifies it using vertex clustering with voxel sizes of 1/32 and 1/16 of the bounding box diagonal. Uses o3d.geometry.SimplificationContraction.Average to pool vertices. Prints vertex and triangle counts before and after simplification and visualizes the meshes.
+
+```python
+bunny = o3d.data.BunnyMesh()
+mesh_in = o3d.io.read_triangle_mesh(bunny.path)
+mesh_in.compute_vertex_normals()
+
+print(
+    f'Input mesh has {len(mesh_in.vertices)} vertices and {len(mesh_in.triangles)} triangles'
+)
+o3d.visualization.draw_geometries([mesh_in])
+
+voxel_size = max(mesh_in.get_max_bound() - mesh_in.get_min_bound()) / 32
+print(f'voxel_size = {voxel_size:e}')
+mesh_smp = mesh_in.simplify_vertex_clustering(
+    voxel_size=voxel_size,
+    contraction=o3d.geometry.SimplificationContraction.Average)
+print(
+    f'Simplified mesh has {len(mesh_smp.vertices)} vertices and {len(mesh_smp.triangles)} triangles'
+)
+o3d.visualization.draw_geometries([mesh_smp])
+
+voxel_size = max(mesh_in.get_max_bound() - mesh_in.get_min_bound()) / 16
+print(f'voxel_size = {voxel_size:e}')
+mesh_smp = mesh_in.simplify_vertex_clustering(
+    voxel_size=voxel_size,
+    contraction=o3d.geometry.SimplificationContraction.Average)
+print(
+    f'Simplified mesh has {len(mesh_smp.vertices)} vertices and {len(mesh_smp.triangles)} triangles'
+)
+o3d.visualization.draw_geometries([mesh_smp])
+```
+
+--------------------------------
+
+### Cluster connected triangles with cluster_connected_triangles
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+Runs the connected components algorithm on the mesh. Returns triangle_clusters, cluster_n_triangles, and cluster_area, which are converted to numpy arrays for further processing.
+
+```python
+print("Cluster connected triangles")
+with o3d.utility.VerbosityContextManager(
+        o3d.utility.VerbosityLevel.Debug) as cm:
+    triangle_clusters, cluster_n_triangles, cluster_area = (
+        mesh.cluster_connected_triangles())
+triangle_clusters = np.asarray(triangle_clusters)
+cluster_n_triangles = np.asarray(cluster_n_triangles)
+cluster_area = np.asarray(cluster_area)
+```
+
+--------------------------------
+
+### Mesh properties
+
+Source: https://github.com/isl-org/open3d/blob/main/docs/jupyter/geometry/mesh.ipynb
+
+A triangle mesh has several properties that can be tested with Open3D. One important property is the manifold property, where we can test the triangle mesh if it is edge manifold `is_edge_manifold` and if it is `is_vertex_manifold`. A triangle mesh is edge manifold, if each edge is bounding either one or two triangles. The function `is_edge_manifold` has the `bool` parameter `allow_boundary_edges` that defines if boundary edges should be allowed. Further, a triangle mesh is vertex manifold if the star of the vertex is edge-manifold and edge-connected, e.g., two or more faces connected only by a vertex and not by an edge.

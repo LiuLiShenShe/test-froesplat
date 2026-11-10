@@ -1,0 +1,106 @@
+{
+  "source_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P1_GGGS_Tetrahedra/recon_post.ply",
+  "camera": {
+    "name": "crop_0079",
+    "source_id": 79,
+    "width": 1080,
+    "height": 1920,
+    "Fx": 1614.190282637548,
+    "Fy": 1616.5578999758684,
+    "Cx": 541.3532818532818,
+    "Cy": 961.3532818532818,
+    "world_view_transform": [
+      [
+        0.9895405769348145,
+        0.03146231174468994,
+        0.14078201353549957,
+        0.0
+      ],
+      [
+        -0.10382898896932602,
+        0.832848846912384,
+        0.543674886226654,
+        0.0
+      ],
+      [
+        -0.1001448705792427,
+        -0.5526056289672852,
+        0.8274043798446655,
+        0.0
+      ],
+      [
+        0.056952860206365585,
+        0.5807710289955139,
+        0.020982971414923668,
+        1.0
+      ]
+    ],
+    "projection_matrix": [
+      [
+        2.989241361618042,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.6839144229888916,
+        0.0,
+        0.0
+      ],
+      [
+        0.0034320035483688116,
+        0.00193050189409405,
+        1.000100016593933,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.010001000016927719,
+        0.0
+      ]
+    ],
+    "full_proj_transform": [
+      [
+        2.95845890045166,
+        0.05325162038207054,
+        0.14079609513282776,
+        0.14078201353549957
+      ],
+      [
+        -0.30850401520729065,
+        1.4034956693649292,
+        0.5437292456626892,
+        0.543674886226654
+      ],
+      [
+        -0.2965175211429596,
+        -0.9289432764053345,
+        0.8274871110916138,
+        0.8274043798446655
+      ],
+      [
+        0.1703178584575653,
+        0.9780092239379883,
+        0.010984070599079132,
+        0.020982971414923668
+      ]
+    ],
+    "camera_center": [
+      -0.07758358120918274,
+      -0.4891889691352844,
+      0.30927950143814087
+    ]
+  },
+  "normal_space": "camera",
+  "world_normal": "Actual Open3D unit frontmost triangle normal in source mesh world coordinates",
+  "camera_normal": "world normal @ W2C_rotation.T",
+  "gray": "Same two-sided headlight shading0.2+0.8*abs(camera_normal.z), independent of all colors/textures",
+  "wireframe": "Exact actual triangle vertex/face edge segments, clipped in camera Z and projected with corrected K; retain pixels on frontmost ray-hit face within the recorded pixel width of its actual edge; not RGB/normal/silhouette edge detection",
+  "wireframe_width_px": 0.65,
+  "vertex_color_available": false,
+  "native_uv_texture_available": false,
+  "color_semantics": "Vertex color only if actually present; UV texture only if actual source OBJ has per-corner UV and decoded texture material image. Missing color/texture is unavailable, never replaced by gray.",
+  "background": 0.25
+}

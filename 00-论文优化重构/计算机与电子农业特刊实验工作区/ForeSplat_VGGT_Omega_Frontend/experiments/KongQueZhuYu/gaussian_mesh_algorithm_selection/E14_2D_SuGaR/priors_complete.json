@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "views": 208,
+  "model": "Metric3Dv2 ViT-giant2 800K official",
+  "weight": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/weights/metric_depth_vit_giant2_800k.pth",
+  "weight_sha256": "22d64c4dec098fa56eb17b6f22b1fb7d16b4742c66a9c8ee73e7dae61c0d2a1b",
+  "input_rgb": "exact E11 training RGB, includes original black RAP background; no frontend rerun",
+  "preprocessing": "Official keep-aspect to616x1064, mean padding, RGB channel normalization, unpad, bilinear to original, scale actual-width-resized corrected focal/1000; actual sx/sy halfpixel K replaces nominal scalar after integer resize",
+  "world_scale": "Metric3D monocular outputs subsequently rescaled to VGGT gauge by official median per-image point-track scale; not independent metric ground truth",
+  "elapsed_seconds": 775.1963918209076,
+  "peak_allocated_gib": 7.515829086303711
+}

@@ -1,0 +1,61 @@
+--- official/gaussian_splatting_2d/scene/dataset_readers.py
++++ foresplat/gaussian_splatting_2d/scene/dataset_readers.py
+@@ -43,6 +43,9 @@
+     depth_map: np.array = None
+     normal_map: np.array = None
+     world_normal_map: np.array = None
++    cx: float = None
++    cy: float = None
++    mask_path: str = None
+ 
+ class SceneInfo(NamedTuple):
+     point_cloud: BasicPointCloud
+@@ -79,7 +82,7 @@
+     normals_flat = normal_map.reshape(-1, 3)  # (H*W, 3)
+ 
+     # Apply rotation (Rn for each normal n in N): (H*W, 3) @ (3, 3).T => (H*W, 3)
+-    normals_world_flat = normals_flat @ R.T  # (H*W, 3)
++    normals_world_flat = normals_flat @ R.astype(np.float32).T  # (H*W, 3)
+ 
+     # Reshape back
+     normals_world = normals_world_flat.reshape(H, W, 3)
+@@ -131,13 +134,13 @@
+         depth_path = os.path.join(os.path.dirname(images_folder), "estimated_dense_depth", f"{image_name}.npy")
+         depth_map = None
+         if os.path.exists(depth_path):
+-            depth_map = np.load(depth_path)
++            depth_map = np.load(depth_path, mmap_mode="r")
+ 
+         normal_path = os.path.join(os.path.dirname(images_folder), "estimated_dense_normal", f"{image_name}.npy")
+         normal_map = None
+         world_normal_map = None
+         if os.path.exists(normal_path):
+-            normal_map = np.load(normal_path)
++            normal_map = np.load(normal_path, mmap_mode="r")
+             normal_map = normal_map / np.linalg.norm(normal_map, axis=2, keepdims=True)
+ 
+             world_normal_map = transform_normal_map_to_world(normal_map, R)
+@@ -145,7 +148,10 @@
+ 
+         cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image, image_id=extr.id,
+                               image_path=image_path, image_name=image_name, width=width, height=height,
+-                              depth_map=depth_map, normal_map=normal_map, world_normal_map=world_normal_map)
++                              depth_map=depth_map, normal_map=normal_map, world_normal_map=world_normal_map,
++                              cx=float(intr.params[1] if intr.model=="SIMPLE_PINHOLE" else intr.params[2]),
++                              cy=float(intr.params[2] if intr.model=="SIMPLE_PINHOLE" else intr.params[3]),
++                              mask_path=os.path.join(os.path.dirname(images_folder),"masks",image_name+".png"))
+         cam_infos.append(cam_info)
+     sys.stdout.write('\n')
+     return cam_infos
+@@ -302,6 +308,11 @@
+                 image_depth_scale_map[image_id]["estimated_scale"] = np.median(np.array(values["scales"]))
+                 image_depth_scale_map[image_id]["estimated_scale_variance"] = np.array(values["scales"]).std()
+ 
++            # Persist actual extra-prior scale attribution, without copying millions of raw track ratios.
++            scale_meta={str(k):dict(estimated_scale=float(v["estimated_scale"]),estimated_scale_variance=float(v["estimated_scale_variance"]),track_count=len(v["scales"])) for k,v in image_depth_scale_map.items()}
++            with open(os.path.join(path,"prior_depth_scale.json"),"w") as f:
++                json.dump(dict(method="official per-image median COLMAP-track Z / monocular depth",units="VGGT arbitrary gauge; not independent metric truth",views=scale_meta),f,indent=2)
++
+             # num_generated_points = int(xyz.shape[0] * 1)  # 100%, TODO: Make this configurable
+             num_generated_points = min(75000, len(cam_infos) * 1000)
+             print("Generated points:", num_generated_points)

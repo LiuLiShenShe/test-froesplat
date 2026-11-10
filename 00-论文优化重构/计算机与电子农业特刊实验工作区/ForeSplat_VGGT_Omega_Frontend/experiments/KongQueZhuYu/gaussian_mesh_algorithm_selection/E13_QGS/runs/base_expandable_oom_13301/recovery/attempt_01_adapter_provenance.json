@@ -1,0 +1,56 @@
+{
+  "official_repository": "https://github.com/will-zzy/QGS",
+  "official_commit": "74d05c945e99fcaef7afe5a8831903be71ad9b55",
+  "pixel_convention": "integer array coordinates, canonical resized principal point, normalized grid align_corners=False uses pixel+.5",
+  "changes": [
+    {
+      "file": "train.py",
+      "official_sha256": "dabf257d7b37a3671731d804794d21b6a833f0f9f23101ae518d91d1ea00aeed",
+      "adapted_sha256": "09904e25f504572b87c45d6cec984c69593d3d37803f38b9ec089d55f6c2b816"
+    },
+    {
+      "file": "utils/depth_utils.py",
+      "official_sha256": "43fb27b0f785ba5bd29d31f8639a2c4f03d5afd3f5ae47f129d7e3184365bc28",
+      "adapted_sha256": "1e41cb8ac3495ef4e0acb23a9fa3a70cd3e8edd3994889b1db06ba90e8f41354"
+    },
+    {
+      "file": "scene/gaussian_model.py",
+      "official_sha256": "a2179342d44604bc23ca0d99c93c730e6939bb5bc8c71bddca6684cba035e646",
+      "adapted_sha256": "3f8afd62d1a862c53d759a1c7cce6cd19af777fc249f0b8af93d72dd90ce83e2"
+    },
+    {
+      "file": "submodules/diff-quadratic-rasterization/cuda_rasterizer/backward.cu",
+      "official_sha256": "335e6ca9d826b106e21b7ec3c279e3081c13a3fa77dc6291b10bb049198ad5a3",
+      "adapted_sha256": "60dd3719b6db7bb520f9980549fd526d5160ed957dfb07286b5122ba65e5c71a"
+    },
+    {
+      "file": "submodules/diff-quadratic-rasterization/cuda_rasterizer/forward.cu",
+      "official_sha256": "46a7bdbeb8bdea48f14873ef6a465ad60598ba1b27ad7a58288461c1ec885447",
+      "adapted_sha256": "b6423af193012857a4d8996719138d82c0fdc89b0a0b25bc5acbe3ee6b977c94"
+    },
+    {
+      "file": "submodules/diff-quadratic-rasterization/cuda_rasterizer/stopthepop_QGS/resorted_render.cuh",
+      "official_sha256": "5ce4c0875f0402ec890387a7df10b6efd37307622612e00451677c588cda6057",
+      "adapted_sha256": "8cc4e14cf53831bed5db5a0c67de8d383f0d32295068dc9ae459a48faacab8f6"
+    },
+    {
+      "file": "scene/cameras.py",
+      "official_sha256": "9fbe80f041330f95d16b833f70a5ef66b7d30a1bf442f82d30e840611ab62b84",
+      "adapted_sha256": "743dc777c379d7ca5604d446338175a327bb7726e43c3dd2b3f74157a2601977"
+    },
+    {
+      "file": "scene/dataset_readers.py",
+      "official_sha256": "3a74ae765193d98a308d97a64d6159730d3fee7f281db0ef12541cbad85b72f2",
+      "adapted_sha256": "d5b67bbe50ddbc27532d3c4f5ac1a487309c1dd528d63e4e3e5e73f0ace47c0d"
+    },
+    {
+      "file": "submodules/diff-quadratic-rasterization/cuda_rasterizer/rasterizer_impl.h",
+      "official_sha256": "2e72f3f58929b0476ebb3cd716e9af869289e9ecd008b62ddb7c0802cbd60eca",
+      "adapted_sha256": "697172ded6692c13e6cdcc1462ac6a05191308a75b1527c37105671ecbd63ace",
+      "reason": "Missing standard cstdint include required by CUDA12.6; no numerical change"
+    }
+  ],
+  "primitive_preserved": "Signed six-channel scaling; quadratic intersection/cone bounding box/reordering/loss/optimizer/densification equations unchanged",
+  "cli_bug": "Official __main__ training call commented out. Driver calls official training() directly; no replacement implementation.",
+  "Camera_patch_scope": "Only Camera canonical projection is adapted; unused original MiniCam remains unmodified."
+}

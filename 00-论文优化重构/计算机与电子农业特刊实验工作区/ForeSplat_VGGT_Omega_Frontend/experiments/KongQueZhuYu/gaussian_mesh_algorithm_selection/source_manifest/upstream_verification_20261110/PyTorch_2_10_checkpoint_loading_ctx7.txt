@@ -1,0 +1,95 @@
+### Weights only load error for unsupported global
+
+Source: https://github.com/pytorch/pytorch/blob/v2.10.0/docs/source/notes/serialization.rst
+
+Error shown when the weights_only Unpickler encounters a function or class not allowlisted by default. Follow the message to allowlist the global only if you trust the checkpoint source.
+
+```text
+_pickle.UnpicklingError: Weights only load failed. This file can still be loaded,
+to do so you have two options, do those steps only if you trust the source of the checkpoint.
+    1. Re-running `torch.load` with `weights_only` set to `False` will likely succeed,
+        but it can result in arbitrary code execution. Do it only if you got the file from a trusted source.
+    2. Alternatively, to load with `weights_only=True` please check the recommended
+       steps in the following error message.
+       WeightsUnpickler error: Unsupported global: GLOBAL {__module__}.{__name__} was not an allowed global by
+       default. Please use `torch.serialization.add_safe_globals([{__name__}])` or the
+       `torch.serialization.safe_globals([{__name__}])` context manager to allowlist this global
+       if you trust this class/function.
+```
+
+--------------------------------
+
+### Serialization Notes > weights_only allowlist
+
+Source: https://github.com/pytorch/pytorch/blob/v2.10.0/docs/source/notes/serialization.rst
+
+To get all GLOBALs (functions/classes) in the checkpoint that are not yet allowlisted you can use
+:func:`torch.serialization.get_unsafe_globals_in_checkpoint` which will return a list of strings of the form
+``{__module__}.{__name__}``. If you trust these functions/classes, you can import them and allowlist them per
+the error message either via :func:`torch.serialization.add_safe_globals` or the context manager
+:class:`torch.serialization.safe_globals`.
+
+--------------------------------
+
+### torch.serialization.safe_globals
+
+Source: https://github.com/pytorch/pytorch/blob/v2.10.0/docs/source/notes/serialization.rst
+
+A context manager that temporarily allowlists functions or classes for weights_only loading. Within the context, the specified globals are treated as safe.
+
+```APIDOC
+## torch.serialization.safe_globals
+
+### Description
+A context manager that temporarily allowlists functions or classes for weights_only loading. Within the context, the specified globals are treated as safe.
+
+### Method
+torch.serialization.safe_globals
+
+### Parameters
+- **globals** (list) - Required - A list of functions/classes to allowlist within the context.
+
+### Response
+(No response documented in the source.)
+```
+
+--------------------------------
+
+### torch.serialization > torch.serialization.get_unsafe_globals_in_checkpoint
+
+Source: https://github.com/pytorch/pytorch/blob/v2.10.0/docs/source/notes/serialization.rst
+
+Returns a list of strings of functions/classes in a ``torch.save`` object that are not safe for ``weights_only``.
+
+For a given function or class ``f``, the corresponding string will be of the form
+``{f.__module__}.{f.__name__}``.
+
+This function will return any GLOBALs in the checkpoint that are not in the set marked safe
+for ``weights_only`` (either via :func:`add_safe_globals` or :class:`safe_globals` context or
+allowlisted by ``torch`` by default).
+
+--------------------------------
+
+### safe_globals context manager example with MyTensor
+
+Source: https://github.com/pytorch/pytorch/blob/v2.10.0/docs/source/notes/serialization.rst
+
+Uses torch.serialization.safe_globals as a context manager to allow MyTensor during weights_only load. After the context exits, get_safe_globals returns an empty list.
+
+```python
+>>> # xdoctest: +SKIP("Can't torch.save(t, ...) as doctest thinks MyTensor is defined on torch.serialization")
+>>> import tempfile
+>>> class MyTensor(torch.Tensor):
+...     pass
+>>> t = MyTensor(torch.randn(2, 3))
+>>> with tempfile.NamedTemporaryFile() as f:
+...     torch.save(t, f.name)
+# Running `torch.load(f.name, weights_only=True)` will fail with
+# Unsupported global: GLOBAL __main__.MyTensor was not an allowed global by default.
+# Check the code and make sure MyTensor is safe to be used when loaded from an arbitrary checkpoint.
+...     with torch.serialization.safe_globals([MyTensor]):
+...         torch.load(f.name, weights_only=True)
+# MyTensor([[-0.5024, -1.8152, -0.5455],
+#          [-0.8234,  2.0500, -0.3657]])
+>>> assert torch.serialization.get_safe_globals() == []
+```

@@ -1,0 +1,58 @@
+{
+  "status": "passed_partial",
+  "terminal_iteration": null,
+  "validation_scope": "Exact native checkpoint/PLY provenance; nonfinite primitive quality defects are explicitly reported and not silently filtered",
+  "all_retained_models_finite": false,
+  "partial_checkpoints_not_treated_as_terminal": true,
+  "records": [
+    {
+      "iteration": 7000,
+      "stage": "partial_7000",
+      "native_primitive": "QGS signed six-scale quadratic",
+      "primitives": 157387,
+      "checkpoint_path": "/home/test/foresplat_model_files/KongQueZhuYu/E13_QGS/Mip/checkpoints/chkpnt7000.pth",
+      "checkpoint_size": 118993029,
+      "checkpoint_sha256": "f573ca463248426f16d86446a890f62f71f0a4a90901edff9d509161a347eef2",
+      "native_ply_path": "/home/test/foresplat_model_files/KongQueZhuYu/E13_QGS/Mip/checkpoints/point_cloud/iteration_7000/point_cloud.ply",
+      "native_ply_size": 40922220,
+      "native_ply_sha256": "967b7dae9dda6e4e2c5df956792a7b870c125e137eb1e59d3aa27848b6208703",
+      "all_native_fields_bitwise_match_checkpoint": true,
+      "all_native_fields_finite": false,
+      "native_nonfinite_primitives": 6,
+      "native_nonfinite_fraction": 3.8122589540432184e-05,
+      "native_nonfinite_field_counts": {
+        "x": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "y": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "z": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "rot_0": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "rot_1": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "rot_2": {
+          "nan": 6,
+          "infinity": 0
+        },
+        "rot_3": {
+          "nan": 6,
+          "infinity": 0
+        }
+      },
+      "quality_warning": "Native invalid primitives are retained unchanged, including original NaN payloads; provenance pass is not a numerical-stability pass.",
+      "active_sh_degree": 3,
+      "viewing": "native QGS renderer; not ordinary SuperSplat Gaussian"
+    }
+  ]
+}

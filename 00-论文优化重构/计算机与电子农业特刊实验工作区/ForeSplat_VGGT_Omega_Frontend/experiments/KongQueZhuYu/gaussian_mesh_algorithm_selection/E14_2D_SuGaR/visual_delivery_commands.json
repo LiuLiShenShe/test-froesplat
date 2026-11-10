@@ -1,0 +1,133 @@
+{
+  "status": "prepared_not_executed",
+  "GPU_started": false,
+  "commands": [
+    {
+      "id": "E11_shared8_native",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_e11_shared_free.py",
+        "--out",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/E11_shared_free"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/E11_shared_free",
+      "artifact_types": [
+        "Native2DGS RGB/Alpha/median depth/expected depth/world+camera normal NPZ",
+        "Actual native PNG",
+        "Exact camera/channel metadata"
+      ]
+    },
+    {
+      "id": "E11_top2_native",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/2d-gaussian-splatting-main/venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_e11_shared_free.py",
+        "--protocol",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/shared_inspection_views.json",
+        "--out",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/E11_top_oblique"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/E11_top_oblique",
+      "artifact_types": [
+        "Same actual native2DGS channels, two extra exact inspection matrices"
+      ]
+    },
+    {
+      "id": "E14_surfel_top2",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/.venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_surfel_visuals.py",
+        "--protocol",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/shared_inspection_views.json",
+        "--out",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/surfel_top_oblique"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/surfel_top_oblique"
+    },
+    {
+      "id": "E14_refined_top2",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/.venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_refined_visuals.py",
+        "--protocol",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/shared_inspection_views.json",
+        "--out",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/refined_top_oblique"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/refined_top_oblique",
+      "note": "Native3D RGB/alpha; expected centerZ/axis-normal maps explicitly AUX, native surfaceDepth/Normal unavailable"
+    },
+    {
+      "id": "E14_all_actual_Mesh_fixed8",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/.venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_mesh_geometry_visuals.py"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/visual_views/mesh",
+      "artifact_types": [
+        "Actual Mesh gray/face normals",
+        "Actual vertex colors only when present",
+        "Actual geometry-edge wireframe mask/overlay",
+        "Actual native OBJ UV texture image only when present",
+        "Actual geometric camera-Z/normal/visible-mask NPZ"
+      ]
+    },
+    {
+      "id": "E14_last_native_viewer_HTTP_smoke",
+      "command": [
+        "uv",
+        "run",
+        "--no-project",
+        "--python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/.venv/bin/python",
+        "python",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/smoke_native_viewers_http.py"
+      ],
+      "output": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/native_viewer_http_smoke",
+      "note": "Actual E11 native2D + E14 native refined3D; yaw0/180 HTTP image responses; shutdown both services before overall STATUS complete"
+    }
+  ],
+  "generic_Mesh_command_template": [
+    "uv",
+    "run",
+    "--no-project",
+    "--python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/.venv/bin/python",
+    "python",
+    "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/render_mesh_geometry_visuals.py",
+    "--mesh",
+    "ACTUAL_MESH_ABSOLUTE_PATH",
+    "--input",
+    "ACTUAL_208_RENDER_INPUT",
+    "--out",
+    "NEW_VISUAL_OUTPUT",
+    "--normal",
+    "world"
+  ],
+  "generic_Mesh_template_is_not_artifact_path": true
+}

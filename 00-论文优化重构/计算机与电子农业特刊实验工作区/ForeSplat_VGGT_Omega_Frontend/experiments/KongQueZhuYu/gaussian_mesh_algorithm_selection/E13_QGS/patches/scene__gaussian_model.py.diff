@@ -1,0 +1,19 @@
+--- official/scene/gaussian_model.py
++++ adapted/scene/gaussian_model.py
+@@ -487,12 +487,13 @@
+         depth_view = depth_view[:H, :W]
+         pts_projections = torch.stack(
+                         [points_in_camera_space[:,0] * fov_camera.Fx / points_in_camera_space[:,2] + fov_camera.Cx,
+-                         points_in_camera_space[:,1] * fov_camera.Fy / points_in_camera_space[:,2] + fov_camera.Cy], -1).float()/scale
++                         points_in_camera_space[:,1] * fov_camera.Fy / points_in_camera_space[:,2] + fov_camera.Cy], -1).float()
++        pts_projections = (pts_projections + 0.5)/scale - 0.5
+         mask = (pts_projections[:, 0] > 0) & (pts_projections[:, 0] < W) &\
+                (pts_projections[:, 1] > 0) & (pts_projections[:, 1] < H) & (points_in_camera_space[:,2] > 0.1)
+ 
+-        pts_projections[..., 0] /= (W / 2)
+-        pts_projections[..., 1] /= (H / 2)
++        pts_projections[..., 0] = (pts_projections[..., 0] + 0.5) / (W / 2)
++        pts_projections[..., 1] = (pts_projections[..., 1] + 0.5) / (H / 2)
+         pts_projections -= 1
+         pts_projections = pts_projections.view(1, -1, 1, 2)
+         map_z = torch.nn.functional.grid_sample(input=depth_view,

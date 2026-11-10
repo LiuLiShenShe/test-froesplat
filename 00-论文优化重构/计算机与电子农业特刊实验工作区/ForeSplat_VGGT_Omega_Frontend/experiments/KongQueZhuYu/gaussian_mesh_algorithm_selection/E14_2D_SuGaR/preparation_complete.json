@@ -1,0 +1,258 @@
+{
+  "status": "prepared",
+  "official_commit": "e62770ec6ab50076ebb6c0e3b4ac39f777f14d27",
+  "source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/official",
+  "input": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/input_colmap",
+  "frames": 208,
+  "seed": 0,
+  "modified_sources": [
+    {
+      "path": "gaussian_splatting_2d/utils/point_utils.py",
+      "before_sha256": "3bfbd7a496b7f55d30aebccb1abc6df407a2dd4896283f68f5c8a67513317703",
+      "after_sha256": "2fece7e8dbed6ca56e2f7d22fb53fccf96188efb05f46cc20ebdd6a32a082a52"
+    },
+    {
+      "path": "gaussian_splatting_2d/gaussian_renderer/__init__.py",
+      "before_sha256": "c27c0f8ba31ae8adf75e56291802ad07b0db1bcea4b94b52c8424098ff65c11a",
+      "after_sha256": "0c4157f0721986fc0319179c989c002cd365fb9ec3b1583eaf17b863bd2e8fdd"
+    },
+    {
+      "path": "gaussian_splatting_2d/scene/point_generator.py",
+      "before_sha256": "7d70b88ebc061cdb2f1dc9b488fbc4c4e0340cc636801f100757b67f9c914780",
+      "after_sha256": "91329d7aaa61bbd6db5444ada1a08320b0274f911688e75a22c6727b7515e48a"
+    },
+    {
+      "path": "sugar_scene/cameras.py",
+      "before_sha256": "3960e2f7a6bcf23f7f245a77bd0550a96e3b7b4db85fb4a0450ac538acd31963",
+      "after_sha256": "e545100666f5285c6d84a0b8a8018422845cbb064335b35c44c1fb8a0de8806f"
+    },
+    {
+      "path": "estimate_depth_normal_priors.py",
+      "before_sha256": "9c9e15e9380974648c478f71454654153551c8fb88c87384f17f93b73040821e",
+      "after_sha256": "1115e9b24bac1c4d73206e5fbdc22df8e3e0849c767b18eaede92d0a0805e878"
+    },
+    {
+      "path": "gaussian_splatting_2d/utils/camera_utils.py",
+      "before_sha256": "91844091a37657707056dfc1e1f54d001e59700082c2e48047d991861b84e923",
+      "after_sha256": "6531dbb53b6dc929a64a43e3f1ab8c5dafcf6742f4fb6d38665f85358826966e"
+    },
+    {
+      "path": "sugar_trainers/refine.py",
+      "before_sha256": "8ef9ad548bef78acbe6ff0814590799c883295444104aa49995e51f076ee7481",
+      "after_sha256": "b99d80bea139b63145d7fa87770f4732603d92ce0552890775c245cc6e2a99dc"
+    },
+    {
+      "path": "sugar_scene/sugar_model.py",
+      "before_sha256": "32aa2e1fdf62cd5929cf976d46eac1140087377ca631b92c2d32a9868c187f22",
+      "after_sha256": "56d0c47ff9c13b714d369fb97487f459a3379c6da7353639e95914eb4cf88e53"
+    },
+    {
+      "path": "gaussian_splatting_2d/scene/dataset_readers.py",
+      "before_sha256": "bbf283335d493b7c4ee2aae01d500835df4a01f3c182f5eafa26871a3a58664f",
+      "after_sha256": "842ba3c1b342483601e9fd02936264e445c58f1ce3a82a9e41710e26d5b14da9"
+    },
+    {
+      "path": "gaussian_splatting_2d/scene/cameras.py",
+      "before_sha256": "a0a096adbb24edeb5cd877f4f5c526e7173406ba4d2b7bbcbca3ae4032ad6a56",
+      "after_sha256": "5e0417f18cfb81977612eafffb5481c170a3d1dcc487dcb137f377c4e52aae54"
+    }
+  ],
+  "prior": "Metric3Dv2 ViT-giant2; native depth+normal prior, actual intrinsics replace DTU hardcoding; per-image median track depth scale aligns to existing VGGT gauge",
+  "initial_pointcloud": "Original VGGT COLMAP1,252,383 track points plus official generated points filtered by unchanged RAP mask; all loss/densification/clustering native",
+  "rasterizer": "Official 2DGS projective homography preserves noncentral projection without numerical kernel changes",
+  "training": "30K, depth_ratio1, lambda_dist1000, lambda_normal.05, lambda_normal_prior.1, DBSCAN largest-cluster prune at7000; refinement15K on all208",
+  "read_only_history": true,
+  "metric3d_commit": "eb5b6fac0dc155e4e52f576e304fbf11655ff339",
+  "metric3d_weights_source": "https://huggingface.co/JUGGHM/Metric3D/resolve/80d2d1410afb4b23cd9d18c6be9144483d4b70b6/metric_depth_vit_giant2_800k.pth",
+  "metric3d_weights_expected_sha256": "22d64c4dec098fa56eb17b6f22b1fb7d16b4742c66a9c8ee73e7dae61c0d2a1b",
+  "submodules": [
+    " 0103f7fd75deb0f392c339c74a4ec1cf728e31d1 gaussian_splatting/SIBR_viewers (0.9.6-3-g0103f7f)",
+    " 59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d gaussian_splatting/submodules/diff-gaussian-rasterization (heads/main)",
+    " 5c46b9c07008ae65cb81ab79cd677ecc1934b903 gaussian_splatting/submodules/diff-gaussian-rasterization/third_party/glm (0.9.5.3-2728-g5c46b9c0)",
+    " 86710c2d4b46680c02301765dd79e465819c8f19 gaussian_splatting/submodules/simple-knn (heads/main)",
+    " e0ed0207b3e0669960cfad70852200a4a5847f61 gaussian_splatting_2d/submodules/diff-surfel-rasterization (heads/main)",
+    " 5c46b9c07008ae65cb81ab79cd677ecc1934b903 gaussian_splatting_2d/submodules/diff-surfel-rasterization/third_party/glm (0.9.5.3-2728-g5c46b9c0)",
+    " 86710c2d4b46680c02301765dd79e465819c8f19 gaussian_splatting_2d/submodules/simple-knn (heads/main)"
+  ],
+  "pytorch3d_commit": "75ebeeaea0908c5527e7b1e305fbc7681382db47",
+  "gpu_work_started": false,
+  "prior_memory_adapter": "mmap priors, preserve float32 normal vectors across world rotation rather than accidental NumPy float64 promotion; transformation formula, prior weights and sampling unchanged",
+  "driver_sha256": "2e4deaa45ff332ac5788d8b6add48f5069fcc1fabf2694ae8954128edad6a1b1",
+  "shared_free_views": {
+    "status": "passed",
+    "views": 8,
+    "shared_matrix_source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/shared_free_views.json",
+    "source_sha256": "1fe7cdbe9716b097543e7a8fee0aac6d348d782ed78c0768ce6bf26503a617e6",
+    "exact_matrix_consumption": true,
+    "background": 0.25,
+    "axis": "worldY",
+    "pivot": [
+      -0.008067022599279883,
+      -0.09497366935014726,
+      0.886115317940712
+    ],
+    "validation": "CPU source/JSON checks; no CUDA render claimed"
+  },
+  "all_stage_scripts": [
+    {
+      "path": "scripts/evaluate_native_meshes.py",
+      "sha256": "09145b01e50c79ffb73da163498e49753094aff3e0d0ced34f109d8cfe307f35"
+    },
+    {
+      "path": "scripts/evaluate_stage_renders.py",
+      "sha256": "e061d3a066f5cd5a6856e41135a942944bf977af74f9e3bbc676f742a6e03052"
+    },
+    {
+      "path": "scripts/generate_priors.py",
+      "sha256": "ac2ea20d57cd8e4dc24792b0f80b656878b7f229c020f8bee718f5246924f93b"
+    },
+    {
+      "path": "scripts/prepare_e14.py",
+      "sha256": "6b0b4be380d5f6ce8695103361b7087ffa875ce7421641d516a64f5faf15a82e"
+    },
+    {
+      "path": "scripts/refine_native.py",
+      "sha256": "6a78441277a944f272c86b9fd0526b507b94e21ac2b1131676fb1a955eed63a6"
+    },
+    {
+      "path": "scripts/render_and_mesh.py",
+      "sha256": "b6178fd411d55c5f7596467d3b7f15e3ed22be24238e3c2c1e9cbcdcd2f7e1c3"
+    },
+    {
+      "path": "scripts/render_e11_shared_free.py",
+      "sha256": "2afdf17e547c7c959728a29c853840ed36b4d1b244977faa4a282b2e9dc1a28c"
+    },
+    {
+      "path": "scripts/render_mesh_geometry_visuals.py",
+      "sha256": "a6bd286f1cfbafe11325d8e8ca77413fa8da1693b04cee815af99affdc40aacd"
+    },
+    {
+      "path": "scripts/render_refined.py",
+      "sha256": "3352a7c58f839d9c206ac8ccd312a7a8fb8c93c93c59961d4dcfb31e31728981"
+    },
+    {
+      "path": "scripts/render_refined_visuals.py",
+      "sha256": "0741f40ad4680a974c4303865c08b92b9e2c8c5c58ce56d0accf33fa2ea7082d"
+    },
+    {
+      "path": "scripts/render_surfel_visuals.py",
+      "sha256": "4d431bd8e3df13e145d5abb771c05c51d6debb47fedceefc91c9d87228c4dca3"
+    },
+    {
+      "path": "scripts/render_visual_views.py",
+      "sha256": "958524d675cf466967a044347738b30d9bd9939282b209e38fa080ff9103519e"
+    },
+    {
+      "path": "scripts/run_all_e14.py",
+      "sha256": "2e4deaa45ff332ac5788d8b6add48f5069fcc1fabf2694ae8954128edad6a1b1"
+    },
+    {
+      "path": "scripts/smoke_native_viewers_http.py",
+      "sha256": "1c0824e1e088d46ce466c3df644f687e7c71180c8dc24450f6c5d2e33f224f8b"
+    },
+    {
+      "path": "scripts/train_native.py",
+      "sha256": "14ecfdb63a4caf2d9d8a8f30ff438e4f3bb54091a26d60a0b7a72e2ab911ff17"
+    },
+    {
+      "path": "scripts/validate_mesh_visual_cpu.py",
+      "sha256": "4fab38334e3b490f409f747702d761cc5920a25544c5c3db9fcbc46ea66d4f56"
+    },
+    {
+      "path": "scripts/validate_metric3d_cpu.py",
+      "sha256": "23b8c97436a56469a9e480656f694f2fe94f83521e2ccd2477d97f0820369083"
+    },
+    {
+      "path": "scripts/validate_sugar_camera_cpu.py",
+      "sha256": "454fc45411616c4512ed1793857849ba62628e6c5e419c23d4fb88686ee7a6f1"
+    },
+    {
+      "path": "scripts/view_native_web.py",
+      "sha256": "4cabff71c2d3cdd4106647bb3c6b2e8da9a0a4990423663b9c1d19b9924b942e"
+    },
+    {
+      "path": "scripts/write_viewing_guide.py",
+      "sha256": "25c2e4dd78493baed3899bde3d21088e1e46f664003f9b6e2a1b069fbec08249"
+    }
+  ],
+  "pruning_mesh_attribution": "7K before/after TSDF raw/post at identical frozen scale; same7K before-pruning median reference,208 views each",
+  "prior_resize_adapter": "Actual integer output resize sx/sy and halfpixel K; padded K and actual-width focal de-canonical factor recorded. Official nominal factor changed by0.1443percent forportrait width346 vs346.5; subsequent native median gauge scale retained.",
+  "metric3d_actual_cpu_load": {
+    "status": "passed",
+    "missing_keys": [
+      "depth_model.encoder.mask_token",
+      "depth_model.encoder.norm.weight",
+      "depth_model.encoder.norm.bias"
+    ],
+    "unexpected_keys": [],
+    "model_parameters": 1377675099,
+    "state_tensors": 751,
+    "torch": "2.10.0+cu128",
+    "forward_called": false,
+    "gpu_called": false,
+    "elapsed_seconds": 377.30693650245667,
+    "weight": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/weights/metric_depth_vit_giant2_800k.pth",
+    "source": "Exact official local torch.hub constructor/pretrainFalse + SHA256-verified full checkpoint",
+    "all_inference_weights_loaded": true,
+    "missing_key_reason": "Exact official giant2_reg constructor multi_output=True; tensor inference with masksNone skips mask_token and returns pre-norm features without encoder.norm. Three absent keys are unused in this native forward path; no missing participating weight.",
+    "original_load_check": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/metric3d_cpu_load_validation_first_attempt.json",
+    "source_analysis": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/metric3d_official/mono/model/backbones/ViT_DINO_reg.py",
+    "source_sha256": "70963202c3fca5f75e313bfd21223514251b273b132282cf100767f3942ea712"
+  },
+  "sugar_camera_all208_validation": {
+    "status": "passed",
+    "views": 208,
+    "max_abs_errors": {
+      "Fx": 4.547473508864641e-13,
+      "Fy": 4.547473508864641e-13,
+      "Cx": 0.0,
+      "Cy": 0.0,
+      "world_view_transform": 0.0,
+      "projection_matrix": 0.0,
+      "full_proj_transform": 0.0,
+      "camera_center": 1.1920928955078125e-07
+    },
+    "gt_loaded": false,
+    "gpu_called": false,
+    "method": "Actual official load_gs_cameras/GSCamera with Tensor.cuda routed to CPU for no-image camera creation; full original COLMAP K, no independently modified geometry",
+    "reference": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/render_comparison/E10/camera_runtime.json"
+  },
+  "driver_stages": 12,
+  "native_HTTP_smoke": "Last stage runs actualE11 external2D and actualE14 refined3D services sequentially; stores yaw0/180 response PNG+semantics; closes both before complete",
+  "Mesh_geometry_visual_validation": {
+    "shared_BVH_first_hit_equivalence": true,
+    "actual_OBJ_UV_MTL_PNG_load_passed": true,
+    "UV_axis_orientation_check": true,
+    "texture_offcenter_actual": [
+      0.3749999701976776,
+      0.2499999850988388,
+      0.75
+    ],
+    "texture_offcenter_expected": [
+      0.375,
+      0.25,
+      0.75
+    ],
+    "fixture_vertices": 4,
+    "fixture_triangles": 2,
+    "status": "passed",
+    "GPU": false,
+    "control": "Synthetic flat square split into two actual triangles. Interior geometric diagonal is visible while face normal and gray surface are constant.",
+    "inner_diagonal_wireframe_pixels": 53,
+    "normal_variation": 0.0,
+    "texture_center_actual": [
+      0.5,
+      0.4999999701976776,
+      0.5
+    ],
+    "texture_center_expected": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "vertex_color_available": false,
+    "UV_texture_available": true,
+    "experimental_model": false
+  },
+  "Mesh_BVH": "One RaycastingScene/BVH per Mesh file reused across all8 cameras, explicit release at file completion; cached/uncached channels exactly match CPU control"
+}

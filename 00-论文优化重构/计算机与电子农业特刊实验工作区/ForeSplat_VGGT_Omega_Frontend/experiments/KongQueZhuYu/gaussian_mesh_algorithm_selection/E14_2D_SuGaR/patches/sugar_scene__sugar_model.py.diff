@@ -1,0 +1,55 @@
+--- official/sugar_scene/sugar_model.py
++++ foresplat/sugar_scene/sugar_model.py
+@@ -2178,43 +2178,20 @@
+         if positions is None:
+             positions = self.points
+ 
+-        use_torch = False
+-        # NeRF 'transform_matrix' is a camera-to-world transform
+-        c2w = nerf_cameras.camera_to_worlds[camera_indices]
+-        c2w = torch.cat([c2w, torch.Tensor([[0, 0, 0, 1]]).to(self.device)], dim=0).cpu().numpy() #.transpose(-1, -2)
+-        # change from OpenGL/Blender camera axes (Y up, Z back) to COLMAP (Y down, Z forward)
+-        c2w[:3, 1:3] *= -1
+-
+-        # get the world-to-camera transform and set R, T
+-        w2c = np.linalg.inv(c2w)
+-        R = np.transpose(w2c[:3,:3])  # R is stored transposed due to 'glm' in CUDA code
+-        T = w2c[:3, 3]
+-        
+-        world_view_transform = torch.Tensor(getWorld2View(
+-            R=R, t=T, tensor=use_torch)).transpose(0, 1).cuda()
+-        
+-        proj_transform = getProjectionMatrix(
+-            p3d_camera.znear.item(), 
+-            p3d_camera.zfar.item(), 
+-            self.fov_x, 
+-            self.fov_y).transpose(0, 1).cuda()
+-        # TODO: THE TWO FOLLOWING LINES ARE IMPORTANT! IT'S NOT HERE IN 3DGS CODE! Should make a PR when I have time
+-        proj_transform[..., 2, 0] = - p3d_camera.K[0, 0, 2]
+-        proj_transform[..., 2, 1] = - p3d_camera.K[0, 1, 2]
+-        
+-        full_proj_transform = (world_view_transform.unsqueeze(0).bmm(proj_transform.unsqueeze(0))).squeeze(0)
+-        
+-
+-        camera_center = p3d_camera.get_camera_center()
++        # Use the same supplied camera matrices as native 2DGS; principal points/focals vary per frame.
++        gs_camera=nerf_cameras.gs_cameras[int(camera_indices)]
++        world_view_transform=gs_camera.world_view_transform
++        full_proj_transform=gs_camera.full_proj_transform
++        camera_center=gs_camera.camera_center
+         if verbose:
+             print("p3d camera_center", camera_center)
+             print("ns camera_center", nerf_cameras.camera_to_worlds[camera_indices][..., 3])
+ 
+         raster_settings = GaussianRasterizationSettings(
+-            image_height=int(self.image_height),
+-            image_width=int(self.image_width),
+-            tanfovx=self.tanfovx,
+-            tanfovy=self.tanfovy,
++            image_height=int(gs_camera.image_height),
++            image_width=int(gs_camera.image_width),
++            tanfovx=gs_camera.image_width/(2*gs_camera.Fx),
++            tanfovy=gs_camera.image_height/(2*gs_camera.Fy),
+             bg=bg_color,
+             scale_modifier=1.,
+             viewmatrix=world_view_transform,

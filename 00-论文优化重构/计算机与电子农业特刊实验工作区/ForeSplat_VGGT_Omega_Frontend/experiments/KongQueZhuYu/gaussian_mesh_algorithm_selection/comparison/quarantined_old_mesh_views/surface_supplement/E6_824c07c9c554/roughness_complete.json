@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "seed": 0,
+  "query_stream": 1,
+  "support_stream": 0,
+  "surface_area": 8.759086931336778,
+  "vertices": 8413786,
+  "faces": 13590516,
+  "degenerate_faces": 194,
+  "diagonal": 0.8903337496969407,
+  "target_spacing": 0.0017389331048768373,
+  "effective_spacing": 0.006617811923640917,
+  "support_requested": 2896631,
+  "support_actual": 200000,
+  "support_capped": true,
+  "query_count": 3000,
+  "radius_divisors": [
+    64,
+    32
+  ],
+  "elapsed_seconds": 2.843188762664795,
+  "min_neighbors": 8,
+  "normal_angle_deg": 60,
+  "sampling": "Independent area-uniform barycentric surface points, not mesh vertices; count targets area/spacing^2, capped explicitly",
+  "plane": "Least-squares PCA plane over support neighbors excluding independent query; query distance and sqrt smallest covariance eigenvalue",
+  "interpretation": "Fixed spatial scale lowers tessellation bias. Includes real curvature, nearby sheets and noise; not true3D distance error. Same-normal filter excludes opposite sides/steep folds but may exclude valid fold detail.",
+  "comparability": "Radius/diagonal fixed; sampling density changes when capped; report actual spacing/valid fraction. Different mesh areas are not identical anatomical regions.",
+  "reference": "https://github.com/CloudCompare/CCCoreLib/blob/master/src/Neighbourhood.cpp"
+}

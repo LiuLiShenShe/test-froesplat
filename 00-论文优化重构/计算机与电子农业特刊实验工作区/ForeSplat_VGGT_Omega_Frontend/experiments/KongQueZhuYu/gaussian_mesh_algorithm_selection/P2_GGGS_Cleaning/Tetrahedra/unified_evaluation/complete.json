@@ -1,0 +1,73 @@
+{
+  "status": "complete",
+  "method": "P2_Tetra",
+  "views_per_stage": 208,
+  "stages": [
+    "raw",
+    "binary",
+    "post"
+  ],
+  "elapsed_seconds": 864.0686066150665,
+  "scale": {
+    "frontend": "standard",
+    "original_foreground_points": 7794589,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.24880186252295972,
+      -0.3970067222416401,
+      0.664764198064804
+    ],
+    "robust_bbox_max": [
+      0.23266781732439995,
+      0.20705938354134557,
+      1.10746643781662
+    ],
+    "diagonal": 0.8903337496969407,
+    "origin": [
+      -0.008067022599279883,
+      -0.09497366935014726,
+      0.886115317940712
+    ],
+    "sampling_voxel": 0.0008694665524384186,
+    "nksr_voxel": 0.0017389331048768373,
+    "tsdf_voxel": 0.0017389331048768373,
+    "tsdf_sdf_trunc": 0.008694665524384186,
+    "transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+    "max_original_foreground_camera_depth": 1.2553966045379639,
+    "tsdf_depth_trunc": 1.5692457556724548,
+    "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+  },
+  "hole_definition": "Enclosed connected foreground missing-projection components >=9pixels not touching3px RAP exterior boundary; GT holes excluded. Proxy, not a 3D physical hole-area certificate",
+  "roughness_definition": "mean1-cos adjacent face normal across manifold edges, includes real leaf curvature",
+  "camera_and_metrics": "same historical208 integer-centre raycast and boundary scores"
+}

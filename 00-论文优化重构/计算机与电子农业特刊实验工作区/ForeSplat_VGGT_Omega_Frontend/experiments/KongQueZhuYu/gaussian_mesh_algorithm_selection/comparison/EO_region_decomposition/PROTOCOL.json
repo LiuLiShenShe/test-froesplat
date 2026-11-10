@@ -1,0 +1,45 @@
+{
+  "status": "complete",
+  "actual_views": 208,
+  "conditions": [
+    [
+      "E10",
+      "raw"
+    ],
+    [
+      "P2",
+      "raw"
+    ],
+    [
+      "E12",
+      "corrected"
+    ],
+    [
+      "E12",
+      "raw"
+    ]
+  ],
+  "source_metrics": [
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/render_comparison/E10/per_view_metrics.csv",
+      "sha256": "a55c8a8703cbc121fc86e004d6880978933193d502d8e509f569b73324790939"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P2_GGGS_Cleaning/surface_inputs/per_view_metrics.csv",
+      "sha256": "bfc5d4292b1f6192194cf4e5021c4d6875f2c3589b91ddd1d9b574a46e0bcd7a"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E12_GGGS_EO/surface_inputs/per_view_metrics.csv",
+      "sha256": "9028562a9fbe512008fc2cc21ecb372888da9456134803e43356f7b5cf4911b2"
+    }
+  ],
+  "actual_mask_index": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_mesh_final_selection/surface_inputs/e10_gggs_surface/render_index.json",
+  "exposure_parameters": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E12_GGGS_EO/exposure_params/exposure_matrices.npz",
+  "exposure_sha256": "abc26ed3fa912952f4fac2e9ab065476f01a4da3b480feb1230be08fb3baf241",
+  "SSIM_definition": "Stored full-image SSIMwin7/samplecov score is the mean across RGB channels and3px-rim-excluded pixels; foreground map mean uses the same region. Background mean is derived from these scalars and actual mask counts.",
+  "MSE_definition": "Background MSE is derived from stored full/FG PSNR and actual full-resolution mask counts; floating-score rounding is retained. This does not recompute/render images.",
+  "delta_definition": "Per-view full SSIM delta is decomposed into changes of the foreground/background contributions; means of contributions are not unweighted region means.",
+  "limits": "This partitions existing photometric fit, not true geometric accuracy or a causal test of each exposure matrix component. EO affine mapping of an exactly black input is a mathematical parameter diagnostic, not actual measured background RGB.",
+  "native_models_and_rendered_arrays_unchanged": true,
+  "CPU_only": true
+}

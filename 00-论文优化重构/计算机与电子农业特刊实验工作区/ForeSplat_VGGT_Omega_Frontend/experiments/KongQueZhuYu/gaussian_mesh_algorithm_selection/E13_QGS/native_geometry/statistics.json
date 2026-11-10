@@ -1,0 +1,204 @@
+{
+  "status": "complete",
+  "primitive_count": 532735,
+  "source_native_ply": "/home/test/foresplat_model_files/KongQueZhuYu/E13_QGS/Mip/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "coordinate_system": "standard VGGT original world gauge",
+  "diagnosis": "native quadratic parameters; not ordinary3DGS Gaussian covariance/thickness",
+  "decoder": "s=exp(scale0..2)*tanh(scale3..5), computed in float64 for diagnostic export",
+  "rotation": "quaternion stores native raw WXYZ; quaternion_unit matches official normalized get_rotation",
+  "native_equation": "sign(sx)*x\u00b2/sx\u00b2 + sign(sy)*y\u00b2/sy\u00b2 \u2212 z/sz =0 in primitive local frame",
+  "curvature": "z=a*x\u00b2+b*y\u00b2; a=sz*sign(sx)/sx\u00b2,b=sz*sign(sy)/sy\u00b2; origin principal curvatures2a/2b, K4ab,H=a+b",
+  "units": "a,b,H inverse predicted gauge unit; K inverse predicted gauge unit\u00b2; not calibrated metric distances",
+  "shape_labels": "local positive-Z convention; sign/rotation changes must be considered before interpreting plant surface orientation",
+  "native_nonfinite_primitives": 3456,
+  "native_nonfinite_fraction": 0.006487277914910791,
+  "native_zero_signed_scale_primitives": 0,
+  "invalid_native_parameters_retained_unchanged": true,
+  "native_shape_counts": {
+    "saddle": 1478,
+    "convex": 468854,
+    "concave": 58947,
+    "undefined": 3456
+  },
+  "statistics": {
+    "tangential_anisotropy": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        1.0000076305483632,
+        1.0278030565732559,
+        1.3092792117201941,
+        3.197584083926864,
+        11.148179857906364,
+        71.54441999577621,
+        52194983.785234295
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "abs_sx": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        2.1465267152920923e-09,
+        9.416399769551167e-06,
+        6.425421348634668e-05,
+        0.0007130905982055506,
+        0.0056922385134215055,
+        0.034588018043141516,
+        41.8978483098389
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "abs_sy": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        2.568832276336294e-10,
+        4.810293167051221e-06,
+        1.725825222445015e-05,
+        0.0005172016811208767,
+        0.0047109651663795596,
+        0.027329657101356177,
+        53.143762382965406
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "abs_sz_curvature_scale": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        1.2320912858476372e-13,
+        2.885145083986506e-10,
+        1.0153252064888075e-09,
+        2.393673188614927e-08,
+        0.00035952265040963016,
+        0.002993098878965305,
+        109.41833589328448
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "curvature_a": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        -78991785211313.89,
+        -729.6780465473313,
+        -0.05931305186449215,
+        0.07353993173139774,
+        35.647677627338695,
+        5243.8501082109515,
+        720629652331492.0
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "curvature_b": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        -293115558772896.1,
+        -698.494351574073,
+        -0.05273917497474869,
+        0.3464061723854805,
+        41.18730062163623,
+        6472.926003942502,
+        402609418670559.94
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "mean_curvature_origin": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        -293115558773431.6,
+        -1942.6160666524902,
+        -0.17273069583058748,
+        0.7623828987281382,
+        128.86128707523665,
+        24138.746991998745,
+        720629652332002.9
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    },
+    "Gaussian_curvature_origin": {
+      "quantile_levels": [
+        0,
+        0.01,
+        0.1,
+        0.5,
+        0.9,
+        0.99,
+        1
+      ],
+      "values": [
+        -6.365043554578372e+17,
+        1.9592477822175923e-06,
+        0.0003225083173271553,
+        0.4574026949615729,
+        41104.10425946919,
+        144832313.93429664,
+        1.472572940300411e+18
+      ],
+      "finite_count": 532733,
+      "nonfinite_count": 2
+    }
+  },
+  "parameter_archive": "/data/fj/F2DMAS/00-\u8bba\u6587\u4f18\u5316\u91cd\u6784/\u8ba1\u7b97\u673a\u4e0e\u7535\u5b50\u519c\u4e1a\u7279\u520a\u5b9e\u9a8c\u5de5\u4f5c\u533a/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/native_geometry/quadratic_primitive_parameters.npz",
+  "interpretation": "Center projection alone does not establish per-pixel primitive visibility; spatial highlight comparisons should use actual rendered depth/normal/alpha support",
+  "official_source": "https://github.com/will-zzy/QGS/blob/74d05c945e99fcaef7afe5a8831903be71ad9b55/submodules/diff-quadratic-rasterization/cuda_rasterizer/forward.cu"
+}

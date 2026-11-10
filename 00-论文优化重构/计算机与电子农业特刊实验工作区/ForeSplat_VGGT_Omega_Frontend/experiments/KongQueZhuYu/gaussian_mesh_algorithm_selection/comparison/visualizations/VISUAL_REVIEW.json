@@ -1,0 +1,497 @@
+{
+  "status": "active_finite_review",
+  "direct_model_vision": true,
+  "external_vision_API_used": false,
+  "reviewed": [
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P1_GGGS_Tetrahedra/unified_evaluation/visualizations/raw_0000/gray.png",
+      "scope": "onlyP1raw source0 currently",
+      "observations": [
+        "dense granular leaf surface normals",
+        "large faceted geometry outside plant and around pot",
+        "does not establish performance ofbinary/postorothermethods"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/E10_P2_shared_freeview_contact.png",
+      "scope": "same exact free_0000_+15 native gray-background RGB E10/P2",
+      "observations": [
+        "large upper background black cloud substantially reduced by cleaning",
+        "residual dark splats near leaves",
+        "starburst splats around foreground marker card remain; not all spikes eliminated"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0000_leaf_tip_edge_RGB.png",
+      "scope": "source0 same GT-only leafedge192px ROI with GT/E10/P2/E11, direct model vision",
+      "observations": [
+        "E10/P2 leaf boundary and texture visually very similar",
+        "E11 edge has different local colour/definition",
+        "singleROI cannot establish all-leaf texture or Mesh geometry ranking"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/mesh_0_53_gray.png",
+      "scope": "P1 post / P2 TSDF post / E12 TSDF post at sources0/53, direct model vision, overview only",
+      "observations": [
+        "P1 still contains large faceted exterior mesh around and below pot after binary search and component postprocessing",
+        "P2 and E12 TSDF exhibit fine-scale surface relief; E12 is not certified smooth or free of leaf holes",
+        "At source53 P1 shows separated upper leaf patches and substantial exterior triangles"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/source_0000_RGB.png",
+      "scope": "GT E10 P2 E11 E12 raw/corrected at source0, direct model vision",
+      "observations": [
+        "E12 raw is strongly darker than its corrected render",
+        "P2 retains essentially the same plant colors and leaf arrangement as E10",
+        "E12 corrected restores comparable appearance; this image alone does not establish geometry"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/source_0053_leaf_texture_RGB.png",
+      "scope": "same historical GT-only source53 texture crop, direct model vision",
+      "observations": [
+        "E11 has a large black wedge and thin horizontal strip in this actual native Gaussian render",
+        "E10 P2 and E12 preserve recognizable leaf/pot intersection; all lose some GT fine veins",
+        "E12 corrected appears brighter than raw and remains visibly smoother in texture than GT"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/E10_P2_E12_free.png",
+      "scope": "same free_0000_+15 gray background native RGB, direct model vision",
+      "observations": [
+        "Cleaning removes the large upper E10 black cloud, while residual black areas along leaves remain",
+        "Starburst splats around foreground marker remain after P2 cleaning",
+        "E12 raw has a much larger dark background region than E10/P2 in this actual free view; EO does not remove black cloud artifacts"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/M4_P3shared_E12_source_0000.png",
+      "scope": "Same corrected source0 native gray+camera normals M4, P3 shared depth range, E12 TSDF; direct model vision",
+      "observations": [
+        "P3 shows smoother pot and larger leaf regions in identical geometry-only shading; M4 and E12 retain fine corrugation in pot and crowded central leaves",
+        "P3 retains conspicuous detached fragments around the upper/right silhouette in these views; lower aggregate background ratio does not mean every floater disappears",
+        "All three retain uneven crowded leaf intersections; these views cannot certify absence of inter-leaf adhesion or physical holes",
+        "P3 better full-plant overlap may partly reflect pot reconstruction; leaf-region proxy evaluation is saved separately rather than inferring a leaf winner from the pot"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/compact_continuation/M4_P3shared_E12_source_0053.png",
+      "scope": "Same corrected source53 native gray+camera normals M4, P3 shared depth range, E12 TSDF; direct model vision",
+      "observations": [
+        "P3 shows smoother pot and larger leaf regions in identical geometry-only shading; M4 and E12 retain fine corrugation in pot and crowded central leaves",
+        "P3 retains conspicuous detached fragments around the upper/right silhouette in these views; lower aggregate background ratio does not mean every floater disappears",
+        "All three retain uneven crowded leaf intersections; these views cannot certify absence of inter-leaf adhesion or physical holes",
+        "P3 better full-plant overlap may partly reflect pot reconstruction; leaf-region proxy evaluation is saved separately rather than inferring a leaf winner from the pot"
+      ]
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/P4_stage_visuals/0053_leaf_texture.png",
+      "scope": "Direct native model vision, source53 historicalGT-only leaf_texture320px ROI; E11 nativeRGB/world-normal converted to camera/depth and samepixel P4 Expected/Median raw/post gray/normal/vertexcolor",
+      "observations": [
+        "Large dark wedge and thin dark strip already occur in native E11 RGB across GT leaf texture; corresponding source depth is finite and continuous and normal display has a large uniform patch.",
+        "P4 gray surfaces display fine fragmented ridges and facets in Expected and Median; Median has visibly more small facets in this selected window.",
+        "Raw/post images nearly identical here; dark vertex coloring persists and is not itself proof of missing geometry.",
+        "Same-pixel measured26929 darkFG pixels have medianalpha0.9998555, all4 meshes cover99.9703%; this local black wedge is primarily incorrect colored/occluding surface rather than a TSDF hole; separate whole208 missing-surface proxies still exist.",
+        "One ROI does not certify physical3D geometry or prove unique upstream cause."
+      ],
+      "numeric_audit": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/P4_local_failure/complete.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/highlight_correspondence/query_016225_all_native_maps.png",
+      "scope": "Fixed RGB brightness query16225 source139/target144; E10/E11/E12raw+corrected native maps",
+      "observations": [
+        "Both original RGB windows show variegated leaf texture around the image-only red match.",
+        "E12 corrected RGB is brighter than its raw image; the two versions share the same native alpha/depth/normal maps.",
+        "E11 and E12 alpha appear saturated across the patch, including the local exterior beyond the curved leaf silhouette.",
+        "The common broad depth display has little visible local variation, so it is insufficient to conclude equal geometry; a shared-scale local depth detail supplement is being generated.",
+        "The two RGB texture neighborhoods differ; this brightness query cannot by itself certify a specular reflection or exclude image matching error."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T08:58:37.312057+00:00"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/leaf_surface_continuation/source_0131_gray_color_leaf_edge.png",
+      "scope": "Direct current model vision; frozen source131/157 native192px leaf-edge windows, same cameras/scale and native Mesh files",
+      "observations": [
+        "M4 and P2 gray relief is very similar in this frozen192px window.",
+        "P3 shared shows broader smoother relief; E12 retains pronounced ridges.",
+        "Original02-FFT background and masked03-SAM training RGB are displayed separately; texture color does not prove the gray ridges are correct veins."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T10:35:13.613573+00:00"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/leaf_surface_continuation/source_0157_gray_color_leaf_edge.png",
+      "scope": "Direct current model vision; frozen source131/157 native192px leaf-edge windows, same cameras/scale and native Mesh files",
+      "observations": [
+        "P3 shared has visibly detached geometry above the leaf tip, while its principal leaf surface is smoother than M4/P2 in this selected window.",
+        "M4/P2 show very similar corrugation; E12 retains local corrugation.",
+        "The visible detached fragments have real native triangle/component and world-coordinate records; this local observation is not an unbiased all-view frequency."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T10:35:13.613642+00:00"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/same_ray_layers/source_0000_query_1_actual_layers.png",
+      "scope": "Direct current model vision; same frozen RGB source ray, exact native Mesh intersection arrays and signed world face normals. Main Mesh metrics remain208-view; supplementary69 source cameras.",
+      "observations": [
+        "Direct original RGB crop shows a striped curved leaf near its tip; SAM training RGB removes the surrounding background.",
+        "M4 and P2 TSDF display a front/back pair farther apart than the nearby alternating P1 and P2 Tetrahedra intersections in this selected ray.",
+        "E12 Tetrahedra first visible pair is farther behind the M4 first hit in the displayed ray. This is inter-method disagreement, not scan error.",
+        "The image does not certify that alternating surfaces are erroneous doubles; leaf curl and occlusion remain possible."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:34:31.574873+00:00",
+      "numeric_audit": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/same_ray_mesh_layers/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/same_ray_layers/source_0079_query_5133_actual_layers.png",
+      "scope": "Direct current model vision; same frozen RGB source ray, exact native Mesh intersection arrays and signed world face normals. Main Mesh metrics remain208-view; supplementary69 source cameras.",
+      "observations": [
+        "Direct original RGB crop shows the marked point on a variegated leaf close to its silhouette; original background and SAM black exterior are separate.",
+        "P1 and P2 Tetrahedra show additional alternating close intersections before a more distant backside, whereas M4 and P2 TSDF show a more widely separated pair.",
+        "P3 shared and E12 TSDF show a broadly similar front/back arrangement here. This single purpose-selected ray does not certify all-leaf thickness or an algorithm winner."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:34:31.574987+00:00",
+      "numeric_audit": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/same_ray_mesh_layers/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/same_ray_layers/source_0157_query_18041_actual_layers.png",
+      "scope": "Direct current model vision; same frozen RGB source ray, exact native Mesh intersection arrays and signed world face normals. Main Mesh metrics remain208-view; supplementary69 source cameras.",
+      "observations": [
+        "Direct original RGB crop includes overlapping striped leaves; occlusion can produce several genuine intersections along one ray.",
+        "M4 and P2 TSDF have multiple farther alternating intersections, while P1 and P2 Tetrahedra add close intersections near the front.",
+        "P3 shared has fewer displayed layers, but the ray context cannot establish whether it correctly reconstructs or omits occluded leaves.",
+        "Examples are purpose-selected from fixed queries and are not an unbiased frequency sample."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:34:31.575067+00:00",
+      "numeric_audit": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/same_ray_mesh_layers/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/source_0026_leaf_edge_gray_normal.png",
+      "scope": "Direct current model vision; actual fixed leaf-edge gray and camera-normal windows for six available post routes. Source images, Mesh paths and exact ROI retained. Not an E13/E14 terminal comparison.",
+      "observations": [
+        "M4 and P2 TSDF relief and camera-normal structure remain very similar in this fixed leaf-edge window.",
+        "P3 shared has broader smoother local relief and a small detached fragment in the adjacent gap.",
+        "E12 retains a pronounced local ridge; P1 shows dense fine surface granularity and P4 shows coarse facets plus exterior fragmented geometry.",
+        "Gray relief does not certify physical veins or erroneous reflection pits; this view is one fixed ROI."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:59:52.066630+00:00",
+      "source_protocol": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/source_0079_leaf_edge_gray_normal.png",
+      "scope": "Direct current model vision; actual fixed leaf-edge gray and camera-normal windows for six available post routes. Source images, Mesh paths and exact ROI retained. Not an E13/E14 terminal comparison.",
+      "observations": [
+        "M4 and P2 TSDF share horizontal missing strips on the rear surface in this gray window; P3 shared and E12 show different coverage there.",
+        "P3 shared still has small detached fragments in the gap. Coverage changes can include occlusion or unwanted bridging and require the corresponding RGB and ray evidence.",
+        "P1 remains granular; P4 is visibly faceted. Single-window continuity does not establish correct inter-leaf topology."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:59:52.066749+00:00",
+      "source_protocol": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/source_0105_leaf_edge_gray_normal.png",
+      "scope": "Direct current model vision; actual fixed leaf-edge gray and camera-normal windows for six available post routes. Source images, Mesh paths and exact ROI retained. Not an E13/E14 terminal comparison.",
+      "observations": [
+        "M4 and P2 TSDF show closely matching broad leaf relief and nearby detached fragments.",
+        "P3 shared keeps several small detached pieces outside the main visible contour in this ROI, despite its lower aggregate background projection ratio.",
+        "E12 shows fewer isolated fragments in this selected window but retains broad surface corrugation; this is not a claim that EO removes the overall Gaussian cloud.",
+        "P1 shows fine pockmarked relief and P4 has large flat facets beside noisy surface and detached fragments."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:59:52.066840+00:00",
+      "source_protocol": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/PROTOCOL.json"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/source_0183_leaf_edge_gray_normal.png",
+      "scope": "Direct current model vision; actual fixed leaf-edge gray and camera-normal windows for six available post routes. Source images, Mesh paths and exact ROI retained. Not an E13/E14 terminal comparison.",
+      "observations": [
+        "M4 and P2 TSDF gray relief remains very similar; P3 shared has a comparatively cleaner principal contour in this particular crop.",
+        "E12 shows a different pronounced lower fold-like depression and protruding/jagged boundary in this gray window; its higher PSNR does not prove uniformly improved leaf geometry.",
+        "P1 retains dense fine relief and P4 large facets with fragmented projected edge.",
+        "No same-plant scan or independently annotated leaf anatomy is available to classify the apparent fold as correct or erroneous."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T12:59:52.066921+00:00",
+      "source_protocol": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/fixed_view_continuation/PROTOCOL.json"
+    },
+    {
+      "path": "/home/test/foresplat_model_files/KongQueZhuYu/E13_QGS/Mip/checkpoints/grad_threshold=1.0_lambda_dist=10.0/rgb/7250_rgb.jpg",
+      "scope": "Direct current model vision of the official iteration7250 sampled training JPEG. Its random source camera is not recorded in the JPEG filename; no fixed208 comparison or final30K claim.",
+      "observations": [
+        "Actual rendered variegated leaf patterns and broad curled leaf shapes are recognizable, while some boundary fringes and crowded central textures remain blurred.",
+        "The image uses a black background; it cannot reveal whether black Gaussian cloud geometry is absent. Alpha, native depth and fixed/free-view terminal comparisons remain required.",
+        "This is a passive official training image and no additional GPU render was launched during formal training."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T13:06:32.033674+00:00",
+      "source": "Pinned native train.py50-step imageio output; RGB clipped0..1 before JPEG, not a Mesh view."
+    },
+    {
+      "paths": [
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/paired_view_changes/gaussian_paired_view_ECDF.png",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/paired_view_changes/mesh_paired_view_ECDF.png"
+      ],
+      "scope": "Direct model vision of the actual current matched208-view metric ECDF plots; currently available Gaussian/Mesh groups only. Future terminal QGS/E14 updates require another review.",
+      "observations": [
+        "Axes and legends are legible; zero-difference reference, source208 scope, candidate-minus-baseline direction, metric units and single-plant/seed limitation are visible.",
+        "E12 corrected foreground PSNR is positive for almost every paired view, while full-image LPIPS changes are mostly positive (worse). The two panels do not jointly establish a best photo or geometry method.",
+        "P2 TSDF changes cluster near zero. P3 shared and E12 TSDF generally improve silhouette IoU with visible negative tails; projected missing-area changes have both signs.",
+        "The P4 lower missing-area proxy coexists with substantially worse IoU; the right panel alone must not select a surface or classify anatomical holes."
+      ],
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "reviewed_UTC": "2026-11-09T13:48:37.788444+00:00",
+      "reviewed_file_SHA256": {
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/paired_view_changes/gaussian_paired_view_ECDF.png": "4fd256e84d79ebe970c35a032aa206502382a64fe3ab8af7339240cabf2b49b9",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/paired_view_changes/mesh_paired_view_ECDF.png": "043d0b22170a4a047e90b05a0cfa9bdeea1a9882070f48bd89e83bfe46bbe1f7"
+      },
+      "source": "Actual paired-view CSVs and Matplotlib; raster previews plus standalone vector PDFs, no generated plant imagery"
+    },
+    {
+      "review_utc": "2026-11-10T01:39:06.476212+00:00",
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "paths": [
+        "comparison/visualizations/compact_continuation/E10_P2_E12_free.png",
+        "comparison/visualizations/compact_continuation/M4_P3shared_E12_source_0053.png",
+        "comparison/visualizations/compact_continuation/source_0053_leaf_texture_RGB.png"
+      ],
+      "scope": "three existing compact panels directly inspected, not all208 full images",
+      "observations": [
+        "P2 upper cloud reduced; residual leaflet black masses and marker radial splats remain",
+        "E12 raw free view retains extensive dark peripheral geometry",
+        "source53 gray P3 shared has smoother pot/large leaf regions and detached fragments; crowded center remains rough",
+        "source53 E11 actual native texture shows black wedge while E10/P2/E12 retain recognizable leaf/pot intersection"
+      ]
+    },
+    {
+      "review_utc": "2026-11-10T02:25:12.604099+00:00",
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "paths": [
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0053_RGB.png",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0053_Alpha.png",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0105_leaf_texture_RGB.png"
+      ],
+      "scope": "Three actually viewed panels reduced to <=1800 pixels wide. E13 native30K and E14 native2D30K included; E14 refinement not yet available. Overview and specific crop, not all208 individual images.",
+      "observations": [
+        "Source53 E13 preserves broad plant layout but pot and central texture remain uneven; nearly white Alpha covers background.",
+        "Source53 E14 native2D30K exhibits large dark oblique occluding region and stretched plant patch; Alpha remains nearly white.",
+        "Source105 fixed leaf texture has recognizable stripes for E10/P2/E11/E12-corrected/E13, with fine GT veins blurred; E14 native2D30K is softer and distorted.",
+        "Black-background RGB alone cannot establish absence of geometry artifacts or hole-free Mesh."
+      ],
+      "reviewed_file_SHA256": {
+        "comparison/visualizations/gaussian/source_0053_RGB.png": "4fd9126d03c5085dbefdf3e39020a91355b7022e4a7b8248bb04ff9c095561b7",
+        "comparison/visualizations/gaussian/source_0053_Alpha.png": "6d3da1785c2ed0afb49b8acec0a45c371ddc2733f6fa1b5f06d2236d2e9d4696",
+        "comparison/visualizations/gaussian/source_0105_leaf_texture_RGB.png": "c6b0569da466cdeab874089054dbb8873c2347aba2441dd35765369fd9983ef2"
+      }
+    },
+    {
+      "review_utc": "2026-11-10T02:29:48.041045+00:00",
+      "direct_model_vision": true,
+      "external_vision_API_used": false,
+      "paths": [
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/QGS_M4_P3_E12_leaf_edge_0053.png",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/QGS_M4_P3_E12_leaf_edge_0131.png"
+      ],
+      "scope": "Actual post Mesh gray leaf-edge crops at identical native image windows for source53/131. M4/P3_shared/E12_TSDF versus native E13_QGS post50. Images combine existing raycast shade files; E14 not included yet.",
+      "observations": [
+        "QGS source53/131 leaf surfaces contain dense irregular facets and protruding fragments in these crops, with stronger surface relief than M4/P3_shared/E12_TSDF.",
+        "P3_shared principal leaf patch appears smoother in these two crops, with detached small fragments around the source53 edge.",
+        "M4 and E12 retain fine ribbed relief; no crop proves physical thickness, anatomical holes or scan-distance accuracy."
+      ],
+      "reviewed_file_SHA256": {
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/QGS_M4_P3_E12_leaf_edge_0053.png": "09f9d3302b6a2500cf190ed4d8d5a76fe0352cbbf227db8daa03de6477ef13f4",
+        "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/QGS_M4_P3_E12_leaf_edge_0131.png": "ac0417908d6bf4a6492883c365fad972ba8b7135285e0475adfdedc8ca95ca1b"
+      }
+    }
+  ],
+  "continuation_direct_reviews": [
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0053_RGB.png",
+      "sha256": "c60cdd31846f0b30315b0e11b40fabc3950e1a25535b3206dd2fe487ed33382b",
+      "mode": "Direct model vision from actual local PNG",
+      "findings": "Direct model vision: E14 native30K has a large oblique occlusion and stretched subject. Refined15K removes the long diagonal streak in this view, but retains a badly distorted upper plant/leaf region and missing true subject layout; it does not recover E10/P2/E12/E13 plant structure. E11 also has an upper black wedge. No whole208 visual claim.",
+      "reviewed_unix": 1794280404.8512197
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0105_leaf_texture_RGB.png",
+      "sha256": "89e62806591a8a2836e76948673d075a176528bfb4d8d80f38df553c92087b55",
+      "mode": "Direct model vision from actual local PNG",
+      "findings": "Direct model vision: actual15K E14 refinement restores finer local variation compared with native30K prior-driven2DGS, but its local geometry/texture structure remains displaced and fine veins are softer than actual GT. E10/P2 and correctedE12 preserve the main stripe layout; no unique prior causal attribution.",
+      "reviewed_unix": 1794280404.8571086
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0000_gray_normal.png",
+      "sha256": "ba5322c3777d76a48683ddc84d9186a734f53042599e62b50b4460864978fb27",
+      "source_id": 0,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "The curved underside/edge remains recognizable in M4/P3/E12; P3 is smoother on the major patch. QGS has noisy fragments. E14 initial/refined show large facets/sheets in place of the leaf gap.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.5545025
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0026_gray_normal.png",
+      "sha256": "1ca241b7b649413c1900ab24e574d05f7f138fe67010791488b8b7769e0b6fec",
+      "source_id": 26,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "The folded/rolled boundary is recognizable in M4/P3/E12. P3 has smoother major normals with detached fragments; E12 shows a small open-looking tip gap. QGS is rough. E14 replaces the local structure by broad sheets.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.558247
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0053_gray_normal.png",
+      "sha256": "d72e3cffbab9d601b2569e3d67e3d2c0172bbcbe974e83393884ebc2b8333ed3",
+      "source_id": 53,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "P3 major leaf surface is smoother than M4/E12 and QGS; detached fragments remain. QGS has high frequency facets and spikes. E14 refinement smooths the wrong large surface rather than restoring this leaf outline.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.5632257
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0079_gray_normal.png",
+      "sha256": "360f08ed23c2d4e245e4147c0f887d847ab0423ec740ad955cd018b67e2259cc",
+      "source_id": 79,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "M4 has ladder-like small missing bands on the upper patch; P3/E12 make it more continuous. QGS has irregular intersecting fragments. E14 retains a displaced broad crossing surface after refinement.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.5682514
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0105_gray_normal.png",
+      "sha256": "9ef9a6b50219cf4ec9c9ec1bee67c51bf698899e203a4f236b973666b7c47660",
+      "source_id": 105,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "The main boundary is comparable in M4/P3/E12 and P3 is smoother; QGS has jagged facets. E14 has a more recognizable leaf patch here than view53 but retains serrated fragments and irregular normals.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.5713103
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0131_gray_normal.png",
+      "sha256": "6e861184b59c0de984d6ad9812e02e15d73b2d580b70d4fb2dd0157da25a504e",
+      "source_id": 131,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "P3 major patch is smoother than M4/E12 with a rounded boundary; QGS is faceted and rough. E14 initial/refined structure and normals are displaced from the common leaf outline.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.6186724
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0157_gray_normal.png",
+      "sha256": "e868c0e5d3800161d34625bc26e8c8abec679d22a43a366f1a56f8c2b818b0fc",
+      "source_id": 157,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "P3 has a detached ring-like fragment above the leaf and a rounder tip; E12/M4 retain a sharper tip in this window. QGS is irregular; E14 has displaced crossing sheets. P3 is not free of floaters or universally best at tips.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.68264
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0183_gray_normal.png",
+      "sha256": "043348f8f49dd0fbfc605cfe6f69927a6a1e27cca431450b81e3eeda90fae087",
+      "source_id": 183,
+      "mode": "Direct model vision of actual native-camera gray and normal image panel",
+      "findings": "P3 has a smoother major patch and fewer peripheral jagged faces than QGS; E12 retains fine corrugation/serrated edge. E14 has pronounced shifted crease/sheet boundaries despite refinement smoothing.",
+      "scope": "Only the displayed shared GT-selected leaf-edge window, not all208 or scan accuracy",
+      "reviewed_unix": 1794281910.7347698
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/whole_0053_gray.png",
+      "sha256": "55f3ee45b5cde0259bfef47e4a6173b757666b8f49fa00edb0879b5706a68332",
+      "source_id": 53,
+      "mode": "Direct model vision of actual full gray Mesh panel",
+      "findings": "M4/P3/E12 retain the plant/pot layout. QGS retains layout with much rougher surfaces and floating geometry. E14 initial/refined include enormous displaced plane-like surfaces across the image; refinement smooths them without recovering the correct subject shape.",
+      "reviewed_unix": 1794281910.7386928
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/free/free_0053_p15_RGB_Alpha.png",
+      "sha256": "def7bc0ea639eaa56ed446eeb3c145e9c766293368700a127f3bebf0887948d7",
+      "mode": "Direct model vision of actual shared free camera RGB/Alpha",
+      "findings": "At shared source53+15deg, E10 and P2 retain subject layout but large opaque black cloud remains above the leaves and sharp streaks remain around the blue marker. P2 exposes a small gray background patch where some cloud was removed. E12 raw retains layout with darker subject and broad dark background absorption. Native QGS RGB is almost entirely black here while Alpha is nearly white. E14 native is largely occluded/stretched; refinement retains distorted subject/cloud and sharp planar streaks. Exact camera view only; no unseen-camera photo GT or causal attribution to a single primitive.",
+      "reviewed_unix": 1794282330.5450058
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0053_Depth.png",
+      "sha256": "d0ee041a911bb24ff434b8af9cc7cdb08a08035d39ee8ad962c30bd22e987988",
+      "mode": "Direct model vision of actual native/explicit AUX channels",
+      "findings": "Actual source53 depth display: E10/P2 preserve similar subject depth but broad background surfaces remain. E11 has a broad foreground-occluding near plane. E12 raw/corrected depth is identical by construction, with a broad far-range background surface. QGS subject depth is fragmented with wide background depth. E14 native/refined have large displaced structures. Refined channel is auxiliary alpha-normalized center-Z, not native2D surface depth or real physical thickness.",
+      "reviewed_unix": 1794283731.5340698,
+      "display_label_update": "Subsequent panel regeneration labels refined AUX explicitly; underlying arrays unchanged"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/gaussian/source_0053_Normal_camera.png",
+      "sha256": "7f7098a70d5772a5cbc42ba1f288ba8bbbd8a44b024f6b3eceea224e4bb7ecf6",
+      "mode": "Direct model vision of actual native/explicit AUX channels",
+      "findings": "Actual source53 camera-space normals: E10/P2 nearly identical; E12 raw/corrected identical by construction. E11 and E14 show large plane-like normal regions around/over subject. QGS has sharp normal variations around background and subject. Refined is smallest-axis auxiliary normal, not mesh triangle surface normal. No scan angular-error claim.",
+      "reviewed_unix": 1794283731.5364153,
+      "display_label_update": "Subsequent panel regeneration labels refined AUX explicitly; underlying arrays unchanged"
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/free/free_0053_p15_RGB_Alpha.png",
+      "sha256": "9617e247ac926dc64a087dea8b18cbc6f2b2d2168908bee09948630d9eeef0dd",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Actual seven-method native free render: E11 loses top leaf behind dark opaque surface; E10/P2 cloud and marker streak remain, E12 raw dark, QGS near-black here, E14 mislocated sheets. Same .25 background and exact camera. No unseen GT."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/free/free_0157_m15_RGB_Alpha.png",
+      "sha256": "14aa00aadf92ad585725a05a6660f0b5bce15bb5dc5bb0412fd65d6bfb317fcc",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "QGS and E11 retain recognizable leaf layout in this free view despite near-white background Alpha. This prevents generalizing source53 QGS black frame to all novel views. E14 native top leaves visible but lower broad blurred sheet; refined streaks and background cloud persist."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/mesh/E14_a446e4dbd3c5/fixed_0053/textured.png",
+      "sha256": "199c8e00b5ad4e02ed577f7410a6737514780e43e6bead9683723fbf0dd57fae",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Actual UV OBJ texture on severely oblique broad overlapping reconstructed sheets. Texture does not restore correct plant geometry; full image visible."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/mesh/E14_a446e4dbd3c5/fixed_0053/wireframe.png",
+      "sha256": "ae9dd7726f9951fe844dce3b988cde2d69ec4098f7dc04b3656ae6eafa5a0b51",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Actual triangle wire confirms enormous slanted connected surfaces and gaps; no texture-based claim of smooth valid leaf geometry."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0053_gray_normal.png",
+      "sha256": "0377ba6bb191f018ae5da8d9ee9c982d16d4a07183f1cf77333207a15e84cbb6",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Seven routes include actual QGS official top10. Official removes some disconnected outliers, while main leaf gray corrugation and camera-normal fragmentation remain essentially same as common post. P3 principal leaf smoother; E14 wrong broad sheet."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/leaf_edge_0157_gray_normal.png",
+      "sha256": "43e011f0f3165c83c822ac5894f5607d02c974eb5a2e2ee364facfb8675af10c",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Actual top10 removes QGS upper floating outliers but retains corrugated main tip. P3 detached ring and round tip; M4/E12 sharper. E14 large surfaces crossed/mislocated."
+    },
+    {
+      "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/visualizations/scientific_review/QGS_official_top10_all8_direct_review.png",
+      "sha256": "306665708f32087e97f74f7f6d639f4b1dba6301d971d072eaf6ec3144ab16a9",
+      "direct_current_model_vision": true,
+      "external_vision_API_used": false,
+      "observations": "Directly viewed all8 exact fixed ROI crops for official top10 QGS: folded source26 relatively continuous; sources0/53/79/105/131/157/183 fragmented normals and faceted gray leaf surfaces persist. Combined with actual208 official metrics, not ranking QGS from common post alone."
+    }
+  ],
+  "version_scope": "SHA256 is the image version actually reviewed. Earlier six-route composite or old AUX labels may differ after adding the official QGS column/explicit labels; unchanged underlying model/source image pixels retain the earlier observations. Current seven-route QGS comparisons and auxiliary definitions have separate explicit review entries."
+}

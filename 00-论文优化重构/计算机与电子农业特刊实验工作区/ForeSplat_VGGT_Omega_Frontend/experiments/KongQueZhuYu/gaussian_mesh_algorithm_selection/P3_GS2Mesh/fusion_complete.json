@@ -1,0 +1,91 @@
+{
+  "status": "complete",
+  "source_experiment": "E10",
+  "algorithm": "Official GS2Mesh DLNR stereo -> native ScalableTSDF",
+  "wall_seconds": 22.674788236618042,
+  "parameters": {
+    "TSDF_valid": null,
+    "TSDF_skip": null,
+    "TSDF_voxel": 0.8903337496969407,
+    "TSDF_sdf_trunc": 0.008694665524384186,
+    "TSDF_dilate": 1,
+    "TSDF_use_mask": true,
+    "TSDF_invert_mask": false,
+    "TSDF_erode_mask": false,
+    "TSDF_use_occlusion_mask": true,
+    "TSDF_min_depth_baselines": 4,
+    "TSDF_max_depth_baselines": 20,
+    "TSDF_scale": 1.0,
+    "TSDF_cleaning_threshold": 50
+  },
+  "scale": {
+    "frontend": "standard",
+    "original_foreground_points": 7794589,
+    "extent_quantiles": [
+      0.005,
+      0.995
+    ],
+    "robust_bbox_min": [
+      -0.24880186252295972,
+      -0.3970067222416401,
+      0.664764198064804
+    ],
+    "robust_bbox_max": [
+      0.23266781732439995,
+      0.20705938354134557,
+      1.10746643781662
+    ],
+    "diagonal": 0.8903337496969407,
+    "origin": [
+      -0.008067022599279883,
+      -0.09497366935014726,
+      0.886115317940712
+    ],
+    "sampling_voxel": 0.0008694665524384186,
+    "nksr_voxel": 0.0017389331048768373,
+    "tsdf_voxel": 0.0017389331048768373,
+    "tsdf_sdf_trunc": 0.008694665524384186,
+    "transform": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "scale_fit_to_scan": false,
+    "note": "Same reference scale is reused by direct, GGGS and 2DGS inputs of this frontend, including TSDF; no surface-dependent retuning",
+    "max_original_foreground_camera_depth": 1.2553966045379639,
+    "tsdf_depth_trunc": 1.5692457556724548,
+    "extent_sample": "deterministic stride approximately 4000 observations per frame; no clipping"
+  },
+  "views": 208,
+  "depth_trunc": 0.7555287380009728,
+  "mask": "Existing RAP without erosion; native stereo consistency mask",
+  "official_commit": "560f3e8a2349aaad24fe9444ef1ca2770aeec5ab",
+  "coordinate_system": "Unchanged E10 standard VGGT world gauge",
+  "raw_vertices": 522597,
+  "raw_faces": 937251,
+  "post_vertices": 478560,
+  "post_faces": 898522,
+  "raw_components": 8023,
+  "post_components": 158
+}

@@ -1,0 +1,66 @@
+{
+  "status": "complete",
+  "source_id": 157,
+  "bounds_native": [
+    836,
+    299,
+    1028,
+    491
+  ],
+  "candidate_extra_pixels": 1441,
+  "actual_source_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/meshes_shared_depth_range/post.ply",
+  "source_cache": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/P3_GS2Mesh/meshes_shared_depth_range/evaluation/views/post_0157.npz",
+  "native_mesh_vertices": 787660,
+  "native_mesh_faces": 1514233,
+  "native_mesh_components": 251,
+  "component_records": [
+    {
+      "native_component_id": 28,
+      "faces": 665,
+      "vertices": 423,
+      "area_predicted_gauge_squared": 0.0006609513765027405,
+      "bbox_min": [
+        0.14719178613815614,
+        -0.3061544980347011,
+        0.676239230597251
+      ],
+      "bbox_max": [
+        0.17997957635475265,
+        -0.27823431143416333,
+        0.7103541733421881
+      ],
+      "is_largest_mesh_component": false,
+      "pixels_in_selected_candidate": 1067
+    },
+    {
+      "native_component_id": 29,
+      "faces": 164,
+      "vertices": 121,
+      "area_predicted_gauge_squared": 0.00014762637089263232,
+      "bbox_min": [
+        0.15703658429771344,
+        -0.2999659605912544,
+        0.668619778825144
+      ],
+      "bbox_max": [
+        0.17058680253967748,
+        -0.2895323619619934,
+        0.6825312436641586
+      ],
+      "is_largest_mesh_component": false,
+      "pixels_in_selected_candidate": 374
+    }
+  ],
+  "candidate_components_all_disconnected_from_largest": true,
+  "GT_foreground_overlap_pixels": 0,
+  "training_GT_luminance_median": 0.0,
+  "original_RGB_luminance_median": 0.547792965978384,
+  "original_RGB_source_path": "/data/fj/F2DMAS/02-FFT/KongQueZhuYu/0157.jpg",
+  "original_RGB_source_sha256": "0cdfe72f1ef37246e8a733790f75540fdf489f9d525314ac3c9e313c9f2a950d",
+  "original_RGB_context_crop": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/P3_leaf_tip_spatial/source157_original_RGB_context.png",
+  "exact_camera_cached_depth_max_difference": 0.0,
+  "world_triangle_csv": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/comparison/P3_leaf_tip_spatial/source157_extra_surface_world_triangles.csv",
+  "elapsed_seconds": 6.759186744689941,
+  "selection": "Largest >=9px extra-geometry component fully inside the previously frozen192px leaf-edge ROI, >3px from original RAP foreground. Selected after direct inspection; diagnostic sample, not an unbiased all-view frequency.",
+  "interpretation": "Actual mesh-connected-component and world-coordinate evidence. Outside RAP is a mask consistency proxy; absent scan truth and potentially imperfect masks do not certify all components erroneous. Mesh unchanged; a floating fragment in this inspected view is not evidence that all GS2Mesh surfaces float."
+}

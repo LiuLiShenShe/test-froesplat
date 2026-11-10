@@ -1,0 +1,49 @@
+{
+  "boundary_edges": 150063,
+  "boundary_self_edges_excluded": 0,
+  "total_unique_edges": 12257384,
+  "nonmanifold_edges": 7425,
+  "boundary_components": 7782,
+  "closed_boundary_loops": 7353,
+  "open_boundary_chains": 114,
+  "branched_boundary_networks": 315,
+  "boundary_graph_cycle_rank": 8093,
+  "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes.",
+  "projection_status": "complete_fixed8",
+  "projection_evaluated_views": 8,
+  "projection_requested_source_ids": [
+    0,
+    26,
+    53,
+    79,
+    105,
+    131,
+    157,
+    183
+  ],
+  "projection_actual_source_ids": [
+    0,
+    26,
+    53,
+    79,
+    105,
+    131,
+    157,
+    183
+  ],
+  "projection_component_classes": {
+    "mixed_or_ambiguous": 3433,
+    "unobserved_or_occluded": 4178,
+    "foreground_mask_boundary_supported": 158,
+    "internal_missing_boundary_candidate": 13
+  },
+  "projection_boundary_spacing": 0.0006593952096931499,
+  "projection_boundary_sample_cap_per_component": 2048,
+  "projection_evidence": "Existing fixed8 full-resolution first-hit depth and RAP mask caches; no new GPU or full208 evaluation",
+  "status": "complete",
+  "diagonal": 0.6752206947257855,
+  "elapsed_seconds": 22.89587688446045,
+  "leaf_edge_policy": "Visible foreground-mask boundary support is a leaf/foreground-edge candidate; RAP also includes pot/marker. Internal missing projection is a separate proxy. Neither labels physical3D holes.",
+  "area_policy": "Boundary polygon best-fit projected area is not a hole area; outer leaf perimeters also enclose polygons.",
+  "visibility_policy": "Boundary point camera Z agrees within max(diagonal/1024,0.2% depth) with finite first-hit depth in3x3 image neighborhood; occluded points are excluded"
+}

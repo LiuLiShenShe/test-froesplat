@@ -1,0 +1,475 @@
+diff --git a/estimate_depth_normal_priors.py b/estimate_depth_normal_priors.py
+index 1c490dc..b0b6624 100644
+--- a/estimate_depth_normal_priors.py
++++ b/estimate_depth_normal_priors.py
+@@ -8,7 +8,7 @@ import sys
+ from argparse import ArgumentParser
+ 
+ 
+-def run_metric3d(rgb_origin, model):
++def run_metric3d(rgb_origin, model, actual_intrinsic):
+     #### adjust input size to fit pretrained model
+     # keep ratio resize
+     input_size = (616, 1064)  # for vit model
+@@ -18,7 +18,8 @@ def run_metric3d(rgb_origin, model):
+     rgb = cv2.resize(rgb_origin, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_LINEAR)
+ 
+     # remember to scale intrinsic, hold depth
+-    intrinsic = [2892.33 * scale, 2883.18 * scale, 777 * scale, 581 * scale]
++    sx, sy = rgb.shape[1] / w, rgb.shape[0] / h
++    intrinsic = [actual_intrinsic[0]*sx, actual_intrinsic[1]*sy, (actual_intrinsic[2]+0.5)*sx-0.5, (actual_intrinsic[3]+0.5)*sy-0.5]
+     # padding to input_size
+     padding = [123.675, 116.28, 103.53]
+     h, w = rgb.shape[:2]
+@@ -102,6 +103,13 @@ def estimate_scene_depth_normal_priors(path):
+ 
+     model = torch.hub.load('yvanyin/metric3d', 'metric3d_vit_giant2', pretrain=True)
+     model.cuda().eval()
++    # The native standalone entry point uses the same actual per-image COLMAP intrinsics.
++    import importlib.util
++    spec=importlib.util.spec_from_file_location('sugar_prior_colmap',os.path.join(os.path.dirname(__file__),'gaussian_splatting_2d','scene','colmap_loader.py'))
++    colmap=importlib.util.module_from_spec(spec);spec.loader.exec_module(colmap)
++    intrinsics=colmap.read_intrinsics_binary(os.path.join(path,'sparse/0/cameras.bin'))
++    extrinsics=colmap.read_extrinsics_binary(os.path.join(path,'sparse/0/images.bin'))
++    by_name={os.path.basename(im.name):intrinsics[im.camera_id] for im in extrinsics.values()}
+ 
+     for filename in os.listdir(images_dir):
+         if os.path.isdir(os.path.join(images_dir, filename)):
+@@ -111,7 +119,7 @@ def estimate_scene_depth_normal_priors(path):
+             image_file = os.path.join(images_dir, filename)
+             rgb_origin = cv2.imread(image_file)[:, :, ::-1]
+ 
+-            pred_depth, pred_normal = run_metric3d(rgb_origin, model)
++            pred_depth, pred_normal = run_metric3d(rgb_origin, model,by_name[filename].params)
+ 
+             depth_file = filename.rsplit('.', 1)[0] + '.npy'
+             depth_save_path = os.path.join(depth_dir, depth_file)
+diff --git a/gaussian_splatting/submodules/diff-gaussian-rasterization b/gaussian_splatting/submodules/diff-gaussian-rasterization
+--- a/gaussian_splatting/submodules/diff-gaussian-rasterization
++++ b/gaussian_splatting/submodules/diff-gaussian-rasterization
+@@ -1 +1 @@
+-Subproject commit 59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d
++Subproject commit 59f5f77e3ddbac3ed9db93ec2cfe99ed6c5d121d-dirty
+diff --git a/gaussian_splatting_2d/gaussian_renderer/__init__.py b/gaussian_splatting_2d/gaussian_renderer/__init__.py
+index 3b21780..282be06 100644
+--- a/gaussian_splatting_2d/gaussian_renderer/__init__.py
++++ b/gaussian_splatting_2d/gaussian_renderer/__init__.py
+@@ -152,6 +152,8 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor,
+             'rend_normal': render_normal,
+             'rend_dist': render_dist,
+             'surf_depth': surf_depth,
++            'depth_expected': render_depth_expected,
++            'depth_median': render_depth_median,
+             'surf_normal': surf_normal,
+     })
+ 
+diff --git a/gaussian_splatting_2d/scene/cameras.py b/gaussian_splatting_2d/scene/cameras.py
+index 20d7a0a..8e836a6 100644
+--- a/gaussian_splatting_2d/scene/cameras.py
++++ b/gaussian_splatting_2d/scene/cameras.py
+@@ -17,7 +17,7 @@ from utils.graphics_utils import getWorld2View2, getProjectionMatrix
+ class Camera(nn.Module):
+     def __init__(self, colmap_id, R, T, FoVx, FoVy, image, gt_alpha_mask,
+                  image_name, uid,
+-                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, world_normal_map=None, data_device = "cuda"
++                 trans=np.array([0.0, 0.0, 0.0]), scale=1.0, world_normal_map=None, data_device = "cuda", fx=None, fy=None, cx=None, cy=None
+                  ):
+         super(Camera, self).__init__()
+ 
+@@ -55,6 +55,16 @@ class Camera(nn.Module):
+ 
+         self.world_view_transform = torch.tensor(getWorld2View2(R, T, trans, scale)).transpose(0, 1).cuda()
+         self.projection_matrix = getProjectionMatrix(znear=self.znear, zfar=self.zfar, fovX=self.FoVx, fovY=self.FoVy).transpose(0,1).cuda()
++        self.Fx = float(fx if fx is not None else self.image_width/(2*np.tan(FoVx/2)))
++        self.Fy = float(fy if fy is not None else self.image_height/(2*np.tan(FoVy/2)))
++        self.Cx = float(cx if cx is not None else (self.image_width-1)/2)
++        self.Cy = float(cy if cy is not None else (self.image_height-1)/2)
++        p = self.projection_matrix.T.clone()
++        p[0,0] = 2*self.Fx/self.image_width
++        p[1,1] = 2*self.Fy/self.image_height
++        p[0,2] = (2*self.Cx+1)/self.image_width-1
++        p[1,2] = (2*self.Cy+1)/self.image_height-1
++        self.projection_matrix = p.T.contiguous()
+         self.full_proj_transform = (self.world_view_transform.unsqueeze(0).bmm(self.projection_matrix.unsqueeze(0))).squeeze(0)
+         self.camera_center = self.world_view_transform.inverse()[3, :3]
+ 
+@@ -70,6 +80,12 @@ class MiniCam:
+         self.zfar = zfar
+         self.world_view_transform = world_view_transform
+         self.full_proj_transform = full_proj_transform
++        self.projection_matrix=torch.linalg.solve(world_view_transform,full_proj_transform)
++        p=self.projection_matrix.T
++        self.Fx=float(p[0,0]*width/2)
++        self.Fy=float(p[1,1]*height/2)
++        self.Cx=float((p[0,2]+1)*width/2-.5)
++        self.Cy=float((p[1,2]+1)*height/2-.5)
+         view_inv = torch.inverse(self.world_view_transform)
+         self.camera_center = view_inv[3][:3]
+ 
+diff --git a/gaussian_splatting_2d/scene/dataset_readers.py b/gaussian_splatting_2d/scene/dataset_readers.py
+index dc59bb3..3c0a8c3 100644
+--- a/gaussian_splatting_2d/scene/dataset_readers.py
++++ b/gaussian_splatting_2d/scene/dataset_readers.py
+@@ -43,6 +43,9 @@ class CameraInfo(NamedTuple):
+     depth_map: np.array = None
+     normal_map: np.array = None
+     world_normal_map: np.array = None
++    cx: float = None
++    cy: float = None
++    mask_path: str = None
+ 
+ class SceneInfo(NamedTuple):
+     point_cloud: BasicPointCloud
+@@ -79,7 +82,7 @@ def transform_normal_map_to_world(normal_map, R):
+     normals_flat = normal_map.reshape(-1, 3)  # (H*W, 3)
+ 
+     # Apply rotation (Rn for each normal n in N): (H*W, 3) @ (3, 3).T => (H*W, 3)
+-    normals_world_flat = normals_flat @ R.T  # (H*W, 3)
++    normals_world_flat = normals_flat @ R.astype(np.float32).T  # (H*W, 3)
+ 
+     # Reshape back
+     normals_world = normals_world_flat.reshape(H, W, 3)
+@@ -131,13 +134,13 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder):
+         depth_path = os.path.join(os.path.dirname(images_folder), "estimated_dense_depth", f"{image_name}.npy")
+         depth_map = None
+         if os.path.exists(depth_path):
+-            depth_map = np.load(depth_path)
++            depth_map = np.load(depth_path, mmap_mode="r")
+ 
+         normal_path = os.path.join(os.path.dirname(images_folder), "estimated_dense_normal", f"{image_name}.npy")
+         normal_map = None
+         world_normal_map = None
+         if os.path.exists(normal_path):
+-            normal_map = np.load(normal_path)
++            normal_map = np.load(normal_path, mmap_mode="r")
+             normal_map = normal_map / np.linalg.norm(normal_map, axis=2, keepdims=True)
+ 
+             world_normal_map = transform_normal_map_to_world(normal_map, R)
+@@ -145,7 +148,10 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder):
+ 
+         cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, image=image, image_id=extr.id,
+                               image_path=image_path, image_name=image_name, width=width, height=height,
+-                              depth_map=depth_map, normal_map=normal_map, world_normal_map=world_normal_map)
++                              depth_map=depth_map, normal_map=normal_map, world_normal_map=world_normal_map,
++                              cx=float(intr.params[1] if intr.model=="SIMPLE_PINHOLE" else intr.params[2]),
++                              cy=float(intr.params[2] if intr.model=="SIMPLE_PINHOLE" else intr.params[3]),
++                              mask_path=os.path.join(os.path.dirname(images_folder),"masks",image_name+".png"))
+         cam_infos.append(cam_info)
+     sys.stdout.write('\n')
+     return cam_infos
+@@ -302,6 +308,11 @@ def readColmapSceneInfo(path, images, eval, initialization_prior, llffhold=8):
+                 image_depth_scale_map[image_id]["estimated_scale"] = np.median(np.array(values["scales"]))
+                 image_depth_scale_map[image_id]["estimated_scale_variance"] = np.array(values["scales"]).std()
+ 
++            # Persist actual extra-prior scale attribution, without copying millions of raw track ratios.
++            scale_meta={str(k):dict(estimated_scale=float(v["estimated_scale"]),estimated_scale_variance=float(v["estimated_scale_variance"]),track_count=len(v["scales"])) for k,v in image_depth_scale_map.items()}
++            with open(os.path.join(path,"prior_depth_scale.json"),"w") as f:
++                json.dump(dict(method="official per-image median COLMAP-track Z / monocular depth",units="VGGT arbitrary gauge; not independent metric truth",views=scale_meta),f,indent=2)
++
+             # num_generated_points = int(xyz.shape[0] * 1)  # 100%, TODO: Make this configurable
+             num_generated_points = min(75000, len(cam_infos) * 1000)
+             print("Generated points:", num_generated_points)
+diff --git a/gaussian_splatting_2d/scene/point_generator.py b/gaussian_splatting_2d/scene/point_generator.py
+index a7f8c36..2824564 100644
+--- a/gaussian_splatting_2d/scene/point_generator.py
++++ b/gaussian_splatting_2d/scene/point_generator.py
+@@ -1,5 +1,6 @@
+ import os
+ import numpy as np
++from PIL import Image
+ 
+ 
+ def gaussian_generator(cam_infos, cam_intrinsics, num_points, image_depth_scale_map):
+@@ -23,6 +24,11 @@ def gaussian_generator(cam_infos, cam_intrinsics, num_points, image_depth_scale_
+ 
+         valid_mask = (xs >= 0) & (xs < cam_info.width) & (ys >= 0) & (ys < cam_info.height)
+ 
++        # Same native sampling distribution, restricted to the existing RAP foreground.
++        if cam_info.mask_path and os.path.exists(cam_info.mask_path):
++            fg=np.asarray(Image.open(cam_info.mask_path).convert('L'))>127
++            candidates=np.flatnonzero(valid_mask)
++            valid_mask[candidates] &= fg[ys[candidates],xs[candidates]]
+         xs = xs[valid_mask]
+         ys = ys[valid_mask]
+ 
+diff --git a/gaussian_splatting_2d/submodules/diff-surfel-rasterization b/gaussian_splatting_2d/submodules/diff-surfel-rasterization
+--- a/gaussian_splatting_2d/submodules/diff-surfel-rasterization
++++ b/gaussian_splatting_2d/submodules/diff-surfel-rasterization
+@@ -1 +1 @@
+-Subproject commit e0ed0207b3e0669960cfad70852200a4a5847f61
++Subproject commit e0ed0207b3e0669960cfad70852200a4a5847f61-dirty
+diff --git a/gaussian_splatting_2d/utils/camera_utils.py b/gaussian_splatting_2d/utils/camera_utils.py
+index 4693b65..3a28032 100644
+--- a/gaussian_splatting_2d/utils/camera_utils.py
++++ b/gaussian_splatting_2d/utils/camera_utils.py
+@@ -15,6 +15,7 @@ from utils.general_utils import PILtoTorch
+ from utils.graphics_utils import fov2focal
+ from utils.image_utils import resize_image
+ import torch
++from PIL import Image
+ 
+ WARNED = False
+ 
+@@ -49,6 +50,9 @@ def loadCam(args, id, cam_info, resolution_scale):
+         loaded_mask = None
+         gt_image = resized_image_rgb
+ 
++    if loaded_mask is None and cam_info.mask_path:
++        loaded_mask=torch.from_numpy((np.asarray(Image.open(cam_info.mask_path).convert("L").resize(resolution,Image.Resampling.NEAREST))>127).copy()).float()[None]
++
+     if cam_info.world_normal_map is None:
+         resized_world_normal_map = None
+     else:
+@@ -59,7 +63,11 @@ def loadCam(args, id, cam_info, resolution_scale):
+                   FoVx=cam_info.FovX, FoVy=cam_info.FovY, 
+                   image=gt_image, gt_alpha_mask=loaded_mask,
+                   image_name=cam_info.image_name, world_normal_map=resized_world_normal_map,
+-                  uid=id, data_device=args.data_device)
++                  uid=id, data_device=args.data_device,
++                  fx=fov2focal(cam_info.FovX,orig_w)*resolution[0]/orig_w,
++                  fy=fov2focal(cam_info.FovY,orig_h)*resolution[1]/orig_h,
++                  cx=(cam_info.cx+0.5)*resolution[0]/orig_w-0.5,
++                  cy=(cam_info.cy+0.5)*resolution[1]/orig_h-0.5)
+ 
+ def cameraList_from_camInfos(cam_infos, resolution_scale, args):
+     camera_list = []
+@@ -86,6 +94,8 @@ def camera_to_JSON(id, camera : Camera):
+         'height' : camera.height,
+         'position': pos.tolist(),
+         'rotation': serializable_array_2d,
++        'cx' : camera.cx,
++        'cy' : camera.cy,
+         'fy' : fov2focal(camera.FovY, camera.height),
+         'fx' : fov2focal(camera.FovX, camera.width)
+     }
+diff --git a/gaussian_splatting_2d/utils/point_utils.py b/gaussian_splatting_2d/utils/point_utils.py
+index 008196c..96f1fb4 100644
+--- a/gaussian_splatting_2d/utils/point_utils.py
++++ b/gaussian_splatting_2d/utils/point_utils.py
+@@ -9,13 +9,9 @@ import math
+ def depths_to_points(view, depthmap):
+     c2w = (view.world_view_transform.T).inverse()
+     W, H = view.image_width, view.image_height
+-    ndc2pix = torch.tensor([
+-        [W / 2, 0, 0, (W) / 2],
+-        [0, H / 2, 0, (H) / 2],
+-        [0, 0, 0, 1]]).float().cuda().T
+-    projection_matrix = c2w.T @ view.full_proj_transform
+-    intrins = (projection_matrix @ ndc2pix)[:3,:3].T
+-    
++    fx,fy,cx,cy = view.Fx,view.Fy,view.Cx,view.Cy
++    intrins=torch.tensor([[fx,0,cx],[0,fy,cy],[0,0,1]],device='cuda',dtype=torch.float32)
++
+     grid_x, grid_y = torch.meshgrid(torch.arange(W, device='cuda').float(), torch.arange(H, device='cuda').float(), indexing='xy')
+     points = torch.stack([grid_x, grid_y, torch.ones_like(grid_x)], dim=-1).reshape(-1, 3)
+     rays_d = points @ intrins.inverse().T @ c2w[:3,:3].T
+diff --git a/sugar_extractors/refined_mesh.py b/sugar_extractors/refined_mesh.py
+index 1e21f0d..c1ead87 100644
+--- a/sugar_extractors/refined_mesh.py
++++ b/sugar_extractors/refined_mesh.py
+@@ -109,7 +109,7 @@ def extract_mesh_and_texture_from_refined_sugar(args):
+     o3d_mesh = o3d.io.read_triangle_mesh(sugar_mesh_path)
+     
+     # --- Loading refined SuGaR model ---
+-    checkpoint = torch.load(refined_model_path, map_location=nerfmodel.device)
++    checkpoint = torch.load(refined_model_path, map_location=nerfmodel.device, weights_only=False)
+     refined_sugar = SuGaR(
+         nerfmodel=nerfmodel,
+         points=checkpoint['state_dict']['_points'],
+@@ -231,4 +231,4 @@ def extract_mesh_and_texture_from_refined_sugar(args):
+             )
+         
+     CONSOLE.print("Texture saved at:", mesh_save_path)
+-    return mesh_save_path
+\ No newline at end of file
++    return mesh_save_path
+diff --git a/sugar_scene/cameras.py b/sugar_scene/cameras.py
+index c6f8afe..afaff91 100644
+--- a/sugar_scene/cameras.py
++++ b/sugar_scene/cameras.py
+@@ -31,7 +31,7 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
+     """
+     image_dir = os.path.join(source_path, 'images')
+     
+-    with open(gs_output_path + 'cameras.json') as f:
++    with open(os.path.join(gs_output_path, 'cameras.json')) as f:
+         unsorted_camera_transforms = json.load(f)
+         
+     # Remove indices
+@@ -132,7 +132,10 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
+             colmap_id=id, image=gt_image, gt_alpha_mask=None,
+             R=R, T=T, FoVx=fov_x, FoVy=fov_y,
+             image_name=name, uid=id,
+-            image_height=image_height, image_width=image_width,)
++            image_height=image_height, image_width=image_width,
++            fx=fx/downscale_factor, fy=fy/downscale_factor,
++            cx=(camera_transform["cx"]+0.5)/downscale_factor-0.5,
++            cy=(camera_transform["cy"]+0.5)/downscale_factor-0.5,)
+         
+         cam_list.append(gs_camera)
+ 
+@@ -145,7 +148,7 @@ class GSCamera(torch.nn.Module):
+     def __init__(self, colmap_id, R, T, FoVx, FoVy, image, gt_alpha_mask,
+                  image_name, uid,
+                  trans=np.array([0.0, 0.0, 0.0]), scale=1.0, data_device = "cuda",
+-                 image_height=None, image_width=None,
++                 image_height=None, image_width=None, fx=None, fy=None, cx=None, cy=None,
+                  ):
+         """
+         Args:
+@@ -208,6 +211,16 @@ class GSCamera(torch.nn.Module):
+ 
+         self.world_view_transform = torch.tensor(getWorld2View2(R, T, trans, scale)).transpose(0, 1).cuda()
+         self.projection_matrix = getProjectionMatrix(znear=self.znear, zfar=self.zfar, fovX=self.FoVx, fovY=self.FoVy).transpose(0,1).cuda()
++        self.Fx = float(fx if fx is not None else self.image_width/(2*np.tan(FoVx/2)))
++        self.Fy = float(fy if fy is not None else self.image_height/(2*np.tan(FoVy/2)))
++        self.Cx = float(cx if cx is not None else (self.image_width-1)/2)
++        self.Cy = float(cy if cy is not None else (self.image_height-1)/2)
++        p = self.projection_matrix.T.clone()
++        p[0,0] = 2*self.Fx/self.image_width
++        p[1,1] = 2*self.Fy/self.image_height
++        p[0,2] = (2*self.Cx+1)/self.image_width-1
++        p[1,2] = (2*self.Cy+1)/self.image_height-1
++        self.projection_matrix = p.T.contiguous()
+         self.full_proj_transform = (self.world_view_transform.unsqueeze(0).bmm(self.projection_matrix.unsqueeze(0))).squeeze(0)
+         self.camera_center = self.world_view_transform.inverse()[3, :3]
+         
+@@ -270,8 +283,8 @@ def convert_camera_from_gs_to_pytorch3d(gs_cameras, device='cuda'):
+     fy = torch.Tensor(np.array([fov2focal(gs_camera.FoVy, gs_camera.image_height) for gs_camera in gs_cameras])).to(device)
+     image_height = torch.tensor(np.array([gs_camera.image_height for gs_camera in gs_cameras]), dtype=torch.int).to(device)
+     image_width = torch.tensor(np.array([gs_camera.image_width for gs_camera in gs_cameras]), dtype=torch.int).to(device)
+-    cx = image_width / 2.  # torch.zeros_like(fx).to(device)
+-    cy = image_height / 2.  # torch.zeros_like(fy).to(device)
++    cx = torch.tensor([c.Cx+0.5 for c in gs_cameras],device=device)
++    cy = torch.tensor([c.Cy+0.5 for c in gs_cameras],device=device)
+     
+     w2c = torch.zeros(N, 4, 4).to(device)
+     w2c[:, :3, :3] = R.transpose(-1, -2)
+@@ -287,31 +300,11 @@ def convert_camera_from_gs_to_pytorch3d(gs_cameras, device='cuda'):
+ 
+     # Pytorch3d-compatible camera matrices
+     # Intrinsics
+-    image_size = torch.Tensor(
+-        [image_width[0], image_height[0]],
+-    )[
+-        None
+-    ].to(device)
+-    scale = image_size.min(dim=1, keepdim=True)[0] / 2.0
+-    c0 = image_size / 2.0
+-    p0_pytorch3d = (
+-        -(
+-            torch.Tensor(
+-                (cx[0], cy[0]),
+-            )[
+-                None
+-            ].to(device)
+-            - c0
+-        )
+-        / scale
+-    )
+-    focal_pytorch3d = (
+-        torch.Tensor([fx[0], fy[0]])[None].to(device) / scale
+-    )
+-    K = _get_sfm_calibration_matrix(
+-        1, "cpu", focal_pytorch3d, p0_pytorch3d, orthographic=False
+-    )
+-    K = K.expand(N, -1, -1)
++    image_size=torch.stack([image_width,image_height],dim=1).float()
++    scale=image_size.min(dim=1,keepdim=True)[0]/2
++    p0_pytorch3d=-(torch.stack([cx,cy],dim=1)-image_size/2)/scale
++    focal_pytorch3d=torch.stack([fx,fy],dim=1)/scale
++    K=_get_sfm_calibration_matrix(N,device,focal_pytorch3d,p0_pytorch3d,orthographic=False)
+ 
+     # Extrinsics
+     line = torch.Tensor([[0.0, 0.0, 0.0, 1.0]]).to(device).expand(N, -1, -1)
+@@ -451,8 +444,8 @@ class CamerasWrapper:
+         self.fy = torch.Tensor(np.array([fov2focal(gs_camera.FoVy, gs_camera.image_height) for gs_camera in gs_cameras])).to(device)
+         self.height = torch.tensor(np.array([gs_camera.image_height for gs_camera in gs_cameras]), dtype=torch.int).to(device)
+         self.width = torch.tensor(np.array([gs_camera.image_width for gs_camera in gs_cameras]), dtype=torch.int).to(device)
+-        self.cx = self.width / 2.  # torch.zeros_like(fx).to(device)
+-        self.cy = self.height / 2.  # torch.zeros_like(fy).to(device)
++        self.cx = torch.tensor([c.Cx for c in gs_cameras],device=device)
++        self.cy = torch.tensor([c.Cy for c in gs_cameras],device=device)
+         
+         w2c = torch.zeros(N, 4, 4).to(device)
+         w2c[:, :3, :3] = R.transpose(-1, -2)
+diff --git a/sugar_scene/sugar_model.py b/sugar_scene/sugar_model.py
+index ae5d17d..283179f 100644
+--- a/sugar_scene/sugar_model.py
++++ b/sugar_scene/sugar_model.py
+@@ -2178,43 +2178,20 @@ class SuGaR(nn.Module):
+         if positions is None:
+             positions = self.points
+ 
+-        use_torch = False
+-        # NeRF 'transform_matrix' is a camera-to-world transform
+-        c2w = nerf_cameras.camera_to_worlds[camera_indices]
+-        c2w = torch.cat([c2w, torch.Tensor([[0, 0, 0, 1]]).to(self.device)], dim=0).cpu().numpy() #.transpose(-1, -2)
+-        # change from OpenGL/Blender camera axes (Y up, Z back) to COLMAP (Y down, Z forward)
+-        c2w[:3, 1:3] *= -1
+-
+-        # get the world-to-camera transform and set R, T
+-        w2c = np.linalg.inv(c2w)
+-        R = np.transpose(w2c[:3,:3])  # R is stored transposed due to 'glm' in CUDA code
+-        T = w2c[:3, 3]
+-        
+-        world_view_transform = torch.Tensor(getWorld2View(
+-            R=R, t=T, tensor=use_torch)).transpose(0, 1).cuda()
+-        
+-        proj_transform = getProjectionMatrix(
+-            p3d_camera.znear.item(), 
+-            p3d_camera.zfar.item(), 
+-            self.fov_x, 
+-            self.fov_y).transpose(0, 1).cuda()
+-        # TODO: THE TWO FOLLOWING LINES ARE IMPORTANT! IT'S NOT HERE IN 3DGS CODE! Should make a PR when I have time
+-        proj_transform[..., 2, 0] = - p3d_camera.K[0, 0, 2]
+-        proj_transform[..., 2, 1] = - p3d_camera.K[0, 1, 2]
+-        
+-        full_proj_transform = (world_view_transform.unsqueeze(0).bmm(proj_transform.unsqueeze(0))).squeeze(0)
+-        
+-
+-        camera_center = p3d_camera.get_camera_center()
++        # Use the same supplied camera matrices as native 2DGS; principal points/focals vary per frame.
++        gs_camera=nerf_cameras.gs_cameras[int(camera_indices)]
++        world_view_transform=gs_camera.world_view_transform
++        full_proj_transform=gs_camera.full_proj_transform
++        camera_center=gs_camera.camera_center
+         if verbose:
+             print("p3d camera_center", camera_center)
+             print("ns camera_center", nerf_cameras.camera_to_worlds[camera_indices][..., 3])
+ 
+         raster_settings = GaussianRasterizationSettings(
+-            image_height=int(self.image_height),
+-            image_width=int(self.image_width),
+-            tanfovx=self.tanfovx,
+-            tanfovy=self.tanfovy,
++            image_height=int(gs_camera.image_height),
++            image_width=int(gs_camera.image_width),
++            tanfovx=gs_camera.image_width/(2*gs_camera.Fx),
++            tanfovy=gs_camera.image_height/(2*gs_camera.Fy),
+             bg=bg_color,
+             scale_modifier=1.,
+             viewmatrix=world_view_transform,
+diff --git a/sugar_trainers/refine.py b/sugar_trainers/refine.py
+index 5625fa8..0077bf4 100644
+--- a/sugar_trainers/refine.py
++++ b/sugar_trainers/refine.py
+@@ -878,15 +878,10 @@ def refined_training(args):
+     if export_ply_at_the_end:
+         # Build path
+         CONSOLE.print("\nExporting ply file with refined Gaussians...")
+-        tmp_list = model_path.split(os.sep)
+-        tmp_list[-4] = 'refined_ply'
+-        tmp_list.pop(-1)
+-        tmp_list[-1] = tmp_list[-1] + '.ply'
+-        refined_ply_save_dir = os.path.join(*tmp_list[:-1])
+-        refined_ply_save_path = os.path.join(*tmp_list)
+-        
++        refined_ply_save_dir = os.path.join(args.output_dir, "refined_ply")
++        refined_ply_save_path = os.path.join(refined_ply_save_dir, os.path.basename(sugar_checkpoint_path.rstrip(os.sep))+".ply")
+         os.makedirs(refined_ply_save_dir, exist_ok=True)
+-        
++
+         # Export and save ply
+         refined_gaussians = convert_refined_sugar_into_gaussians(sugar)
+         refined_gaussians.save_ply(refined_ply_save_path)

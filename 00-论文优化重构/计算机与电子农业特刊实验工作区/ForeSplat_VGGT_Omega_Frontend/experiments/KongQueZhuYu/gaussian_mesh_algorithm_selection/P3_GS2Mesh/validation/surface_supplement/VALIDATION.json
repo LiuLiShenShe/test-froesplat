@@ -1,0 +1,215 @@
+{
+  "status": "all_checks_passed",
+  "elapsed_seconds": 0.39583897590637207,
+  "seed": 0,
+  "records": {
+    "planar_coarse": {
+      "topology": {
+        "boundary_edges": 4,
+        "boundary_self_edges_excluded": 0,
+        "total_unique_edges": 5,
+        "nonmanifold_edges": 0,
+        "boundary_components": 1,
+        "closed_boundary_loops": 1,
+        "open_boundary_chains": 0,
+        "branched_boundary_networks": 0,
+        "boundary_graph_cycle_rank": 1,
+        "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+      },
+      "roughness_max": 0.0,
+      "support_capped": true
+    },
+    "planar_dense": {
+      "topology": {
+        "boundary_edges": 100,
+        "boundary_self_edges_excluded": 0,
+        "total_unique_edges": 1925,
+        "nonmanifold_edges": 0,
+        "boundary_components": 1,
+        "closed_boundary_loops": 1,
+        "open_boundary_chains": 0,
+        "branched_boundary_networks": 0,
+        "boundary_graph_cycle_rank": 1,
+        "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+      },
+      "roughness_max": 0.0,
+      "support_capped": true
+    },
+    "curved_surface": {
+      "local_plane_rms": [
+        0.008641074752361514,
+        0.008641074752361514,
+        0.03102583136922611,
+        0.02870228447443674
+      ],
+      "meaning": "Real surface curvature raises proxy; not an error classification"
+    },
+    "annulus": {
+      "boundary_edges": 8,
+      "boundary_self_edges_excluded": 0,
+      "total_unique_edges": 16,
+      "nonmanifold_edges": 0,
+      "boundary_components": 2,
+      "closed_boundary_loops": 2,
+      "open_boundary_chains": 0,
+      "branched_boundary_networks": 0,
+      "boundary_graph_cycle_rank": 2,
+      "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+    },
+    "closed_tetrahedron": {
+      "boundary_edges": 0,
+      "boundary_self_edges_excluded": 0,
+      "total_unique_edges": 6,
+      "nonmanifold_edges": 0,
+      "boundary_components": 0,
+      "closed_boundary_loops": 0,
+      "open_boundary_chains": 0,
+      "branched_boundary_networks": 0,
+      "boundary_graph_cycle_rank": 0,
+      "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+    },
+    "nonmanifold_open_chain": {
+      "boundary_edges": 2,
+      "boundary_self_edges_excluded": 0,
+      "total_unique_edges": 8,
+      "nonmanifold_edges": 1,
+      "boundary_components": 1,
+      "closed_boundary_loops": 0,
+      "open_boundary_chains": 1,
+      "branched_boundary_networks": 0,
+      "boundary_graph_cycle_rank": 0,
+      "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+    },
+    "two_cycles_shared_vertex": {
+      "boundary_edges": 6,
+      "boundary_self_edges_excluded": 0,
+      "total_unique_edges": 6,
+      "nonmanifold_edges": 0,
+      "boundary_components": 1,
+      "closed_boundary_loops": 0,
+      "open_boundary_chains": 0,
+      "branched_boundary_networks": 1,
+      "boundary_graph_cycle_rank": 2,
+      "definition": "Only all-degree2 simple-cycle components count as unambiguous boundary loops. Branched networks retain cycle-rank separately; loops are not automatically holes."
+    },
+    "projection_attribution": {
+      "missing_inside_foreground": {
+        "component_results": [
+          {
+            "boundary_id": 0,
+            "projection_class": "foreground_mask_boundary_supported",
+            "inframe_samples": 2048,
+            "visible_samples": 2048,
+            "visible_fraction": 1.0,
+            "foreground_mask_edge_fraction": 1.0,
+            "internal_missing_edge_fraction": 0.0,
+            "outside_mask_fraction": 0.0
+          },
+          {
+            "boundary_id": 1,
+            "projection_class": "internal_missing_boundary_candidate",
+            "inframe_samples": 1229,
+            "visible_samples": 1229,
+            "visible_fraction": 1.0,
+            "foreground_mask_edge_fraction": 0.0,
+            "internal_missing_edge_fraction": 1.0,
+            "outside_mask_fraction": 0.0
+          }
+        ],
+        "view_results": [
+          {
+            "source_id": 0,
+            "inframe_boundary_samples": 3277,
+            "visible_boundary_samples": 3277,
+            "foreground_mask_edge_supported_samples": 2048,
+            "internal_missing_edge_proxy_samples": 1229,
+            "outside_mask_visible_samples": 0,
+            "enclosed_missing_components": 1,
+            "enclosed_missing_area_px": 81,
+            "open_boundary_missing_area_px": 0
+          }
+        ]
+      },
+      "actual_mask_void": {
+        "component_results": [
+          {
+            "boundary_id": 0,
+            "projection_class": "foreground_mask_boundary_supported",
+            "inframe_samples": 2048,
+            "visible_samples": 2048,
+            "visible_fraction": 1.0,
+            "foreground_mask_edge_fraction": 1.0,
+            "internal_missing_edge_fraction": 0.0,
+            "outside_mask_fraction": 0.0
+          },
+          {
+            "boundary_id": 1,
+            "projection_class": "foreground_mask_boundary_supported",
+            "inframe_samples": 1229,
+            "visible_samples": 1229,
+            "visible_fraction": 1.0,
+            "foreground_mask_edge_fraction": 1.0,
+            "internal_missing_edge_fraction": 0.0,
+            "outside_mask_fraction": 0.0
+          }
+        ],
+        "view_results": [
+          {
+            "source_id": 0,
+            "inframe_boundary_samples": 3277,
+            "visible_boundary_samples": 3277,
+            "foreground_mask_edge_supported_samples": 3277,
+            "internal_missing_edge_proxy_samples": 0,
+            "outside_mask_visible_samples": 0,
+            "enclosed_missing_components": 0,
+            "enclosed_missing_area_px": 0,
+            "open_boundary_missing_area_px": 0
+          }
+        ]
+      },
+      "occluded": {
+        "component_results": [
+          {
+            "boundary_id": 0,
+            "projection_class": "unobserved_or_occluded",
+            "inframe_samples": 2048,
+            "visible_samples": 0,
+            "visible_fraction": 0.0,
+            "foreground_mask_edge_fraction": 0.0,
+            "internal_missing_edge_fraction": 0.0,
+            "outside_mask_fraction": 0.0
+          },
+          {
+            "boundary_id": 1,
+            "projection_class": "unobserved_or_occluded",
+            "inframe_samples": 1229,
+            "visible_samples": 0,
+            "visible_fraction": 0.0,
+            "foreground_mask_edge_fraction": 0.0,
+            "internal_missing_edge_fraction": 0.0,
+            "outside_mask_fraction": 0.0
+          }
+        ],
+        "view_results": [
+          {
+            "source_id": 0,
+            "inframe_boundary_samples": 3277,
+            "visible_boundary_samples": 0,
+            "foreground_mask_edge_supported_samples": 0,
+            "internal_missing_edge_proxy_samples": 0,
+            "outside_mask_visible_samples": 0,
+            "enclosed_missing_components": 1,
+            "enclosed_missing_area_px": 81,
+            "open_boundary_missing_area_px": 0
+          }
+        ]
+      }
+    },
+    "opposed_parallel_sheets": {
+      "all_spatial_rms": 0.009919321572817146,
+      "same_oriented_rms": 7.001574956376388e-18,
+      "meaning": "Filtering shows nearby sheet mixing; may exclude real steep folds"
+    }
+  },
+  "policy": "Synthetic in-memory fixtures and small cached depth/mask arrays only; no synthetic mesh is exported or indexed as an experiment model"
+}

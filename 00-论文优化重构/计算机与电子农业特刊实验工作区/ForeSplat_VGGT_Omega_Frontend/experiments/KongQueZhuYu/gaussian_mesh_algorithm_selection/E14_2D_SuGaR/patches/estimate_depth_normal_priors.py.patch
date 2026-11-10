@@ -1,0 +1,46 @@
+diff --git a/estimate_depth_normal_priors.py b/estimate_depth_normal_priors.py
+index 1c490dc..b0b6624 100644
+--- a/estimate_depth_normal_priors.py
++++ b/estimate_depth_normal_priors.py
+@@ -8,7 +8,7 @@ import sys
+ from argparse import ArgumentParser
+ 
+ 
+-def run_metric3d(rgb_origin, model):
++def run_metric3d(rgb_origin, model, actual_intrinsic):
+     #### adjust input size to fit pretrained model
+     # keep ratio resize
+     input_size = (616, 1064)  # for vit model
+@@ -18,7 +18,8 @@ def run_metric3d(rgb_origin, model):
+     rgb = cv2.resize(rgb_origin, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_LINEAR)
+ 
+     # remember to scale intrinsic, hold depth
+-    intrinsic = [2892.33 * scale, 2883.18 * scale, 777 * scale, 581 * scale]
++    sx, sy = rgb.shape[1] / w, rgb.shape[0] / h
++    intrinsic = [actual_intrinsic[0]*sx, actual_intrinsic[1]*sy, (actual_intrinsic[2]+0.5)*sx-0.5, (actual_intrinsic[3]+0.5)*sy-0.5]
+     # padding to input_size
+     padding = [123.675, 116.28, 103.53]
+     h, w = rgb.shape[:2]
+@@ -102,6 +103,13 @@ def estimate_scene_depth_normal_priors(path):
+ 
+     model = torch.hub.load('yvanyin/metric3d', 'metric3d_vit_giant2', pretrain=True)
+     model.cuda().eval()
++    # The native standalone entry point uses the same actual per-image COLMAP intrinsics.
++    import importlib.util
++    spec=importlib.util.spec_from_file_location('sugar_prior_colmap',os.path.join(os.path.dirname(__file__),'gaussian_splatting_2d','scene','colmap_loader.py'))
++    colmap=importlib.util.module_from_spec(spec);spec.loader.exec_module(colmap)
++    intrinsics=colmap.read_intrinsics_binary(os.path.join(path,'sparse/0/cameras.bin'))
++    extrinsics=colmap.read_extrinsics_binary(os.path.join(path,'sparse/0/images.bin'))
++    by_name={os.path.basename(im.name):intrinsics[im.camera_id] for im in extrinsics.values()}
+ 
+     for filename in os.listdir(images_dir):
+         if os.path.isdir(os.path.join(images_dir, filename)):
+@@ -111,7 +119,7 @@ def estimate_scene_depth_normal_priors(path):
+             image_file = os.path.join(images_dir, filename)
+             rgb_origin = cv2.imread(image_file)[:, :, ::-1]
+ 
+-            pred_depth, pred_normal = run_metric3d(rgb_origin, model)
++            pred_depth, pred_normal = run_metric3d(rgb_origin, model,by_name[filename].params)
+ 
+             depth_file = filename.rsplit('.', 1)[0] + '.npy'
+             depth_save_path = os.path.join(depth_dir, depth_file)

@@ -1,0 +1,20 @@
+--- official/official/estimate_depth_normal_priors.py
++++ foresplat/official/estimate_depth_normal_priors.py
+@@ -8,7 +8,7 @@
+ from argparse import ArgumentParser
+ 
+ 
+-def run_metric3d(rgb_origin, model):
++def run_metric3d(rgb_origin, model, actual_intrinsic):
+     #### adjust input size to fit pretrained model
+     # keep ratio resize
+     input_size = (616, 1064)  # for vit model
+@@ -18,7 +18,7 @@
+     rgb = cv2.resize(rgb_origin, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_LINEAR)
+ 
+     # remember to scale intrinsic, hold depth
+-    intrinsic = [2892.33 * scale, 2883.18 * scale, 777 * scale, 581 * scale]
++    intrinsic = [actual_intrinsic[0]*scale, actual_intrinsic[1]*scale, (actual_intrinsic[2]+0.5)*scale-0.5, (actual_intrinsic[3]+0.5)*scale-0.5]
+     # padding to input_size
+     padding = [123.675, 116.28, 103.53]
+     h, w = rgb.shape[:2]

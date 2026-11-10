@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "physical_gpu": 1,
+  "torch_version": "2.5.1+cu121",
+  "allocator": "expandable_segments:True",
+  "varying_size_float32_allocations": [
+    {
+      "elements": 8000000,
+      "allocated_bytes": 32000000,
+      "reserved_bytes": 44040192
+    },
+    {
+      "elements": 9000000,
+      "allocated_bytes": 36000256,
+      "reserved_bytes": 44040192
+    },
+    {
+      "elements": 10000000,
+      "allocated_bytes": 40000000,
+      "reserved_bytes": 44040192
+    }
+  ],
+  "warnings": [],
+  "elapsed_seconds": 0.46176576614379883,
+  "changes_to_native_objective_or_representation": false,
+  "source": "https://github.com/pytorch/pytorch/blob/v2.5.1/docs/source/notes/cuda.rst"
+}

@@ -1,0 +1,11 @@
+--- official/gaussian_splatting_2d/gaussian_renderer/__init__.py
++++ foresplat/gaussian_splatting_2d/gaussian_renderer/__init__.py
+@@ -152,6 +152,8 @@
+             'rend_normal': render_normal,
+             'rend_dist': render_dist,
+             'surf_depth': surf_depth,
++            'depth_expected': render_depth_expected,
++            'depth_median': render_depth_median,
+             'surf_normal': surf_normal,
+     })
+ 

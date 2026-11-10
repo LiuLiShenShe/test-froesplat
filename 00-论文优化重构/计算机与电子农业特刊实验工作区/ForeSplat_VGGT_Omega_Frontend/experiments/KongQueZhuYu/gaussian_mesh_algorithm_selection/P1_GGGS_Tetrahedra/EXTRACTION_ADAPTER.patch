@@ -1,0 +1,38 @@
+--- official/mesh_extract_tetrahedra.py
++++ actual/mesh_extract_tetrahedra_adapted.py
+@@ -71,7 +71,7 @@
+         pts2d,
+     )
+     sampled_mask = torch.nn.functional.grid_sample(
+-        view.gt_mask[None].cuda(), pts2d[None, None], align_corners=True
++        view.gt_mask[None].cuda(), pts2d[None, None], align_corners=False
+     )
+     return (sampled_mask.squeeze() > 0.5) & inside
+ 
+@@ -80,7 +80,7 @@
+ def evaluate_alpha_cull(points, views, gaussians, pipeline, kernel_size):
+     final_sdf = []
+     any_valid = []
+-    chunk_size = 10000000
++    chunk_size = 2000000
+     for point_chunk in torch.chunk(points, points.shape[0] // chunk_size + 1):
+         final_weight_chunk = torch.zeros(
+             point_chunk.shape[0], dtype=torch.float32, device="cuda"
+@@ -111,7 +111,7 @@
+     points, views, gaussians, pipeline, kernel_size, background, max_dist=0.008
+ ):
+     surface_points = []
+-    chunk_size = 10000000
++    chunk_size = 2000000
+     accumulated_colors = []
+     for point_chunk in torch.chunk(points, points.shape[0] // chunk_size + 1):
+         n_points = point_chunk.shape[0]
+@@ -153,7 +153,7 @@
+ 
+ @torch.no_grad()
+ def add_color_silhouette(points, views, gaussians, pipeline, kernel_size, background):
+-    chunk_size = 10000000
++    chunk_size = 2000000
+     colors = []
+     for point_chunk in torch.chunk(points, points.shape[0] // chunk_size + 1):
+         n_points = point_chunk.shape[0]

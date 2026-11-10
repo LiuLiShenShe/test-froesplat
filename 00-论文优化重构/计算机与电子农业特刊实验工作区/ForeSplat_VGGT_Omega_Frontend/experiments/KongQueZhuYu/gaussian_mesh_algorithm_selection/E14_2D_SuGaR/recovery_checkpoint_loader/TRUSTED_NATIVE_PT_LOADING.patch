@@ -1,0 +1,20 @@
+diff --git a/sugar_extractors/refined_mesh.py b/sugar_extractors/refined_mesh.py
+index 1e21f0d..c1ead87 100644
+--- a/sugar_extractors/refined_mesh.py
++++ b/sugar_extractors/refined_mesh.py
+@@ -109,7 +109,7 @@ def extract_mesh_and_texture_from_refined_sugar(args):
+     o3d_mesh = o3d.io.read_triangle_mesh(sugar_mesh_path)
+     
+     # --- Loading refined SuGaR model ---
+-    checkpoint = torch.load(refined_model_path, map_location=nerfmodel.device)
++    checkpoint = torch.load(refined_model_path, map_location=nerfmodel.device, weights_only=False)
+     refined_sugar = SuGaR(
+         nerfmodel=nerfmodel,
+         points=checkpoint['state_dict']['_points'],
+@@ -231,4 +231,4 @@ def extract_mesh_and_texture_from_refined_sugar(args):
+             )
+         
+     CONSOLE.print("Texture saved at:", mesh_save_path)
+-    return mesh_save_path
+\ No newline at end of file
++    return mesh_save_path

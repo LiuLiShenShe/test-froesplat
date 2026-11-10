@@ -1,0 +1,48 @@
+[
+  {
+    "time": 1794211520.7708397,
+    "iteration": 10700,
+    "primitives": 2230022,
+    "note": "GPU resource snapshot queried externally; native allocated/reserved peaks are recorded by the trainer on completion."
+  },
+  {
+    "time": 1794211543.108887,
+    "iteration": 10700,
+    "primitives": 2230022,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_used_MiB": 3173,
+        "memory_free_MiB": 45362,
+        "utilization_percent": 0
+      },
+      {
+        "index": 1,
+        "memory_used_MiB": 15931,
+        "memory_free_MiB": 32612,
+        "utilization_percent": 100
+      }
+    ],
+    "notes": "Total device memory includes other existing jobs; trainer peak allocated/reserved is the E13-process metric."
+  },
+  {
+    "time": 1794212340.6200268,
+    "iteration": 11300,
+    "primitives": 6085318,
+    "gpus": [
+      {
+        "index": 0,
+        "memory_used_MiB": 3175,
+        "memory_free_MiB": 45360,
+        "utilization_percent": 0
+      },
+      {
+        "index": 1,
+        "memory_used_MiB": 27415,
+        "memory_free_MiB": 21128,
+        "utilization_percent": 100
+      }
+    ],
+    "notes": "Device-level figures cover all active processes; trainer peak allocated/reserved is the E13-process measurement."
+  }
+]

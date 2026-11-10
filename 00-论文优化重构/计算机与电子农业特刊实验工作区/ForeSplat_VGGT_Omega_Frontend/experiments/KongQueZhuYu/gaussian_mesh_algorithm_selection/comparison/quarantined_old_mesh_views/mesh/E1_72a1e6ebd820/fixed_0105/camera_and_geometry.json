@@ -1,0 +1,106 @@
+{
+  "source_mesh": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/E1_GGGS_Baseline/mesh/recon.ply",
+  "camera": {
+    "name": "crop_0105",
+    "source_id": 105,
+    "width": 1080,
+    "height": 1920,
+    "Fx": 1587.4310373431467,
+    "Fy": 1587.6767238778957,
+    "Cx": 541.3532818532818,
+    "Cy": 961.3532818532818,
+    "world_view_transform": [
+      [
+        0.6096066236495972,
+        0.7903355360031128,
+        -0.06123284250497818,
+        0.0
+      ],
+      [
+        -0.5244603157043457,
+        0.4600387215614319,
+        0.7164536118507385,
+        0.0
+      ],
+      [
+        0.5944082140922546,
+        -0.40464067459106445,
+        0.6949422955513,
+        0.0
+      ],
+      [
+        -0.5554220080375671,
+        0.33854785561561584,
+        0.36143752932548523,
+        1.0
+      ]
+    ],
+    "projection_matrix": [
+      [
+        2.9396870136260986,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.6538299322128296,
+        0.0,
+        0.0
+      ],
+      [
+        0.0034320035483688116,
+        0.00193050189409405,
+        1.000100016593933,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.010001000016927719,
+        0.0
+      ]
+    ],
+    "full_proj_transform": [
+      [
+        1.7918424606323242,
+        1.306962251663208,
+        -0.06123896688222885,
+        -0.06123284250497818
+      ],
+      [
+        -1.539290189743042,
+        0.7622089385986328,
+        0.7165252566337585,
+        0.7164536118507385
+      ],
+      [
+        1.7497590780258179,
+        -0.6678652763366699,
+        0.6950117945671082,
+        0.6949422955513
+      ],
+      [
+        -1.6315263509750366,
+        0.5605983138084412,
+        0.3514726758003235,
+        0.36143752932548523
+      ]
+    ],
+    "camera_center": [
+      0.09315428137779236,
+      -0.7059951424598694,
+      0.21595948934555054
+    ]
+  },
+  "normal_space": "camera",
+  "world_normal": "Actual Open3D unit frontmost triangle normal in source mesh world coordinates",
+  "camera_normal": "world normal @ W2C_rotation.T",
+  "gray": "Same two-sided headlight shading0.2+0.8*abs(camera_normal.z), independent of all colors/textures",
+  "wireframe": "Exact actual triangle vertex/face edge segments, clipped in camera Z and projected with corrected K; retain pixels on frontmost ray-hit face within the recorded pixel width of its actual edge; not RGB/normal/silhouette edge detection",
+  "wireframe_width_px": 0.65,
+  "vertex_color_available": true,
+  "native_uv_texture_available": false,
+  "color_semantics": "Vertex color only if actually present; UV texture only if actual source OBJ has per-corner UV and decoded texture material image. Missing color/texture is unavailable, never replaced by gray.",
+  "background": 0.25
+}

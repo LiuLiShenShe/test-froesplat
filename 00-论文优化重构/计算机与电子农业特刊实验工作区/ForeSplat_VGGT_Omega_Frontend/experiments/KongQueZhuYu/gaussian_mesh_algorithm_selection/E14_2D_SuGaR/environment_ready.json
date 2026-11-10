@@ -1,0 +1,49 @@
+{
+  "status": "ready",
+  "torch": "2.10.0+cu128",
+  "pytorch3d": "0.7.8",
+  "physical_gpu": 1,
+  "compiled_native2d_and3d_rasterizers": true,
+  "weights_verified": {
+    "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/weights/metric_depth_vit_giant2_800k.pth",
+    "size": 5510989187,
+    "sha256": "22d64c4dec098fa56eb17b6f22b1fb7d16b4742c66a9c8ee73e7dae61c0d2a1b",
+    "status": "verified"
+  },
+  "p3d_camera_validation": {
+    "status": "passed",
+    "different_focal_and_principal_points": true,
+    "error_max_px": 3.814697265625e-06,
+    "protocol": "CPU actual official FoVPerspectiveCameras + per-camera calibration; screen edge coordinates shift-.5 to integer pixel centres"
+  },
+  "gpu_work_started": false,
+  "torch_cuda_runtime": "12.8",
+  "native_cuda_toolkit": "12.6.85",
+  "metric3d_actual_cpu_model_weight_load": {
+    "status": "passed",
+    "missing_keys": [
+      "depth_model.encoder.mask_token",
+      "depth_model.encoder.norm.weight",
+      "depth_model.encoder.norm.bias"
+    ],
+    "unexpected_keys": [],
+    "model_parameters": 1377675099,
+    "state_tensors": 751,
+    "torch": "2.10.0+cu128",
+    "forward_called": false,
+    "gpu_called": false,
+    "elapsed_seconds": 377.30693650245667,
+    "weight": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/weights/metric_depth_vit_giant2_800k.pth",
+    "source": "Exact official local torch.hub constructor/pretrainFalse + SHA256-verified full checkpoint",
+    "all_inference_weights_loaded": true,
+    "missing_key_reason": "Exact official giant2_reg constructor multi_output=True; tensor inference with masksNone skips mask_token and returns pre-norm features without encoder.norm. Three absent keys are unused in this native forward path; no missing participating weight.",
+    "original_load_check": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/metric3d_cpu_load_validation_first_attempt.json",
+    "source_analysis": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/metric3d_official/mono/model/backbones/ViT_DINO_reg.py",
+    "source_sha256": "70963202c3fca5f75e313bfd21223514251b273b132282cf100767f3942ea712"
+  },
+  "native_web_viewer": {
+    "script": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E14_2D_SuGaR/scripts/view_native_web.py",
+    "external_2dgs_supported": true,
+    "launched": false
+  }
+}

@@ -1,0 +1,54 @@
+defaults:
+  - ./base.yaml
+
+skip_train: True
+skip_test: True
+skip_mesh: False
+skip_cull: False
+render_path: False
+# case_name: bicycle
+# case_name: bonsai
+# case_name: counter
+# case_name: flowers
+case_name: garden
+# case_name: kitchen
+# case_name: room
+# case_name: stump
+# case_name: treehill
+root_dir: /home/zzy_group/data/public_data/mipnerf360/${case_name}
+
+GT_path:
+pipeline:
+  num_cluster: 1
+  depth_ratio: 1.0
+  mesh_res: 1024
+  voxel_size: 0.004
+  sdf_trunc: 0.016
+  depth_trunc: 3.5
+  # num_cluster: 1
+  # depth_ratio: 1.0
+  # mesh_res: 1024
+  # voxel_size: 0.006
+  # sdf_trunc: 0.024
+  # depth_trunc: 4.5
+dataset:
+  use_alpha: False
+  eval: False
+  downsample: 0.5
+
+optimizer:
+  percent_dense: 0.0001
+  densify_grad_threshold: 1.0
+  multi_view_weight_from_iter: 30000
+  curvature_clamp_threshold: -1.0
+  lambda_normal: 0.015
+  lambda_dist: 10.0
+
+model_path: > 
+  ${root_dir}/exp/DepthRatio=${pipeline.depth_ratio}_
+  DensifyGrad=${optimizer.densify_grad_threshold}_
+  CurvClamp=${optimizer.curvature_clamp_threshold}_
+  Dist=${optimizer.lambda_dist}_
+  Percendent=${optimizer.percent_dense}
+# path to pre-trained model
+load_model_path: ${model_path}

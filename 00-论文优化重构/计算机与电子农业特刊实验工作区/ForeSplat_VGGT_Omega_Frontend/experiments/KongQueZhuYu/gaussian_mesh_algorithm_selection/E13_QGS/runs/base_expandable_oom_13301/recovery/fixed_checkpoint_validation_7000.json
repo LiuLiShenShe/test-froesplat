@@ -1,0 +1,205 @@
+{
+  "status": "actual_checkpoint_structure_verified",
+  "observed_iteration": 7000,
+  "checkpoint": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/E13_QGS/checkpoints/chkpnt7000.pth",
+  "file_size_bytes": 358372869,
+  "observed_sha256": "cbb15ed13b9e94c13e16ca21225dd36fb2185a07fdd3f10fc177c21b4fe0ed16",
+  "primitives": 474027,
+  "native_signed_scale_channels": 6,
+  "active_sh_degree": 3,
+  "fields": [
+    {
+      "field": "xyz",
+      "shape": [
+        474027,
+        3
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_dc",
+      "shape": [
+        474027,
+        1,
+        3
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_rest",
+      "shape": [
+        474027,
+        15,
+        3
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "scaling",
+      "shape": [
+        474027,
+        6
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "rotation",
+      "shape": [
+        474027,
+        4
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "opacity",
+      "shape": [
+        474027,
+        1
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "max_radii2D",
+      "shape": [
+        474027
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "xyz_gradient_accum",
+      "shape": [
+        474027,
+        1
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "denom",
+      "shape": [
+        474027,
+        1
+      ],
+      "nonfinite_primitives": 0,
+      "NaNs": 0,
+      "infinities": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "xyz.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "xyz.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_dc.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_dc.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_rest.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "f_rest.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "opacity.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "opacity.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "scaling.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "scaling.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "rotation.Adam.exp_avg",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    },
+    {
+      "field": "rotation.Adam.exp_avg_sq",
+      "nonfinite_primitives": 0,
+      "first_bad_native_indices": []
+    }
+  ],
+  "nonfinite_native_primitives": 0,
+  "nonfinite_native_fraction": 0.0,
+  "all_native_parameters_finite": true,
+  "numeric_defects_retained_unchanged": true,
+  "CPU_only": true,
+  "phase": "Native Scene.save capture before densification and optimizer step",
+  "run_id": null,
+  "not_terminal_30000": true,
+  "audit_time": 1794220932.891146,
+  "native_forward_parameter_decode": {
+    "dtype": "torch.float32 CPU; no guarantee of bitwise CUDA transcendental equality",
+    "scale_equation": "exp(raw_scale0..2)*tanh(raw_scale3..5)",
+    "rotation_equation": "raw_quaternion/max(L2norm,1e-12)",
+    "nonfinite_decoded_primitives": 0,
+    "additional_nonfinite_decode_from_finite_raw": 0,
+    "signed_scale_exact_zero_primitives": 0,
+    "zero_raw_quaternion_primitives": 0,
+    "zero_decoded_quaternion_primitives": 0,
+    "finite_signed_scale_min_abs_per_axis": [
+      1.2502928257163148e-06,
+      5.962626801192528e-07,
+      1.6271797393053178e-17
+    ],
+    "finite_signed_scale_max_abs_per_axis": [
+      0.047930777072906494,
+      0.03823816031217575,
+      0.002371487207710743
+    ],
+    "original_parameters_unchanged": true,
+    "quadratic_scale_is_not_ordinary_Gaussian_thickness": true
+  },
+  "audit_script_sha256": "ca843bc679e387661d84cb3a521f7f7e2de1235786adc924d94dcd7e677b2afd",
+  "mutable_path_note": "Actual fixed native checkpoint; provenance success is distinct from numerical quality."
+}
