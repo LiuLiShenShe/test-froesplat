@@ -1,0 +1,22 @@
+{
+  "views": 1,
+  "count": 576396,
+  "source": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/E10_Standard_Corrected_Interface/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+  "source_sha256": "93d97195f4e77eb463d071503f67c7be4d8b9d21fdb24d775ec5f46bd6921860",
+  "seconds": 2.934267282485962,
+  "records": [
+    {
+      "source_id": 0,
+      "relative_sum_error": [
+        0.0002764409582596272,
+        8.093408723652828e-06,
+        5.002306807000423e-06
+      ],
+      "fg_weight": 468906.6875,
+      "bg_weight": 154446.671875,
+      "black_weight": 149930.84375
+    }
+  ],
+  "method": "Native GGGS rasterizer dRGB_channel/dGaussian_color_channel = sum(T * alpha) inside fixed pixel weights; parameters detached, no training. bg excludes3px RAP band. Black ROI luminance<0.12. Sum independently validated against rendered alpha.",
+  "physical_gpu": 1
+}

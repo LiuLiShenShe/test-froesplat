@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "official_core_unchanged": {
+    "gs2mesh_utils/stereo_utils.py": true,
+    "gs2mesh_utils/tsdf_utils.py": true,
+    "gs2mesh_utils/renderer_utils.py": true,
+    "third_party/DLNR/core/dlnr.py": true
+  },
+  "stages": [
+    {
+      "experiment": "G1_P2_to_GS2Mesh",
+      "gaussian_sha256": "406189476cf70e7e4a65c23fd87013140126cef828467b361ff8c25a27f9d7eb",
+      "gaussian_count": 544074,
+      "left_right_pairs": 208,
+      "fresh_stereo_records": 208,
+      "depth_trunc": 1.5692457556724548,
+      "stereo_iterations": 10,
+      "render_seconds": 282.0379457473755,
+      "stereo_seconds": 369.27674102783203,
+      "fusion_seconds": 28.200155019760132
+    },
+    {
+      "experiment": "G2_BestCleaned_to_GS2Mesh",
+      "gaussian_sha256": "dc647363875a782c51c1987f35c9e1032a41a83e7366188c7a3599f6ea3b34f9",
+      "gaussian_count": 510248,
+      "left_right_pairs": 208,
+      "fresh_stereo_records": 208,
+      "depth_trunc": 1.5692457556724548,
+      "stereo_iterations": 10,
+      "render_seconds": 242.6288321018219,
+      "stereo_seconds": 388.0041573047638,
+      "fusion_seconds": 72.37194895744324
+    }
+  ],
+  "manager": "uv",
+  "gpu": 1,
+  "original_model_untouched_sha256": {
+    "E10": "93d97195f4e77eb463d071503f67c7be4d8b9d21fdb24d775ec5f46bd6921860",
+    "P2": "406189476cf70e7e4a65c23fd87013140126cef828467b361ff8c25a27f9d7eb",
+    "P3": "6e0d219b39a991a21ae2bb147ee49dda6e55214dcf15208314503e8f663c3325"
+  },
+  "scope": "No VGGT/SAM inference, no GGGS training, no new model representation",
+  "search": "Bocha HTTP403 quota unavailable. Official project and GS2Mesh source retrieved directly; ctx7 GS2Mesh has no indexed match, uv current docs fetched. All quality conclusions measured locally."
+}

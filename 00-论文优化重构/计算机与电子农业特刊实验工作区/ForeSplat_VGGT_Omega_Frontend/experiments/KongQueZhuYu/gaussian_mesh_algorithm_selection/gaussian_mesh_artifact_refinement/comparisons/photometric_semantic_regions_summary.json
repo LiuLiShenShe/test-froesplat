@@ -1,0 +1,24 @@
+{
+  "summaries": {
+    "P2": {
+      "plant_pot_fg_psnr": 19.49628671316,
+      "plant_pot_boundary_psnr": 13.963828701239366,
+      "full_historical_fg_psnr": 19.47479352584252,
+      "marker_mask_pixels": 3406.403846153846
+    },
+    "R5_historical": {
+      "plant_pot_fg_psnr": 19.539230392529415,
+      "plant_pot_boundary_psnr": 14.157511044007082,
+      "full_historical_fg_psnr": 19.512785306343666,
+      "marker_mask_pixels": 3406.403846153846
+    },
+    "Best_PlantPot": {
+      "plant_pot_fg_psnr": 19.539025077453026,
+      "plant_pot_boundary_psnr": 14.156541313116367,
+      "full_historical_fg_psnr": 18.68054886964651,
+      "marker_mask_pixels": 3406.403846153846
+    }
+  },
+  "mask_rule": "Existing RAP component around projected actual marker center, search30px, component<5% foreground; main plant/pot component is never excluded. Occluded/merged uncertain markers remain in scoring. No SAM rerun.",
+  "interpretation": "Supplementary same Plant+Pot regions separate semantic marker exclusion from leaf loss. Historical full208 metrics retain original RAP without changes."
+}

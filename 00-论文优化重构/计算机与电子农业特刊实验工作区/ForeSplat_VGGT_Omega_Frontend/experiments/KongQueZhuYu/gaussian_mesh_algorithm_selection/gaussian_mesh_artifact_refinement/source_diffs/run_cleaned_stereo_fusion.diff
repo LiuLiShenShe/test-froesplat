@@ -1,0 +1,67 @@
+--- original/run_stereo_fusion.py
++++ refinement/run_cleaned_stereo_fusion.py
+@@ -10,11 +10,12 @@
+ import numpy as np
+ from PIL import Image
+ 
+-ROOT=Path(__file__).resolve().parents[1]
++ORIGINAL_ROOT=Path(__file__).resolve().parents[2]/'P3_GS2Mesh'
++ROOT=ORIGINAL_ROOT
+ OFFICIAL=ROOT/"official"
+ HISTORY=ROOT.parents[1]/"geometry_mesh_final_selection"
+ sys.path.insert(0,str(OFFICIAL))
+-from render_e10_stereo import write
++from render_cleaned_stereo import write
+ 
+ class CachedRenderer:
+     def __init__(self):
+@@ -58,7 +59,7 @@
+         if code or not (out/'complete.json').exists():raise RuntimeError('Parent '+experiment+' free view audit failed; '+str(log))
+ 
+ def run_stereo(a,renderer):
+-    parent_free_view_tasks()
++    if ROOT==ORIGINAL_ROOT: parent_free_view_tasks()
+     import torch
+     from gs2mesh_utils.stereo_utils import Stereo
+     args=argparse.Namespace(stereo_model="DLNR_Middlebury",stereo_warm=False,stereo_occlusion_threshold=3,stereo_shading_eps=1e-4)
+@@ -71,8 +72,9 @@
+         renderer.render_image_pair(i)
+         folder=Path(renderer.render_folder_name(i));out=folder/"out_DLNR_Middlebury"
+         out.mkdir(parents=True,exist_ok=True)
+-        if (out/"complete.json").exists():
+-            records.append(json.loads((out/"complete.json").read_text()));continue
++        input_sha=hashlib.sha256((folder/'left.png').read_bytes()+(folder/'right.png').read_bytes()).hexdigest()
++        if (out/'complete.json').exists():
++            cached=json.loads((out/'complete.json').read_text());assert cached['stereo_rgb_sha256']==input_sha,'Stale depth cache';records.append(cached);continue
+         t=time.time()
+         image1=stereo.load_image(str(folder/"left.png"));image2=stereo.load_image(str(folder/"right.png"))
+         padder=stereo.input_padder(image1.shape,divis_by=32)
+@@ -108,7 +110,7 @@
+         Image.fromarray(occlusion.astype(np.uint8)*255).save(out/"occlusion_mask.png")
+         Image.fromarray((confidence*255).astype(np.uint8)).save(out/"confidence.png")
+         mask=np.load(folder/"left_mask.npy").astype(bool)
+-        rec=dict(source_id=c["source_id"],name=c["name"],elapsed_seconds=time.time()-t,shape=list(d.shape),
++        rec=dict(stereo_rgb_sha256=input_sha,gaussian_sha256=json.loads((folder/'render_complete.json').read_text())['gaussian_sha256'],source_id=c['source_id'],name=c['name'],elapsed_seconds=time.time()-t,shape=list(d.shape),
+                  fg_pixels=int(mask.sum()),fg_valid_depth_pixels=int((mask&(depth>0)).sum()),
+                  fg_stereo_consistent_pixels=int((mask&occlusion).sum()),path=str(out),
+                  confidence="exp(-native left-right reprojection residual/3px); consistency score, not calibrated network probability")
+@@ -144,7 +146,7 @@
+     tsdf.run(visualize=False)
+     tsdf.save_mesh()
+     stats=save_meshes(tsdf.mesh,mesh_out,scale)
+-    summary=dict(status="complete",source_experiment="E10",algorithm="Official GS2Mesh DLNR stereo -> native ScalableTSDF",
++    summary=dict(status="complete",source_experiment=ROOT.name,gaussian_source=json.loads((ROOT/'render_complete.json').read_text())['checkpoint'],gaussian_sha256=json.loads((ROOT/'render_complete.json').read_text())['gaussian_sha256'],algorithm="Official GS2Mesh DLNR stereo -> native ScalableTSDF",
+       wall_seconds=time.time()-start,parameters=vars(args),scale=scale,views=208,depth_trunc=args.TSDF_max_depth_baselines*renderer.baseline,
+       mask="Existing RAP without erosion; native stereo consistency mask",
+       official_commit="560f3e8a2349aaad24fe9444ef1ca2770aeec5ab",coordinate_system="Unchanged E10 standard VGGT world gauge",**stats)
+@@ -157,7 +159,10 @@
+     p.add_argument("--stage",choices=["stereo","fusion","all"],default="all")
+     p.add_argument("--limit",type=int,default=None)
+     p.add_argument("--shared-depth-range",action="store_true",help="Supplementary fusion using historical maximum depth; native main retains20 baselines")
++    p.add_argument('--output',type=Path,required=True)
+     a=p.parse_args()
++    global ROOT
++    ROOT=a.output.resolve()
+     renderer=CachedRenderer()
+     if a.stage in ["stereo","all"]:run_stereo(a,renderer)
+     if a.stage in ["fusion","all"]:run_fusion(a,renderer)

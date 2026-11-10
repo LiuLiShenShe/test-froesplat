@@ -1,0 +1,93 @@
+--- original/render_e10_stereo.py
++++ refinement/render_cleaned_stereo.py
+@@ -8,7 +8,7 @@
+ import torch
+ from PIL import Image
+ 
+-ROOT = Path(__file__).resolve().parents[1]
++ROOT = Path(__file__).resolve().parents[2] / 'P3_GS2Mesh'
+ BASE = ROOT.parents[3]
+ DUAL = ROOT.parents[1] / "geometry_rgb_dual_frontend"
+ HISTORY = ROOT.parents[1] / "geometry_mesh_final_selection"
+@@ -22,7 +22,9 @@
+     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+     tmp.replace(path)
+ 
+-def prepare():
++def prepare(output=None):
++    global ROOT
++    if output is not None: ROOT=Path(output).resolve()
+     refs = json.loads((HISTORY / "surface_inputs/e10_gggs_surface/camera_runtime.json").read_text())["records"]
+     assert len(refs) == 208
+     centers = np.asarray([r["camera_center"] for r in refs])
+@@ -52,8 +54,10 @@
+     parser=argparse.ArgumentParser()
+     parser.add_argument("--prepare-only", action="store_true")
+     parser.add_argument("--limit", type=int, default=None)
++    parser.add_argument('--gaussian-ply',type=Path)
++    parser.add_argument('--output',type=Path)
+     a=parser.parse_args()
+-    pairs, baseline=prepare()
++    pairs, baseline=prepare(a.output)
+     if a.prepare_only:
+         print("208 stereo camera pairs prepared; baseline", baseline, flush=True)
+         return
+@@ -70,7 +74,9 @@
+     runtime=ROOT/"runtime_checkpoint"
+     linked=runtime/"point_cloud/iteration_30000/point_cloud.ply"
+     linked.parent.mkdir(parents=True,exist_ok=True)
+-    original=checkpoint/"point_cloud/iteration_30000/point_cloud.ply"
++    original=(a.gaussian_ply or checkpoint/'point_cloud/iteration_30000/point_cloud.ply').resolve(strict=True)
++    gaussian_sha=hashlib.sha256(original.read_bytes()).hexdigest()
++    if linked.is_symlink() and linked.resolve()!=original: raise RuntimeError('Output runtime links to another Gaussian')
+     if not linked.exists(): linked.symlink_to(original)
+     ns=argparse.Namespace(sh_degree=3,sg_degree=0,source_path=str(DUAL/"Standard_VGGT_Original_RGB/COLMAP_Corrected"),
+        model_path=str(runtime),images="images",dataset="",resolution=2,white_background=False,data_device="cpu",eval=False,
+@@ -81,7 +87,10 @@
+     start=time.time()
+     scene=Scene(ns,gaussians,load_iteration=30000,shuffle=False)
+     cameras={c.image_name:c for c in scene.getTrainCameras()}
+-    assert len(cameras)==208 and len(gaussians.get_xyz)==576396
++    from plyfile import PlyData
++    expected=len(PlyData.read(str(original))['vertex'].data)
++    assert len(cameras)==208 and len(gaussians.get_xyz)==expected
++    if original.name=='cleaned_gaussians.ply' and original.parent.name=='P2_GGGS_Cleaning': assert expected==544074
+     background=torch.zeros(3,device="cuda")
+     torch.cuda.reset_peak_memory_stats()
+     records=[]
+@@ -91,7 +100,9 @@
+         dst=ROOT/"stereo"/f"{i:03}"
+         dst.mkdir(parents=True,exist_ok=True)
+         if (dst/"render_complete.json").exists():
+-            records.append(json.loads((dst/"render_complete.json").read_text()))
++            cached_record=json.loads((dst/'render_complete.json').read_text())
++            assert cached_record['gaussian_sha256']==gaussian_sha,'Stale render cache'
++            records.append(cached_record)
+             continue
+         E=np.linalg.inv(np.asarray(pair["right"]["extrinsic"]))
+         right=Camera(left.colmap_id,E[:3,:3].T,E[:3,3],left.FoVx,left.FoVy,left.original_image,
+@@ -111,7 +122,7 @@
+                     with np.load(cached) as old:
+                         delta=np.abs(rgb-old['render_raw'])
+                     parity=dict(reference_render_max_abs=float(delta.max()),reference_render_mean_abs=float(delta.mean()),reference_render_path=str(cached))
+-                    assert parity['reference_render_max_abs']<1e-4, 'E10 native rendered left parity failed'
++                    if a.gaussian_ply is None: assert parity['reference_render_max_abs']<1e-4, 'E10 native rendered left parity failed'
+                 Image.fromarray(np.clip(rgb*255,0,255).astype(np.uint8)).save(dst/(name+".png"),compress_level=1)
+                 outputs[name+"_alpha"]=pkg["mask"].cpu().numpy().squeeze().astype(np.float32)
+                 outputs[name+"_median_depth"]=pkg["median_depth"].cpu().numpy().squeeze().astype(np.float32)
+@@ -122,13 +133,14 @@
+         np.save(dst/"left_mask.npy",fg)
+         Image.fromarray(fg.astype(np.uint8)*255).save(dst/"left_mask.png")
+         rec=dict(source_id=pair["left"]["source_id"],name=left.image_name,path=str(dst),baseline=baseline,
++                 gaussian_sha256=gaussian_sha,gaussian_count=expected,gaussian_ply=str(original),
+                  left_mask_sha256=hashlib.sha256(fg.tobytes()).hexdigest(),**parity)
+         write(dst/"render_complete.json",rec)
+         records.append(rec)
+         print("E10 stereo rendered",i,rec["source_id"],flush=True)
+     done=a.limit is None or a.limit>=208
+     write(ROOT/("render_complete.json" if done else "render_smoke.json"),
+-         dict(status="complete" if done else "partial",views=len(records),model_count=len(gaussians.get_xyz),checkpoint=str(original.resolve()),
++         dict(status="complete" if done else "partial",views=len(records),model_count=len(gaussians.get_xyz),checkpoint=str(original.resolve()),gaussian_sha256=gaussian_sha,
+               wall_seconds=time.time()-start,peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
+               peak_reserved_gib=torch.cuda.max_memory_reserved()/2**30,physical_gpu=1,
+               renderer=str(repo),records=records))
