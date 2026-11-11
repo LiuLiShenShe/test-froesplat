@@ -1,0 +1,36 @@
+method_version: 3
+evidence_views: 64
+evaluation_max_side: 960
+max_rounds: 12
+minimum_relative_gain: 0.002
+geometry: true
+refinement: true
+boundary_relative_width: 0.002
+prune_background_fraction: 0.99
+geometry_prune_background_fraction: 0.98
+prune_foreground_budget: 0.0005
+refine_background_fraction: 0.10
+refine_max_gaussians: 4096
+refine_steps: 48
+refine_lr: 0.004
+refine_scale_trust: 0.30
+refine_rotation_trust: 0.06
+refine_validation_interval: 16
+quality:
+  foreground_alpha_drop: 0.001
+  foreground_mse_relative_increase: 0.005
+  foreground_mse_absolute_increase: 0.00001
+  boundary_f1_drop: 0.002
+  boundary_coverage_drop: 0.002
+  foreground_coverage_drop: 0.001
+  skeleton_coverage_drop: 0.001
+  thin_coverage_drop: 0.001
+  depth_relative_p95: 0.03
+  normal_angle_p95_deg: 3.0
+  view_foreground_alpha_drop: 0.005
+  view_thin_coverage_drop: 0.005
+  view_foreground_mse_relative_increase: 0.05
+  view_depth_relative_p95: 0.06
+  view_normal_angle_p95_deg: 8.0
+  depth_changed_fraction: 0.002
+  view_depth_changed_fraction: 0.01
