@@ -1,5 +1,20 @@
 # ForeSplat Automatic Gaussian Artifact Suppression
 
+The current default entry is `auto_clean_gaussians.py --strategy historical_two_stage`.
+It restores iterative native GGGS contribution pruning and then performs automatic
+residual pruning and candidate-only covariance refinement. The earlier C5 usage
+below remains available for comparison; it is not the current default route.
+See `HISTORICAL_TWO_STAGE_PLAN.md` and the selected experiment's measured report.
+
+For local browser validation, use the separately preserved official SuperSplat
+source with its documented opacity compatibility fix. The original local3.8.0
+build and installed splat-transform3.11.1 combination applied sigmoid twice,
+exaggerating low-alpha splats. Earlier visual rejections using that build require
+correction. Evidence, known-alpha browser tests, untouched build locations and the
+one-line source patch are in
+`experiments/Historical_TwoStage_Cleaner/viewer_compatibility/VISUAL_REVIEW_ERRATUM.md`.
+Native GGGS measurements and the standard PLY logit contract are unaffected.
+
 Standalone post-processing module for native GGGS SH Gaussian models. Keeps original E10/P2/R5 and all previous assets unchanged. GPU1 and the existing uv environment are mandatory for this experiment.
 
 From `ForeSplat_VGGT_Omega_Frontend/`:

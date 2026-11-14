@@ -15,6 +15,22 @@ from ..cleaner.io import write_json
 from .metrics import arrays
 
 
+def free_framing(view,config):
+    """Preserve vertical FoV while matching an explicitly requested viewport.
+
+    Portrait training crops can hide detached splats seen in a landscape
+    editor. This changes free-camera framing only; observed cameras stay exact.
+    """
+    aspect=config.get('free_view_aspect')
+    if aspect is None:return dict(K=view['K'],width=view['width'],height=view['height'])
+    if not np.isfinite(aspect) or aspect<=0:raise ValueError('Positive free-view aspect required')
+    longest=config['evaluation_max_side']
+    width,height=(longest,round(longest/aspect)) if aspect>=1 else (round(longest*aspect),longest)
+    scale=height/view['height']
+    affine=np.array([[scale,0,(width-scale*view['width'])/2],[0,scale,0],[0,0,1.]])
+    return dict(K=affine@view['K'],width=width,height=height)
+
+
 def generate(scene, surface):
     if surface is None:
         return []
@@ -44,7 +60,7 @@ def generate(scene, surface):
         E = np.eye(4)
         E[:3, :3] = np.stack([x, y, z])
         E[:3, 3] = -E[:3, :3] @ center
-        result.append(dict(name=name, E=E, K=v['K'], width=v['width'], height=v['height']))
+        result.append(dict(name=name, E=E, **free_framing(v,scene.config)))
     return result
 
 

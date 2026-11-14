@@ -1,0 +1,46 @@
+method: ForeSplat Two-Stage Gaussian Artifact Suppression
+method_version: historical-two-stage-8
+full_view_restoration: true
+allow_unsupported_nonworsening_tails: true
+contribution_aggregation: trajectory_voronoi
+stage1_historical_photo_tradeoff: true
+protect_covariance_damage: true
+free_view_aspect: 1.3333333333333333
+attribution_max_side: 1920
+original_foreground_views: 64
+protect_measured_damage: true
+damage_protection_fractions: [0.98, 1.0]
+refine_filtered_covariance: true
+refine_axis_modes: [surface_normal, longest]
+historical_supported_quality: true
+foreground_support_relative_error: 0.25
+foreground_support_minimum_fraction: 0.5
+edge_photo_worse_alpha_loss: 0.002
+depth_supported_alpha_loss: 0.002
+evaluation_max_side: 960
+evidence_views: 24
+confirmation_views: 64
+boundary_relative_width: 0.002
+geometry: true
+free_background_support: projected_surface
+stage1_max_rounds: 12
+stage2_max_rounds: 8
+minimum_relative_gain: 0.002
+plateau_patience: 2
+v3_discovery: true
+refine_max_candidates: 512
+refine_axis_factors: [0.9, 0.75, 0.5]
+quality:
+  foreground_psnr_drop_db: 0.12
+  foreground_alpha_drop: 0.003
+  foreground_coverage_drop: 0.003
+  boundary_coverage_drop: 0.006
+  thin_coverage_drop: 0.003
+  skeleton_coverage_drop: 0.002
+  dark_foreground_alpha_drop: 0.003
+  dark_foreground_mse_relative_increase: 0.02
+  local_rgb_mse_increase: 0.0005
+  depth_relative_p95: 0.03
+  depth_changed_fraction: 0.02
+  normal_angle_p95_deg: 8.0
+  new_depth_invalid_fraction: 0.003
