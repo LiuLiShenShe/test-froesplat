@@ -77,6 +77,10 @@ def run(args):
     spec.pop('geometry_cameras',None);spec.pop('geometry_dir',None)
     scene=Scene(spec,dict(evaluation_max_side=args.max_side,evidence_views=args.views))
     indices=scene.evidence_indices()
+    if args.view_indices:
+        indices=args.view_indices
+        if len(indices)!=args.views or len(set(indices))!=len(indices) or any(i<0 or i>=len(scene.views) for i in indices):
+            raise ValueError('Explicit indices must be unique existing cameras and match --views')
     meter=Meter(20)
     header,original=read_rows(spec['model'],meter)
     variants={'original':None};ablations={}
@@ -151,6 +155,8 @@ def run(args):
             if order==0 and (name in ['original','fast'] or args.external_models):
                 Image.fromarray(np.uint8(np.clip(a['rgb']+(1-a['alpha'][...,None])*.5,0,1)*255)).save(args.output/(name+'_first_observed_full.png'))
             if args.external_models:
+                if name=='original':
+                    Image.fromarray(np.uint8(np.clip(target,0,1)*255)).save(args.output/('reference_observed_'+str(order).zfill(2)+'.png'))
                 Image.fromarray(np.uint8(np.clip(a['rgb']+(1-a['alpha'][...,None])*.5,0,1)*255)).save(args.output/(name+'_observed_'+str(order).zfill(2)+'.png'))
                 Image.fromarray(np.uint8(np.clip(a['alpha'],0,1)*255)).save(args.output/(name+'_alpha_'+str(order).zfill(2)+'.png'))
             if order<4 and (args.external_models or name in ['original','fast','C1','C2','R5']):
@@ -200,6 +206,7 @@ def main():
     p.add_argument('--output',required=True,type=Path);p.add_argument('--views',type=int,default=16);p.add_argument('--max-side',type=int,default=960);p.add_argument('--skip-ablations',action='store_true');p.add_argument('--skip-baselines',action='store_true')
     p.add_argument('--result-root',type=Path,default=ROOT/'experiments/fast_ply_validation/v2')
     p.add_argument('--external-models',type=Path,help='JSON name:path mapping; evaluate original/baselines and these final PLYs, skip Fast computation')
+    p.add_argument('--view-indices',nargs='+',type=int,help='Optional fixed existing camera indices; same indices for every model')
     run(p.parse_args())
 
 if __name__=='__main__':

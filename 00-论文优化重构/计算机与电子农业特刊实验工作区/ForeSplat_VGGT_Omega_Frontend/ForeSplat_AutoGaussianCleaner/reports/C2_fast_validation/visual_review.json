@@ -1,0 +1,34 @@
+{
+  "ChangShouHua1": {
+    "assessment": "明显过删：暗叶与花盆碎裂",
+    "representative_view": 7,
+    "details": "直接查看全部16视角拼图及全尺寸view 00、07：大面积黑云被清除，但多片下部/内侧暗叶出现透空和碎裂，叶片连接区域显著变稀，花盆表面出现大片透明孔洞。上部亮叶与花序仍可见，不能据此认定完整植株受到保护。代表图为crop_0055，新增前景alpha孔洞16.76%；16视角平均10.41%。未对每条叶柄做语义标注，不能保证其完整性。",
+    "evidence": [
+      "ChangShouHua1/paired_view_00.png",
+      "ChangShouHua1/paired_view_07.png",
+      "ChangShouHua1/all_16_pairs.png"
+    ]
+  },
+  "DouBanLv1": {
+    "assessment": "主体保留，暗部局部损伤",
+    "representative_view": 0,
+    "details": "直接查看全部16视角拼图及全尺寸view 00、08：主体叶片、叶尖和可见主茎总体保留，未见主茎整段消失；下层阴影叶片、盆口内部与花盆暗侧局部变稀/侵蚀。view 14、15等近景仍见黑色叶缘/残余黑边，因此不能描述成全部黑点和黑条均已清零。最差view 08（crop_0092）新增前景alpha孔洞8.87%；平均3.51%。边缘覆盖下降也受原始黑云对mask的过覆盖影响，不能将其全部解释成叶片丢失。",
+    "evidence": [
+      "DouBanLv1/paired_view_00.png",
+      "DouBanLv1/paired_view_08.png",
+      "DouBanLv1/all_16_pairs.png"
+    ]
+  },
+  "recommendation": "C2_raw在三株的观测背景黑像素上均清除超过99%，可固定为强去云基线和低I/O入口；当前不建议直接统一应用于19株。长寿花1有明显暗叶/花盆过删，网纹草1在crop_0012/crop_0013暗视角中植株几乎消失；豆瓣绿1主体较完整但暗部有局部侵蚀、残余黑边。三株平均清理98.88秒，917万点网纹草260.15秒，应用层峰值均低于20 MiB/s。本轮未调整阈值或关闭KNN；后续是否调整现有参数，应基于这些损伤再决定，不能仅依据平均PSNR或背景黑像素下降而验收。",
+  "WangWenCao1": {
+    "assessment": "两个暗视角植株近乎消失",
+    "representative_view": 2,
+    "details": "直接查看全部16视角拼图、全尺寸view 00/02与crop_0013目标图：多数视角的大面积黑云显著消失，但仍有黑条、亮色漂浮物和模糊/发亮的叶片。view 01（crop_0012）与view 02（crop_0013）中原本可见的暗色植株几乎消失；后者对应目标图确有可见绿色植株，不能将该区域的删除解释成单纯去除黑云。两视角新增前景alpha孔洞分别87.09%和99.39%；16视角平均20.66%。其他视角原模型本就模糊且被黑云遮挡，不能保证每片叶和叶柄完整。尽管平均PSNR由10.20升至12.54 dB，这两个视角的明显丢失已不满足结构保留要求。",
+    "evidence": [
+      "WangWenCao1/paired_view_00.png",
+      "WangWenCao1/paired_view_02.png",
+      "WangWenCao1/crop_0013_target_preview.png",
+      "WangWenCao1/all_16_pairs.png"
+    ]
+  }
+}

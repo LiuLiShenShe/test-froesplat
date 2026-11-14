@@ -1,0 +1,58 @@
+{
+  "algorithm": "C2_raw: legacy.rules(version=3,normalized=False)",
+  "plants": [
+    "ChangShouHua1",
+    "DouBanLv1",
+    "WangWenCao1"
+  ],
+  "io_limit_mib_s": 20,
+  "memory_budget_gib": 8,
+  "knn_query_k": 65,
+  "knn_final_k": 20,
+  "knn_chunk_rows": 16384,
+  "knn_workers": 8,
+  "observed_views": 16,
+  "max_side": 960,
+  "historical_free_protocol": null,
+  "gpu": "GPU1 evaluation only; CPU-only cleaning",
+  "python": "3.12.3",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "source_sha256": {
+    "cleaner/adaptive/legacy.py": "9d6da23dfed763c300b18b82dda873fac6977e0126db4d5e0a7985c8b2cf2a91",
+    "fast_ply/c2.py": "5533bb2fdcd75255391bc21dbb5e4dc7c7bd693230b096154da9379038ef3a60",
+    "fast_ply/io.py": "b032363663689eb33cc3d275c216a3b67144c4ba6aaded1186325d8925234d3c",
+    "fast_clean_c2.py": "7c3b5bf0b11cf3f1f286f7110b7ce57f260355d57457d5c7ef9bd3e5f26012b8",
+    "fast_ply/evaluate.py": "420875d138844fff28e11ee421f17fd8088291c2dff108542114d8795f28437c"
+  },
+  "web_search": "Bocha attempted; HTTP 403 unavailable; experiments use local sources",
+  "docs": "https://github.com/scipy/scipy/blob/v1.18.1/doc/source/tutorial/spatial.rst",
+  "inputs": {
+    "ChangShouHua1": {
+      "scene_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/configs/scenes/ChangShouHua1.json",
+      "model": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/ChangShouHua1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+      "size_bytes": 111367664,
+      "mtime_ns": 1794307454701583325
+    },
+    "DouBanLv1": {
+      "scene_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/configs/scenes/DouBanLv1.json",
+      "model": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/DouBanLv1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+      "size_bytes": 188674460,
+      "mtime_ns": 1794384168277995807
+    },
+    "WangWenCao1": {
+      "scene_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/configs/scenes/WangWenCao1.json",
+      "model": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/WangWenCao1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+      "size_bytes": 2311442577,
+      "mtime_ns": 1794320757912449335
+    },
+    "KongQueZhuYu": {
+      "scene_config": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/configs/scenes/KongQueZhuYu.json",
+      "model": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/experiments/KongQueZhuYu/geometry_rgb_dual_frontend/E10_Standard_Corrected_Interface/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+      "size_bytes": 145253348,
+      "mtime_ns": 1794121006049699723
+    }
+  },
+  "regression_checks": "PYTHONPATH=.. ../.venv/bin/python -m pytest tests/fast_ply/test_c2.py -q: 6 passed",
+  "historical_equivalence_report": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/C2_fast_validation/KongQueZhuYu_equivalence/cleanup_report.json"
+}

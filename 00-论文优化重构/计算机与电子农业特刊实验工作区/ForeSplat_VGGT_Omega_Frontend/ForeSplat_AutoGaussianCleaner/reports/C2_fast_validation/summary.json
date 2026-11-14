@@ -1,0 +1,605 @@
+{
+  "schema": "C2_fast_validation_summary_v1",
+  "plants": {
+    "ChangShouHua1": {
+      "label": "长寿花1",
+      "cleanup": {
+        "schema": "fast_c2_raw_v1",
+        "algorithm": "legacy.rules(version=3, normalized=False)",
+        "input_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/ChangShouHua1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+        "output_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/C2_fast_validation/ChangShouHua1/cleaned_gaussians.ply",
+        "config": {
+          "io_limit_mib": 20.0,
+          "memory_budget_gib": 8.0,
+          "block_rows": 16384
+        },
+        "original_gaussians": 441929,
+        "remaining_gaussians": 299528,
+        "removed_gaussians": 142401,
+        "removed_fraction": 0.32222596842479223,
+        "parameters": {
+          "version": 3,
+          "normalized": false,
+          "thresholds": {
+            "opacity": 0.01,
+            "brightness": 0.1,
+            "scale_max": 0.5,
+            "dark_scale": 0.05,
+            "knn_k": 20,
+            "knn_ratio": 0.4,
+            "knn_brightness_max": 0.35
+          },
+          "reasons": {
+            "low_opacity": {
+              "overlapping_count": 6097,
+              "exclusive_first_reason_count": 6097
+            },
+            "oversized": {
+              "overlapping_count": 5,
+              "exclusive_first_reason_count": 5
+            },
+            "dark": {
+              "overlapping_count": 74566,
+              "exclusive_first_reason_count": 73544
+            },
+            "dark_large": {
+              "overlapping_count": 1629,
+              "exclusive_first_reason_count": 0
+            },
+            "dark_desaturated": {
+              "overlapping_count": 66833,
+              "exclusive_first_reason_count": 22221
+            },
+            "spatial_outlier": {
+              "overlapping_count": 7970,
+              "exclusive_first_reason_count": 0
+            },
+            "scale_brightness": {
+              "overlapping_count": 101689,
+              "exclusive_first_reason_count": 39725
+            },
+            "knn_dark": {
+              "overlapping_count": 43101,
+              "exclusive_first_reason_count": 809
+            }
+          },
+          "scale_encoding": "exp(log scale); 3 axes; isotropic filter adds f^2 to covariance eigenvalues",
+          "alpha_encoding": "sigmoid(logit); normalized variant multiplies native determinant filter coefficient",
+          "color_definition": "Unclipped mean(SH_DC*C0+0.5), not true rendered brightness",
+          "removed": 142401,
+          "scene_extent": 1.1459466645323801
+        },
+        "historical_verification": null,
+        "execution_path": "one_read_in_memory",
+        "timing": {
+          "process_cpu_s": 8.981453623,
+          "total_s": 14.633701747050509,
+          "read_and_features_s": 5.863030722015537,
+          "decision_s": 2.2023882810026407,
+          "export_s": 6.568282744032331,
+          "throttle_wait_s": 8.979003608808853,
+          "active_wall_excluding_throttle_s": 5.654698138241656
+        },
+        "io": {
+          "complete_model_reads": 1,
+          "complete_model_writes": 1,
+          "logical_read_bytes": 111367664,
+          "logical_write_bytes": 75482612,
+          "configured_limit_mib_s": 20.0,
+          "observed_peak_one_second_mib_s": 19.603092193603516,
+          "average_aggregate_mib_s": 12.176981075245369,
+          "max_transfer_bytes": 262144,
+          "read_calls": 433,
+          "write_calls": 300,
+          "proc_io_delta": {
+            "rchar": 111367764,
+            "wchar": 75482701,
+            "syscr": 1990,
+            "syscw": 303,
+            "read_bytes": 0,
+            "write_bytes": 75485184,
+            "cancelled_write_bytes": 0
+          },
+          "temporary_data_bytes": 0,
+          "final_ply_bytes": 75482612,
+          "measurement_scope": "Aggregate application PLY bytes in trailing one-second windows; NOT measured device physical peak. Single final payload staged under .partial; no intermediate models or SHA scans."
+        },
+        "resource": {
+          "gpu_used": false,
+          "renderer_used": false,
+          "peak_process_rss_bytes": 258002944,
+          "budget_bytes": 8589934592,
+          "estimated_peak_bytes": 408787164
+        },
+        "native_record_policy": "All fields, order, byte order and retained record bytes unchanged; only vertex count changes.",
+        "quality_boundary": "Cleanup timing excludes separate GPU render evaluation; visual/metric review required."
+      },
+      "psnr_original": 20.555673074880723,
+      "psnr_cleaned": 17.119195160269165,
+      "psnr_delta_db": -3.436477914611558,
+      "observed_bg_black_pixels_original": 4920909,
+      "observed_bg_black_pixels_cleaned": 25330,
+      "observed_bg_black_reduction_pct": 99.48525770340399,
+      "original_mean": {
+        "fg_mse": 0.010189531560172327,
+        "fg_psnr": 20.555673074880723,
+        "fg_ssim": 0.6696906145662069,
+        "fg_alpha": 0.9903784282505512,
+        "fg_coverage": 0.9914436382663171,
+        "boundary_coverage": 0.9020299355851606,
+        "skeleton_coverage": 0.991861126737194,
+        "boundary_f1": 0.06743778715630618,
+        "thin_coverage": 0.9677990568313583,
+        "dark_foreground_alpha": 0.9973002001643181,
+        "dark_foreground_mse": 0.003320721112686442,
+        "dark_foreground_pixels": 24850.4375,
+        "bg_alpha": 0.8332607075572014,
+        "bg_alpha_mass_per_fg": 2.298828609699938,
+        "bg_high_alpha_coverage": 0.8331471192604578,
+        "bg_high_alpha_pixels": 310562.0625,
+        "largest_bg_component_fraction": 0.5933598572530865,
+        "small_bg_components": 19.3125,
+        "small_bg_pixels": 114.375,
+        "dark_bg_high_alpha_pixels": 307556.8125,
+        "dark_bg_high_alpha_fraction": 0.5932808883101852,
+        "new_fg_alpha_hole_fraction": 0.0,
+        "depth_changed_gt_3pct_fraction": 0.0
+      },
+      "cleaned_mean": {
+        "fg_mse": 0.02042662719031796,
+        "fg_psnr": 17.119195160269165,
+        "fg_ssim": 0.42292620334774256,
+        "fg_alpha": 0.8682276681065559,
+        "fg_coverage": 0.887868146731404,
+        "boundary_coverage": 0.5732189064812514,
+        "skeleton_coverage": 0.921142337757735,
+        "boundary_f1": 0.1432014081778781,
+        "thin_coverage": 0.8721202084630513,
+        "dark_foreground_alpha": 0.7229561787098646,
+        "dark_foreground_mse": 0.0346234145690687,
+        "dark_foreground_pixels": 24850.4375,
+        "bg_alpha": 0.014122547436272725,
+        "bg_alpha_mass_per_fg": 0.035221299902902556,
+        "bg_high_alpha_coverage": 0.013680571848183587,
+        "bg_high_alpha_pixels": 4931.875,
+        "largest_bg_component_fraction": 0.0021217930169753086,
+        "small_bg_components": 72.125,
+        "small_bg_pixels": 429.6875,
+        "dark_bg_high_alpha_pixels": 1583.125,
+        "dark_bg_high_alpha_fraction": 0.0030538676697530864,
+        "new_fg_alpha_hole_fraction": 0.10413201203926085,
+        "depth_changed_gt_3pct_fraction": 0.17935274494172038
+      },
+      "visual_review": {
+        "assessment": "明显过删：暗叶与花盆碎裂",
+        "representative_view": 7,
+        "details": "直接查看全部16视角拼图及全尺寸view 00、07：大面积黑云被清除，但多片下部/内侧暗叶出现透空和碎裂，叶片连接区域显著变稀，花盆表面出现大片透明孔洞。上部亮叶与花序仍可见，不能据此认定完整植株受到保护。代表图为crop_0055，新增前景alpha孔洞16.76%；16视角平均10.41%。未对每条叶柄做语义标注，不能保证其完整性。",
+        "evidence": [
+          "ChangShouHua1/paired_view_00.png",
+          "ChangShouHua1/paired_view_07.png",
+          "ChangShouHua1/all_16_pairs.png"
+        ]
+      },
+      "observed_indices": [
+        0,
+        11,
+        21,
+        30,
+        35,
+        39,
+        46,
+        52,
+        61,
+        66,
+        71,
+        89,
+        120,
+        144,
+        159,
+        172
+      ]
+    },
+    "DouBanLv1": {
+      "label": "豆瓣绿1",
+      "cleanup": {
+        "schema": "fast_c2_raw_v1",
+        "algorithm": "legacy.rules(version=3, normalized=False)",
+        "input_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/DouBanLv1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+        "output_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/C2_fast_validation/DouBanLv1/cleaned_gaussians.ply",
+        "config": {
+          "io_limit_mib": 20.0,
+          "memory_budget_gib": 8.0,
+          "block_rows": 16384
+        },
+        "original_gaussians": 748702,
+        "remaining_gaussians": 638938,
+        "removed_gaussians": 109764,
+        "removed_fraction": 0.14660572564251198,
+        "parameters": {
+          "version": 3,
+          "normalized": false,
+          "thresholds": {
+            "opacity": 0.01,
+            "brightness": 0.1,
+            "scale_max": 0.5,
+            "dark_scale": 0.05,
+            "knn_k": 20,
+            "knn_ratio": 0.4,
+            "knn_brightness_max": 0.35
+          },
+          "reasons": {
+            "low_opacity": {
+              "overlapping_count": 10302,
+              "exclusive_first_reason_count": 10302
+            },
+            "oversized": {
+              "overlapping_count": 67,
+              "exclusive_first_reason_count": 67
+            },
+            "dark": {
+              "overlapping_count": 61420,
+              "exclusive_first_reason_count": 60830
+            },
+            "dark_large": {
+              "overlapping_count": 6543,
+              "exclusive_first_reason_count": 0
+            },
+            "dark_desaturated": {
+              "overlapping_count": 70855,
+              "exclusive_first_reason_count": 15338
+            },
+            "spatial_outlier": {
+              "overlapping_count": 20086,
+              "exclusive_first_reason_count": 0
+            },
+            "scale_brightness": {
+              "overlapping_count": 84479,
+              "exclusive_first_reason_count": 22795
+            },
+            "knn_dark": {
+              "overlapping_count": 55548,
+              "exclusive_first_reason_count": 432
+            }
+          },
+          "scale_encoding": "exp(log scale); 3 axes; isotropic filter adds f^2 to covariance eigenvalues",
+          "alpha_encoding": "sigmoid(logit); normalized variant multiplies native determinant filter coefficient",
+          "color_definition": "Unclipped mean(SH_DC*C0+0.5), not true rendered brightness",
+          "removed": 109764,
+          "scene_extent": 1.4323811238160664
+        },
+        "historical_verification": null,
+        "execution_path": "one_read_in_memory",
+        "timing": {
+          "process_cpu_s": 10.604817723,
+          "total_s": 21.870466533931904,
+          "read_and_features_s": 9.898021510918625,
+          "decision_s": 2.605575527995825,
+          "export_s": 9.366869495017454,
+          "throttle_wait_s": 16.822172636864707,
+          "active_wall_excluding_throttle_s": 5.048293897067197
+        },
+        "io": {
+          "complete_model_reads": 1,
+          "complete_model_writes": 1,
+          "logical_read_bytes": 188674460,
+          "logical_write_bytes": 161013932,
+          "configured_limit_mib_s": 20.0,
+          "observed_peak_one_second_mib_s": 19.58144760131836,
+          "average_aggregate_mib_s": 15.248364166278519,
+          "max_transfer_bytes": 262144,
+          "read_calls": 732,
+          "write_calls": 640,
+          "proc_io_delta": {
+            "rchar": 188674560,
+            "wchar": 161014021,
+            "syscr": 2289,
+            "syscw": 643,
+            "read_bytes": 0,
+            "write_bytes": 161017856,
+            "cancelled_write_bytes": 0
+          },
+          "temporary_data_bytes": 0,
+          "final_ply_bytes": 161013932,
+          "measurement_scope": "Aggregate application PLY bytes in trailing one-second windows; NOT measured device physical peak. Single final payload staged under .partial; no intermediate models or SHA scans."
+        },
+        "resource": {
+          "gpu_used": false,
+          "renderer_used": false,
+          "peak_process_rss_bytes": 363905024,
+          "budget_bytes": 8589934592,
+          "estimated_peak_bytes": 564627848
+        },
+        "native_record_policy": "All fields, order, byte order and retained record bytes unchanged; only vertex count changes.",
+        "quality_boundary": "Cleanup timing excludes separate GPU render evaluation; visual/metric review required."
+      },
+      "psnr_original": 19.416927527359974,
+      "psnr_cleaned": 18.71543887146268,
+      "psnr_delta_db": -0.7014886558972933,
+      "observed_bg_black_pixels_original": 6613730,
+      "observed_bg_black_pixels_cleaned": 27174,
+      "observed_bg_black_reduction_pct": 99.58912746664893,
+      "original_mean": {
+        "fg_mse": 0.012222470686538145,
+        "fg_psnr": 19.416927527359974,
+        "fg_ssim": 0.7275708355009556,
+        "fg_alpha": 0.9996067248284817,
+        "fg_coverage": 1.0,
+        "boundary_coverage": 1.0,
+        "skeleton_coverage": 1.0,
+        "boundary_f1": 0.0011430412753145058,
+        "thin_coverage": 1.0,
+        "dark_foreground_alpha": 0.9994416683912277,
+        "dark_foreground_mse": 0.0063762969366507605,
+        "dark_foreground_pixels": 2902.6875,
+        "bg_alpha": 0.9653118550777435,
+        "bg_alpha_mass_per_fg": 5.056306080881513,
+        "bg_high_alpha_coverage": 0.9794158591421396,
+        "bg_high_alpha_pixels": 415886.8125,
+        "largest_bg_component_fraction": 0.8022504340277778,
+        "small_bg_components": 0.1875,
+        "small_bg_pixels": 0.1875,
+        "dark_bg_high_alpha_pixels": 413358.125,
+        "dark_bg_high_alpha_fraction": 0.7973729263117284,
+        "new_fg_alpha_hole_fraction": 0.0,
+        "depth_changed_gt_3pct_fraction": 0.0
+      },
+      "cleaned_mean": {
+        "fg_mse": 0.014115952915744856,
+        "fg_psnr": 18.71543887146268,
+        "fg_ssim": 0.6559636853635311,
+        "fg_alpha": 0.9566669203341007,
+        "fg_coverage": 0.9648611351989242,
+        "boundary_coverage": 0.6629047651950573,
+        "skeleton_coverage": 0.9823564643820464,
+        "boundary_f1": 0.2305127397586907,
+        "thin_coverage": 0.9678306965074046,
+        "dark_foreground_alpha": 0.8578342646360397,
+        "dark_foreground_mse": 0.03433595955721103,
+        "dark_foreground_pixels": 2902.6875,
+        "bg_alpha": 0.010708977250033058,
+        "bg_alpha_mass_per_fg": 0.047165953708429006,
+        "bg_high_alpha_coverage": 0.010487644257543689,
+        "bg_high_alpha_pixels": 4278.4375,
+        "largest_bg_component_fraction": 0.0030330102237654316,
+        "small_bg_components": 56.625,
+        "small_bg_pixels": 296.625,
+        "dark_bg_high_alpha_pixels": 1698.375,
+        "dark_bg_high_alpha_fraction": 0.003276186342592593,
+        "new_fg_alpha_hole_fraction": 0.035063724971545945,
+        "depth_changed_gt_3pct_fraction": 0.03979832327744377
+      },
+      "visual_review": {
+        "assessment": "主体保留，暗部局部损伤",
+        "representative_view": 0,
+        "details": "直接查看全部16视角拼图及全尺寸view 00、08：主体叶片、叶尖和可见主茎总体保留，未见主茎整段消失；下层阴影叶片、盆口内部与花盆暗侧局部变稀/侵蚀。view 14、15等近景仍见黑色叶缘/残余黑边，因此不能描述成全部黑点和黑条均已清零。最差view 08（crop_0092）新增前景alpha孔洞8.87%；平均3.51%。边缘覆盖下降也受原始黑云对mask的过覆盖影响，不能将其全部解释成叶片丢失。",
+        "evidence": [
+          "DouBanLv1/paired_view_00.png",
+          "DouBanLv1/paired_view_08.png",
+          "DouBanLv1/all_16_pairs.png"
+        ]
+      },
+      "observed_indices": [
+        0,
+        17,
+        30,
+        42,
+        51,
+        58,
+        65,
+        78,
+        89,
+        95,
+        108,
+        124,
+        134,
+        145,
+        153,
+        193
+      ]
+    },
+    "WangWenCao1": {
+      "label": "网纹草1",
+      "cleanup": {
+        "schema": "fast_c2_raw_v1",
+        "algorithm": "legacy.rules(version=3, normalized=False)",
+        "input_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/model_preparation/WangWenCao1/checkpoints/point_cloud/iteration_30000/point_cloud.ply",
+        "output_ply": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/C2_fast_validation/WangWenCao1/cleaned_gaussians.ply",
+        "config": {
+          "io_limit_mib": 20.0,
+          "memory_budget_gib": 8.0,
+          "block_rows": 16384
+        },
+        "original_gaussians": 9172385,
+        "remaining_gaussians": 8550282,
+        "removed_gaussians": 622103,
+        "removed_fraction": 0.06782347230300516,
+        "parameters": {
+          "version": 3,
+          "normalized": false,
+          "thresholds": {
+            "opacity": 0.01,
+            "brightness": 0.1,
+            "scale_max": 0.5,
+            "dark_scale": 0.05,
+            "knn_k": 20,
+            "knn_ratio": 0.4,
+            "knn_brightness_max": 0.35
+          },
+          "reasons": {
+            "low_opacity": {
+              "overlapping_count": 9791,
+              "exclusive_first_reason_count": 9791
+            },
+            "oversized": {
+              "overlapping_count": 0,
+              "exclusive_first_reason_count": 0
+            },
+            "dark": {
+              "overlapping_count": 533684,
+              "exclusive_first_reason_count": 528698
+            },
+            "dark_large": {
+              "overlapping_count": 1308,
+              "exclusive_first_reason_count": 1
+            },
+            "dark_desaturated": {
+              "overlapping_count": 497238,
+              "exclusive_first_reason_count": 13353
+            },
+            "spatial_outlier": {
+              "overlapping_count": 216637,
+              "exclusive_first_reason_count": 37
+            },
+            "scale_brightness": {
+              "overlapping_count": 585023,
+              "exclusive_first_reason_count": 60695
+            },
+            "knn_dark": {
+              "overlapping_count": 519293,
+              "exclusive_first_reason_count": 9528
+            }
+          },
+          "scale_encoding": "exp(log scale); 3 axes; isotropic filter adds f^2 to covariance eigenvalues",
+          "alpha_encoding": "sigmoid(logit); normalized variant multiplies native determinant filter coefficient",
+          "color_definition": "Unclipped mean(SH_DC*C0+0.5), not true rendered brightness",
+          "removed": 622103,
+          "scene_extent": 0.6209418181032931
+        },
+        "historical_verification": null,
+        "execution_path": "one_read_in_memory",
+        "timing": {
+          "process_cpu_s": 48.553068978,
+          "total_s": 260.1472663579043,
+          "read_and_features_s": 124.94979536894243,
+          "decision_s": 13.6699246710632,
+          "export_s": 121.52754631789867,
+          "throttle_wait_s": 214.77494160237256,
+          "active_wall_excluding_throttle_s": 45.372324755531736
+        },
+        "io": {
+          "complete_model_reads": 1,
+          "complete_model_writes": 1,
+          "logical_read_bytes": 2311442577,
+          "logical_write_bytes": 2154672621,
+          "configured_limit_mib_s": 20.0,
+          "observed_peak_one_second_mib_s": 19.62057113647461,
+          "average_aggregate_mib_s": 16.37233947553569,
+          "max_transfer_bytes": 262144,
+          "read_calls": 8959,
+          "write_calls": 8533,
+          "proc_io_delta": {
+            "rchar": 2311442677,
+            "wchar": 2154672731,
+            "syscr": 10517,
+            "syscw": 8537,
+            "read_bytes": 4096,
+            "write_bytes": 2154684416,
+            "cancelled_write_bytes": 0
+          },
+          "temporary_data_bytes": 0,
+          "final_ply_bytes": 2154672621,
+          "measurement_scope": "Aggregate application PLY bytes in trailing one-second windows; NOT measured device physical peak. Single final payload staged under .partial; no intermediate models or SHA scans."
+        },
+        "resource": {
+          "gpu_used": false,
+          "renderer_used": false,
+          "peak_process_rss_bytes": 3474030592,
+          "budget_bytes": 8589934592,
+          "estimated_peak_bytes": 4843858812
+        },
+        "native_record_policy": "All fields, order, byte order and retained record bytes unchanged; only vertex count changes.",
+        "quality_boundary": "Cleanup timing excludes separate GPU render evaluation; visual/metric review required."
+      },
+      "psnr_original": 10.198811767583669,
+      "psnr_cleaned": 12.536756363957789,
+      "psnr_delta_db": 2.33794459637412,
+      "observed_bg_black_pixels_original": 6719062,
+      "observed_bg_black_pixels_cleaned": 17583,
+      "observed_bg_black_reduction_pct": 99.73831168695868,
+      "original_mean": {
+        "fg_mse": 0.11477247078437358,
+        "fg_psnr": 10.198811767583669,
+        "fg_ssim": 0.37673594057559967,
+        "fg_alpha": 0.9589402787387371,
+        "fg_coverage": 0.960359699145215,
+        "boundary_coverage": 0.9512310548757115,
+        "skeleton_coverage": 0.9586343111042638,
+        "boundary_f1": 0.003768709364929264,
+        "thin_coverage": 0.9515985461877462,
+        "dark_foreground_alpha": 0.9621044062077999,
+        "dark_foreground_mse": 0.11536078393692151,
+        "dark_foreground_pixels": 6641.5625,
+        "bg_alpha": 0.8989295847713947,
+        "bg_alpha_mass_per_fg": 11.245053159213512,
+        "bg_high_alpha_coverage": 0.8980876960015123,
+        "bg_high_alpha_pixels": 421953.25,
+        "largest_bg_component_fraction": 0.7866648582175926,
+        "small_bg_components": 3.875,
+        "small_bg_pixels": 7.6875,
+        "dark_bg_high_alpha_pixels": 419941.375,
+        "dark_bg_high_alpha_fraction": 0.8100720968364197,
+        "new_fg_alpha_hole_fraction": 0.0,
+        "depth_changed_gt_3pct_fraction": 0.0
+      },
+      "cleaned_mean": {
+        "fg_mse": 0.06258739647455513,
+        "fg_psnr": 12.536756363957789,
+        "fg_ssim": 0.36069565266370773,
+        "fg_alpha": 0.7710535335936584,
+        "fg_coverage": 0.7881404736647293,
+        "boundary_coverage": 0.5276626253249268,
+        "skeleton_coverage": 0.7775882637966673,
+        "boundary_f1": 0.07948700749805337,
+        "thin_coverage": 0.5565983564321113,
+        "dark_foreground_alpha": 0.7760144851636142,
+        "dark_foreground_mse": 0.24608164589153603,
+        "dark_foreground_pixels": 6641.5625,
+        "bg_alpha": 0.023079636361217126,
+        "bg_alpha_mass_per_fg": 0.27020615172178014,
+        "bg_high_alpha_coverage": 0.021774640207111638,
+        "bg_high_alpha_pixels": 10193.9375,
+        "largest_bg_component_fraction": 0.01142722800925926,
+        "small_bg_components": 62.1875,
+        "small_bg_pixels": 204.0,
+        "dark_bg_high_alpha_pixels": 1098.9375,
+        "dark_bg_high_alpha_fraction": 0.0021198640046296295,
+        "new_fg_alpha_hole_fraction": 0.2066038012292583,
+        "depth_changed_gt_3pct_fraction": 0.4081119318599207
+      },
+      "visual_review": {
+        "assessment": "两个暗视角植株近乎消失",
+        "representative_view": 2,
+        "details": "直接查看全部16视角拼图、全尺寸view 00/02与crop_0013目标图：多数视角的大面积黑云显著消失，但仍有黑条、亮色漂浮物和模糊/发亮的叶片。view 01（crop_0012）与view 02（crop_0013）中原本可见的暗色植株几乎消失；后者对应目标图确有可见绿色植株，不能将该区域的删除解释成单纯去除黑云。两视角新增前景alpha孔洞分别87.09%和99.39%；16视角平均20.66%。其他视角原模型本就模糊且被黑云遮挡，不能保证每片叶和叶柄完整。尽管平均PSNR由10.20升至12.54 dB，这两个视角的明显丢失已不满足结构保留要求。",
+        "evidence": [
+          "WangWenCao1/paired_view_00.png",
+          "WangWenCao1/paired_view_02.png",
+          "WangWenCao1/crop_0013_target_preview.png",
+          "WangWenCao1/all_16_pairs.png"
+        ]
+      },
+      "observed_indices": [
+        0,
+        9,
+        10,
+        21,
+        27,
+        33,
+        38,
+        46,
+        52,
+        68,
+        80,
+        88,
+        125,
+        139,
+        155,
+        174
+      ]
+    }
+  },
+  "average_cleanup_wall_s": 98.88381154629558,
+  "average_cleanup_cpu_s": 22.713113441333334,
+  "recommendation": "C2_raw在三株的观测背景黑像素上均清除超过99%，可固定为强去云基线和低I/O入口；当前不建议直接统一应用于19株。长寿花1有明显暗叶/花盆过删，网纹草1在crop_0012/crop_0013暗视角中植株几乎消失；豆瓣绿1主体较完整但暗部有局部侵蚀、残余黑边。三株平均清理98.88秒，917万点网纹草260.15秒，应用层峰值均低于20 MiB/s。本轮未调整阈值或关闭KNN；后续是否调整现有参数，应基于这些损伤再决定，不能仅依据平均PSNR或背景黑像素下降而验收。",
+  "quality_protocol": "16 matched observed views per plant, max side 960, original native GGGS renderer, GPU1; no historical free-view protocol",
+  "visual_review_method": "Direct model vision of actual local render PNGs; no external vision API"
+}
