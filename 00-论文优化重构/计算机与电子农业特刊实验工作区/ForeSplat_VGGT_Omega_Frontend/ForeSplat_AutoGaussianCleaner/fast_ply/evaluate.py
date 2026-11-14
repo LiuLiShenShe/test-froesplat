@@ -79,29 +79,43 @@ def run(args):
     indices=scene.evidence_indices()
     meter=Meter(20)
     header,original=read_rows(spec['model'],meter)
-    features=extract_features(original)
-    index=build(features,4,16384)
     variants={'original':None};ablations={}
-    cfg=CleanupConfig()
-    for stage in (['joint'] if args.skip_ablations else ['attributes','appearance','isolation','joint']):
-        start=time.perf_counter();keep,stats=decide_keep(features,replace(cfg,stage=stage),index)
-        name='fast' if stage=='joint' else 'ablation_'+stage
-        variants[name]=keep
-        ablations[stage]=dict(**stats,decision_s=time.perf_counter()-start)
-    del features,index
+    if not args.external_models:
+        features=extract_features(original)
+        index=build(features,4,16384)
+        cfg=CleanupConfig()
+        for stage in (['joint'] if args.skip_ablations else ['attributes','appearance','isolation','joint']):
+            start=time.perf_counter();keep,stats=decide_keep(features,replace(cfg,stage=stage),index)
+            name='fast' if stage=='joint' else 'ablation_'+stage
+            variants[name]=keep
+            ablations[stage]=dict(**stats,decision_s=time.perf_counter()-start)
+        del features,index
     models=[]
     if spec['plant']=='KongQueZhuYu' and not args.skip_baselines:
         models.extend([('C1',ROOT/'experiments/GGGS_Cleaner_Comparison/baselines/C1_raw/cleaned_gaussians.ply'),
                        ('C2',ROOT/'experiments/GGGS_Cleaner_Comparison/baselines/C2_raw/cleaned_gaussians.ply'),
                        ('R5',ROOT.parent/'experiments/KongQueZhuYu/gaussian_mesh_algorithm_selection/gaussian_mesh_artifact_refinement/task0_gaussian_cleaning/additional_rounds/round_05/gaussians.ply')])
-    final=args.result_root/spec['plant']/'cleaned_gaussians.ply'
-    retained_ids=np.flatnonzero(variants['fast'])
-    with final.open('rb',buffering=0) as stream:
-        h_final=read_header(stream,meter)
-        if h_final.count!=len(retained_ids):raise ValueError('Final file count differs from decision')
-        for start,block in chunks(stream,h_final,meter,16384):
-            if block.tobytes()!=original[retained_ids[start:start+len(block)]].tobytes():raise ValueError('Final record bytes differ from derived decision')
-    del retained_ids
+    if args.external_models:
+        models=[(n,p) for n,p in models if n!='C1']
+        extra=json.loads(args.external_models.read_text())
+        if not isinstance(extra,dict) or not extra:raise ValueError('External manifest must be a nonempty name:path mapping')
+        occupied=set(variants)|{n for n,p in models}
+        for name,path in extra.items():
+            if name in occupied or not name.replace('_','').isalnum():raise ValueError('Unique alphanumeric/underscore model names required')
+            p=Path(path)
+            if not p.is_file():raise FileNotFoundError(p)
+            models.append((name,p));occupied.add(name)
+        for name,path in models:
+            if not path.is_file():raise FileNotFoundError(path)
+    else:
+        final=args.result_root/spec['plant']/'cleaned_gaussians.ply'
+        retained_ids=np.flatnonzero(variants['fast'])
+        with final.open('rb',buffering=0) as stream:
+            h_final=read_header(stream,meter)
+            if h_final.count!=len(retained_ids):raise ValueError('Final file count differs from decision')
+            for start,block in chunks(stream,h_final,meter,16384):
+                if block.tobytes()!=original[retained_ids[start:start+len(block)]].tobytes():raise ValueError('Final record bytes differ from derived decision')
+        del retained_ids
     all_names=list(variants)+[name for name,p in models if p.exists()]
     baseline={};records={};thumbs={};free_thumbs={}
     protocol=json.loads(Path(spec['historical_free_protocol']).read_text()) if spec.get('historical_free_protocol') else None
@@ -134,9 +148,12 @@ def run(args):
             unit=max(float(np.median(old['depth'][base_valid])),1e-9) if base_valid.any() else 1
             rec['depth_changed_gt_3pct_fraction']=float((np.abs(a['depth'][common]-old['depth'][common])/unit>.03).sum()/max(common.sum(),1))
             view_records.append(rec)
-            if order==0 and name in ['original','fast']:
+            if order==0 and (name in ['original','fast'] or args.external_models):
                 Image.fromarray(np.uint8(np.clip(a['rgb']+(1-a['alpha'][...,None])*.5,0,1)*255)).save(args.output/(name+'_first_observed_full.png'))
-            if order<4 and name in ['original','fast','C1','C2','R5']:
+            if args.external_models:
+                Image.fromarray(np.uint8(np.clip(a['rgb']+(1-a['alpha'][...,None])*.5,0,1)*255)).save(args.output/(name+'_observed_'+str(order).zfill(2)+'.png'))
+                Image.fromarray(np.uint8(np.clip(a['alpha'],0,1)*255)).save(args.output/(name+'_alpha_'+str(order).zfill(2)+'.png'))
+            if order<4 and (args.external_models or name in ['original','fast','C1','C2','R5']):
                 im=Image.fromarray(np.uint8(np.clip(a['rgb']+(1-a['alpha'][...,None])*.5,0,1)*255));im.thumbnail((360,240))
                 thumbs[(name,order)]=im
             scene.view_cache.clear()
@@ -148,7 +165,9 @@ def run(args):
             labels,_=ndimage.label(black);sizes=np.bincount(labels.ravel())[1:]
             free_records.append(dict(name=c.image_name,black_pixels=int(black.sum()),background_alpha=float(a['alpha'][outside].sum()),
                                      small_black_components=int(((sizes>0)&(sizes<=200)).sum()),largest_black_component=int(sizes.max()) if len(sizes) else 0))
-            if order<4 and name in ['original','fast','C1','C2','R5']:
+            if args.external_models:
+                Image.fromarray(np.uint8(np.clip(gray,0,1)*255)).save(args.output/(name+'_free_'+str(order).zfill(2)+'.png'))
+            if order<4 and (args.external_models or name in ['original','fast','C1','C2','R5']):
                 im=Image.fromarray(np.uint8(np.clip(gray,0,1)*255));im.thumbnail((360,240));free_thumbs[(name,order)]=im
         means={k:float(np.mean([r[k] for r in view_records if r[k] is not None])) for k in view_records[0] if isinstance(view_records[0][k],(int,float)) and k!='index'}
         records[name]=dict(gaussians=count,mean=means,observed_views=view_records,free_views=free_records,
@@ -159,7 +178,7 @@ def run(args):
     args.output.mkdir(parents=True,exist_ok=True)
     for kind,images in [('observed',thumbs),('free',free_thumbs)]:
         if not images:continue
-        names=[n for n in ['original','C1','C2','R5','fast'] if (n,0) in images]
+        names=[n for n in (all_names if args.external_models else ['original','C1','C2','R5','fast']) if (n,0) in images]
         canvas=Image.new('RGB',(4*360,len(names)*270),'white');draw=ImageDraw.Draw(canvas)
         for row,name in enumerate(names):
             for col in range(4):canvas.paste(images[name,col],(col*360,row*270+25))
@@ -167,7 +186,9 @@ def run(args):
         canvas.save(args.output/(kind+'_contact.png'))
     result=dict(plant=spec['plant'],observed_indices=indices,observed_max_side=args.max_side,
                 historical_protocol=spec.get('historical_free_protocol'),ablations=ablations,results=records,
-                cleaning_stage="joint",measured_gpu='physical GPU1, final paired evaluation only',logical_ply_read_bytes=meter.read_bytes,
+                cleaning_stage="external_final_models" if args.external_models else "joint",
+                external_models={n:str(p) for n,p in models} if args.external_models else None,
+                measured_gpu='physical GPU1, final paired evaluation only',logical_ply_read_bytes=meter.read_bytes,
                 semantic_boundary='RAP mask/skeleton and P3 silhouette proxies, not botanical semantic ground truth; observed subset is not full-view evaluation')
     (args.output/'paired_quality.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     (args.output/'progress.json').unlink(missing_ok=True)
@@ -178,6 +199,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--scene',required=True,type=Path)
     p.add_argument('--output',required=True,type=Path);p.add_argument('--views',type=int,default=16);p.add_argument('--max-side',type=int,default=960);p.add_argument('--skip-ablations',action='store_true');p.add_argument('--skip-baselines',action='store_true')
     p.add_argument('--result-root',type=Path,default=ROOT/'experiments/fast_ply_validation/v2')
+    p.add_argument('--external-models',type=Path,help='JSON name:path mapping; evaluate original/baselines and these final PLYs, skip Fast computation')
     run(p.parse_args())
 
 if __name__=='__main__':
