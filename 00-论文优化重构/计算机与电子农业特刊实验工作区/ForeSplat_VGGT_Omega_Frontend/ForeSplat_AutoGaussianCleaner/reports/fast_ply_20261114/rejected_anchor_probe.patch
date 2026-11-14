@@ -1,0 +1,177 @@
+--- a/fast_ply/spatial.py
++++ b/fast_ply/spatial.py
+@@ -17,7 +17,7 @@
+     return np.quantile(sample(a),q)
+ 
+ 
+-def build(features,cell_scale,block_rows):
++def build(features,cell_scale,block_rows,with_anchors=False):
+     xyz=features['xyz']; n=len(xyz)
+     extent=np.linalg.norm(np.diff(quantile(xyz,[.01,.99]),axis=0))
+     origin=xyz.min(0).astype('f8')
+@@ -35,20 +35,26 @@
+     # Geometric scale mean limits domination by huge splats in a cell.
+     log_s=np.log(np.maximum(features['effective_max'],np.finfo('f4').tiny))
+     sums_s=np.bincount(inverse,weights=log_s)
++    anchors=None
++    if with_anchors:
++        reliable=(features['brightness']>quantile(features['brightness'],.2)) & (features['alpha_eff']>=quantile(features['alpha_eff'],.2))
++        anchors=np.bincount(inverse,weights=reliable.astype('f4'))
+     del inverse
+     return dict(keys=keys,unique=unique,counts=counts,sums_b=sums_b,sums_s=sums_s,
+-                cell_size=h,extent=float(extent))
++                cell_size=h,extent=float(extent),anchors=anchors)
+ 
+ 
+ def query(index,features,ids,block_rows=32768):
+     n=len(ids)
+     support=np.zeros(n,'i4'); cells=np.zeros(n,'u1'); opposite=np.zeros(n,'u1')
+     neighbor_b=np.full(n,np.nan,'f4');neighbor_s=np.full(n,np.nan,'f4')
++    anchors=np.zeros(n,'i4');volume=np.zeros(n,'f4')
+     unique=index['unique'];counts=index['counts'];keys=index['keys']
+     for start in range(0,n,block_rows):
+         ii=ids[start:start+block_rows];size=len(ii); key=keys[ii]
+         total=np.zeros(size,'i8'); bsum=np.zeros(size,'f8');ssum=np.zeros(size,'f8')
+         occupied=np.zeros((27,size),bool)
++        anchor_sum=np.zeros(size,'f8')
+         for j,(dx,dy,dz) in enumerate(OFFSETS):
+             delta=dx*(1<<(2*BITS))+dy*(1<<BITS)+dz
+             kk=key+np.uint64(delta) if delta>=0 else key-np.uint64(-delta)
+@@ -59,6 +65,7 @@
+             total[positions]+=counts[at]
+             bsum[positions]+=index['sums_b'][at];ssum[positions]+=index['sums_s'][at]
+             occupied[j,positions]=True
++            if index.get('anchors') is not None:anchor_sum[positions]+=index['anchors'][at]
+         available=total>1
+         neighbor_b[start:start+size][available]=((bsum[available]-features['brightness'][ii[available]])/(total[available]-1)).astype('f4')
+         logs=np.log(np.maximum(features['effective_max'][ii],np.finfo('f4').tiny))
+@@ -68,5 +75,14 @@
+         occupied[13]=False
+         cells[start:start+size]=occupied.sum(0)
+         opposite[start:start+size]=(occupied[:13] & occupied[:13:-1]).sum(0)
++        if index.get('anchors') is not None:
++            anchors[start:start+size]=anchor_sum.astype('i4')
++            directions=np.asarray(OFFSETS,dtype='f8')
++            weights=occupied.T.astype('f8');mass=np.maximum(weights.sum(1),1)
++            mean=weights@directions/mass[:,None]
++            products=(directions[:,:,None]*directions[:,None,:]).reshape(27,9)
++            covariance=(weights@products/mass[:,None]).reshape(-1,3,3)-mean[:,:,None]*mean[:,None,:]
++            eigen=np.linalg.eigvalsh(covariance)
++            volume[start:start+size]=np.maximum(eigen[:,0],0)/np.maximum(eigen[:,1],1e-9)
+     return dict(support=support,neighbor_brightness=neighbor_b,neighbor_scale=neighbor_s,
+-                occupied_neighbors=cells,opposite_pairs=opposite)
++                occupied_neighbors=cells,opposite_pairs=opposite,anchor_support=anchors,volume_ratio=volume)
+--- a/fast_ply/core.py
++++ b/fast_ply/core.py
+@@ -29,7 +29,7 @@
+             raise ValueError('Rate must be nonnegative; memory budget and cell scale must be positive')
+         if self.block_rows<1 or self.min_local_support<1 or self.alpha_floor<0:
+             raise ValueError('Invalid block/support/alpha configuration')
+-        if self.stage not in ['attributes','appearance','isolation','joint']:
++        if self.stage not in ['attributes','appearance','isolation','joint','anchor_probe']:
+             raise ValueError('Unknown ablation stage')
+ 
+ 
+@@ -47,6 +47,7 @@
+     scale_limit=max(float(s995),float(s50)*3)
+     alpha_limit=max(config.alpha_floor,float(a01)*.25)
+     dark=b<=b05;large=s>=scale_limit;weak=a<=alpha_limit
++    if config.stage=='anchor_probe':dark=b<=b20
+     candidates=dark|large|weak
+     ids=np.flatnonzero(candidates)
+     removed=np.zeros(n,bool)
+@@ -59,7 +60,7 @@
+     if config.stage=='attributes': removed=weak & large
+     elif config.stage=='appearance': removed=(weak & large)|(dark & large)
+     else:
+-        index=spatial_index if spatial_index is not None else build(features,config.cell_scale,config.block_rows)
++        index=spatial_index if spatial_index is not None else build(features,config.cell_scale,config.block_rows,with_anchors=config.stage=='anchor_probe')
+         local=query(index,features,ids)
+         support=local['support'];nb=local['neighbor_brightness'];ns=local['neighbor_scale']
+         sparse=support<config.min_local_support
+@@ -69,12 +70,16 @@
+         bad_dark=dark[ids]|local_dark
+         delete=(weak[ids] & (sparse|scale)) | (bad_dark & scale & (sparse|local_dark))
+         protected=np.zeros(len(ids),bool)
+-        if config.stage=='joint':
++        if config.stage in ['joint','anchor_probe']:
+             continuous=local['opposite_pairs']>=1
+             # A line or sheet can have low density; coherent occupied directions
+             # plus a locally reasonable scale protect dark leaf/stem structures.
+             protected=(continuous & ~local_large) | ((b[ids]>=b20) & (support>=config.min_local_support))
+             delete &= ~protected
++        if config.stage=='anchor_probe':
++            volume_candidate=dark[ids] & (local['anchor_support']<config.min_local_support) & (local['volume_ratio']>.35)
++            delete |= volume_candidate
++            stats['unsupported_dark_volume_candidates']=int(volume_candidate.sum())
+         removed[ids[delete]]=True
+         stats.update(voxel_count=len(index['unique']),voxel_size=index['cell_size'],
+                      sparse_candidate=int(sparse.sum()),local_dark_outlier=int(local_dark.sum()),
+--- a/fast_clean_gggs.py
++++ b/fast_clean_gggs.py
+@@ -25,7 +25,7 @@
+     parser.add_argument("--cell-scale", type=float)
+     parser.add_argument("--min-local-support", type=int)
+     parser.add_argument("--block-rows", type=int)
+-    parser.add_argument("--stage", choices=["attributes","appearance","isolation","joint"], default=None, help="Research ablation; use joint for normal cleanup")
++    parser.add_argument("--stage", choices=["attributes","appearance","isolation","joint","anchor_probe"], default=None, help="Research ablation; use joint for normal cleanup")
+     args = parser.parse_args()
+     options = asdict(CleanupConfig())
+     if args.config:
+--- a/fast_ply/evaluate.py
++++ b/fast_ply/evaluate.py
+@@ -80,12 +80,12 @@
+     meter=Meter(20)
+     header,original=read_rows(spec['model'],meter)
+     features=extract_features(original)
+-    index=build(features,4,16384)
++    index=build(features,4,16384,with_anchors=args.stage=="anchor_probe")
+     variants={'original':None};ablations={}
+     cfg=CleanupConfig()
+-    for stage in (['joint'] if args.skip_ablations else ['attributes','appearance','isolation','joint']):
++    for stage in ([args.stage] if args.skip_ablations else ['attributes','appearance','isolation','joint']):
+         start=time.perf_counter();keep,stats=decide_keep(features,replace(cfg,stage=stage),index)
+-        name='fast' if stage=='joint' else 'ablation_'+stage
++        name='fast' if stage in ['joint','anchor_probe'] else 'ablation_'+stage
+         variants[name]=keep
+         ablations[stage]=dict(**stats,decision_s=time.perf_counter()-start)
+     del features,index
+@@ -167,7 +167,7 @@
+         canvas.save(args.output/(kind+'_contact.png'))
+     result=dict(plant=spec['plant'],observed_indices=indices,observed_max_side=args.max_side,
+                 historical_protocol=spec.get('historical_free_protocol'),ablations=ablations,results=records,
+-                cleaning_stage="joint",measured_gpu='physical GPU1, final paired evaluation only',logical_ply_read_bytes=meter.read_bytes,
++                cleaning_stage=args.stage,measured_gpu='physical GPU1, final paired evaluation only',logical_ply_read_bytes=meter.read_bytes,
+                 semantic_boundary='RAP mask/skeleton and P3 silhouette proxies, not botanical semantic ground truth; observed subset is not full-view evaluation')
+     (args.output/'paired_quality.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+     (args.output/'progress.json').unlink(missing_ok=True)
+@@ -177,6 +177,7 @@
+ def main():
+     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--scene',required=True,type=Path)
+     p.add_argument('--output',required=True,type=Path);p.add_argument('--views',type=int,default=16);p.add_argument('--max-side',type=int,default=960);p.add_argument('--skip-ablations',action='store_true');p.add_argument('--skip-baselines',action='store_true')
++    p.add_argument('--stage',choices=['joint','anchor_probe'],default='joint')
+     p.add_argument('--result-root',type=Path,default=ROOT/'experiments/fast_ply_validation/v2')
+     run(p.parse_args())
+ 
+--- a/tests/fast_ply/test_core.py
++++ b/tests/fast_ply/test_core.py
+@@ -130,3 +130,19 @@
+     for i in range(3):scaled[f'scale_{i}']+=np.log(factor)
+     converted,_=decide_keep(extract_features(scaled))
+     assert np.array_equal(original,converted)
++
++
++def test_anchor_probe_distinguishes_dark_volume_from_sheet():
++    a=rows(12000);rng=np.random.default_rng(5)
++    points=rng.uniform(-.1,.1,(12000,3)).astype('f4')
++    points[4000:8000]+=1
++    points[8000:]+=2;points[8000:,2]=2
++    for k,name in enumerate(['x','y','z']):a[name]=points[:,k]
++    a['opacity']=5
++    for k in range(3):
++        a[f'scale_{k}']=-5;a[f'f_dc_{k}'][4000:]=(0.02-.5)/.28209479177387814
++    f=extract_features(a)
++    keep,stats=decide_keep(f,CleanupConfig(stage='anchor_probe'))
++    assert keep[:4000].all()
++    assert keep[8000:].mean()>.99
++    assert (~keep[4000:8000]).mean()>.5

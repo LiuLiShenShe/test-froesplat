@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-14",
+  "config_sha256": "529e8470e61437741404c9ba88c79b773aac37aa08dd8a8f55ea84855d5ea677",
+  "config": {
+    "io_limit_mib": 20.0,
+    "memory_budget_gib": 8.0,
+    "cell_scale": 4.0,
+    "min_local_support": 3,
+    "alpha_floor": 1e-05,
+    "block_rows": 16384,
+    "stage": "joint"
+  },
+  "development": [
+    "KongQueZhuYu",
+    "ChangShouHua1",
+    "WangWenCao1"
+  ],
+  "heldout": [
+    "DouBanLv1"
+  ],
+  "rule_tuning_on_heldout": false,
+  "evaluation": "16 observed + fixed8 historical on KongQueZhuYu; 8 observed on others; max_side=960 for observed",
+  "cleanup_gpu": false,
+  "evaluation_gpu": 1
+}
