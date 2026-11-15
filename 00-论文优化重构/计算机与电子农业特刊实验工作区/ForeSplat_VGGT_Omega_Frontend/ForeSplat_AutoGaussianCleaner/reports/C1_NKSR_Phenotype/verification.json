@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "plants": [
+    "DouBanLv1",
+    "HongZhang",
+    "ChangShouHua3"
+  ],
+  "meshes": 6,
+  "matched_comparison_images": 3,
+  "checks": [
+    "unchanged original GGGS/C1 stamps",
+    "unchanged historical source hashes",
+    "existing NKSR binary and weight hashes",
+    "fixed NKSR parameters",
+    "all actual camera counts",
+    "surface NPZ fields/shapes/dtypes",
+    "mesh headers/counts/lengths",
+    "exact raw/post vertex subset",
+    "stage GPU and I/O records",
+    "matched image dimensions"
+  ],
+  "regression_tests": "3 adapter checks passed",
+  "details": [
+    {
+      "plant": "DouBanLv1",
+      "cameras": 200,
+      "input_points": 9305174,
+      "raw_vertices": 4184851,
+      "raw_faces": 8296092,
+      "post_vertices": 4181184,
+      "post_faces": 8291877
+    },
+    {
+      "plant": "HongZhang",
+      "cameras": 199,
+      "input_points": 6247267,
+      "raw_vertices": 2977658,
+      "raw_faces": 5901339,
+      "post_vertices": 2975328,
+      "post_faces": 5898770
+    },
+    {
+      "plant": "ChangShouHua3",
+      "cameras": 198,
+      "input_points": 7717462,
+      "raw_vertices": 4954486,
+      "raw_faces": 9804274,
+      "post_vertices": 4951241,
+      "post_faces": 9800829
+    }
+  ],
+  "final_adapter_sha256": {
+    "nksr_pipeline/__init__.py": "668fa564de23ef855292aa8c8f2164ef53431bcb2472f062111301c0b38ca152",
+    "nksr_pipeline/common.py": "91fbf86fcabd55d6af3812ab71cf18b20ff2a182a85f711bd2d67516affce8f8",
+    "nksr_pipeline/evaluate.py": "05c89df6f4a2fb639aa7f6e4c6f45977e93c876d0c07359a0075f94b603bffb1",
+    "nksr_pipeline/phenotype.py": "793e0d4bbc63e6a09f45132093e0088c7bed138950078fc7743550117bc92fdb",
+    "nksr_pipeline/reconstruct.py": "e7b2f807c88c745e734a0291e23eaa5a50343f8c2f25b3533639ab7374bd1aac",
+    "nksr_pipeline/references.py": "2571636717d4b5f2101eba2086189137b0bf639a55e6ea29a85be176c9ebb5df",
+    "nksr_pipeline/report.py": "643cae60921aaac24e201ffbfe628bf71e8c8104b7c62645d56a264e6f346b91",
+    "nksr_pipeline/run.py": "db3875e122766b8098a94da9746ff8a881c444685e6a0241c64d470275f3c5aa",
+    "nksr_pipeline/surface.py": "d225d2122506eb64da4334233e400b0117573b872028f7a85963b379f5d75001"
+  }
+}
