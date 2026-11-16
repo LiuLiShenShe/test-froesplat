@@ -1,0 +1,41 @@
+{
+  "source_mesh": {
+    "path": "/data/fj/F2DMAS/00-论文优化重构/计算机与电子农业特刊实验工作区/ForeSplat_VGGT_Omega_Frontend/ForeSplat_AutoGaussianCleaner/experiments/COLMAP_Gaussian_Mesh_Selection/mesh/TSDF/GGGS/post.ply",
+    "sha256": "f414f1352199ffbf3f90265556bf56a0f02cdfafbe37eccd8398d0474a0d34e9",
+    "expected_at_stage_start": "f414f1352199ffbf3f90265556bf56a0f02cdfafbe37eccd8398d0474a0d34e9"
+  },
+  "cameras": {
+    "common_input/colmap_source.json": "f8ed1516842bf1853ae2a4ec40451b69f77b3f1b6a88d4a992d30c58039a5a9e",
+    "common_input/camera_trajectory.json": "fa75cb3e950a7f22798de66a25d15989a77c94c14b7259e56b91765e56159940"
+  },
+  "sam3": {
+    "path": "/data/fj/F2DMAS/第三方源码/SAM3-latest",
+    "upstream_commit": "Not independently recorded: bundled source is tracked in parent repository",
+    "local_file_sha256": {
+      "sam3/model_builder.py": "faba3d0099f3da6d63d3ca49a8bf945d4014657b813e76ad082602d3922d3ff6",
+      "sam3/model/sam3_image_processor.py": "cb52a75ff84d46e62fbf8d18cd080b77814ab54d9e99b44763676ad194246853",
+      "sam3/model/sam3_image.py": "c34ae59dba5ef5823da8fbaab66e7d4b78c7df2677efc6e8c9156e3ca80c9b81"
+    },
+    "checkpoint_sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+    "official_repository": "https://github.com/facebookresearch/sam3"
+  },
+  "implementation_files": {
+    "phenotyping/annotation.html": "4fbacb18140af060e852da43ca76c806050b55e8f43d45d5166be163ff88f3cd",
+    "phenotyping/annotation_server.py": "befe5c57baea1f87d511eaa8c06b1e484064633dad8205738ffe5d182dab0f50",
+    "phenotyping/apply_corrections.py": "784ae4f7400d6457ae780a87be11046639abf8127282c2b14831fe9ee697cb58",
+    "phenotyping/associate_leaves.py": "6541ef6c0d8adedb9fc751a7a79fa810e531e8ba176a1a546e276081cb2345db",
+    "phenotyping/build_report.py": "40514499ef72ae1052ce6872556dc523aeae0d1bf591718dbc66bba9de4b0045",
+    "phenotyping/calibrate_cube.py": "10e7e4977a4cbd0fa482952faf9872050658c90c2aeb68c2c421cb6cc37336ca",
+    "phenotyping/common.py": "c0876c2c3e76d2dd5c36f7b08e64f57aad0fe3ef3f2660239774ab470b21f47a",
+    "phenotyping/extract_instances.py": "f2fdaf5425233ebb2a39d914035a2f564f46f481fbed5d786e34c4a7e74b17b9",
+    "phenotyping/fuse_semantics.py": "6544f89b9bdb4c21e0124b98d667f52e44ec792cc0abbf22b3d4f1e4ef37616c",
+    "phenotyping/leaf_sam_refine.py": "de053d8c3b5ef5329cf6e903096256d8b7f6a4d9f92ce983bd888f4d476b807f",
+    "phenotyping/manual_errors.py": "f73dd90396806ee83581a2349ef93cf55e767b8091e6a58fd2d3126b3b00c0a8",
+    "phenotyping/measure_phenotypes.py": "f29b7473fe1d3378d82808aa48bd2debdce7f8a55c12282ea4e5aafe0c19faf1",
+    "phenotyping/measurement_geometry.py": "508edbf9a922c2bbaddf54fe678f49e55e0f9f6e46fa6b22e957c15bffa1aac2",
+    "phenotyping/prepare_guidance.py": "28616037750ecac326f6580c7f9a35ca535711caef481b49d54dbc28361b9ae8",
+    "phenotyping/review_geometry.py": "b0a516202ec161cfa6192017d54ccba56b008e4281f19167651a1414757a6ac7",
+    "phenotyping/sam_inference.py": "fffdb101205420c230ff8116fcd146fa3c5c6a4648c459511c50def4f1f98cae",
+    "phenotyping/validate_delivery.py": "9e3fd2a4a658beb1ca682e8ca84f2110bf1cf62f1b42c7f845373bfbd3cb4175"
+  }
+}

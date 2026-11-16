@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><title>孔雀竹芋 · 单叶复核</title>
+<style>body{margin:0;font:15px system-ui;background:#edf1ee;color:#1d3427}header{padding:16px 24px;background:#173b2a;color:white}main{display:flex;gap:24px;padding:20px;align-items:flex-start}aside{width:360px}canvas{width:530px;max-width:60vw;background:#111;touch-action:none}select,button,input{font:inherit;padding:6px;margin:4px}button{cursor:pointer}fieldset{margin:12px 0;border:1px solid #abb}#status{white-space:pre-wrap}#others button{font-size:13px}.note{color:#55685c;font-size:13px}a{color:#164f35}</style>
+<header>孔雀竹芋 · SAM3 单叶提示与测量标志复核</header><main><canvas id="canvas" width="530" height="948"></canvas><aside>
+<label>视角 <select id="view"></select></label><label>叶片 <select id="leaf"></select></label>
+<p>同一 Leaf ID 的已有视角</p><div id="others"></div>
+<fieldset><legend>提示与标志</legend><select id="mode"><option value="positive">正向点：叶片内部</option><option value="negative">负向点：相邻叶片</option><option value="box">拖动单叶框</option><option value="base">叶基</option><option value="tip">叶尖</option><option value="boundary">叶缘边界点</option><option value="plant_base">整株茎—土连接点</option></select>
+<button id="undo">撤销一步</button><button id="clear">清空本次提示</button><br><label><input type="checkbox" id="mask" checked>显示已有掩膜</label></fieldset>
+<button id="sam">用当前提示运行 SAM3</button><p class="note">按需读取现有权重约需数分钟；只使用 GPU1，等待已有任务释放锁。可继续查看其他视角。</p>
+<label><input type="checkbox" id="confirmed">已人工核对当前叶片身份及标志点</label><p><label>显示名称 <input id="alias" placeholder="可选；不改变固定 Leaf ID"></label></p>
+<button id="save">保存复核记录</button><p class="note">二维标志同步保存原始 Mesh 首个射线交点；遮挡处交点可能属于前方器官，请核对。不同视角的修正均单独保存。自动中心线仍需检查，破碎网格不能仅通过点击恢复完整叶面积。</p>
+<div id="status">正在读取…</div><p class="note">保存位置：annotations/user_edits.json、user_masks/。应用到三维与 CSV：运行 apply_corrections.py。原始 RGB、历史掩膜和源 Mesh 保持完整。</p>
+</aside></main>
+<script>
+const $=id=>document.getElementById(id),ctx=$('canvas').getContext('2d');let cfg,photo,maskImage,state,history=[],drag=null,serial=0;
+const fresh=()=>({points:[],box:null,landmarks:{},confirmed:false,alias:''});
+const key=()=>$('leaf').value+'/'+$('view').value;
+function status(s){$('status').textContent=s}
+function render(){ctx.clearRect(0,0,530,948);if(photo)ctx.drawImage(photo,0,0,530,948);if(maskImage&&$('mask').checked){const off=document.createElement('canvas');off.width=530;off.height=948;const c=off.getContext('2d');c.drawImage(maskImage,0,0,530,948);const im=c.getImageData(0,0,530,948);for(let i=0;i<im.data.length;i+=4){const a=im.data[i]>0?100:0;im.data[i]=30;im.data[i+1]=220;im.data[i+2]=130;im.data[i+3]=a}c.putImageData(im,0,0);ctx.drawImage(off,0,0)}
+ if(!state)return;for(const [x,y,l] of state.points){ctx.fillStyle=l?'#00ff72':'#ff4060';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill()}
+ if(state.box){ctx.strokeStyle='#ffe351';ctx.lineWidth=2;ctx.strokeRect(state.box[0],state.box[1],state.box[2]-state.box[0],state.box[3]-state.box[1])}
+ for(const [kind,points] of Object.entries(state.landmarks)){for(const [x,y] of points){ctx.fillStyle=kind==='base'?'#ffe351':kind==='tip'?'#3de4ff':'white';ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();ctx.font='13px system-ui';ctx.strokeStyle='black';ctx.lineWidth=3;ctx.strokeText(kind,x+6,y-5);ctx.fillText(kind,x+6,y-5)}}}
+async function load(){const token=++serial;state=structuredClone(cfg.edits.records[key()]||fresh());state.landmarks??={};history=[];$('confirmed').checked=state.confirmed||false;$('alias').value=state.alias||'';photo=null;maskImage=null;render();const view=$('view').value,leaf=$('leaf').value;const img=new Image();img.onload=()=>{if(token===serial){photo=img;render()}};img.src='/api/image?view='+view;const m=new Image();m.onload=()=>{if(token===serial){maskImage=m;render()}};m.src='/api/mask?view='+view+'&leaf_id='+leaf+'&t='+Date.now();$('others').replaceChildren();for(const v of cfg.leaves.find(x=>x.id===leaf).views){const b=document.createElement('button');b.textContent=v;b.onclick=()=>{$('view').value=v;load()};$('others').append(b)}status('当前 '+leaf+' / '+view+'；提示与标志尚可复核。')}
+function point(e){const r=$('canvas').getBoundingClientRect();return [Math.max(0,Math.min(529,(e.clientX-r.left)*530/r.width)),Math.max(0,Math.min(947,(e.clientY-r.top)*948/r.height))]}
+$('canvas').onpointerdown=e=>{history.push(structuredClone(state));const p=point(e),mode=$('mode').value;if(mode==='box'){drag=p;$('canvas').setPointerCapture(e.pointerId)}else if(mode==='positive'||mode==='negative'){state.points.push([...p,mode==='positive'?1:0])}else{state.landmarks[mode]=mode==='boundary'?[...(state.landmarks[mode]||[]),p]:[p]}render()};
+$('canvas').onpointermove=e=>{if(drag){const p=point(e);state.box=[Math.min(drag[0],p[0]),Math.min(drag[1],p[1]),Math.max(drag[0],p[0]),Math.max(drag[1],p[1])];render()}};
+$('canvas').onpointerup=()=>{drag=null};$('undo').onclick=()=>{if(history.length)state=history.pop();render()};$('clear').onclick=()=>{history.push(structuredClone(state));state=fresh();render()};$('mask').onchange=render;$('view').onchange=load;$('leaf').onchange=load;
+async function send(path){const submittedKey=key(),data={...state,view:$('view').value,leaf_id:$('leaf').value,confirmed:$('confirmed').checked,alias:$('alias').value};status(path==='/api/sam'?'SAM3 正在运行；权重读取和 GPU1 锁等待可能需数分钟…':'正在保存…');$('sam').disabled=true;try{const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),result=await r.json();if(!r.ok)throw Error(result.error);cfg.edits.records[submittedKey]=result;if(key()===submittedKey)await load();status('已保存 '+submittedKey+'。三维更新请运行 apply_corrections.py。')}catch(e){status('操作失败：'+e.message)}finally{$('sam').disabled=false}}
+$('sam').onclick=()=>send('/api/sam');$('save').onclick=()=>send('/api/save');
+fetch('/api/config').then(r=>r.json()).then(c=>{cfg=c;for(const v of cfg.views)$('view').add(new Option(v,v));for(const l of cfg.leaves)$('leaf').add(new Option(l.id,l.id));load()}).catch(e=>status('读取失败：'+e));
+</script></html>

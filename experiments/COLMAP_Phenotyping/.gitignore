@@ -1,0 +1,36 @@
+# Keep large experimental assets local. Only code links, prompts and light
+# calibration/measurement summaries are candidates for version control.
+KongQueZhuYu/*
+!KongQueZhuYu/README.md
+!KongQueZhuYu/scripts
+!KongQueZhuYu/calibration/
+KongQueZhuYu/calibration/*
+!KongQueZhuYu/calibration/scale_calibration.json
+!KongQueZhuYu/calibration/reference_frame.json
+!KongQueZhuYu/calibration/cube_corners.json
+!KongQueZhuYu/annotations/
+KongQueZhuYu/annotations/*
+!KongQueZhuYu/annotations/semantic_guidance.json
+!KongQueZhuYu/annotations/leaf_prompt_ledger.json
+!KongQueZhuYu/annotations/leaf_prompt_ledger_initial85.json
+!KongQueZhuYu/summary/
+KongQueZhuYu/summary/*
+!KongQueZhuYu/summary/conclusions.md
+!KongQueZhuYu/summary/DELIVERY_VALIDATION.json
+!KongQueZhuYu/summary/source_manifest.json
+!KongQueZhuYu/summary/ui_validation.json
+!KongQueZhuYu/summary/review_record.json
+!KongQueZhuYu/phenotype/
+KongQueZhuYu/phenotype/*
+!KongQueZhuYu/phenotype/plant_measurements.csv
+!KongQueZhuYu/phenotype/leaf_measurements.csv
+!KongQueZhuYu/phenotype/manual_reference.csv
+!KongQueZhuYu/phenotype/phenotype_errors.csv
+!KongQueZhuYu/phenotype/manual_reference_audit.json
+!KongQueZhuYu/phenotype/pairing_validation.json
+!KongQueZhuYu/phenotype/paired_measurements.csv
+!KongQueZhuYu/leaf_instances/
+KongQueZhuYu/leaf_instances/*
+!KongQueZhuYu/leaf_instances/association_candidates.json
+!KongQueZhuYu/leaf_instances/leaf_instances.json
+!KongQueZhuYu/leaf_instances/video_geometry_validation.json

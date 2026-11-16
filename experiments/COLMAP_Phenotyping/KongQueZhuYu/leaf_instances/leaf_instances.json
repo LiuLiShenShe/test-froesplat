@@ -1,0 +1,1364 @@
+{
+  "status": "12candidate_instances_extracted",
+  "plant_id": "KongQueZhuYu",
+  "species": "孔雀竹芋",
+  "instances": [
+    {
+      "leaf_id": "Leaf_001",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 5322,
+      "vertices": 2971,
+      "views": 8,
+      "view_names": [
+        "0000",
+        "0028",
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 37,
+      "largest_component_face_fraction": 0.9494550920706502,
+      "leaf_surface_coverage": 0.976481447803784,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 10897,
+          "source_mesh_hit_fraction": 0.9751307699366798,
+          "fused_instance_visible_coverage": 0.9395246398091218
+        },
+        {
+          "view": "0028",
+          "mask_pixels": 8762,
+          "source_mesh_hit_fraction": 0.970212280301301,
+          "fused_instance_visible_coverage": 0.9575439397397855
+        },
+        {
+          "view": "0056",
+          "mask_pixels": 1519,
+          "source_mesh_hit_fraction": 0.955892034233048,
+          "fused_instance_visible_coverage": 0.9493087557603687
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 2615,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9797323135755258
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 14793,
+          "source_mesh_hit_fraction": 0.9825593185966336,
+          "fused_instance_visible_coverage": 0.9732305820320422
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 17576,
+          "source_mesh_hit_fraction": 0.9828743741465635,
+          "fused_instance_visible_coverage": 0.9802002730996814
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 4588,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 1.0
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 33855,
+          "source_mesh_hit_fraction": 0.9961896322552061,
+          "fused_instance_visible_coverage": 0.987062472308374
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_001/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_001/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_001/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_001/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_001/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_001/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_001/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_001/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        225,
+        55,
+        75
+      ],
+      "source_mesh_hit_fraction": 0.9827168463715985,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_002",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 4495,
+      "vertices": 2499,
+      "views": 7,
+      "view_names": [
+        "0000",
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 31,
+      "largest_component_face_fraction": 0.9766407119021134,
+      "leaf_surface_coverage": 0.9438344594594594,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 829,
+          "source_mesh_hit_fraction": 0.8371531966224367,
+          "fused_instance_visible_coverage": 0.7913148371531966
+        },
+        {
+          "view": "0028",
+          "mask_pixels": 6639,
+          "source_mesh_hit_fraction": 0.9814731134206959,
+          "fused_instance_visible_coverage": 0.9075161921976201
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 2368,
+          "source_mesh_hit_fraction": 0.9869087837837838,
+          "fused_instance_visible_coverage": 0.9438344594594594
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 8864,
+          "source_mesh_hit_fraction": 0.9919900722021661,
+          "fused_instance_visible_coverage": 0.5174864620938628
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 8508,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9569816643159379
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 2301,
+          "source_mesh_hit_fraction": 0.9960886571056062,
+          "fused_instance_visible_coverage": 0.9491525423728814
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 7091,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9674234945705824
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_002/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_002/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_002/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_002/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_002/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_002/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_002/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        40,
+        180,
+        90
+      ],
+      "source_mesh_hit_fraction": 0.9919900722021661,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_003",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 4430,
+      "vertices": 2413,
+      "views": 7,
+      "view_names": [
+        "0000",
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 14,
+      "largest_component_face_fraction": 0.9652370203160271,
+      "leaf_surface_coverage": 0.994781474233529,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 4626,
+          "source_mesh_hit_fraction": 0.980544747081712,
+          "fused_instance_visible_coverage": 0.9779507133592736
+        },
+        {
+          "view": "0028",
+          "mask_pixels": 10034,
+          "source_mesh_hit_fraction": 0.9871437113813035,
+          "fused_instance_visible_coverage": 0.9869443890771378
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 24752,
+          "source_mesh_hit_fraction": 0.9990707821590175,
+          "fused_instance_visible_coverage": 0.9979395604395604
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 26349,
+          "source_mesh_hit_fraction": 0.9971156400622414,
+          "fused_instance_visible_coverage": 0.9902083570533986
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 16863,
+          "source_mesh_hit_fraction": 0.9985767657000534,
+          "fused_instance_visible_coverage": 0.994781474233529
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 9049,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9952480937120124
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 54746,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9963102327110657
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_003/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_003/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_003/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_003/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_003/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_003/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_003/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        40,
+        130,
+        230
+      ],
+      "source_mesh_hit_fraction": 0.9985767657000534,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_004",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 3025,
+      "vertices": 1758,
+      "views": 7,
+      "view_names": [
+        "0000",
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 22,
+      "largest_component_face_fraction": 0.9266115702479338,
+      "leaf_surface_coverage": 0.9596350912271931,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 608,
+          "source_mesh_hit_fraction": 0.850328947368421,
+          "fused_instance_visible_coverage": 0.5279605263157895
+        },
+        {
+          "view": "0028",
+          "mask_pixels": 8528,
+          "source_mesh_hit_fraction": 0.9807692307692307,
+          "fused_instance_visible_coverage": 0.8794559099437148
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 5177,
+          "source_mesh_hit_fraction": 0.9915008692292834,
+          "fused_instance_visible_coverage": 0.9770137145064709
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 11130,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9705300988319856
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 16004,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9596350912271931
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 1161,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9517657192075797
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 19675,
+          "source_mesh_hit_fraction": 0.9924777636594664,
+          "fused_instance_visible_coverage": 0.9657941550190597
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_004/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_004/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_004/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_004/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_004/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_004/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_004/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        230,
+        160,
+        30
+      ],
+      "source_mesh_hit_fraction": 0.9924777636594664,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_005",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 3438,
+      "vertices": 2128,
+      "views": 7,
+      "view_names": [
+        "0000",
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 53,
+      "largest_component_face_fraction": 0.8757998836532868,
+      "leaf_surface_coverage": 0.9911444496535917,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 4982,
+          "source_mesh_hit_fraction": 0.9889602569249297,
+          "fused_instance_visible_coverage": 0.8932155760738659
+        },
+        {
+          "view": "0056",
+          "mask_pixels": 2098,
+          "source_mesh_hit_fraction": 0.996186844613918,
+          "fused_instance_visible_coverage": 0.9313632030505243
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 9988,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9913896676011213
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 5207,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9930862300748992
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 6288,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9950699745547074
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 10214,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9752300763657725
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 19197,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9911444496535917
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_005/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_005/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_005/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_005/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_005/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_005/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_005/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        170,
+        80,
+        210
+      ],
+      "source_mesh_hit_fraction": 1.0,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_006",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 1689,
+      "vertices": 975,
+      "views": 7,
+      "view_names": [
+        "0000",
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 15,
+      "largest_component_face_fraction": 0.9769094138543517,
+      "leaf_surface_coverage": 0.9648586707410237,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0000",
+          "mask_pixels": 4133,
+          "source_mesh_hit_fraction": 0.9985482700217759,
+          "fused_instance_visible_coverage": 0.9934672150979917
+        },
+        {
+          "view": "0056",
+          "mask_pixels": 2280,
+          "source_mesh_hit_fraction": 0.9574561403508772,
+          "fused_instance_visible_coverage": 0.9057017543859649
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 10323,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.98546934030805
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 2113,
+          "source_mesh_hit_fraction": 0.9815428300993848,
+          "fused_instance_visible_coverage": 0.9096071935636536
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 3286,
+          "source_mesh_hit_fraction": 0.9923919659160073,
+          "fused_instance_visible_coverage": 0.9464394400486914
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 10472,
+          "source_mesh_hit_fraction": 0.9981856378915203,
+          "fused_instance_visible_coverage": 0.9648586707410237
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 10342,
+          "source_mesh_hit_fraction": 0.9989363759427576,
+          "fused_instance_visible_coverage": 0.9843357184297041
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0000",
+          "mask": "leaf_instances/Leaf_006/masks/0000.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_006/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_006/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_006/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_006/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_006/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_006/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        40,
+        195,
+        200
+      ],
+      "source_mesh_hit_fraction": 0.9981856378915203,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_007",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 5861,
+      "vertices": 3362,
+      "views": 6,
+      "view_names": [
+        "0028",
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168"
+      ],
+      "components": 50,
+      "largest_component_face_fraction": 0.8860262753796281,
+      "leaf_surface_coverage": 0.9860861972032351,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0028",
+          "mask_pixels": 6190,
+          "source_mesh_hit_fraction": 0.997092084006462,
+          "fused_instance_visible_coverage": 0.9725363489499192
+        },
+        {
+          "view": "0056",
+          "mask_pixels": 3969,
+          "source_mesh_hit_fraction": 0.9760644998740237,
+          "fused_instance_visible_coverage": 0.9339884101788863
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 20974,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9996185753790408
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 25525,
+          "source_mesh_hit_fraction": 0.9975318315377081,
+          "fused_instance_visible_coverage": 0.9878942213516161
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 17428,
+          "source_mesh_hit_fraction": 0.987606151021345,
+          "fused_instance_visible_coverage": 0.9842781730548542
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 27477,
+          "source_mesh_hit_fraction": 0.9950504057939368,
+          "fused_instance_visible_coverage": 0.9942861302180005
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_007/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_007/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_007/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_007/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_007/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_007/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        230,
+        80,
+        190
+      ],
+      "source_mesh_hit_fraction": 0.9960712449001994,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_008",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 4513,
+      "vertices": 2520,
+      "views": 6,
+      "view_names": [
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 26,
+      "largest_component_face_fraction": 0.953910923997341,
+      "leaf_surface_coverage": 0.9934041327091943,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0028",
+          "mask_pixels": 8535,
+          "source_mesh_hit_fraction": 0.9888693614528412,
+          "fused_instance_visible_coverage": 0.9511423550087873
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 20121,
+          "source_mesh_hit_fraction": 0.996670145619005,
+          "fused_instance_visible_coverage": 0.9928432980468168
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 22322,
+          "source_mesh_hit_fraction": 0.9979840516082789,
+          "fused_instance_visible_coverage": 0.9969536779858436
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 16579,
+          "source_mesh_hit_fraction": 0.9991555582363231,
+          "fused_instance_visible_coverage": 0.9837143374148019
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 20381,
+          "source_mesh_hit_fraction": 0.9965163632795251,
+          "fused_instance_visible_coverage": 0.9939649673715716
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 7196,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9995831017231795
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_008/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_008/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_008/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_008/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_008/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_008/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        130,
+        170,
+        40
+      ],
+      "source_mesh_hit_fraction": 0.997327098613642,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_009",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 3464,
+      "vertices": 1906,
+      "views": 6,
+      "view_names": [
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 13,
+      "largest_component_face_fraction": 0.9927829099307159,
+      "leaf_surface_coverage": 0.979535066950338,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0028",
+          "mask_pixels": 4902,
+          "source_mesh_hit_fraction": 0.9761321909424725,
+          "fused_instance_visible_coverage": 0.9534883720930233
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 22067,
+          "source_mesh_hit_fraction": 0.9918430235192822,
+          "fused_instance_visible_coverage": 0.9769338831739702
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 18921,
+          "source_mesh_hit_fraction": 0.9995243380371016,
+          "fused_instance_visible_coverage": 0.9821362507267057
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 7767,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9824900218874726
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 19643,
+          "source_mesh_hit_fraction": 0.9984218296594206,
+          "fused_instance_visible_coverage": 0.9714402077075803
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 34746,
+          "source_mesh_hit_fraction": 0.999942439417487,
+          "fused_instance_visible_coverage": 0.9887181258274333
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_009/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_009/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_009/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_009/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_009/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_009/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        100,
+        100,
+        230
+      ],
+      "source_mesh_hit_fraction": 0.9989730838482611,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_010",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 3548,
+      "vertices": 1972,
+      "views": 6,
+      "view_names": [
+        "0028",
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168"
+      ],
+      "components": 15,
+      "largest_component_face_fraction": 0.9850620067643743,
+      "leaf_surface_coverage": 0.9819308537686119,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0028",
+          "mask_pixels": 4317,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9529766041232337
+        },
+        {
+          "view": "0056",
+          "mask_pixels": 2196,
+          "source_mesh_hit_fraction": 0.9467213114754098,
+          "fused_instance_visible_coverage": 0.9453551912568307
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 8685,
+          "source_mesh_hit_fraction": 0.9938975244674727,
+          "fused_instance_visible_coverage": 0.9935521013241221
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 12483,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9912681246495233
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 15055,
+          "source_mesh_hit_fraction": 0.9960146130853537,
+          "fused_instance_visible_coverage": 0.9918963799402192
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 10472,
+          "source_mesh_hit_fraction": 0.9853896103896104,
+          "fused_instance_visible_coverage": 0.9725935828877005
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_010/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_010/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_010/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_010/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_010/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_010/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        240,
+        130,
+        80
+      ],
+      "source_mesh_hit_fraction": 0.9949560687764132,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_011",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 2291,
+      "vertices": 1349,
+      "views": 6,
+      "view_names": [
+        "0056",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 27,
+      "largest_component_face_fraction": 0.9790484504583151,
+      "leaf_surface_coverage": 0.9702699822088857,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0056",
+          "mask_pixels": 3270,
+          "source_mesh_hit_fraction": 0.9929663608562691,
+          "fused_instance_visible_coverage": 0.9700305810397554
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 1167,
+          "source_mesh_hit_fraction": 0.9802913453299057,
+          "fused_instance_visible_coverage": 0.9717223650385605
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 4181,
+          "source_mesh_hit_fraction": 0.9944989237024635,
+          "fused_instance_visible_coverage": 0.8887825878976321
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 6241,
+          "source_mesh_hit_fraction": 0.9977567697484377,
+          "fused_instance_visible_coverage": 0.9294984778080436
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 1865,
+          "source_mesh_hit_fraction": 0.9919571045576407,
+          "fused_instance_visible_coverage": 0.9705093833780161
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 5398,
+          "source_mesh_hit_fraction": 0.9898110411263431,
+          "fused_instance_visible_coverage": 0.974805483512412
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0056",
+          "mask": "leaf_instances/Leaf_011/masks/0056.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_011/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_011/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_011/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_011/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_011/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        70,
+        170,
+        150
+      ],
+      "source_mesh_hit_fraction": 0.9924617327069549,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    },
+    {
+      "leaf_id": "Leaf_012",
+      "status": "SAM3+multi-view geometry, agent reviewed candidate group; botanical landmarks pending",
+      "faces": 1751,
+      "vertices": 1238,
+      "views": 6,
+      "view_names": [
+        "0028",
+        "0084",
+        "0112",
+        "0140",
+        "0168",
+        "0196"
+      ],
+      "components": 49,
+      "largest_component_face_fraction": 0.7492861222158766,
+      "leaf_surface_coverage": 0.957642396022828,
+      "coverage_definition": "Median fraction of SAM3 leaf-mask pixels explained by first-visible assigned leaf triangles; visible2D coverage, not complete anatomical surface coverage",
+      "coverage_by_view": [
+        {
+          "view": "0028",
+          "mask_pixels": 1802,
+          "source_mesh_hit_fraction": 0.9944506104328524,
+          "fused_instance_visible_coverage": 0.9594894561598224
+        },
+        {
+          "view": "0084",
+          "mask_pixels": 2521,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.8746529155097184
+        },
+        {
+          "view": "0112",
+          "mask_pixels": 2962,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9949358541525996
+        },
+        {
+          "view": "0140",
+          "mask_pixels": 2873,
+          "source_mesh_hit_fraction": 0.9979115906717717,
+          "fused_instance_visible_coverage": 0.9557953358858337
+        },
+        {
+          "view": "0168",
+          "mask_pixels": 3290,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9148936170212766
+        },
+        {
+          "view": "0196",
+          "mask_pixels": 3627,
+          "source_mesh_hit_fraction": 1.0,
+          "fused_instance_visible_coverage": 0.9889716018748277
+        }
+      ],
+      "pixel_sources": [
+        {
+          "view": "0028",
+          "mask": "leaf_instances/Leaf_012/masks/0028.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0084",
+          "mask": "leaf_instances/Leaf_012/masks/0084.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0112",
+          "mask": "leaf_instances/Leaf_012/masks/0112.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0140",
+          "mask": "leaf_instances/Leaf_012/masks/0140.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0168",
+          "mask": "leaf_instances/Leaf_012/masks/0168.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        },
+        {
+          "view": "0196",
+          "mask": "leaf_instances/Leaf_012/masks/0196.png",
+          "prompt_type": "SAM3 native interactive box + positive point + adjacent-leaf negative points",
+          "prompt_author": "automatic from SAM3 proposals after agent visual group selection"
+        }
+      ],
+      "source_vertices_and_normals_preserved": true,
+      "source_face_index_archive": "source_indices.npz",
+      "source_faces_boundary_policy": "Whole original triangles assigned by visible pixel votes; no unreported filling or synthetic surface",
+      "color": [
+        170,
+        120,
+        75
+      ],
+      "source_mesh_hit_fraction": 1.0,
+      "pixel_provenance_definition": "For each pixel_sources view: intersect that mask with plant_only/projection_cache/<view>.npz triangle_id; original face ID plus barycentric_uv identifies the exact source surface point"
+    }
+  ],
+  "all_faces_reference": "OriginalTSDFPost triangle indices",
+  "unassigned_plant_faces": 48115,
+  "ambiguous_faces": 780,
+  "human_manual_masks": false,
+  "human_confirmed_mask_overrides": 0,
+  "agent_visual_candidate_selection": 12
+}

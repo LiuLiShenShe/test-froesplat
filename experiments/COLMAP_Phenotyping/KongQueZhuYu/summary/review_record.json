@@ -1,0 +1,53 @@
+{
+  "author": "Codex agent direct visual inspection; not human signoff",
+  "reviewed_at_utc": "2026-11-16T04:15:31.227831+00:00",
+  "human_signoff": false,
+  "images": [
+    "calibration/calibration_overview.png",
+    "review/semantic_pilot.png",
+    "review/corrected_0000.png",
+    "review/leaf_association_candidates.png",
+    "plant_only/plant_only_overview.png",
+    "leaf_instances/leaf_instances_overview.png",
+    "leaf_instances/video_geometry_review.png",
+    "leaf_instances/leaf_meshes_overview.png",
+    "summary/measurement_visualization.png",
+    "summary/annotation_ui.png"
+  ],
+  "findings": [
+    "Five annotated cube views support a common static cube under plantCOLMAP cameras; fit depends on reused historical boundaries",
+    "SAM3 text pot includes whole pottedplant, requiring separate box/point correction; some corrected pot masks still require review",
+    "Twelve representative instance IDs are agent-reviewed candidates; no human anatomical signoff",
+    "Actual paths follow jagged observed triangle surfaces; partial endpoints and holes prevent complete-leaf validity",
+    "Local Chrome UI shows original RGB, corresponding mask,selectors,prompts and landmarks",
+    "No source-mesh cube geometry; no cubePLY created",
+    "Final twelve-row table includes Leaf_012 with length blank: connected-surface path failed validity gate; rejected path shown in red",
+    "Eleven provisional observed-patch lengths retained;12 widths and observed single-side areas recorded; all complete-leaf validity flags false",
+    "Independent source-provenance check passed for plant,pot and twelve leaves including original vertex coordinates,normals and original face indices"
+  ],
+  "nested_candidates": {
+    "repaired_leaf_view_pairs": 6,
+    "overlap_over_smaller_mask_range": [
+      0.89,
+      0.983
+    ],
+    "rule": "Re-prompt largest nested original proposal; count one visible observation per leaf/view"
+  },
+  "prompt_accounting": {
+    "retained_successful_calls": 91,
+    "unique_leaf_view_observations": 79,
+    "logged_completed_prompt_attempts_including_failed_runs": 176,
+    "attempt_logs": {
+      "leaf_refine.log": 85,
+      "leaf_nested_repair.log": 6,
+      "leaf_refine_retry.log": 85
+    },
+    "agent_api_test_calls": 1,
+    "new_human_clicks": 0,
+    "historical_annotation_views": 5,
+    "agent_visual_instance_selections": 12
+  },
+  "biological_status": "All12 partial surfaces; true manual pairs unavailable",
+  "final_review_at_utc": "2026-11-16T04:25:36.345122+00:00",
+  "final_stage_validation": "summary/DELIVERY_VALIDATION.json"
+}

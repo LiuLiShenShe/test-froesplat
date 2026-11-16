@@ -1,0 +1,108 @@
+{
+  "vertical_unit_vector": [
+    -0.07952893169982844,
+    -0.4549798673753934,
+    -0.8869433292526381
+  ],
+  "horizontal_axis_a": [
+    -0.9967665383945488,
+    0.026056459016045284,
+    0.07601005775878474
+  ],
+  "horizontal_axis_b": [
+    -0.011472443490061754,
+    0.890120430743287,
+    -0.4555809497924082
+  ],
+  "vertical_source": "Normal to the cube face visually resting on the common support board; camera-orbit axis is a separate consistency check",
+  "cube_vertical_axis_index": 0,
+  "reference_plane": {
+    "point_units": [
+      -0.040693087498081204,
+      3.152469076394767,
+      4.550130439019114
+    ],
+    "normal": [
+      -0.07952893169982844,
+      -0.4549798673753934,
+      -0.8869433292526381
+    ],
+    "source": "Fitted cube bottom face on common support board, identified by agent direct RGB inspection; not soil level"
+  },
+  "base_point": [
+    -0.220754831416823,
+    1.6602452265619334,
+    3.9692488853930166
+  ],
+  "base_status": "AGENT_PROPOSED_VISIBLE_STEM_SOIL_CONTACT_REQUIRES_HUMAN_CONFIRMATION",
+  "pot_center_units": [
+    0.08767405415414889,
+    1.6407572991705006,
+    4.388432003685593
+  ],
+  "pot_vertical_range_units": [
+    -0.8063657790997618,
+    0.8615582592845868
+  ],
+  "coordinate_transform": "measurement_xyz_cm = scale * ((world_xyz-base) dot [horizontalA,horizontalB,vertical]); no source geometry modified",
+  "base_point_cm": [
+    0,
+    0,
+    0
+  ],
+  "base_view": "0000",
+  "base_pixel_xy": [
+    267.0,
+    452.0
+  ],
+  "base_original_face_id": 65364,
+  "base_landmark_author": "Agent visual inspection of actualRGB, not historicalhumanmeasurements",
+  "scale_cm_per_unit": 8.921081023022882,
+  "measurement_rotation_rows": [
+    [
+      -0.9967665383945488,
+      0.026056459016045284,
+      0.07601005775878474
+    ],
+    [
+      -0.011472443490061754,
+      0.890120430743287,
+      -0.4555809497924082
+    ],
+    [
+      -0.07952893169982844,
+      -0.4549798673753934,
+      -0.8869433292526381
+    ]
+  ],
+  "reference_plane_point_cm": [
+    -0.8603901903486117,
+    9.470214756461859,
+    -10.780778016883481
+  ],
+  "vertical_verification": {
+    "support": "Agent direct visual inspection: cube has a face resting on common flat board; chosen edge normal to that face",
+    "orbit_plane_normal": [
+      -0.03536768013868029,
+      -0.4507474040209574,
+      -0.8919506180108717
+    ],
+    "orbit_axis_angle_deg": 2.5581997629458897,
+    "orbit_plane_singular_values": [
+      35.27667499395319,
+      32.46194608171992,
+      18.756103855398855
+    ],
+    "pot_upper_band_plane_normal": [
+      -0.6059632199506677,
+      -0.03347748898579564,
+      -0.7947879174963753
+    ],
+    "pot_upper_band_angle_deg": 39.793598846536675,
+    "pot_plane_points": 5,
+    "pot_rim_check_status": "INCONCLUSIVE_TOO_FEW_POINTS",
+    "pot_plane_rms_units": 0.0007075188664592239,
+    "status": "PROVISIONAL_SUPPORT_NORMAL; cameraorbit is a consistency check, not surveyed gravity",
+    "limits": "Orbit trajectory is not planar; sparse upper-band pot fragments do not establish a rim plane"
+  }
+}

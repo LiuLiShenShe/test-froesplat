@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "config_views": 210,
+  "leaf_ids": 12,
+  "page_http": 200,
+  "invalid_view_http": 400,
+  "sam_http": 200,
+  "mask_http": 200,
+  "mask_pixels": 24752,
+  "predicted_score": 0.97265625,
+  "physical_gpu": 1,
+  "wall_s": 187.2809008549666,
+  "author": "agent automated API validation, not human annotation",
+  "human_clicks": 0,
+  "storage": "annotations/validation/masks/Leaf_003/0084.png",
+  "io": {
+    "application_read_bytes": 3450785048,
+    "application_write_bytes": 1544,
+    "peak_one_second_mib_s": 19.5,
+    "target_mib_s": 20
+  },
+  "browser_render_test": true,
+  "limitation": "Page rendering, HTTP validation and native SAM3 backend tested; human anatomical review remains pending",
+  "browser_engine": "Local Google Chrome headless",
+  "browser_screenshot": "summary/annotation_ui.png",
+  "browser_findings": "Actual RGB, selected LeafID mask,210-view selector,12 IDs, prompts and landmarks render correctly; agent directly inspected screenshot",
+  "invalid_box_http": 400,
+  "empty_sam_prompt_http": 400
+}

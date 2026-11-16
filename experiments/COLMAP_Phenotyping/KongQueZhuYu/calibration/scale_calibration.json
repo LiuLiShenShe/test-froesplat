@@ -1,0 +1,216 @@
+{
+  "reference_object": "blue_cube",
+  "real_edge_length_cm": 2.0,
+  "reconstructed_edge_length_units": 0.22418807707704305,
+  "scale_cm_per_unit": 8.921081023022882,
+  "coordinate_frame": "Unchanged trueCOLMAP",
+  "reference_views": [
+    "0000",
+    "0025",
+    "0050",
+    "0075",
+    "0100"
+  ],
+  "reprojection_error_px": 0.5823503671163525,
+  "reprojection_resolution": [
+    530,
+    948
+  ],
+  "corner_error_px_original_approx": 2.32940146846541,
+  "boundary_support_rms_px": 0.5675546290368829,
+  "status": "CALIBRATED_MULTI_VIEW_CUBE",
+  "independent_adjacent_edges": [
+    {
+      "corners": [
+        0,
+        1
+      ],
+      "length_units": 0.2149251318142438,
+      "views_common": [
+        "0050"
+      ]
+    },
+    {
+      "corners": [
+        0,
+        2
+      ],
+      "length_units": 0.22883623355007315,
+      "views_common": [
+        "0025",
+        "0050"
+      ]
+    },
+    {
+      "corners": [
+        0,
+        4
+      ],
+      "length_units": 0.2351233056751761,
+      "views_common": [
+        "0025"
+      ]
+    },
+    {
+      "corners": [
+        1,
+        3
+      ],
+      "length_units": 0.221109824152137,
+      "views_common": [
+        "0000",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        1,
+        5
+      ],
+      "length_units": 0.23027269469960934,
+      "views_common": [
+        "0050",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        2,
+        3
+      ],
+      "length_units": 0.22592279622081912,
+      "views_common": [
+        "0025",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        2,
+        6
+      ],
+      "length_units": 0.22810180254969584,
+      "views_common": [
+        "0050",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        3,
+        7
+      ],
+      "length_units": 0.22191294381057894,
+      "views_common": [
+        "0025"
+      ]
+    },
+    {
+      "corners": [
+        4,
+        5
+      ],
+      "length_units": 0.22171745675766824,
+      "views_common": [
+        "0025",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        4,
+        6
+      ],
+      "length_units": 0.22050361868480092,
+      "views_common": [
+        "0000",
+        "0075",
+        "0100"
+      ]
+    },
+    {
+      "corners": [
+        5,
+        7
+      ],
+      "length_units": 0.22177287617481026,
+      "views_common": [
+        "0025",
+        "0050"
+      ]
+    },
+    {
+      "corners": [
+        6,
+        7
+      ],
+      "length_units": 0.22708960600881495,
+      "views_common": [
+        "0050"
+      ]
+    }
+  ],
+  "edge_length_units_mean": 0.224774024174869,
+  "edge_length_units_std": 0.005218548134681997,
+  "leave_one_view_out": [
+    {
+      "excluded": "0000",
+      "edge_units": 0.22355896387687682,
+      "scale_cm_per_unit": 8.946185674314911
+    },
+    {
+      "excluded": "0025",
+      "edge_units": 0.22473171188624544,
+      "scale_cm_per_unit": 8.899500578771717
+    },
+    {
+      "excluded": "0050",
+      "edge_units": 0.22421831249257101,
+      "scale_cm_per_unit": 8.919878032113303
+    },
+    {
+      "excluded": "0075",
+      "edge_units": 0.22352428048671708,
+      "scale_cm_per_unit": 8.947573819027907
+    },
+    {
+      "excluded": "0100",
+      "edge_units": 0.22438218195264784,
+      "scale_cm_per_unit": 8.913363719861085
+    }
+  ],
+  "motion_relation": "Cube/pot on same rigid support; static multi-view cube fit evaluated with plantCOLMAP cameras, no external-camera model substitution",
+  "motion_validation": "Multiplechanging visible faces and low residualjointcube reprojection over widely separated orbit views",
+  "cube_orientation": [
+    [
+      0.07952893169982844,
+      -0.9967665383945487,
+      0.011472443490061768
+    ],
+    [
+      0.4549798673753934,
+      0.026056459016045252,
+      -0.8901204307432868
+    ],
+    [
+      0.8869433292526381,
+      0.07601005775878467,
+      0.4555809497924082
+    ]
+  ],
+  "cube_center": [
+    -0.04960780663296922,
+    3.101468545606938,
+    4.450709379288384
+  ],
+  "limits": [
+    "Only5 historical annotated views provide high-resolution boundaries; SAM3 additional cube masks provide a separate semantic check",
+    "Edge identities from multi-view rigid cube fit; boundary annotations not precision fiducials",
+    "No claim that the cube alone establishes gravity or soil-base origin"
+  ]
+}
