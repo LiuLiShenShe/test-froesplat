@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>ForeSplat 单叶三维测量</title>
+<script src="../../summary/assets/plotly.min.js"></script>
+<style>body{font:16px system-ui;margin:20px;color:#16312b;background:#f4f7f6}main{display:grid;grid-template-columns:2fr 1fr;gap:20px}#plot{height:75vh}img{max-width:100%;max-height:55vh}button,a{margin:6px}#result{white-space:pre-wrap}small{color:#52655f}</style>
+<h2 id="title"></h2><p id="status"></p>
+<a id="download" download>下载独立 PLY</a><a href="../../phenotype/manual_reference.csv" download>人工参考 CSV</a><a href="../../../summary/leaf_mesh_index.html">全部植物与叶片</a>
+<button id="reset">清除选点</button><button id="save">保存选点 JSON</button><label><input type="checkbox" id="vertices" checked>显示可选顶点</label>
+<main><div id="plot"></div><aside><img src="reference.png"><p id="result">旋转查看叶片。依次点击原始顶点，计算沿三角网格边的最短曲面路径。</p><small>开放边界和孔洞保留。路径跨不过不连通区域；自动端点、完整性与单侧面积仍需核验。选点测量属于当前可见曲面。</small></aside></main>
+<script id="payload" type="application/json">__PAYLOAD__</script>
+<script>
+const d=JSON.parse(document.getElementById('payload').textContent),p=d.vertices,f=d.faces,unit=d.unit,selected=[];
+const title=document.getElementById('title'),status=document.getElementById('status'),download=document.getElementById('download'),reset=document.getElementById('reset'),save=document.getElementById('save'),vertices=document.getElementById('vertices'),result=document.getElementById('result');
+title.textContent=d.plant+' / '+d.leaf;status.textContent=unit==='cm'?'坐标单位：厘米。保留原始观测表面。':'尚未通过三维蓝块标定；坐标为模型单位，禁止作为厘米测量。';download.href=d.ply;
+const xyz=(pts,k)=>pts.map(a=>a[k]),graph=Array.from({length:p.length},()=>new Map()),dist=(a,b)=>Math.hypot(...a.map((x,k)=>x-b[k]));
+for(const face of f)for(let j=0;j<3;j++){let a=face[j],b=face[(j+1)%3],w=dist(p[a],p[b]);graph[a].set(b,w);graph[b].set(a,w)}
+const traces=[{type:'mesh3d',x:xyz(p,0),y:xyz(p,1),z:xyz(p,2),i:xyz(f,0),j:xyz(f,1),k:xyz(f,2),vertexcolor:d.colors,opacity:1,hoverinfo:'skip',name:'原始叶面'},
+{type:'scatter3d',mode:'markers',x:xyz(p,0),y:xyz(p,1),z:xyz(p,2),customdata:d.source_vertex_ids,marker:{size:2,color:'#336d50',opacity:.35},hovertemplate:'原始顶点 %{customdata}<br>(%{x:.3f}, %{y:.3f}, %{z:.3f})<extra></extra>',name:'选择顶点'},
+{type:'scatter3d',mode:'lines+markers',x:[],y:[],z:[],line:{color:'#ff5522',width:7},marker:{size:4},name:'选点路径'}];
+Plotly.newPlot('plot',traces,{margin:{l:0,r:0,t:0,b:0},scene:{aspectmode:'data',xaxis:{title:'X ('+unit+')'},yaxis:{title:'Y ('+unit+')'},zaxis:{title:'Z ('+unit+')'}},showlegend:false},{responsive:true});
+function shortest(start,end){let dis=new Float64Array(p.length).fill(Infinity),prev=new Int32Array(p.length).fill(-1),heap=[];dis[start]=0;
+function push(a){heap.push(a);let i=heap.length-1;while(i){let par=(i-1)>>1;if(heap[par][0]<=a[0])break;heap[i]=heap[par];i=par}heap[i]=a}
+function pop(){const root=heap[0],last=heap.pop();if(heap.length){let i=0;while(2*i+1<heap.length){let j=2*i+1;if(j+1<heap.length&&heap[j+1][0]<heap[j][0])j++;if(heap[j][0]>=last[0])break;heap[i]=heap[j];i=j}heap[i]=last}return root}
+push([0,start]);while(heap.length){let [dd,u]=pop();if(dd!==dis[u])continue;if(u===end)break;for(let [v,w] of graph[u])if(dd+w<dis[v]){dis[v]=dd+w;prev[v]=u;push([dis[v],v])}}
+if(!Number.isFinite(dis[end]))return null;let path=[];for(let u=end;u!==-1;u=prev[u]){path.push(u);if(u===start)break}return {path:path.reverse(),length:dis[end]}}
+let latest={};function update(){let path=selected.length?[selected[0]]:[],total=0,ok=true,straight=0;for(let i=1;i<selected.length;i++){let s=shortest(selected[i-1],selected[i]);if(!s){ok=false;break}path.push(...s.path.slice(1));total+=s.length;straight+=dist(p[selected[i-1]],p[selected[i]])}let q=path.map(i=>p[i]);Plotly.restyle('plot',{x:[xyz(q,0)],y:[xyz(q,1)],z:[xyz(q,2)]},[2]);result.textContent='已选 '+selected.length+' 点\n'+(ok?'曲面边路径：'+total.toFixed(4)+' '+unit:'选点之间不连通，无法计算曲面路径')+'\n欧氏折线：'+straight.toFixed(4)+' '+unit;latest={plant:d.plant,leaf_id:d.leaf,unit,source_vertex_ids:selected.map(i=>d.source_vertex_ids[i]),xyz:selected.map(i=>p[i]),connected:ok,mesh_edge_path:ok?total:null,euclidean_polyline:straight,source_ply:d.ply,geometry:'Original observed mesh; no interpolation across holes'}}
+document.getElementById('plot').on('plotly_click',e=>{let a=e.points[0];if(a.curveNumber!==1)return;selected.push(a.pointNumber);update()});reset.onclick=()=>{selected.length=0;update()};vertices.onchange=()=>Plotly.restyle('plot',{visible:vertices.checked},[1]);save.onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(latest,null,2)],{type:'application/json'}));a.download=d.plant+'_'+d.leaf+'_points.json';a.click();URL.revokeObjectURL(a.href)};
+</script>
