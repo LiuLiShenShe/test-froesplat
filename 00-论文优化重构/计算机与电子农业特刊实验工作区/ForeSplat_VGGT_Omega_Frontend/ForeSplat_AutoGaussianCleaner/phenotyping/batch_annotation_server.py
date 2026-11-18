@@ -9,6 +9,7 @@ import annotation_server as existing
 import threading,traceback,argparse,mimetypes
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from urllib.parse import urlparse,parse_qs
+import three_leaf_matching as three_leaf
 MUTEX=threading.Lock()
 
 def configure(ctx):
@@ -46,6 +47,35 @@ class Handler(SimpleHTTPRequestHandler):
   u=urlparse(self.path);q=parse_qs(u.query)
   try:
    if u.path=='/':self.send_response(302);self.send_header('Location','/summary/leaf_mesh_index.html');self.end_headers();return
+   if u.path=='/match':return self.content((CODE/'three_leaf_match.html').read_bytes(),'text/html; charset=utf-8')
+   if u.path=='/api/match/plants':
+    rows=three_leaf.ensure_matches();return self.send_json(dict(plants=[dict(plant=r['plant'],group=r['group'],confirmed=sum(x['human_confirmed']=='True' for x in rows if x['plant_id']==r['plant'])) for r in read(MANIFEST)['plants']]))
+   if u.path=='/api/match/config':
+    plant=q.get('plant',[''])[0];state=three_leaf.current_state(plant);view=q.get('view',[''])[0];number=str(q.get('number',['1'])[0]);row=next(x for x in state['rows'] if x['handwritten_number']==number);return self.send_json(dict(plant=plant,views=three_leaf.views(plant),row=row,all_rows=state['all_rows']))
+   if u.path=='/api/match/pixel':
+    return self.send_json(three_leaf.pixel_candidates(q.get('plant',[''])[0],q.get('view',[''])[0],float(q.get('x',['0'])[0]),float(q.get('y',['0'])[0]),int(q.get('radius',['48'])[0])))
+   if u.path=='/api/match/leaf':
+    return self.send_json(three_leaf.leaf_detail(q.get('plant',[''])[0],q.get('leaf_id',[''])[0],q.get('view',[''])[0]))
+   if u.path=='/api/match/history':
+    plant=q.get('plant',[''])[0];number=int(q.get('number',['1'])[0]);return self.send_json(dict(plant=plant,number=number,candidates=three_leaf.history_candidates(plant,number)))
+   if u.path=='/api/match/metric-candidates':
+    plant=q.get('plant',[''])[0];number=int(q.get('number',['1'])[0]);history_row_id=q.get('history_row_id',[''])[0]
+    return self.send_json(three_leaf.metric_candidates(plant,number,history_row_id))
+   if u.path=='/api/match/rgb':
+    ctx=self.context(q);name=q.get('view',[''])[0];data,cameras=ctx.cameras()
+    if name not in cameras:raise ValueError('Unknown registered view')
+    buffer=io.BytesIO();ctx.image(name).save(buffer,format='PNG');return self.content(buffer.getvalue(),'image/png')
+   if u.path=='/api/match/mask':
+    plant=q.get('plant',[''])[0];leaf=q.get('leaf_id',[''])[0];view=q.get('view',[''])[0];ctx=self.context(q)
+    catalog=read(ctx.out/'leaf_instances'/'leaf_instances.json')
+    item=next((entry for entry in catalog.get('instances',[]) if entry.get('leaf_id')==leaf),None)
+    if item is None or view not in set(item.get('views',[])):
+     return self.send_json(dict(error='Unknown Leaf ID or unavailable RGB view'),404)
+    path=ctx.out/'leaf_instances'/leaf/'masks'/f'{view}.png'
+    if not path.exists():return self.send_json(dict(error='No leaf mask in this view'),404)
+    return self.content(path.read_bytes(),'image/png')
+   if u.path=='/api/match/overview':
+    three_leaf.export_three_leaf_tables();return self.send_json(dict(url='/summary/three_leaf_match_overview.html'))
    if u.path=='/review':return self.content((CODE/'batch_review.html').read_bytes(),'text/html; charset=utf-8')
    if u.path=='/api/plants':return self.send_json(dict(plants=[dict(plant=r['plant'],group=r['group'],ready=(OUT/r['plant']/'phenotype/manual_reference.csv').exists()) for r in read(MANIFEST)['plants']]))
    if u.path=='/api/manual':
@@ -56,6 +86,7 @@ class Handler(SimpleHTTPRequestHandler):
      text=(CODE/'annotation.html').read_text().replace('孔雀竹芋',ctx.plant).replace('530',str(data['width'])).replace('529',str(data['width']-1)).replace('948',str(data['height'])).replace('947',str(data['height']-1));plant=ctx.plant
      text=text.replace("'/api/image?view='",f"'/api/image?plant={plant}&view='").replace("'/api/mask?view='",f"'/api/mask?plant={plant}&view='").replace("fetch('/api/config')",f"fetch('/api/config?plant={plant}')").replace('fetch(path,{',f"fetch(path+'?plant={plant}',{{").replace('apply_corrections.py','batch_apply_corrections.py '+plant)
      text=text.replace('<button id="save">','<label><input type="checkbox" id="whole_complete">我已核对整片叶面的边界及可见完整性</label><button id="save">').replace("confirmed:$('confirmed').checked,alias:","confirmed:$('confirmed').checked,whole_leaf_surface_complete_confirmed:$('whole_complete').checked,alias:").replace("$('alias').value=state.alias||'';","$('alias').value=state.alias||'';$('whole_complete').checked=state.whole_leaf_surface_complete_confirmed||false;")
+     text=text.replace('</html>',"<script>(function(){const q=new URLSearchParams(location.search);setTimeout(()=>{const leaf=q.get('leaf_id'),view=q.get('view'),ls=document.querySelector('#leaf'),vs=document.querySelector('#view');if(leaf&&Array.from(ls.options).some(o=>o.value===leaf))ls.value=leaf;if(view&&Array.from(vs.options).some(o=>o.value===view))vs.value=view;if(leaf||view)ls.dispatchEvent(new Event('change'))},800)})();</script></html>")
      return self.content(text.encode(),'text/html; charset=utf-8')
     if u.path=='/api/config':return self.send_json(dict(views=sorted(cameras),leaves=[dict(id=i['leaf_id'],views=i['views']) for i in catalog['instances']],edits=edits,width=data['width'],height=data['height']))
     if u.path=='/api/image':
@@ -95,6 +126,8 @@ class Handler(SimpleHTTPRequestHandler):
      from batch_manual import main
      from batch_report import summarize
      main(ctx);summarize();return self.send_json(dict(saved=True,plant=ctx.plant,leaf_id=row['leaf_id'],audit=read(ctx.out/'phenotype/manual_pairing_audit.json')))
+    if u.path=='/api/match/confirm':
+     result=three_leaf.confirm(value);return self.send_json(result)
     if u.path not in ['/api/save','/api/sam']:return self.send_json(dict(error='Unknown route'),404)
     configure(ctx);existing.validate(value);inference=existing.sam_mask(value) if u.path=='/api/sam' else None;result=existing.save(value,inference)
     if result.get('human_confirmed') and result.get('landmarks_3d',{}).get('plant_base'):
