@@ -1,0 +1,113 @@
+%%
+%% Revised ForeSplat manuscript for the COMPAG special issue on foundation models in agriculture.
+%% Main revision: the manuscript has been repositioned from an FSAM3/engineering workflow paper
+%% to a VFM-guided foreground-prior adaptation and foreground-object 2DGS reconstruction paper.
+
+\documentclass[a4paper]{cas-sc}
+
+\usepackage[numbers,sort&compress,super]{natbib}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb}
+\usepackage[section]{placeins}
+\usepackage{float}
+\usepackage{lineno}
+\usepackage{setspace}
+
+% The CAS class enables fleqn by default; switch display equations back to centered.
+\makeatletter
+\@fleqnfalse
+\makeatother
+
+% Keep large figures close to their discussion instead of accumulating at the end.
+\setcounter{topnumber}{5}
+\setcounter{bottomnumber}{4}
+\setcounter{totalnumber}{8}
+\renewcommand{\topfraction}{.95}
+\renewcommand{\bottomfraction}{.85}
+\renewcommand{\textfraction}{.05}
+\renewcommand{\floatpagefraction}{.75}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\raggedbottom
+
+%%%Author macros
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+%%%
+
+% Pandoc emits this command for compact Markdown lists.
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Retain the source manuscript's CAS figure placement and image scaling.
+\setkeys{Gin}{keepaspectratio}
+\NewEnvironmentCopy{foresplatfigure}{figure}
+\RenewDocumentEnvironment{figure}{O{pos=!htbp}}%
+  {\begin{foresplatfigure}[#1]}{\end{foresplatfigure}}
+
+\begin{document}
+\doublespacing
+\let\WriteBookmarks\relax
+\linenumbers
+
+\shorttitle{VFM-guided ForeSplat for plant phenotyping}
+\shortauthors{Fang et al.}
+
+\title [mode = title]{$title$}
+
+\author[1,2,3,4]{Jian Fang}
+
+\author[2,3,4]{Nengfu Xie}
+\cormark[1]
+
+\author[1]{Yane Duan}
+
+\author[2,3,4]{Jingchao Fan}
+\author[2,3,4]{Xiaoli Wang}
+\author[2,3,4]{Hailong Liu}
+\author[2,3,4]{Yue Wang}
+\author[2,3,4]{Hao Wu}
+\author[2,3,4]{Zhibo Meng}
+\author[2,3,4]{Xin Wang}
+\author[2,3,4]{Rui Man}
+
+\affiliation[1]{organization={College of Intelligent Science and Engineering, Beijing University of Agriculture},
+            city={Beijing},
+            postcode={102206},
+            country={China}}
+
+\affiliation[2]{organization={Agricultural Information Institute, Chinese Academy of Agricultural Sciences},
+            city={Beijing},
+            postcode={100081},
+            country={China}}
+
+\affiliation[3]{organization={National Agricultural Science Data Center},
+            city={Beijing},
+            postcode={100081},
+            country={China}}
+
+\affiliation[4]{organization={Data Hub, Chinese Agrosystem Long-Term Observation Network},
+            city={Beijing},
+            postcode={100081},
+            country={China}}
+
+\cortext[1]{Corresponding author.}
+
+\begin{abstract}
+$abstract$
+\end{abstract}
+
+\begin{keywords}
+$for(keywords)$$keywords$$sep$ \sep $endfor$
+\end{keywords}
+
+\maketitle
+
+$body$
+
+\bibliographystyle{elsarticle-num-names}
+\bibliography{cas-refs}
+
+\end{document}

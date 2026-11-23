@@ -19,6 +19,9 @@ PYTHON=PRE/'.venv-rap/bin/python'
 GPU_PYTHON=FRONT/'.venv/bin/python'
 UV=Path('/home/test/.local/bin/uv')
 
+def has_metric_scale(calibration):
+ return calibration.get('status') in {'CALIBRATED_MULTI_VIEW_CUBE','CALIBRATED_MULTI_VIEW_TARGETS'}
+
 def read(path):return json.loads(Path(path).read_text())
 def write(path,value):
  def default(v):

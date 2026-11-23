@@ -27,6 +27,8 @@ def historical(ctx,name,label):
 def main(ctx):
  marker=ctx.out/'semantic_masks/complete.json'
  if marker.exists():return
+ preserve_plant=getattr(ctx,'preserve_independent_plant_mask',False)
+ leaf_prompts=getattr(ctx,'leaf_prompts',('leaf',))
  data,cameras=ctx.cameras();names=sorted(cameras);keyviews=[names[i] for i in np.unique(np.linspace(0,len(names)-1,16,dtype=int))];missing=read(ctx.common/'missing_mask_views.json')['views'] if (ctx.common/'missing_mask_views.json').exists() else [];selected=sorted(set(names[::3]+keyviews+missing+[p.stem for p in ctx.annotation.glob('*.json') if p.stem in cameras]));ctx.status('sam3','running',selected_views=len(selected))
  lock=(PRE/'summary/gpu1.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX);wall=time.time();cpu=time.process_time()
  import torch
@@ -52,6 +54,8 @@ def main(ctx):
    if name in missing:
     mm,ss=text('potted plant');envelope=mm[int(np.argmax(ss))] if len(mm) else np.zeros(envelope.shape,bool);png(ctx.common/'rap_masks'/f'{name}.png',envelope.astype('uint8')*255,ctx.meter);prompts.append(dict(view=name,label='target_envelope',type='SAM3 replacement for corrupt/absent archived mask',historical_assisted=False,foreground_pixels=int(envelope.sum()),requires_review=bool(not envelope.any())))
    for label,prompt in [('plant','plant leaves and stems'),('pot','flowerpot and tray'),('blue_cube','blue calibration cube')]:
+    if label=='blue_cube' and preserve_plant:
+     masks[label]=np.zeros(envelope.shape,bool);continue
     mm,ss=text(prompt);masks[label]=(mm.any(0) if len(mm) else np.zeros(envelope.shape,bool));prompts.append(dict(view=name,label=label,type='SAM3 independent text',text=prompt,instances=len(mm),scores=ss.tolist(),historical_assisted=False))
     if label=='pot':pot_candidates=mm;pot_scores=ss
    # Box+point is an actual independent SAM3 prediction. A historical mask,
@@ -73,13 +77,13 @@ def main(ctx):
     native,scores,_=model.predict_inst(state,point_coords=np.array(points),point_labels=np.array(labels),box=box,multimask_output=True);native=native>0;ious=np.array([(m&guide).sum()/max(1,(m|guide).sum()) for m in native]);best=int(ious.argmax());masks['pot']=native[best]&envelope;prompts.append(dict(view=name,label='pot',type='SAM3 box+positive/negative points',box=box.tolist(),points=points,point_labels=labels,historical_assisted=assisted,guide_iou=float(ious[best]),requires_review=bool(ious[best]<.5),human_new_clicks=0))
    cube_assisted=False
    # Missing small-object detection: historical ROI is optional and declared.
-   if masks['blue_cube'].sum()<12:
+   if not preserve_plant and masks['blue_cube'].sum()<12:
     cube_guide=historical(ctx,name,'blue_cube')
     if cube_guide is not None and cube_guide.any():
      yy,xx=np.where(cube_guide);bounds=[max(0,xx.min()-12),max(0,yy.min()-12),min(data['width'],xx.max()+13),min(data['height'],yy.max()+13)];cropstate=processor.set_image(image.crop(bounds));processor.reset_all_prompts(cropstate);res=processor.set_text_prompt(prompt='blue calibration cube',state=cropstate)
      if len(res['masks']):masks['blue_cube'][bounds[1]:bounds[3],bounds[0]:bounds[2]]=res['masks'].squeeze(1).any(0).cpu().numpy()>0
      cube_assisted=True;prompts.append(dict(view=name,label='blue_cube',type='SAM3 independent ROI detection with historical boundary ROI',historical_assisted=True,crop=bounds))
-   if masks['blue_cube'].sum()<12:
+   if not preserve_plant and masks['blue_cube'].sum()<12:
     # A generic blue-colour proposal makes small cubes visible to SAM3.
     # Colour locates an ROI only; the exported mask is an actual SAM3 result.
     import cv2
@@ -96,13 +100,20 @@ def main(ctx):
       if 12<=pixels<=blue.size*.035 and overlap>.2:options.append((float(cscore)+overlap,full,bounds,float(cscore),overlap))
     if options:
      score,mask,bounds,confidence,overlap=max(options,key=lambda o:o[0]);masks['blue_cube']=mask;cube_assisted=False;prompts.append(dict(view=name,label='blue_cube',type='SAM3 text on automatic blue-colour ROI',text='blue cube',crop=bounds,score=confidence,blue_fraction=overlap,historical_assisted=False,colour_used_for_scale=False))
+   if preserve_plant:
+    envelope|=masks['plant'];masks['pot']&=~masks['plant']
+    png(ctx.common/'rap_masks'/f'{name}.png',envelope.astype('uint8')*255,ctx.meter)
+    prompts.append(dict(view=name,label='target_envelope',type='Union of SAM3 potted plant and independent plant mask',foreground_pixels=int(envelope.sum())))
    masks['plant']&=envelope&~masks['pot']&~masks['blue_cube'];masks['pot']&=~masks['blue_cube'];masks['background']=~(masks['plant']|masks['pot']|masks['blue_cube'])
    proposals=[]
    if name in keyviews:
-    mm,ss=text('leaf');candidates=[]
+    detections=[text(prompt) for prompt in leaf_prompts]
+    mm,ss=(np.concatenate(values) for values in zip(*detections));candidates=[]
+    source_prompts=[prompt for prompt,(masks_for_prompt,_) in zip(leaf_prompts,detections) for _ in masks_for_prompt]
     for j in np.argsort(-ss):
      mask=mm[j];area=int(mask.sum());fraction=float((mask&envelope).sum()/max(1,area));plantoverlap=float((mask&masks['plant']).sum()/max(1,area))
-     if ss[j]<.4 or area<max(35,envelope.sum()*.0005) or area>envelope.sum()*.5 or fraction<.75 or plantoverlap<.55:continue
+     proposal_region=masks['plant'] if preserve_plant else envelope
+     if ss[j]<.4 or area<max(35,proposal_region.sum()*.0005) or area>proposal_region.sum()*.5 or fraction<.75 or plantoverlap<.55:continue
      if any((mask&old).sum()/max(1,min(area,old.sum()))>.8 for old in candidates):continue
      candidates.append(mask)
      # Native geometric prompting refines each candidate; neighboring text
@@ -114,9 +125,12 @@ def main(ctx):
       if len(points)>=4:break
      native,scores,_=model.predict_inst(state,point_coords=np.array(points),point_labels=np.array(labels),box=box,multimask_output=True);native=native>0;ious=[(m&mask).sum()/max(1,(m|mask).sum()) for m in native];best=int(np.argmax(ious));refined=native[best] if ious[best]>=.5 else mask
      path=ctx.out/'leaf_instances/candidates'/name/f'candidate_{len(proposals):03}.png';png(path,refined.astype('uint8')*255,ctx.meter);proposals.append(dict(view=name,candidate_id=len(proposals),mask=str(path.relative_to(ctx.out)),score=float(ss[j]),box=box.tolist(),points=points,point_labels=labels,prompt_type='SAM3 leaf text proposal plus native box/positive/negative prompts',human_new_clicks=0,agent_visual_selection=False,refinement_iou=float(ious[best])))
+     if preserve_plant:proposals[-1]['text_prompt']=source_prompts[j]
    for label,mask in masks.items():png(folder/f'{label}.png',mask.astype('uint8')*255,ctx.meter)
   record=dict(status='complete',view=name,prompts=prompts,leaf_proposals=proposals,cube_historical_assisted=cube_assisted);write(done,record);ledger.extend(prompts);allproposals.extend(proposals);print('SAM3_BATCH',ctx.plant,name,'leaf_candidates',len(proposals),flush=True)
  write(ctx.out/'leaf_instances/candidates.json',dict(proposals=allproposals,key_views=keyviews,no_fixed_leaf_limit=True,human_clicks=0,semantic_guidance='Historical annotation where available; automatically proposed pot geometry otherwise'))
- result=dict(status='complete',views=selected,key_views=keyviews,prompts=ledger,leaf_candidates=len(allproposals),checkpoint=str(weight),checkpoint_sha256=read(OLD/'summary/sam_pilot_resources.json')['weight_digest']['sha256'],model_source=str(ROOT/'第三方源码/SAM3-latest'),physical_gpu=1,wall_s=time.time()-wall,cpu_s=time.process_time()-cpu,peak_cuda_allocated_gib=torch.cuda.max_memory_allocated()/2**30,peak_rss_gib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/2**20,io=ctx.meter.stats());write(marker,result);ctx.status('sam3','complete',views=len(selected),leaf_candidates=len(allproposals))
+ result=dict(status='complete',views=selected,key_views=keyviews,prompts=ledger,leaf_candidates=len(allproposals),checkpoint=str(weight),checkpoint_sha256=read(OLD/'summary/sam_pilot_resources.json')['weight_digest']['sha256'],model_source=str(ROOT/'第三方源码/SAM3-latest'),physical_gpu=1,wall_s=time.time()-wall,cpu_s=time.process_time()-cpu,peak_cuda_allocated_gib=torch.cuda.max_memory_allocated()/2**30,peak_rss_gib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/2**20,io=ctx.meter.stats());
+ if preserve_plant:result.update(preserve_independent_plant_mask=True,leaf_prompts=leaf_prompts)
+ write(marker,result);ctx.status('sam3','complete',views=len(selected),leaf_candidates=len(allproposals))
 
 if __name__=='__main__':main(Context(sys.argv[1]))

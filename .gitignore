@@ -110,3 +110,16 @@ hf_cache/
 
 # Actual all19 models, input caches, rendered frames and derived reports stay local.
 /experiments/ForeSplat_MultiSpecies_Phenotyping/
+
+# ---------- TomatoPGT 42 扫描批次（2026-11） ----------
+# COLMAP/GGGS/TSDF/掩码/网格/渲染等 44GB 产物保持本地；仅纳入 README 与批量汇总
+/experiments/ForeSplat_TomatoPGT_Pilot/*
+!/experiments/ForeSplat_TomatoPGT_Pilot/README.md
+!/experiments/ForeSplat_TomatoPGT_Pilot/summary/
+/experiments/ForeSplat_TomatoPGT_Independent/*
+!/experiments/ForeSplat_TomatoPGT_Independent/README.md
+!/experiments/ForeSplat_TomatoPGT_Independent/summary/
+
+# ---------- 例外：2026-11-18修改后论文 图件需纳入版本控制 ----------
+# 与 00-论文优化重构 下图片同样作为论文资源入库（全目录共 13MB）
+!2026-11-18修改后论文/*.png

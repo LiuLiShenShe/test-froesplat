@@ -17,7 +17,7 @@ def scale_vertices(vertices,factor):
 
 def apply(ctx):
  calibration=read(ctx.out/'calibration/scale_calibration.json');source=ctx.out/'gaussian/original_gaussians.ply';result=ctx.out/'gaussian/metric_gaussians.ply';marker=ctx.out/'gaussian/metric_conversion.json'
- if calibration.get('status')!='CALIBRATED_MULTI_VIEW_CUBE':ctx.status('metric','uncalibrated',reason=calibration.get('status'));return False
+ if not has_metric_scale(calibration):ctx.status('metric','uncalibrated',reason=calibration.get('status'));return False
  factor=float(calibration['scale_cm_per_unit']);key=dict(source=signature(source),scale_cm_per_unit=factor,output_units='cm',applied_scale_count=1)
  if marker.exists():
   old=read(marker)

@@ -114,7 +114,7 @@ def bind_registered_rgb(ctx,directory,views):
    sha=digest(file,ctx.meter);proof='Exact ALL retained nonblack originalCOLMAP PNG pixels verified against rawFFT RGB; raw SHA256 recorded; source-image pixels outside mask are black. Cameras renamed jointly, no guessed filename correspondence.';identities.append((image,file.stem,file,registered,sha,proof))
  return sorted(identities,key=lambda row:row[0].name)
 
-def prepare(ctx):
+def prepare(ctx, *, source=None):
  marker=ctx.common/'complete.json'
  if marker.exists():return read(marker)
  start=time.time();ctx.status('colmap','running');io_col=colmap_io()
@@ -128,7 +128,8 @@ def prepare(ctx):
   write(ctx.common/'cameras.json',data)
   for split in ['train','test']:link(ctx.common/f'{split}_views.txt',PRE/'common_input'/f'{split}_views.txt')
   result=dict(status='complete',reuse=True,source=original['source'],registered_images=len(views),sparse_points=original['sparse_points']);write(marker,result);ctx.status('colmap','complete',**{k:v for k,v in result.items() if k!='status'});return result
- source=locate(ctx)
+ explicit_source=source is not None
+ if not explicit_source:source=locate(ctx)
  if source is None:
   try:source=reuse_native_distorted(ctx)
   except subprocess.CalledProcessError as failure:
@@ -156,6 +157,7 @@ def prepare(ctx):
  identity=bind_registered_rgb(ctx,directory,views)
  if len(identity)<max(10,len(views)*.9):
   write(ctx.out/'colmap/rejected_historical_input.json',dict(source=str(directory),mapped_images=len(identity),registered_images=len(views),reason='Original registered RGB SHA256 cannot be matched to current FFT input; nativeSfM must be rerun, no guessed filename correspondence'))
+  if explicit_source:raise ValueError('Explicit COLMAP input mapping incomplete')
   if directory==ctx.out/'colmap':
    if (directory/'reused_native_sfm.json').exists():
     archive=ctx.out/'colmap_attempts'/f'reused_unmatched_{time.time_ns()}';archive.parent.mkdir(exist_ok=True);directory.rename(archive)

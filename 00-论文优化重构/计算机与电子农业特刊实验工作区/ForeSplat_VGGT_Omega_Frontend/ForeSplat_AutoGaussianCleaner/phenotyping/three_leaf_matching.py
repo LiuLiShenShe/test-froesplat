@@ -368,8 +368,76 @@ def export_three_leaf_tables() -> dict:
     ])
     csvwrite(folder / "three_leaf_errors.csv", errors, fields=["plant_id", "handwritten_number", "leaf_id", "trait", "manual_cm", "automatic_cm", "error_cm", "history_row_id"])
     csvwrite(folder / "three_leaf_error_summary.csv", summary)
+    _write_model_locations(rows, measurements)
     _write_overview(rows, measurements)
     return {"matches": rows, "measurements": measurements, "errors": errors, "error_summary": summary}
+
+
+def _write_model_locations(rows: list[dict], measurements: list[dict]) -> None:
+    """Export exact per-leaf model paths and direct browser links for manual work."""
+    folder = OUT / "summary"
+    measurement_by_key = {(r["plant_id"], r["handwritten_number"]): r for r in measurements}
+    records = []
+    cards = []
+    for row in rows:
+        plant, number, leaf = row["plant_id"], row["handwritten_number"], row.get("leaf_id", "")
+        ctx = Context(plant)
+        view = row.get("reference_view", "")
+        mesh_path = ctx.out / "leaf_instances" / leaf / "leaf_cm.ply" if leaf else None
+        viewer_path = ctx.out / "leaf_instances" / leaf / "viewer.html" if leaf else None
+        leaf_reference_path = ctx.out / "leaf_instances" / leaf / "reference.png" if leaf else None
+        rgb_path = ctx.common / "images" / f"{view}.jpg" if view else None
+        mesh_rel = f"/{plant}/leaf_instances/{leaf}/leaf_cm.ply" if leaf else ""
+        viewer_rel = f"/{plant}/leaf_instances/{leaf}/viewer.html" if leaf else ""
+        leaf_reference_rel = f"/{plant}/leaf_instances/{leaf}/reference.png" if leaf else ""
+        rgb_rel = f"/api/match/rgb?plant={plant}&view={view}" if view else ""
+        measure = measurement_by_key.get((plant, number), {})
+        record = {
+            "plant_id": plant,
+            "handwritten_number": number,
+            "leaf_id": leaf,
+            "match_status": row.get("match_status", ""),
+            "human_confirmed": row.get("human_confirmed", ""),
+            "reference_view": view,
+            "model_file_exists": str(bool(mesh_path and mesh_path.is_file())),
+            "model_local_path": mesh_path.resolve().as_posix() if mesh_path else "",
+            "model_download_path": mesh_rel,
+            "viewer_local_path": viewer_path.resolve().as_posix() if viewer_path else "",
+            "viewer_path": viewer_rel,
+            "leaf_reference_local_path": leaf_reference_path.resolve().as_posix() if leaf_reference_path else "",
+            "leaf_reference_path": leaf_reference_rel,
+            "original_rgb_local_path": rgb_path.resolve().as_posix() if rgb_path else "",
+            "original_rgb_path": rgb_rel,
+            "automatic_leaf_length_cm": measure.get("automatic_leaf_length_cm", ""),
+            "automatic_leaf_width_cm": measure.get("automatic_leaf_width_cm", ""),
+            "automatic_leaf_area_cm2": measure.get("automatic_leaf_area_cm2", ""),
+            "measurement_status": measure.get("measurement_status", ""),
+        }
+        records.append(record)
+        def link(path: str, label: str) -> str:
+            return f'<a href="{html.escape(path, quote=True)}" target="_blank">{label}</a>' if path else "—"
+        local_path = html.escape(record["model_local_path"] or "模型路径缺失")
+        cards.append(
+            "<tr>"
+            f"<td>{html.escape(plant)}</td><td>{html.escape(number)}</td><td>{html.escape(leaf or '—')}</td>"
+            f"<td>{link(rgb_rel, '原始 RGB')}<br>{link(leaf_reference_rel, '单叶参考图')}</td>"
+            f"<td>{link(viewer_rel, '打开三维模型')}<br>{link(mesh_rel, '下载厘米 PLY')}</td>"
+            f"<td class='path'>{local_path}</td>"
+            f"<td>{html.escape(str(record['automatic_leaf_length_cm'] or '—'))} / "
+            f"{html.escape(str(record['automatic_leaf_width_cm'] or '—'))} / "
+            f"{html.escape(str(record['automatic_leaf_area_cm2'] or '—'))}</td>"
+            f"<td>{html.escape(str(record['measurement_status'] or '—'))}</td>"
+            "</tr>"
+        )
+    csvwrite(folder / "three_leaf_model_locations.csv", records)
+    page = """<!doctype html><html lang='zh-CN'><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'><title>57 片标定叶片模型位置</title>
+<style>body{font:14px system-ui,sans-serif;margin:20px;color:#1d302b}h1{font-size:24px}p{line-height:1.6}.wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:1200px}th,td{padding:8px;border:1px solid #d4ddd9;text-align:left;vertical-align:top}th{position:sticky;top:0;background:#eaf2ee}tr:nth-child(even){background:#f7faf8}a{color:#075e46}.path{font:12px ui-monospace,monospace;max-width:360px;overflow-wrap:anywhere}</style>
+<h1>57 片已确认叶片的模型位置</h1>
+<p>“下载厘米 PLY”可逐片保存并导入 MeshLab、CloudCompare 或其他 PLY 测量工具；“打开三维模型”可在浏览器中旋转检查。服务器磁盘绝对路径也列在表中。自动长、宽、面积仅作现有计算结果参考。</p>
+<p><a href='three_leaf_model_locations.csv'>下载完整位置 CSV</a> · <a href='three_leaf_matches.csv'>对应关系 CSV</a> · <a href='three_leaf_measurements.csv'>三维表型 CSV</a> · <a href='three_leaf_match_overview.html'>返回 57 片总览</a></p>
+<div class='wrap'><table><thead><tr><th>植株</th><th>手写编号</th><th>Leaf ID</th><th>参考资料</th><th>三维模型</th><th>服务器绝对路径</th><th>自动长 / 宽 / 面积</th><th>测量状态</th></tr></thead><tbody>""" + "".join(cards) + "</tbody></table></div></html>"
+    (folder / "three_leaf_model_locations.html").write_text(page, encoding="utf-8")
 
 
 def _write_overview(rows: list[dict], measurements: list[dict]) -> None:
@@ -417,7 +485,7 @@ def _write_overview(rows: list[dict], measurements: list[dict]) -> None:
     confirmed_count = sum(row["human_confirmed"].lower() == "true" for row in rows)
     page = """<!doctype html><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>ForeSplat 57 片标定叶片总览</title>
     <style>body{font:15px system-ui;margin:20px;background:#f4f7f6;color:#16312b}a{color:#145e49}nav{position:sticky;top:0;background:#f4f7f6;padding:10px 0;z-index:2}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}.card{background:#fff;border:1px solid #cbd8d2;border-radius:8px;overflow:hidden}.card header{display:flex;justify-content:space-between;padding:10px;background:#eaf2ee}.confirmed{color:#08643d}.pending{color:#80611d}.photo{height:300px;position:relative;background:#1b241f;overflow:hidden}.photo img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0}.photo .mask{opacity:.5;mix-blend-mode:screen;object-fit:fill;pointer-events:none}.photo.empty{display:grid;place-items:center;color:#fff}.details{padding:10px}.details p{margin:6px 0;color:#40574d;font-size:13px}</style>
-    <h1>ForeSplat · 57 片人工标定叶片</h1><nav><b>已确认 """ + str(confirmed_count) + "/57</b> · <a href='/match'>打开交互匹配页面</a> · <a href='three_leaf_matches.csv'>匹配 CSV</a> · <a href='three_leaf_measurements.csv'>测量 CSV</a> · <a href='three_leaf_metric_suggestions.csv'>尺寸候选排序</a> · <a href='three_leaf_errors.csv'>误差 CSV</a> · <a href='three_leaf_error_summary.csv'>误差汇总</a></nav><div class='grid'>" + "".join(cards) + "</div>"
+    <h1>ForeSplat · 57 片人工标定叶片</h1><nav><b>已确认 """ + str(confirmed_count) + "/57</b> · <a href='/match'>打开交互匹配页面</a> · <a href='three_leaf_model_locations.html'>逐片模型位置 / 下载</a> · <a href='three_leaf_model_locations.csv'>模型路径 CSV</a> · <a href='three_leaf_matches.csv'>匹配 CSV</a> · <a href='three_leaf_measurements.csv'>测量 CSV</a> · <a href='three_leaf_metric_suggestions.csv'>尺寸候选排序</a> · <a href='three_leaf_errors.csv'>误差 CSV</a> · <a href='three_leaf_error_summary.csv'>误差汇总</a></nav><div class='grid'>" + "".join(cards) + "</div>"
     (OUT / "summary" / "three_leaf_match_overview.html").write_text(page, encoding="utf-8")
 
 

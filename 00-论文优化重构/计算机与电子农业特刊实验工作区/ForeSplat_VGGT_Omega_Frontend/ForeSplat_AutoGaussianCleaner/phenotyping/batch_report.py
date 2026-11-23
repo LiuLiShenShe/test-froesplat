@@ -13,12 +13,13 @@ def rows(path):return csvread(path) if Path(path).exists() else []
 def color(i):return np.array(colorsys.hsv_to_rgb((i*.61803398875)%1,.75,.95))*255
 def font(size):return ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',size)
 
-def viewer(ctx,inst,mesh=None):
- folder=ctx.out/'leaf_instances'/inst['leaf_id'];metric=inst['metric'];mesh=ctx.mesh() if mesh is None else mesh
+def viewer(ctx,inst,mesh=None,*,catalog_href=None,organ_dir='leaf_instances'):
+ folder=ctx.out/organ_dir/inst['leaf_id'];metric=inst['metric'];mesh=ctx.mesh() if mesh is None else mesh
  with np.load(io.BytesIO(ctx.meter.read(folder/'source_indices.npz'))) as d:fid=d['original_face_ids'];vi=d['original_vertex_ids']
  sub,_=subset(mesh,fid);v=np.asarray(sub.vertices);f=np.asarray(sub.triangles);colors=(np.asarray(sub.vertex_colors)*255).clip(0,255).astype(int).tolist() if sub.has_vertex_colors() else ['#64ad67']*len(v)
  payload=dict(plant=ctx.plant,leaf=inst['leaf_id'],unit='cm' if metric else 'model units',ply='leaf_cm.ply' if metric else 'leaf_units.ply',vertices=v.tolist(),faces=f.tolist(),colors=colors,source_vertex_ids=vi.tolist())
  template=(CODE/'leaf_viewer.html').read_text();text=template.replace('__PAYLOAD__',json.dumps(payload,separators=(',',':')).replace('</','<\\/')).replace('../../summary/assets/','../../../summary/assets/')
+ if catalog_href is not None:text=text.replace('../../../summary/leaf_mesh_index.html',html.escape(catalog_href,quote=True))
  ctx.meter.save(folder/'viewer.html',text.encode())
 
 def preview_view(ctx,mesh,metric):

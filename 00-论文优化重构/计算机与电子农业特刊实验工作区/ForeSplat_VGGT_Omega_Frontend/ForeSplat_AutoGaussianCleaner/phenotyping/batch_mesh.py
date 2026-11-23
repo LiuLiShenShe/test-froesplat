@@ -38,10 +38,10 @@ def render_frames(ctx,metric,selected_views=None):
   if name in sorted(cameras)[::max(1,len(cameras)//4)]:png(ctx.out/'gaussian'/f'{name}_render.png',rgb,ctx.meter)
   print('METRIC_RENDER',ctx.plant,name,'valid',int(valid.sum()),flush=True)
 
-def main(ctx,fuse_only=False):
+def main(ctx,fuse_only=False,*,fuse_worker=None):
  marker=ctx.out/'mesh/complete.json'
  if marker.exists():return
- ctx.status('tsdf','running');cal=read(ctx.out/'calibration/scale_calibration.json');metric=cal.get('status')=='CALIBRATED_MULTI_VIEW_CUBE';unit='cm' if metric else 'model_units';wall=time.time();cpu=time.process_time();folder=ctx.out/'mesh/surface';folder.mkdir(parents=True,exist_ok=True);frames=folder/'frames';frames.mkdir(exist_ok=True)
+ ctx.status('tsdf','running');cal=read(ctx.out/'calibration/scale_calibration.json');metric=has_metric_scale(cal);unit='cm' if metric else 'model_units';wall=time.time();cpu=time.process_time();folder=ctx.out/'mesh/surface';folder.mkdir(parents=True,exist_ok=True);frames=folder/'frames';frames.mkdir(exist_ok=True)
  if not fuse_only:
   lock=None
   if ctx.plant!='KongQueZhuYu':lock=(PRE/'summary/gpu1.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX)
@@ -60,7 +60,8 @@ def main(ctx,fuse_only=False):
   write(ctx.out/'mesh/render_complete.json',dict(metric=metric,frames=len(list(frames.glob('*.npz'))),wall_s=time.time()-wall,io=ctx.meter.stats()))
   # Reuse the existing TSDF environment, which owns its optional media deps.
   # The GPU renderer process has released GPU1 before CPU-only integration.
-  subprocess.run([str(UV),'run','--no-project','--python',str(ROOT/'2d-gaussian-splatting-main/venv/bin/python'),str(CODE/'batch_mesh.py'),ctx.plant,'--fuse-only'],check=True,cwd=ROOT);return
+  worker=fuse_worker if fuse_worker is not None else [str(CODE/'batch_mesh.py'),ctx.plant,'--fuse-only']
+  subprocess.run([str(UV),'run','--no-project','--python',str(ROOT/'2d-gaussian-splatting-main/venv/bin/python'),*worker],check=True,cwd=ROOT);return
  data,cameras=ctx.cameras(metric);K=np.array(data['K']);train={Path(n).stem for n in (ctx.common/'train_views.txt').read_text().splitlines()};samples=[]
  sys.path.insert(0,str(FRONT/'experiments/KongQueZhuYu/geometry_mesh_final_selection/scripts'));from surface_protocol import normals_from_grid
  for frame in sorted(frames.glob('*.npz')):
